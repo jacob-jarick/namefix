@@ -1,0 +1,5 @@
+for some reason these cmd's dont work from a bat file.
+So just copy and paste into a cmd window in the namefix.pl directory
+
+pp --gui -o namefix-gui.exe -M Tk -M Time/localtime.pm namefix.pl
+pp -o namefix.exe  -M Time/localtime.pm namefix-cli.pl

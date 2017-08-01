@@ -1,0 +1,40 @@
+--------------------------------------------------------------------------------
+Credits & Thanks:
+--------------------------------------------------------------------------------
+
+Jacob Jarick:
+		 	Concept, Creator and Main Coder (Mr Everything).
+		 	Atm roughly 98% of all code has been written by myself,
+			no serious contributers since Martins help with 2.0.
+
+Mauro J. Jaskelioff
+			Gave me alot more international character conversions
+                        for 3.99, thanks Mauro.
+
+John Tibbs:
+		 	Long time tester and supporter of the namefix.pl
+			project. Thanks for picking up the bugs I dont.
+		 	Contributed updated/better regexps for urls.
+
+Michael Armstrong:
+			Beta tester for 2.0, Minor Contributions to the 3.0 code
+			base. Old website maintainer.
+			Thanks Mik, for help with the file menu and dialogs.
+
+Scott Harvey:
+		     	2.0 - 4.0 Tester.
+			Scott also catches some of my spelling & gramar errors.
+
+Martin Schuster:
+		  	Long time conritbuter to namefix.pl from 1.0 to 2.0.
+		 	Thanks Martin, your contributions are missed :~)
+
+Sal Gonzalez:
+			One time contributer to namefix.pl version 1.x,
+			havent heard from him in ages but his help was/is
+			still appreciated.
+
+--------------------------------------------------------------------------------
+
+New contributers are always welcome and if for some reason I dont allow your
+code into the main project feel free to fork the code.
