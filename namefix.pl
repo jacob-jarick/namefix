@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 
 use strict;
-#no strict;
-#use warnings;
-no warnings;
+use warnings;
+
+use Data::Dumper::Concise;
 
 use English;
 use Cwd;
@@ -23,54 +23,45 @@ use Tk::Text;
 use Tk::ROText;
 use Tk::DynaTabFrame;
 use Tk::Menu;
+
+# redirect warnings for Tk::JComboBox
+$SIG{'__WARN__'} = sub { warn $_[0] unless (caller eq "Tk::JComboBox"); };
 use Tk::JComboBox;
 
-# $0 = location of scipt either full or relative, usefull to determine scripts location
-our $prog_dir = $0;
-if(-l $prog_dir)	# if its a link find real file
-{
-	$prog_dir = readlink($prog_dir);
-}
-if($prog_dir eq "namefix.pl")
-{
-	$prog_dir = "./";
-}
-$prog_dir =~ s/\\/\//g;
-# remove script name from $dir and then we "should" have a nice path to our scripts
-$prog_dir =~ s/^(.*)\/(.*?)$/$1/;
+use FindBin qw($Bin);
 
 # mems libs
-require "$prog_dir/libs/fixname.pm";
-require "$prog_dir/libs/run_namefix.pm";
-require "$prog_dir/libs/misc.pm";
-require "$prog_dir/libs/config.pm";
-require "$prog_dir/libs/global_variables.pm";
-require "$prog_dir/libs/nf_print.pm";
+require "$Bin/libs/fixname.pm";
+require "$Bin/libs/run_namefix.pm";
+require "$Bin/libs/misc.pm";
+require "$Bin/libs/config.pm";
+require "$Bin/libs/global_variables.pm";
+require "$Bin/libs/nf_print.pm";
 
 
-require "$prog_dir/libs/dir.pm";
-require "$prog_dir/libs/mp3.pm";
-require "$prog_dir/libs/filter.pm";
-require "$prog_dir/libs/undo.pm";
-require "$prog_dir/libs/html.pm";
+require "$Bin/libs/dir.pm";
+require "$Bin/libs/mp3.pm";
+require "$Bin/libs/filter.pm";
+require "$Bin/libs/undo.pm";
+require "$Bin/libs/html.pm";
 
 # gui requires
-require "$prog_dir/libs/gui/dir_hlist.pm";
-require "$prog_dir/libs/gui/about.pm";
-require "$prog_dir/libs/gui/config_dialog.pm";
-require "$prog_dir/libs/gui/help.pm";
-require "$prog_dir/libs/gui/blockrename.pm";
-require "$prog_dir/libs/gui/bookmarks.pm";
-require "$prog_dir/libs/gui/changelog.pm";
-require "$prog_dir/libs/gui/dialog.pm";
-require "$prog_dir/libs/gui/edit_lists.pm";
-require "$prog_dir/libs/gui/links.pm";
-require "$prog_dir/libs/gui/manual.pm";
-require "$prog_dir/libs/gui/menu.pm";
-require "$prog_dir/libs/gui/thanks.pm";
-require "$prog_dir/libs/gui/todo.pm";
-require "$prog_dir/libs/gui/br_preview.pm";
-require "$prog_dir/libs/gui/undo.pm";
+require "$Bin/libs/gui/dir_hlist.pm";
+require "$Bin/libs/gui/about.pm";
+require "$Bin/libs/gui/config_dialog.pm";
+require "$Bin/libs/gui/help.pm";
+require "$Bin/libs/gui/blockrename.pm";
+require "$Bin/libs/gui/bookmarks.pm";
+require "$Bin/libs/gui/changelog.pm";
+require "$Bin/libs/gui/dialog.pm";
+require "$Bin/libs/gui/edit_lists.pm";
+require "$Bin/libs/gui/links.pm";
+require "$Bin/libs/gui/manual.pm";
+require "$Bin/libs/gui/menu.pm";
+require "$Bin/libs/gui/thanks.pm";
+require "$Bin/libs/gui/todo.pm";
+require "$Bin/libs/gui/br_preview.pm";
+require "$Bin/libs/gui/undo.pm";
 
 # ----------------------------------------------------------------------------
 # Vars
@@ -79,17 +70,69 @@ require "$prog_dir/libs/gui/undo.pm";
 my $row	= 1;
 my $col	= 1;
 
+our $id3v2_rm;
+our $id3_guess_tag;
+our $id3_year_str;
+our $LISTING;
+our $truncate;
+our $eaw;
+our $id3_year_set;
+our $ig_type;
+our $truncate_to;
+our $pad_digits_w_zero;
+our $faw;
+our $id3_art_str;
+our $id3_alb_set;
+our $rpwnew;
+our $case;
+our $intr_char;
+our $id3_com_str;
+our $enum_pad_zeros;
+our $id3v1_rm;
+our $rpwold;
+our $pad_digits;
+our $kill_cwords;
+our $filter_use_re;
+our $pad_dash;
+our $id3_com_set;
+our $recr;
+our $filter_cs;
+our $end_a;
+our $id3_gen_str;
+our $kill_sp_patterns;
+our $split_dddd;
+our $id3_mode;
+our $id3_art_set;
+our $author;
+our $spaces;
+our $testmode;
+our $id3_force_guess_tag;
+our $enum_pad;
+our $dot2space;
+our $trunc_char;
+our $ZERO_LOG;
+our $proc_dirs;
+our $sp_word;
+our $id3_alb_str;
+our $replace;
+our $enum;
+our $genres;
+our $id3_gen_set;
+our $sp_char;
+our $front_a;
+
+
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
 
-if(-f $main::config_file) 
+if(-f $main::config_file)
 {
 	do $main::config_file;	# executes config file
 }
 
-if(-f $main::fonts_file) 
+if(-f $main::fonts_file)
 {
 	do $main::fonts_file;		# if font file exists
 }
@@ -102,7 +145,7 @@ if($main::ZERO_LOG)
 }
 
 &plog(1, "**** namefix.pl $main::version start *************************************************");
-&plog(4, "main: \$prog_dir = \"$prog_dir\"");
+&plog(4, "main: \$Bin = \"$Bin\"");
 
 #--------------------------------------------------------------------------------------------------------------
 # Begin Gui
@@ -361,7 +404,7 @@ $frm_bottom -> Button
 (
 	-text=>"STOP!",
 	-activebackground => "red",
-	-command => sub 
+	-command => sub
 	{
 		if($main::STOP)	# stub
 		{
@@ -467,11 +510,11 @@ my $clean_chk = $frm_left -> Checkbutton
 	-variable=>\$main::cleanup,
 	-activeforeground => "blue",
 	-command=> sub {
-		if($main::cleanup == 0) 
+		if($main::cleanup == 0)
 		{
 			$main::advance = 1;
 		}
-		else 
+		else
 		{
 			$main::advance = 0;
 		}
@@ -861,7 +904,7 @@ my $rm_id3v1 = $tab2 -> Checkbutton
 my $rm_id3v2 = $tab2 -> Checkbutton
 (
 	-text=>"RM id3v2 tags",
-	-variable=>\$main::id3v2_rm,
+	-variable=>\$id3v2_rm,
 	-activeforeground => "blue"
 )
 -> grid
@@ -955,7 +998,7 @@ $balloon->attach
 
 my $genre_combo = $tab2 -> JComboBox
 (
-	-mode=>'readonly',
+ 	-mode=>'readonly',
 	-relief=>'groove',
         -background=>'white',
 	-textvariable =>\$main::id3_gen_str,
@@ -969,6 +1012,7 @@ my $genre_combo = $tab2 -> JComboBox
 	-sticky=>"nw"
 );
 
+# print Dumper(\@main::genres);
 
 my $id3_year_chk = $tab2 -> Checkbutton
 (
@@ -1060,9 +1104,9 @@ my $U_chk = $tab5 -> Checkbutton
 	-text=>"Uppercase All",
 	-variable=>\$main::uc_all,
 	-activeforeground => "blue",
-	-command=> sub 
+	-command=> sub
 	{
-		if($main::uc_all == 1) 
+		if($main::uc_all == 1)
 		{
 			$main::lc_all = 0;
 		}
@@ -1080,9 +1124,9 @@ my $L_chk = $tab5 -> Checkbutton
 	-text=>"Lowercase All",
 	-variable=>\$main::lc_all,
 	-activeforeground => "blue",
-	-command=> sub 
+	-command=> sub
 	{
-		if($main::lc_all == 1) 
+		if($main::lc_all == 1)
 		{
 			$main::uc_all = 0;
 		}
@@ -1136,9 +1180,9 @@ my $d_chk = $tab5 -> Checkbutton
 	-text=>"RM ^Digits",
 	-variable=>\$main::digits,
 	-activeforeground => "blue",
-	-command=> sub 
+	-command=> sub
 	{
-		if($main::digits == 1) 
+		if($main::digits == 1)
 		{
 			$main::rm_digits = 0;
 		}
@@ -1161,9 +1205,9 @@ my $N_chk = $tab5 -> Checkbutton
 	-text=>"RM all Digits",
 	-variable=>\$main::rm_digits,
 	-activeforeground => "blue",
-	-command=> sub 
+	-command=> sub
 	{
-		if($main::rm_digits == 1) 
+		if($main::rm_digits == 1)
 		{
 			$main::digits = 0;
 		}
@@ -1193,9 +1237,9 @@ my $unscene_chk = $tab5 -> Checkbutton
 	-text=>"un-Scenify",
 	-variable=>\$main::unscene,
 	-activeforeground => "blue",
-	-command=> sub 
+	-command=> sub
 	{
-		if($main::unscene == 1) 
+		if($main::unscene == 1)
 		{
 			$main::scene = 0;
 		}
@@ -1214,9 +1258,9 @@ my $scene_chk = $tab5 -> Checkbutton
 	-text=>"Scenify",
 	-variable=>\$main::scene,
 	 -activeforeground => "blue",
-	 -command=> sub 
+	 -command=> sub
 	 {
-	 	if($main::scene == 1) 
+	 	if($main::scene == 1)
 	 	{
 	 		$main::unscene = 0;
 	 	}
@@ -1678,7 +1722,7 @@ $tab7 -> Label
 #--------------------------------------------------------------------------------------------------------------
 
 our $f_frame = $main::frm_right2->Frame()
--> pack 
+-> pack
 (
         -side=>"top",
 
@@ -1689,7 +1733,7 @@ $f_frame -> Checkbutton
 	-text=>"Filter",
 	-variable=>\$main::FILTER,
 	-activeforeground => "blue",
-        -command=> sub 
+        -command=> sub
 	{
 		if($main::FILTER && $main::filter_string eq "")	# dont enable filter on an empty string
 		{
@@ -1753,7 +1797,7 @@ $f_frame -> Checkbutton
 # No more frames
 #--------------------------------------------------------------------------------------------------------------
 
-if($main::window_g ne "") 
+if($main::window_g ne "")
 {
 	$mw ->geometry($main::window_g);
 }
