@@ -3,7 +3,7 @@
 # variables that need to be declacred 1st
 # for use with home directory and os dependant variables
 
-our $version 		= "4.0.3 RC1";
+our $version 		= "4.1.1";
 our $author 		= "Jacob Jarick";
 our $debug		= "0";
 
@@ -25,7 +25,7 @@ our $overwrite	= 0;
 
 # Detect enviroment and setup namefix directories
 
-our $nf_dir = $main::prog_dir."/";
+our $nf_dir = $Bin."/";
 
 if(!$dir)
 {
@@ -71,11 +71,11 @@ our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killpat_file   	= "$home/.namefix.pl/list_rm_patterns.txt";
 our $bookmark_file	= "$home/.namefix.pl/list_bookmarks.txt";
-our $changelog		= "$prog_dir/txt/changelog.txt";
-our $about		= "$prog_dir/txt/about.txt";
-our $todo		= "$prog_dir/txt/todo.txt";
-our $thanks		= "$prog_dir/txt/thanks.txt";
-our $links		= "$prog_dir/txt/links.txt";
+our $changelog		= "$Bin/txt/changelog.txt";
+our $about		= "$Bin/txt/about.txt";
+our $todo		= "$Bin/txt/todo.txt";
+our $thanks		= "$Bin/txt/thanks.txt";
+our $links		= "$Bin/txt/links.txt";
 
 our $namefix_log_file	= "$home/.namefix.pl/namefix.pl"."$version"."log";
 our $namefix_error_file	= "$home/.namefix.pl/namefix.pl"."$version"."error.log";
