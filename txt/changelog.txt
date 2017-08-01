@@ -1,3 +1,10 @@
+4.1.1 - ie refresh in progress
+
+* removed all references to $prog_dir, now using Findbin
+* turned on strict and warnings for namefix.pl - redirected warnings for Jcombox
+  created all missing main vars with our (not my), should have turned on strict ages ago.
+  turning on strict has likely broken things, but gui fires up.
+
 4.0.2
 
 2:10 PM 18/04/2010
@@ -24,7 +31,7 @@
 * fn_dots2space renamed to fn_dot2space (-s) to match the variable
 * cli option --unscene was actually -unscene, fixed.
 * spaces short option was listed as "s" in cli help, its actually p - fixed.
-* included entrys in the killwords list with nasty characters were not being processed. escaped killword and special_casing array now stored in @main::kill_words_arr_escaped and @main::word_casing_arr  respectively, rather than overwriting themselves solving this issue and a few others. 
+* included entrys in the killwords list with nasty characters were not being processed. escaped killword and special_casing array now stored in @main::kill_words_arr_escaped and @main::word_casing_arr  respectively, rather than overwriting themselves solving this issue and a few others.
 * added [Moonsong], Dvsky, aaf, sys to killword list
 
 4.0.1b
@@ -104,7 +111,7 @@ Tue May 13 12:05:29 WST 2008
 
 Mon May 12 2008
 * filter is now a checkbutton, will not be enabled if there is no filter
-* updated dir_filtered sub to be more efficient 
+* updated dir_filtered sub to be more efficient
 * rebuilt find_fix sub (again) while tracking down recursive issues.
 * removed now empty gui/misc.pm
 * removed redundant sub multiscolly
@@ -160,7 +167,7 @@ Sat Apr  5 11:00:03 WST 2008
 * All run, list and preview subs now check to see if a previous  listing/ rename/ preview is running - if so it aborts with an error msg.
 * fixed issue with blockrename failing on filenames containing whitespaces at the begining or end.
 * removed redundant nf_error
-  
+
 7:46 AM 2/04/2008
 * removed old print statement from sub undo_rename
 * removed undo menu entry, replaced with undo gui menu entry
@@ -213,8 +220,8 @@ Wed Mar 26 16:41:07 WST 2008
 4.0 RC10
 * start of blockrename preview (hidden for now)
 * block rename uses fn_rename instead of perls, this makes it obey overwrite mode,
-  fsfix and check for tmp files, 
-* fixed bug where blockrename was still reading from dir filtered when preforming 
+  fsfix and check for tmp files,
+* fixed bug where blockrename was still reading from dir filtered when preforming
   rename, so editable left side of block rename would mislead user.
   Caught myself out on this one, hopefully noone else.
 * plog in all blockrename functions

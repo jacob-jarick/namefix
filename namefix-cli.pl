@@ -10,40 +10,35 @@ use File::Find;
 use File::Basename qw(&basename &dirname);
 
 use File::Copy;
+use FindBin qw($Bin);
 
 # $0 = location of scipt either full or relative, usefull to determine scripts location
-our $prog_dir = $0;
-if(-l $prog_dir)	# if its a link find real file
-{
-	$prog_dir = readlink($prog_dir);
-}
-$prog_dir =~ s/\\/\//g;
-# remove script name from $dir and then we "should" have a nice path to our scripts
-$prog_dir =~ s/^(.*)\/(.*?)$/$1/;
+our $Bin = $0;
+
 
 # mems libs
-require "$prog_dir/libs/fixname.pm";
-require "$prog_dir/libs/run_namefix.pm";
-require "$prog_dir/libs/misc.pm";
-require "$prog_dir/libs/config.pm";
-require "$prog_dir/libs/global_variables.pm";
-require "$prog_dir/libs/nf_print.pm";
+require "$Bin/libs/fixname.pm";
+require "$Bin/libs/run_namefix.pm";
+require "$Bin/libs/misc.pm";
+require "$Bin/libs/config.pm";
+require "$Bin/libs/global_variables.pm";
+require "$Bin/libs/nf_print.pm";
 
-require "$prog_dir/libs/dir.pm";
-require "$prog_dir/libs/mp3.pm";
-require "$prog_dir/libs/filter.pm";
-require "$prog_dir/libs/undo.pm";
-require "$prog_dir/libs/html.pm";
+require "$Bin/libs/dir.pm";
+require "$Bin/libs/mp3.pm";
+require "$Bin/libs/filter.pm";
+require "$Bin/libs/undo.pm";
+require "$Bin/libs/html.pm";
 
-require "$prog_dir/libs/cli/help.pm";
-require "$prog_dir/libs/cli/print.pm";
+require "$Bin/libs/cli/help.pm";
+require "$Bin/libs/cli/print.pm";
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
 
-if(-f $main::config_file) 
+if(-f $main::config_file)
 {
 	do $main::config_file;	# executes config file
 }
@@ -54,7 +49,7 @@ if($main::ZERO_LOG)
 }
 
 &plog(1, "**** namefix.pl $main::version start *************************************************");
-&plog(4, "main: \$prog_dir = \"$prog_dir\"");
+&plog(4, "main: \$Bin = \"$Bin\"");
 
 $main::CLI = 1;	# set cli mode flag
 
@@ -103,7 +98,7 @@ if(-d $main::dir)
 {
 	chdir $main::dir;
 	$main::dir = cwd();
-	
+
 	if(!-d $main::dir)
 	{
 		plog(0, "main: $main::dir is not a directory, cowardly refusing to process it");
@@ -334,7 +329,7 @@ for(@ARGV)
 	########################
 	# Enumerate Options
 	########################
-	
+
  	elsif($_ eq "--enum")
  	{
  		$main::enum = 1;
@@ -666,5 +661,5 @@ sub proc_short_opts
 			exit 0;
 		}
 	}
-}	
-	
+}
+
