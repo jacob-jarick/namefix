@@ -1,5 +1,6 @@
 4.1.1 - ie refresh in progress
 
+* created make_test_dir.pl for generating files I can test with.
 * removed all references to $prog_dir, now using Findbin
 * turned on strict and warnings for namefix.pl - redirected warnings for Jcombox
   created all missing main vars with our (not my), should have turned on strict ages ago.
