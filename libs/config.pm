@@ -1,12 +1,14 @@
 use strict;
 use warnings;
 
+use FindBin qw($Bin);
+
 #--------------------------------------------------------------------------------------------------------------
 # Save Config File
 #--------------------------------------------------------------------------------------------------------------
 
 # MEMO: to self, config file is for stuff under prefs dialog only and defaults is for mainwindow vars
-sub save_config 
+sub save_config
 {
 	open(FILE, ">$main::config_file");
 	print FILE "\# namefix.pl $main::version config file\n",
@@ -69,7 +71,7 @@ sub save_config
 		"\n";
 	}
 
-	if($main::SAVE_WINDOW_SIZE == 1 && !$main::CLI) 
+	if($main::SAVE_WINDOW_SIZE == 1 && !$main::CLI)
 	{
 		$main::window_g = $main::mw->geometry;
 

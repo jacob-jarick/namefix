@@ -3,7 +3,7 @@ use warnings;
 
 # routines for manual renaming etc
 
-sub manual_edit 
+sub manual_edit
 {
 	($main::hlist_file, $main::hlist_cwd) = $main::hlist2->info("data", $main::hlist_selection);
 	my $file 	= $main::hlist_file;
@@ -20,7 +20,7 @@ sub manual_edit
 	my $l 		= length $file;
 
 	&plog(3, "sub manual_edit: \"$file\"");
- 
+
        if($ent_min_l <= $l && $l <= $ent_max_l)
         {
         	$ent_l = $l;
@@ -289,7 +289,7 @@ sub manual_edit
 
                 $frame1->JComboBox
                 (
-	                -mode=>'readonly',
+ 	                -mode=>'readonly',
 	                -relief=>'groove',
 	                -textvariable =>\$gen,
 	                -choices=>\@main::genres,
@@ -419,7 +419,7 @@ sub manual_edit
 	my $but_close = $button_frame -> Button(
         	-text=>"Close",
         	-activebackground=>'white',
-        	-command => sub 
+        	-command => sub
 		{
         		destroy $w;
 			if($main::MR_DONE)
@@ -441,22 +441,22 @@ sub manual_edit
 	return;
 }
 
-sub me_rename 
+sub me_rename
 {
 	my $file = shift;
 	my $newfile = shift;
 	$main::MR_DONE = 1;
 
-        if($file eq $newfile) 
+        if($file eq $newfile)
         {
         	return;
         }
 
-	if($main::fat32fix) 
+	if($main::fat32fix)
 	{
 		my $tmpfile = $file."tmp";
 
-		if(-f $tmpfile) 
+		if(-f $tmpfile)
 		{
 			&plog(0, "sub me_rename: tmpfile: $tmpfile exists.");
 			return 0;
@@ -464,9 +464,9 @@ sub me_rename
 		rename $file, $tmpfile;
 		rename $tmpfile, $newfile;
 	}
-	else 
+	else
 	{
-		if(-f $newfile) 
+		if(-f $newfile)
 		{
 			&plog(0, "sub me_rename: newfile: $newfile exists");
 			return 0;
