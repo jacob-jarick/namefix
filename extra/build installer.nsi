@@ -3,19 +3,19 @@
 ;--------------------------------
 
 Name "Namefix.pl"
-OutFile "namefix.pl_install.exe"
+OutFile "..\namefix.pl_install.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\namefix.pl
 
-; Registry key to check for directory (so if you install again, it will 
+; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM "Software\NSIS_namefix.pl" "Install_Dir"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
 
-!include "EnvVarUpdate.nsh"
+;!include "EnvVarUpdate.nsh"
 
 ;--------------------------------
 
@@ -35,16 +35,25 @@ Section "namefix.pl (required)"
 
 InitPluginsDir
   SectionIn RO
-  
+
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
-  
+
   ; Put file there
-  File /r "..\"
-  
+  File /r "..\extra"
+  File /r "..\libs"
+  File /r "..\tools"
+  File /r "..\txt"
+  File  "..\namefix*.*"
+  File  "..\*.pl"
+  File  "..\*.jpg"
+  File  "..\LICENSE"
+  File  "..\README.md"
+
+
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\NSIS_namefix.pl "Install_Dir" "$INSTDIR"
-  
+
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\namefix.pl" "DisplayName" "NSIS namefix.pl"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\namefix.pl" "UninstallString" '"$INSTDIR\uninstall.exe"'
@@ -61,8 +70,8 @@ Section "Add namefix.pl to explorer right click menu"
 SectionEnd
 
 Section "Add namefix.pl to system path"
-${EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR" ; Remove path of old install
-${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR" ; add path
+;${EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR" ; Remove path of old install
+;${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR" ; add path
 SectionEnd
 
 ; Optional section (can be disabled by the user)
@@ -71,7 +80,7 @@ Section "Start Menu Shortcuts"
   CreateDirectory "$SMPROGRAMS\namefix.pl"
   CreateShortCut "$SMPROGRAMS\namefix.pl\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\namefix.pl\namefix.pl.lnk" "$INSTDIR\namefix-gui.exe" "" "$INSTDIR\namefix-gui.exe" 0
-  
+
 SectionEnd
 
 ;--------------------------------
@@ -79,7 +88,7 @@ SectionEnd
 ; Uninstaller
 
 Section "Uninstall"
-  
+
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\namefix.pl"
   DeleteRegKey HKLM SOFTWARE\NSIS_namefix.pl
@@ -98,6 +107,6 @@ Section "Uninstall"
   RMDir "$INSTDIR"
 
   ; remove from system path
-  ${un.EnvVarUpdate} $0 "LIB" "R" "HKLM" "$INSTDIR"
+  ;${un.EnvVarUpdate} $0 "LIB" "R" "HKLM" "$INSTDIR"
 
 SectionEnd

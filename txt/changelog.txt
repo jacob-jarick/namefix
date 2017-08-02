@@ -2,6 +2,8 @@
 
 * .msi & .exe's updated
 
+* nsis installer script updated so it doesnt include .git
+
 * Hot Keys Added:
   ESC = Stop doing whatever your doing
   F2  = Manual Rename
