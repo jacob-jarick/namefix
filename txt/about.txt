@@ -1,4 +1,5 @@
-Please visit the offical page for documenation/ updates.
+Please visit the offical pages for documenation/ updates.
+https://github.com/jacob-jarick/namefix
 http://namefix.blogspot.com
 
 namefix.pl: a multiplatform mass file renamer designed to make renaming media files quick and easy. Created by Jacob Jarick and copyrighted under the GPL License.
@@ -9,7 +10,7 @@ Initialy this script was command lined based and used to convert spaces to under
 
 About the Creator:
 
-Im Currently working as a network engineer and coding namefix.pl im my spare time.
+Im Currently working as a software engineer/ systems administrator/ IT Consultant.
 
 Im a lazy person, Id rather make a tool todo a job than just do the job.
 
