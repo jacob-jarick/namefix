@@ -23,6 +23,7 @@ use Tk::Text;
 use Tk::ROText;
 use Tk::DynaTabFrame;
 use Tk::Menu;
+use Tk::ProgressBar;
 
 # redirect warnings for Tk::JComboBox
 $SIG{'__WARN__'} = sub { warn $_[0] unless (caller eq "Tk::JComboBox"); };
@@ -121,6 +122,8 @@ our $id3_gen_set;
 our $sp_char;
 our $front_a;
 
+our $percent_done = 0;
+
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
@@ -154,10 +157,52 @@ if($main::ZERO_LOG)
 our $mw = new MainWindow; # Main Window
 $mw -> title("namefix.pl $main::version by $main::author");
 
+$mw->bind('<KeyPress>' => sub
+{
+    print 'Keysym=', $Tk::event->K, ', numeric=', $Tk::event->N, "\n";
+
+    if($Tk::event->K eq 'F2')
+    {
+	$testmode = 1;
+	if(defined $main::hlist_file && defined $main::hlist_cwd)
+	{
+		print "Manual Rename '$main::hlist_file' \n";
+		&manual_edit($main::hlist_file, $main::hlist_cwd);
+	}
+    }
+    if($Tk::event->K eq 'F5')
+    {
+	print "refresh\n";
+	$testmode = 1;
+	&ls_dir;
+    }
+    if($Tk::event->K eq 'F6')
+    {
+	print "preview\n";
+	$testmode = 1;
+	&run_namefix;
+    }
+    # Escape
+    if($Tk::event->K eq 'Escape')
+    {
+	print "Escape Key = stopping any actions\n";
+	$main::STOP = 1;
+    }
+
+});
+
 our $folderimage 	= $mw->Getimage("folder");
 our $fileimage   	= $mw->Getimage("file");
 
 our $balloon = $mw->Balloon();
+
+our $frm_bottom2 = $mw -> Frame()
+-> pack
+(
+	-side => 'bottom',
+	-fill => 'x',
+	-anchor => 'w'
+);
 
 our $frm_bottom = $mw -> Frame()
 -> pack
@@ -166,6 +211,23 @@ our $frm_bottom = $mw -> Frame()
 	-fill => 'x',
 	-anchor => 'w'
 );
+
+my $progress = $frm_bottom2->ProgressBar
+(
+        -width => 20,
+        -from => 0,
+        -to => 100,
+        -blocks => 50,
+        -colors => [0, 'green', 50, 'yellow' , 80, 'red'],
+        -variable => \$percent_done
+)->pack
+(
+ 	-side => "bottom",
+	-expand=> 1,
+	-fill => "x",
+#  	-anchor => 's'
+);
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Create dynamic tabbed frames for main gui
@@ -1810,3 +1872,11 @@ MainLoop;
 #--------------------------------------------------------------------------------------------------------------
 # End
 #--------------------------------------------------------------------------------------------------------------
+
+sub callback {
+    print "\n";
+    print "callback args  = @_\n";
+    print "\$Tk::event     = $Tk::event\n";
+    print "\$Tk::widget    = $Tk::widget\n";
+    print "\$Tk::event->W  = ", $Tk::event->W, "\n";
+}

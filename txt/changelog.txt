@@ -1,5 +1,25 @@
 4.1.1 - ie refresh in progress
 
+* .msi & .exe's updated
+
+* nsis installer script updated so it doesnt include .git
+
+* Hot Keys Added:
+  ESC = Stop doing whatever your doing
+  F2  = Manual Rename
+  F5  = Refresh current dir listing
+  F6  = Preview current changes (if any)
+
+* progress bar updates on recurisve listings
+
+* make_test_dir.pl updated - creates fake music files in fake album directories
+* added cool progress bar.
+* code cleanups
+
+* updating NSIS - probally quite broken on stuff like:
+  ENV path,
+  registry entry to ad namefix.pl to right click.
+
 * adding right click Apply Preview to hlist
 * update about dialog to refer to github: https://github.com/jacob-jarick/namefix
 * created make_test_dir.pl for generating files I can test with.
