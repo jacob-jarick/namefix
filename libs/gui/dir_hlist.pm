@@ -112,14 +112,13 @@ sub draw_list
 		{
                 	# when user clicks on an entry update global variables
                		$main::hlist_selection = shift;
-               		($main::hlist_file, $main::hlist_cwd) = $main::hlist2->info("data", $main::hlist_selection);
+               		($main::hlist_file, $main::hlist_cwd, $main::hlist_file_new) = $main::hlist2->info("data", $main::hlist_selection);
                	},
 		-command=> sub
 		{
                 	# user has double clicked
 			&hlist_cd($main::hlist_file, $main::hlist_cwd);
 		}
-
 	)
 	->pack
 	(
@@ -170,6 +169,37 @@ sub draw_list
 			my $ff = $main::hlist_cwd . "/" . $main::hlist_file;
 
 			show_file_prop($ff);
+       		}
+	);
+        $rc_menu -> command
+        (
+		-label=>"Apply Preview",
+		-underline=> 1,
+		-command=> sub
+		{
+			print "Apply Preview: Dir: '$main::hlist_cwd'\n\tfilename:\t'$main::hlist_file'\n\tnew filename:\t'$main::hlist_file_new'\n";
+			if(!&fn_rename($main::hlist_file, $main::hlist_file_new) )
+			{
+				plog(0, "ERROR Apply Preview: \"$main::hlist_file\" cannot preform rename, file allready exists\n");
+			}
+			else
+			{
+				# update hlist cells
+				$main::hlist2->itemConfigure
+				(
+					$main::hlist_selection,
+					$main::hlist_file_row,
+					-text => $main::hlist_file_new
+				);
+
+				# update hlist data
+				$main::hlist2->entryconfigure
+				(
+					$main::hlist_selection,
+					-data=>[$main::hlist_file_new, $main::hlist_cwd, $main::hlist_file_new]
+				);
+
+			}
        		}
 	);
         $rc_menu -> command
