@@ -26,15 +26,23 @@ mkdir $music_dir;
 
 for my $band(@bands)
 {
-	for my $i (01..13)
+	for my $y (0..int(rand(8)))
 	{
-		my $r = int (rand(3)+1);
-		my $title = join(" ", rand_words( size => $r ));
+		my $year = &get_year;
+		my $album = "$band - $year - " . join(" ", rand_words( size => int(rand(3)+1) ));
+		my $album_dir = "$music_dir/$album";
+		mkdir $album_dir;
+		my $ext = $music_filetypes[int(rand($#music_filetypes))];
+		for my $i (1..13)
+		{
+			my $r = int (rand(3)+1);
+			my $title = join(" ", rand_words( size => $r ));
 
-		my $filename = "$music_dir/$band - $i - $title.mp3";
-		print "$filename\n";
+			my $filename = "$album_dir/$band - $i - $title." . $ext;
+			print "$filename\n";
 
-		touch $filename;
+			touch $filename;
+		}
 	}
 }
 
@@ -43,8 +51,8 @@ mkdir $movies;
 
 for(0..100)
 {
-	my $year = int(rand(75) +  1949);
 
+	my $year = &get_year;
 	my $r = int (rand(3)+1);
 	my $title = join(" ", rand_words( size => $r ));
 	my $filename;
@@ -91,3 +99,10 @@ for my $i (01..1000)
 	touch $filename;
 }
 
+exit;
+
+sub get_year
+{
+	my $year = int(rand(75) +  1949);
+	return $year;
+}

@@ -23,6 +23,7 @@ use Tk::Text;
 use Tk::ROText;
 use Tk::DynaTabFrame;
 use Tk::Menu;
+use Tk::ProgressBar;
 
 # redirect warnings for Tk::JComboBox
 $SIG{'__WARN__'} = sub { warn $_[0] unless (caller eq "Tk::JComboBox"); };
@@ -121,6 +122,8 @@ our $id3_gen_set;
 our $sp_char;
 our $front_a;
 
+our $percent_done = 0;
+
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
@@ -159,6 +162,14 @@ our $fileimage   	= $mw->Getimage("file");
 
 our $balloon = $mw->Balloon();
 
+our $frm_bottom2 = $mw -> Frame()
+-> pack
+(
+	-side => 'bottom',
+	-fill => 'x',
+	-anchor => 'w'
+);
+
 our $frm_bottom = $mw -> Frame()
 -> pack
 (
@@ -166,6 +177,23 @@ our $frm_bottom = $mw -> Frame()
 	-fill => 'x',
 	-anchor => 'w'
 );
+
+my $progress = $frm_bottom2->ProgressBar
+(
+        -width => 20,
+        -from => 0,
+        -to => 100,
+        -blocks => 50,
+        -colors => [0, 'green', 50, 'yellow' , 80, 'red'],
+        -variable => \$percent_done
+)->pack
+(
+ 	-side => "bottom",
+	-expand=> 1,
+	-fill => "x",
+#  	-anchor => 's'
+);
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Create dynamic tabbed frames for main gui

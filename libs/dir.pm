@@ -9,12 +9,14 @@ use warnings;
 # List Directory
 #--------------------------------------------------------------------------------------------------------------
 
-sub ls_dir 
+sub ls_dir
 {
 	&plog(3, "sub ls_dir");
 	&prep_globals;
 	&hlist_clear;
-	
+
+	$main::percent_done = 0;
+
 	if($main::LISTING)
 	{
 		&plog(0, "sub ls_dir: Allready preforming a list, aborting new list attempt");
@@ -24,14 +26,14 @@ sub ls_dir
 	$main::STOP = 0;
 	$main::LISTING = 1;
 	chdir $main::dir;	# shift directory, not just list ;)
-	$main::dir = cwd(); 
+	$main::dir = cwd();
 
         my @file_list = ();
         my @dirlist = &dir_filtered($main::dir);
 
 	&ls_dir_print("..");
 
-        if($main::recr) 
+        if($main::recr)
         {
 		&plog(4, "sub ls_dir: recursive mode");
 		@main::find_arr = ();
@@ -41,31 +43,41 @@ sub ls_dir
                 $main::FIRST_DIR_LISTED = 0;
 	        return;
         }
-        else 
+        else
         {
+		my $count = 1;
+		my $total = scalar @dirlist + scalar @file_list;
+		$main::percent_done = int(($count / $total) * 100);
+
 		&plog(4, "sub ls_dir: non recursive mode");
-        	for(@dirlist) 
+        	for my $f (@dirlist)
         	{
-			if($_ eq "..")
+			$count++;
+			$main::percent_done = int(($count / $total) * 100);
+
+			if($f eq "..")
 			{
 				next;
 			}
-                	if(-d $_) 
+                	if(-d $f)
                 	{
-	                	&ls_dir_print($_);	# print directorys 1st
+	                	&ls_dir_print($f);	# print directorys 1st
                         }
-                        else 
+                        else
                         {
-                        	push @file_list, $_;	# push files to array
+                        	push @file_list, $f;	# push files to array
                         }
                 }
-                for(@file_list) 
+                for my $f (@file_list)
                 {
+			$count++;
+			$main::percent_done = int(($count / $total) * 100);
+			
                 	if($main::STOP == 1)
 			{
 				return 0;
 			}
-                	&ls_dir_print($_);		# then print the file array after all dirs have been printed
+                	&ls_dir_print($f);		# then print the file array after all dirs have been printed
                 }
                 $main::LISTING = 0;
                 $main::FIRST_DIR_LISTED = 0;
@@ -118,9 +130,9 @@ sub ls_dir_print
 		return 0;
 	}
 	&plog(3, "sub ls_dir_print: \"$file\"");
-	
+
 	$main::hlist_cwd = cwd;
-	
+
         my $tag = "";
         my $art = "";
         my $tit = "";
@@ -146,10 +158,10 @@ sub ls_dir_print
 	# recursive padding
 
 	# when doing recursive, pad new dir with a blank line
-	# since when doing recursive we step through each directory while listing, 
+	# since when doing recursive we step through each directory while listing,
 	# we simply print cwd for a full dir path.
 
-	if(-d $file && $main::recr) 	
+	if(-d $file && $main::recr)
 	{
 		&nf_print(" ", "<MSG>");
 		&nf_print("$d/$file", "$d/$file");
@@ -157,12 +169,12 @@ sub ls_dir_print
 	}
 
 	# if is mp3 & id3_mode enabled then grab id3 tags
-	if($file =~ /.*\.mp3$/i && $main::id3_mode == 1) 
+	if($file =~ /.*\.mp3$/i && $main::id3_mode == 1)
 	{
 		&plog(4, "sub ls_dir_print: if is mp3 & id3_mode enabled then grab id3 tags");
 		($tag, $art, $tit, $tra, $alb, $gen, $year, $com) = &get_tags($file);
 
-       		if ($tag eq "id3v1") 
+       		if ($tag eq "id3v1")
        		{
 			&plog(4, "sub ls_dir_print: got id3 tags, printing");
 			&nf_print($file, $file, $art, $tit, $tra, $alb, $com, $gen, $year);
@@ -178,7 +190,7 @@ sub ls_dir_print
 # Dir Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub dir_dialog 
+sub dir_dialog
 {
 	&plog(3, "sub dir_dialog");
 	my $old_dir = $main::dir;
@@ -189,13 +201,13 @@ sub dir_dialog
 		-title=>"Choose a directory"
 	);
 
-	if($dd_dir) 
+	if($dd_dir)
 	{
 		$main::dir = $dd_dir;
                 chdir $main::dir;
 		&ls_dir;
 	}
-	else 
+	else
 	{
 		$main::dir = $old_dir;
 	}
@@ -237,7 +249,7 @@ sub dir_filtered
 	my @d = ();
 	my @dirlist = &fn_readdir($dir);
 
-	&plog(3, "sub dir_filtered \"$dir\"");	
+	&plog(3, "sub dir_filtered \"$dir\"");
 
 	for my $i(@dirlist)
 	{
@@ -249,7 +261,7 @@ sub dir_filtered
 		if($main::FILTER)
 		{
 			if(&match_filter($i) == 1)	# apply listing filter
-			{	
+			{
 				&plog(4, "sub dir_filtered: $i passed");
 				push @d, $i;
 				next;
