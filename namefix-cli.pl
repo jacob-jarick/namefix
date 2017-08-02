@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use strict;
-no warnings;
+use warnings;
 
 use English;
 use Cwd;
@@ -13,8 +13,6 @@ use File::Copy;
 use FindBin qw($Bin);
 
 # $0 = location of scipt either full or relative, usefull to determine scripts location
-our $Bin = $0;
-
 
 # mems libs
 require "$Bin/libs/fixname.pm";
@@ -32,6 +30,70 @@ require "$Bin/libs/html.pm";
 
 require "$Bin/libs/cli/help.pm";
 require "$Bin/libs/cli/print.pm";
+
+#--------------------------------------------------------------------------------------------------------------
+# define global vars
+#--------------------------------------------------------------------------------------------------------------
+
+
+our $ERROR_STDOUT;
+our $id3_art_str;
+our $undo_cur_file;
+our $id3_gen_str;
+our $kill_patterns_arr;
+our $space_character;
+our $id3_alb_str;
+our $enum;
+our $truncate;
+our $thanks;
+our $id3v2_rm;
+our $rpwold;
+our $word_casing_arr;
+our $eaw;
+our $faw;
+our $rm_digits;
+our $id3_com_set;
+our $digits;
+our $enum_opt;
+our $id3_year_str;
+our $version;
+our $id3_guess_tag;
+our $file_ext_2_proc;
+our $front_a;
+our $ZERO_LOG;
+our $id3_alb_set;
+our $truncate_style;
+our $overwrite;
+our $intr_char;
+our $links;
+our $split_dddd;
+our $kill_words_arr;
+our $undo_cur;
+our $trunc_char;
+our $id3_force_guess_tag;
+our $debug;
+our $id3_gen_set;
+our $CLI;
+our $todo;
+our $end_a;
+our $changelog;
+our $id3_year_set;
+our $enum_pad_zeros;
+our $enum_pad;
+our $id3v1_rm;
+our $id3_art_set;
+our $LOG_STDOUT;
+our $filter_use_re;
+our $truncate_to;
+our $sp_char;
+our $log_file;
+our $undo_pre;
+our $id3_com_str;
+our $filter_string;
+our $recr;
+our $about;
+our $rpwnew;
+our $undo_pre_file;
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists

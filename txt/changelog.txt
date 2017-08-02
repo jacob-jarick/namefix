@@ -1,5 +1,7 @@
 4.1.1 - ie refresh in progress
 
+
+* update about dialog to refer to github: https://github.com/jacob-jarick/namefix
 * created make_test_dir.pl for generating files I can test with.
 * removed all references to $prog_dir, now using Findbin
 * turned on strict and warnings for namefix.pl - redirected warnings for Jcombox

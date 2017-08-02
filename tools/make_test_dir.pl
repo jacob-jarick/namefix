@@ -47,7 +47,18 @@ for(0..100)
 
 	my $r = int (rand(3)+1);
 	my $title = join(" ", rand_words( size => $r ));
-	my $filename = "$movies/$title - $year.avi";
+	my $filename;
+
+	$filename = "$movies/$title - $year.avi";
+
+	if(rand(1) > 0.2)
+	{
+		$filename = "$movies/$title - ($year).avi";
+	}
+	if(rand(1) > 0.2)
+	{
+		$filename = "$movies/$title [$year].avi";
+	}
 
 	if(rand(1) > 0.5)
 	{
@@ -65,3 +76,18 @@ for(0..100)
 	print "$filename\n";
 	touch $filename;
 }
+
+my $pic_dir = "$dir/Porn";
+mkdir $pic_dir;
+
+for my $i (01..1000)
+{
+	my $r = int (rand(3)+1);
+	my $title = join(" ", rand_words( size => $r ));
+
+	my $filename = "$pic_dir/$title." . $pic_filetypes[int(rand($#pic_filetypes))];
+	print "$filename\n";
+
+	touch $filename;
+}
+
