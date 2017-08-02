@@ -114,12 +114,10 @@ sub run_namefix
 
 		my $count = 1;
 		my $total = scalar @dirlist;
-		$main::percent_done = int(($count / $total) * 100);
 
                 foreach(@dirlist)
                 {
-			$count++;
-			$main::percent_done = int(($count / $total) * 100);
+			$main::percent_done = int(($count++ / $total) * 100);
 
                         if(!$_) # stop warnings getting spat out
                         {
@@ -187,7 +185,7 @@ sub run_namefix
 
 sub find_fix
 {
-	my $file = shift;
+	my $file = $_;
 	my $d = cwd();
 	&plog(3, "sub find_fix: \"$d\" \"$file\"");
 	push @main::find_arr, "$d/$file";
@@ -201,18 +199,16 @@ sub find_fix_process
 
 # 	my @list = @main::find_arr;
 	my $d = cwd();
-	my $file = "";
 	my $dir = "";
 
 	&plog(3, "sub find_fix_process:");
 	my $count = 1;
 	my $total = scalar @main::find_arr;
-	$main::percent_done = int(($count / $total) * 100);
+	$main::percent_done = 0;
 
-	for $file(@main::find_arr)
+	for my $file(@main::find_arr)
 	{
-		$count++;
-		$main::percent_done = int(($count / $total) * 100);
+		$main::percent_done = int(($count++ / $total) * 100);
 
 		&plog(4, "sub find_fix_process: list line \"$file\"");
 		$file =~ m/^(.*)\/(.*?)$/;

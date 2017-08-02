@@ -3,6 +3,15 @@
 ========
 
 ....
+* apply preview fails on recursive
+
+
+===============
+=- Base Todo -=
+===============
+
+* swap to proper libraries
+* move to using ini files as config
 
 ==============
 =- CLI Todo -=
@@ -25,22 +34,21 @@ High:
 
 Medium:
 
-* add shortcuts: 
-  F2, manual rename selected
-  F5, refresh
-  ESC, stop
+* add shortcuts:
+  F2, manual rename selected - done
+  F5, refresh - done
+  ESC, stop - done
 
 * right click menu options:
 |- file properties
-|- delete
-|- cut & paste ? - is cross platform cut n paste doable, and easily ?
-\- PSR (prefrom suggested rename for this file now)
+|- delete - done
+\- Apply Preview - done
 
 Low:
 
 * multi level undo
 * media tag support for ogg.
-* revisting fucking utf8 issues :|
+* revisting fucking utf8 issues :| ? - is this an issue with latest perl ?
 * rename all flags nicely and uppercase.
 * jpeg and other picture tag support.
 

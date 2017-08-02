@@ -157,6 +157,40 @@ if($main::ZERO_LOG)
 our $mw = new MainWindow; # Main Window
 $mw -> title("namefix.pl $main::version by $main::author");
 
+$mw->bind('<KeyPress>' => sub
+{
+    print 'Keysym=', $Tk::event->K, ', numeric=', $Tk::event->N, "\n";
+
+    if($Tk::event->K eq 'F2')
+    {
+	$testmode = 1;
+	if(defined $main::hlist_file && defined $main::hlist_cwd)
+	{
+		print "Manual Rename '$main::hlist_file' \n";
+		&manual_edit($main::hlist_file, $main::hlist_cwd);
+	}
+    }
+    if($Tk::event->K eq 'F5')
+    {
+	print "refresh\n";
+	$testmode = 1;
+	&ls_dir;
+    }
+    if($Tk::event->K eq 'F6')
+    {
+	print "preview\n";
+	$testmode = 1;
+	&run_namefix;
+    }
+    # Escape
+    if($Tk::event->K eq 'Escape')
+    {
+	print "Escape Key = stopping any actions\n";
+	$main::STOP = 1;
+    }
+
+});
+
 our $folderimage 	= $mw->Getimage("folder");
 our $fileimage   	= $mw->Getimage("file");
 
@@ -1838,3 +1872,11 @@ MainLoop;
 #--------------------------------------------------------------------------------------------------------------
 # End
 #--------------------------------------------------------------------------------------------------------------
+
+sub callback {
+    print "\n";
+    print "callback args  = @_\n";
+    print "\$Tk::event     = $Tk::event\n";
+    print "\$Tk::widget    = $Tk::widget\n";
+    print "\$Tk::event->W  = ", $Tk::event->W, "\n";
+}

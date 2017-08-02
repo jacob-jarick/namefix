@@ -72,7 +72,7 @@ sub ls_dir
                 {
 			$count++;
 			$main::percent_done = int(($count / $total) * 100);
-			
+
                 	if($main::STOP == 1)
 			{
 				return 0;
@@ -99,9 +99,13 @@ sub ls_dir_find_fix
 	my $dir = "";
 
 	&plog(3, "sub ls_dir_find_fix:");
+	$main::percent_done = 0;
+	my $total = scalar @main::find_arr;
+	my $count = 1;
 
 	for $file(@main::find_arr)
 	{
+		$main::percent_done = int(($count++/$total) * 100);
 		&plog(4, "sub ls_dir_find_fix: list line \"$file\"");
 		$file =~ m/^(.*)\/(.*?)$/;
 		$dir = $1;
