@@ -1,5 +1,6 @@
 4.1.1 - ie refresh in progress
 
+* updating NSIS
 * adding right click Apply Preview to hlist
 * update about dialog to refer to github: https://github.com/jacob-jarick/namefix
 * created make_test_dir.pl for generating files I can test with.
