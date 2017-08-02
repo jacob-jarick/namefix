@@ -5,9 +5,9 @@
 use strict;
 use warnings;
 
-sub show_changelog 
+sub show_changelog
 {
-	my $text = join("", &readf($main::changelog));
+	my $text = join("", &misc::readf($main::changelog));
 
 	&show_dialog("Changelog", $text);
 }

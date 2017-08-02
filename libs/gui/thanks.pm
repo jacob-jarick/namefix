@@ -5,9 +5,9 @@
 use strict;
 use warnings;
 
-sub show_thanks 
+sub show_thanks
 {
-	my $text = join("", &readf($main::thanks));
+	my $text = join("", &misc::readf($main::thanks));
 	&show_dialog("Thanks", $text);
 }
 

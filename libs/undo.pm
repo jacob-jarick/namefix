@@ -1,4 +1,7 @@
 # undo routines
+package undo;
+require Exporter;
+@ISA = qw(Exporter);
 
 use warnings;
 use strict;
@@ -6,13 +9,13 @@ use strict;
 sub clear_undo
 {
  	# clear undo arrays, atm we only have 1 level of undo
-	&plog(3, "sub clear_undo: wiping undo history");
+	&misc::plog(3, "sub clear_undo: wiping undo history");
 	@main::undo_cur		= ();
 	@main::undo_pre		= ();
 
-	&save_file($main::undo_cur_file, "");
-	&save_file($main::undo_pre_file, "");
-	&save_file($main::undo_dir_file, $main::dir);
+	&misc::save_file($main::undo_cur_file, "");
+	&misc::save_file($main::undo_pre_file, "");
+	&misc::save_file($main::undo_dir_file, $main::dir);
 	$main::undo_dir = $main::dir;
 }
 
@@ -40,8 +43,8 @@ sub undo_rename
 	# changes to directory
 	# chops FQ filename to filename.
 
-	&plog(3, "sub undo_rename");
-	&plog(1, "Preforming Undo");
+	&misc::plog(3, "sub undo_rename");
+	&misc::plog(1, "Preforming Undo");
 	my $c = 0;
 	my $pre = "";
 	my $dir = "";
@@ -58,16 +61,16 @@ sub undo_rename
 
   		if(!-f "$cur")
  		{
- 			&plog(0, "sub undo_rename: \"$cur\" current file does not exist");
+ 			&misc::plog(0, "sub undo_rename: \"$cur\" current file does not exist");
  		}
  		if(-f "$pre")
  		{
- 			&plog(0, "sub undo_rename: \"$pre\" previous filename to revert undo to allready exists");
+ 			&misc::plog(0, "sub undo_rename: \"$pre\" previous filename to revert undo to allready exists");
  		}
- 
-		&plog(4, "sub undo_rename: rename $cur $pre");
+
+		&misc::plog(4, "sub undo_rename: rename $cur $pre");
 		rename $cur, $pre;
-		&nf_print($cur, $pre);
+		&nf_print::p($cur, $pre);
 		$c++;
 	}
 	chdir $main::dir;

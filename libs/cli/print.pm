@@ -30,7 +30,7 @@ sub cli_print
 
 	my $tmp = "";
 
-	&plog(3, "sub cli_print: \"$s1\", \"$s2\"");
+	&misc::plog(3, "sub cli_print: \"$s1\", \"$s2\"");
 
 	if($s2 eq "<MSG>")
 	{
@@ -54,7 +54,7 @@ sub cli_print
 	}
 
 	# When renaming or previewing in id3 mode we will be sent the "after" id3 tags
-	if($main::id3_mode == 1 && $main::LISTING == 0) 
+	if($main::id3_mode == 1 && $main::LISTING == 0)
 	{
 		$newart = shift;
 		$newtit = shift;

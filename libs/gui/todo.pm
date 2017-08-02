@@ -5,9 +5,9 @@ use warnings;
 # Show Todo
 #--------------------------------------------------------------------------------------------------------------
 
-sub show_todo 
+sub show_todo
 {
-	my $todo_txt = join("", &readf($main::todo));
+	my $todo_txt = join("", &misc::readf($main::todo));
 
         my $top = $main::mw -> Toplevel();
         $top -> title("Todo List");

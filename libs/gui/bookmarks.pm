@@ -25,14 +25,14 @@ use warnings;
 # Bookmark add
 #--------------------------------------------------------------------------------------------------------------
 
-sub bm_add 
+sub bm_add
 {
 	my $name = shift;
 	my $dir = shift;
 
 	print "\$name = $name\n";
 
-	if($name !~ /\:(\\|\/)$/) 
+	if($name !~ /\:(\\|\/)$/)
 	{
 		$name =~ s/(.*)(\\|\/)(.*?$)/$3/;	# set name to directory
 	}
@@ -45,27 +45,27 @@ sub bm_add
 # bookmark redraw menu
 #--------------------------------------------------------------------------------------------------------------
 
-sub bm_redraw_menu 
+sub bm_redraw_menu
 {
 	my $n = "";
 	my $u = "";
 	my $count = 0;
 
 	# delete bookmarks menu (also have to delete help as it comes after bookmarks else menu ordering gets screwed up).
-	
-        if($main::bookmarks) 
+
+        if($main::bookmarks)
         {
         	my $index = $main::mbar->index("Bookmarks");
 		$main::mbar->delete($index);
 	}
-        if($main::help) 
+        if($main::help)
         {
         	my $index = $main::mbar->index("Help");
 		$main::mbar->delete($index);
 	}
 
 	# create empty bookmarks menu
-	
+
         $main::bookmarks = $main::mbar -> cascade
         (
         	-label=>"Bookmarks",
@@ -77,7 +77,7 @@ sub bm_redraw_menu
 	$main::bookmarks -> command
 	(
 	        -label=>"Bookmark current Directory",
-	        -command=> sub 
+	        -command=> sub
 	        {
 	                &bm_add($main::dir, $main::dir);
 	        }
@@ -87,7 +87,7 @@ sub bm_redraw_menu
 	$main::bookmarks -> command
 	(
 	        -label=>"Edit Bookmarks",
-	        -command=> sub 
+	        -command=> sub
 	        {
 	                &edit_bookmark_list;
 	        }
@@ -151,14 +151,14 @@ sub bm_redraw_menu
 # This is the hack mentioned above
 
 # Explanation:
-# this code reads from namefix.pl's simple bookmark list, 
+# this code reads from namefix.pl's simple bookmark list,
 # generates some perl/tk code to draw the menu
 # writes said code to bm.pl
 # executes bm.pl
 
 sub bm_list_bookmarks
 {
-	&plog(3, "sub bm_list_bookmarks:");
+	&misc::plog(3, "sub bm_list_bookmarks:");
 
 	my $n = "";
 	my $u = "";
@@ -167,21 +167,21 @@ sub bm_list_bookmarks
 	$main::bookmarks -> separator();
 
 
-	&plog(4, "sub bm_list_bookmarks: generating bookmark code");
-	if(!-f $main::bookmark_file) 
+	&misc::plog(4, "sub bm_list_bookmarks: generating bookmark code");
+	if(!-f $main::bookmark_file)
 	{
 		# no bookmarks, return
-		&plog(0, "bookmarks.pm cant find file $main::bookmark_file");
+		&misc::plog(0, "bookmarks.pm cant find file $main::bookmark_file");
 		return;
 	}
 
-	my @tmp_arr = &readf($main::bookmark_file);
+	my @tmp_arr = &misc::readf($main::bookmark_file);
 
 	open(FILE, ">$main::bm_pl") or die "couldnt open $main::bm_pl $!\n";
 
 	print FILE "\# add bookmarks to menu\n# Dont edit me.\n\n";
 
-	for(@tmp_arr) 
+	for(@tmp_arr)
 	{
 		if(/^\n/) { next; }
 		($n, $u) = split(/\t+/);
@@ -190,7 +190,7 @@ sub bm_list_bookmarks
 
                 # if win32 and dir = network path swap \ with /
                 # (makes it easier for namefix.pl to work with and perl doesnt mind)
-                if($^O eq "MSWin32" && $u =~ /^\\/) 
+                if($^O eq "MSWin32" && $u =~ /^\\/)
                 {
                 	$u =~ s/\\/\//g;
                 }
@@ -200,10 +200,10 @@ print FILE
 \$bookmarks -> command
 (
         -label=>\"$n\",
-        -command=> sub 
+        -command=> sub
         {
                 \$main::dir = q\{$u\};
-                &ls_dir;
+                &dir::ls_dir;
         }
 );
 "
@@ -211,7 +211,7 @@ print FILE
 	}
 	close(FILE);
 
-	&plog(3, "sub bm_list_bookmarks: executing generated bookmark code");
+	&misc::plog(3, "sub bm_list_bookmarks: executing generated bookmark code");
 	do "$main::bm_pl" or die "ERROR: dir.pm, cant do $main::bm_pl: $! $@\n";
 
 	return 1;
@@ -222,16 +222,16 @@ print FILE
 # Edit Bookmarks.
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_bookmark_list 
+sub edit_bookmark_list
 {
-	&plog(3, "sub edit_bookmark_list:");
+	&misc::plog(3, "sub edit_bookmark_list:");
         my $dtext = "";
 
-        if(-f $main::bookmark_file) 
+        if(-f $main::bookmark_file)
         {
                 $dtext = &readjf("$main::bookmark_file");
-        } 
-        else 
+        }
+        else
         {
                 $dtext = "";
         }
@@ -268,9 +268,9 @@ sub edit_bookmark_list
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
-        		&save_file
+        		&misc::save_file
         		(
         			"$main::bookmark_file",
         			$txt -> get
@@ -292,7 +292,7 @@ sub edit_bookmark_list
         (
         	-text=>"Close",
         	-activebackground=>'white',
-        	-command => sub 
+        	-command => sub
         	{
         		destroy $top;
         	}

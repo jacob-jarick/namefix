@@ -41,7 +41,7 @@ my $txt_main = "Main Options:
 
 !	--rename		preform rename
 	--ren			enable once you are happy with preview.
-				Without this option namefix defaults to 
+				Without this option namefix defaults to
 				preview mode.
 
 	--undo			undo last rename
@@ -214,7 +214,7 @@ my $txt_debug =
 	--debug-stdout		Print debug log to stdout
 
 ";
-my $txt_mp3 = 
+my $txt_mp3 =
 "MP3 Options
 
 	--id3-guess		guess mp3 tags from filename
@@ -305,7 +305,7 @@ $txt_mp3;
 
 	else
 	{
-		&plog(0, "sub cli_help: help called, but mode \"$mode\" is invalid");
+		&misc::plog(0, "sub cli_help: help called, but mode \"$mode\" is invalid");
 	}
 
 	exit 1;

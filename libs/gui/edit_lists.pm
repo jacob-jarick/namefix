@@ -5,14 +5,14 @@ use warnings;
 # Edit Word Casing List Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_cas_list 
+sub edit_cas_list
 {
         my $dtext = "";
 
-        if(-f $main::casing_file) 
+        if(-f $main::casing_file)
         {
                 $dtext = &readjf("$main::casing_file");
-        } else 
+        } else
         {
                 $dtext = join("\n", @main::word_casing_arr);
         }
@@ -49,9 +49,9 @@ sub edit_cas_list
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
-        		\&save_file
+        		\&misc::save_file
         		(
         			"$main::casing_file",
         			$txt -> get('0.0', 'end')
@@ -88,15 +88,15 @@ sub edit_cas_list
 # Edit Kill Word List Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_word_list 
+sub edit_word_list
 {
         my $dtext = "";
 
-        if(-f $main::killwords_file) 
+        if(-f $main::killwords_file)
         {
                 $dtext = &readsjf("$main::killwords_file");
-        } 
-	else 
+        }
+	else
         {
                 $dtext = join("\n", sort @main::kill_words_arr);
         }
@@ -127,9 +127,9 @@ sub edit_word_list
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
-        		\&save_file("$main::killwords_file",
+        		\&misc::save_file("$main::killwords_file",
         		$txt -> get('0.0', 'end'));
         	}
         )
@@ -144,7 +144,7 @@ sub edit_word_list
         (
         	-text=>"Close",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
         		destroy $top;
         	}
@@ -164,14 +164,14 @@ sub edit_word_list
 # Edit Pattern List Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_pat_list 
+sub edit_pat_list
 {
         my $dtext = "";
 
-        if(-f $main::killpat_file) 
+        if(-f $main::killpat_file)
         {
                 $dtext = &readsjf("$main::killpat_file");
-        } else 
+        } else
         {
                 $dtext = join("\n", sort @main::kill_patterns_arr);
         }
@@ -201,9 +201,9 @@ sub edit_pat_list
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
-        		\&save_file(
+        		\&misc::save_file(
         			"$main::killpat_file",
         			$txt -> get('0.0', 'end')
         		);

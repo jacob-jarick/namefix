@@ -11,21 +11,23 @@ use File::Basename qw(&basename &dirname);
 
 use File::Copy;
 use FindBin qw($Bin);
+use FindBin qw($Bin);
 
+use lib		"$Bin/libs/";
 # $0 = location of scipt either full or relative, usefull to determine scripts location
 
 # mems libs
-require "$Bin/libs/fixname.pm";
-require "$Bin/libs/run_namefix.pm";
-require "$Bin/libs/misc.pm";
+use fixname;
+use run_namefix;
+use misc;
 require "$Bin/libs/config.pm";
 require "$Bin/libs/global_variables.pm";
-require "$Bin/libs/nf_print.pm";
+use nf_print;
 
 require "$Bin/libs/dir.pm";
 require "$Bin/libs/mp3.pm";
 require "$Bin/libs/filter.pm";
-require "$Bin/libs/undo.pm";
+use undo;
 require "$Bin/libs/html.pm";
 
 require "$Bin/libs/cli/help.pm";
@@ -108,11 +110,11 @@ if(-f $main::config_file)
 
 if($main::ZERO_LOG)
 {
-	&clog;
+	&misc::clog;
 }
 
-&plog(1, "**** namefix.pl $main::version start *************************************************");
-&plog(4, "main: \$Bin = \"$Bin\"");
+&misc::readf(1, "**** namefix.pl $main::version start *************************************************");
+&misc::readf(4, "main: \$Bin = \"$Bin\"");
 
 $main::CLI = 1;	# set cli mode flag
 
@@ -136,19 +138,19 @@ if(!-f $main::config_file)
 if(!-f $main::casing_file)
 {
 	&cli_print("No Special Word Casing file found, Creating.", "<MSG>");
-	&save_file($main::casing_file, join("\n", @main::word_casing_arr));
+	&misc::save_file($main::casing_file, join("\n", @main::word_casing_arr));
 }
 
 if(!-f $main::killwords_file)
 {
 	&cli_print("No Kill Words file found, Creating.", "<MSG>");
-	&save_file($main::killwords_file, join("\n", @main::kill_words_arr));
+	&misc::save_file($main::killwords_file, join("\n", @main::kill_words_arr));
 }
 
 if(!-f $main::killpat_file)
 {
 	&cli_print("No Kill Patterns file found, Creating.", "<MSG>");
-	&save_file($main::killpat_file, join("\n", @main::kill_patterns_arr));
+	&misc::save_file($main::killpat_file, join("\n", @main::kill_patterns_arr));
 }
 
 #-------------------------------------------------------------------------------------------------------------
@@ -561,31 +563,31 @@ for(@ARGV)
 
 	elsif($_ eq "--changelog")
 	{
-		$text = join("", &readf($main::changelog));
+		$text = join("", &misc::readf($main::changelog));
 		print "$text\n\n";
 		exit 1;
 	}
 	elsif($_ eq "--about")
 	{
-		$text = join("", &readf($main::about));
+		$text = join("", &misc::readf($main::about));
 		print "$text\n\n";
 		exit 1;
 	}
 	elsif($_ eq "--todo")
 	{
-		$text = join("", &readf($main::todo));
+		$text = join("", &misc::readf($main::todo));
 		print "$text\n\n";
 		exit 1;
 	}
 	elsif($_ eq "--thanks")
 	{
-		$text = join("", &readf($main::thanks));
+		$text = join("", &misc::readf($main::thanks));
 		print "$text\n\n";
 		exit 1;
 	}
 	elsif($_ eq "--links")
 	{
-		$text = join("", &readf($main::links));
+		$text = join("", &misc::readf($main::links));
 		print "$text\n\n";
 		exit 1;
 	}
@@ -616,7 +618,7 @@ for(@ARGV)
 	}
 	elsif($_ eq "--show-log")
 	{
-		$text = join("", &readf($main::log_file));
+		$text = join("", &misc::readf($main::log_file));
 		print "$text\n\n";
 		exit 1;
 	}
@@ -633,7 +635,7 @@ for(@ARGV)
 	}
 	else
 	{
-		&plog(0, "main: unkown long option \"$_\", cowardly refusing to run.");
+		&misc::readf(0, "main: unkown long option \"$_\", cowardly refusing to run.");
 		exit 0;
 	}
 }
@@ -647,13 +649,13 @@ if(!$main::testmode && !$main::UNDO)
 {
 	&clear_undo;
 	$main::undo_dir = $main::dir;
-	&save_file($main::undo_dir_file, $main::dir);
+	&misc::save_file($main::undo_dir_file, $main::dir);
 }
 
 # set main dir, run fixname.....
 print "*** Processing dir: $main::dir\n";
 
-&save_file($main::html_file, " ");	# clear html file
+&misc::save_file($main::html_file, " ");	# clear html file
 
 &html("<table border=1>");
 &html("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
@@ -661,9 +663,9 @@ print "*** Processing dir: $main::dir\n";
 
 if($main::UNDO)
 {
-	@main::undo_pre = &readf($main::undo_pre_file);
-	@main::undo_cur = &readf($main::undo_cur_file);
-	@tmp = &readf($main::undo_dir_file);
+	@main::undo_pre = &misc::readf($main::undo_pre_file);
+	@main::undo_cur = &misc::readf($main::undo_cur_file);
+	@tmp = &misc::readf($main::undo_dir_file);
 	$main::undo_dir = $tmp[0];
 	&undo_rename;
 }
@@ -720,7 +722,7 @@ sub proc_short_opts
 
 		else
 		{
-			&plog(0, "main: unkown short option \"$_\", cowardly refusing to run.");
+			&misc::readf(0, "main: unkown short option \"$_\", cowardly refusing to run.");
 			exit 0;
 		}
 	}

@@ -5,7 +5,7 @@ use warnings;
 
 sub manual_edit
 {
-	($main::hlist_file, $main::hlist_cwd) = $main::hlist2->info("data", $main::hlist_selection);
+	($main::hlist_file, $main::hlist_cwd) = $dir_hlist::hlist->info("data", $main::hlist_selection);
 	my $file 	= $main::hlist_file;
 	my $file_original = $file;
 	my $row 		= 1;
@@ -19,7 +19,7 @@ sub manual_edit
 	my $ent_l;
 	my $l 		= length $file;
 
-	&plog(3, "sub manual_edit: \"$file\"");
+	&misc::plog(3, "sub manual_edit: \"$file\"");
 
        if($ent_min_l <= $l && $l <= $ent_max_l)
         {
@@ -44,7 +44,7 @@ sub manual_edit
         }
 
         if(!$file) {
-        	&plog(0, "sub manual_edit: \$file isnt defined.");
+        	&misc::plog(0, "sub manual_edit: \$file isnt defined.");
         	return;
         }
 
@@ -57,7 +57,7 @@ sub manual_edit
         my $gen = "";
         my $year = "";
 
-	&plog(4, "sub manual_edit: chdir to  \$main::hlist_cwd = \"$main::hlist_cwd\" ");
+	&misc::plog(4, "sub manual_edit: chdir to  \$main::hlist_cwd = \"$main::hlist_cwd\" ");
 	chdir $main::hlist_cwd;	# shift to correct dir (needed for recursive mode).
 
 	my $newfile = $file;
@@ -198,7 +198,7 @@ sub manual_edit
 	        );
 	}
 	if($file =~ /.*\.mp3$/i) {
-		&plog(4, "sub manual_edit: \"$file\" is a mp3, using mp3 rename gui ");
+		&misc::plog(4, "sub manual_edit: \"$file\" is a mp3, using mp3 rename gui ");
         	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &get_tags($file);
         	$frame1->Label(
 			-text=>"Artist: "
@@ -425,7 +425,7 @@ sub manual_edit
 			if($main::MR_DONE)
 			{
 				$main::MR_DONE = 0;
-                        	&ls_dir;
+                        	&dir::ls_dir;
 			}
         	}
         )
@@ -458,7 +458,7 @@ sub me_rename
 
 		if(-f $tmpfile)
 		{
-			&plog(0, "sub me_rename: tmpfile: $tmpfile exists.");
+			&misc::plog(0, "sub me_rename: tmpfile: $tmpfile exists.");
 			return 0;
 		}
 		rename $file, $tmpfile;
@@ -468,7 +468,7 @@ sub me_rename
 	{
 		if(-f $newfile)
 		{
-			&plog(0, "sub me_rename: newfile: $newfile exists");
+			&misc::plog(0, "sub me_rename: newfile: $newfile exists");
 			return 0;
 		}
 		rename $file, $newfile;

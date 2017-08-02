@@ -1,15 +1,20 @@
+package nf_print;
+require Exporter;
+@ISA = qw(Exporter);
+
 use strict;
 use warnings;
+use Cwd;
 
 #--------------------------------------------------------------------------------------------------------------
 # namefix print
 #--------------------------------------------------------------------------------------------------------------
 
-sub nf_print
+sub p
 {
 	if($main::CLI)		# redirect old print calls for CLI mode
 	{
-		&plog(1, "sub nf_print: use of this sub in CLI mode is depreciated");
+		&misc::plog(1, "sub nf_print: use of this sub in CLI mode is depreciated");
 		&cli_print(@_);
 		return 1;
 	}
@@ -41,14 +46,14 @@ sub nf_print
 		$main::hlist_file_new = $s2;
 	}
 
-	&plog(3, "sub nf_print: \"$s1\", \"$s2\"");
+	&misc::plog(3, "sub nf_print: \"$s1\", \"$s2\"");
 
 	if(!$main::LISTING && !$main::testmode)	# files are being renamed - not a dir list or preview
 	{
 		$main::hlist_file = $s2;
 	}
 
-	$main::hlist2->add
+	$dir_hlist::hlist->add
 	(
 		$main::hl_counter,
 		-data=>[$main::hlist_file, $main::hlist_cwd, $main::hlist_file_new]
@@ -64,8 +69,8 @@ sub nf_print
 		)
 	)
 	{
-		&plog(4, "sub nf_print: \"$s1\" is a dir, attaching dir icon");
-		$main::hlist2->itemCreate
+		&misc::plog(4, "sub nf_print: \"$s1\" is a dir, attaching dir icon");
+		$dir_hlist::hlist->itemCreate
 		(
 			$main::hl_counter,
 			0,
@@ -79,8 +84,8 @@ sub nf_print
 		(!$main::LISTING && -f $s2)
 	)
 	{
-		&plog(4, "sub nf_print: \"$s1\" is a file, attaching file icon");
-		$main::hlist2->itemCreate
+		&misc::plog(4, "sub nf_print: \"$s1\" is a file, attaching file icon");
+		$dir_hlist::hlist->itemCreate
 		(
 			$main::hl_counter,
 			0,
@@ -91,9 +96,9 @@ sub nf_print
 	else	# just been given text to print, no icon and no arrow
 	{
 		$c = cwd();
-		&plog(4, "sub nf_print: \"$s1\" not detected as a file / dir, attaching black icon");
+		&misc::plog(4, "sub nf_print: \"$s1\" not detected as a file / dir, attaching black icon");
 		$arrow = "";
-		$main::hlist2->itemCreate
+		$dir_hlist::hlist->itemCreate
 		(
 			$main::hl_counter,
 			0,
@@ -104,7 +109,7 @@ sub nf_print
 
 	if($main::id3_mode == 1)
 	{
-		&plog(4, "sub nf_print: id3_mode enabled");
+		&misc::plog(4, "sub nf_print: id3_mode enabled");
 		my $art = shift;
 		my $tit = shift;
 		my $tra = shift;
@@ -113,39 +118,39 @@ sub nf_print
 		my $gen = shift;
 		my $year = shift;
 
-		$main::hlist2->itemCreate($main::hl_counter, 1, -text => "$s1");
+		$dir_hlist::hlist->itemCreate($main::hl_counter, 1, -text => "$s1");
 		$main::hlist_file_row = 1;
 
 		if($art)
 		{
-			$main::hlist2->itemCreate($main::hl_counter, 2, -text => "$art");
+			$dir_hlist::hlist->itemCreate($main::hl_counter, 2, -text => "$art");
 		}
 		if($tra)
 		{
-			$main::hlist2->itemCreate($main::hl_counter, 3, -text => "$tra");
+			$dir_hlist::hlist->itemCreate($main::hl_counter, 3, -text => "$tra");
 		}
 		if($tit)
 		{
-			$main::hlist2->itemCreate($main::hl_counter, 4, -text => "$tit");
+			$dir_hlist::hlist->itemCreate($main::hl_counter, 4, -text => "$tit");
 		}
 		if($alb)
 		{
-			$main::hlist2->itemCreate($main::hl_counter, 5, -text => "$alb");
+			$dir_hlist::hlist->itemCreate($main::hl_counter, 5, -text => "$alb");
 		}
 
 		if($gen)
 		{
-			$main::hlist2->itemCreate($main::hl_counter, 6, -text => "$gen");
+			$dir_hlist::hlist->itemCreate($main::hl_counter, 6, -text => "$gen");
 		}
 
 		if($year)
 		{
-			$main::hlist2->itemCreate($main::hl_counter, 7, -text => "$year");
+			$dir_hlist::hlist->itemCreate($main::hl_counter, 7, -text => "$year");
 		}
 
 		if($com)
 		{
-			$main::hlist2->itemCreate($main::hl_counter, 8, -text => "$com");
+			$dir_hlist::hlist->itemCreate($main::hl_counter, 8, -text => "$com");
 		}
 
 		if($main::LISTING == 0) # if renaming or previewing print 'after' fields
@@ -160,38 +165,38 @@ sub nf_print
 
 			if($s1 ne "..")
 			{
-				&plog(4, "sub nf_print: id3_mode, renaming mode, adding new fields");
-				$main::hlist2->itemCreate($main::hl_counter, 9, -text => "$arrow");
-				$main::hlist2->itemCreate($main::hl_counter, 10, -text => "$main::hlist_file_new");
+				&misc::plog(4, "sub nf_print: id3_mode, renaming mode, adding new fields");
+				$dir_hlist::hlist->itemCreate($main::hl_counter, 9, -text => "$arrow");
+				$dir_hlist::hlist->itemCreate($main::hl_counter, 10, -text => "$main::hlist_file_new");
 				$main::hlist_newfile_row = 10;
 
 				if($newart)
 				{
-					$main::hlist2->itemCreate($main::hl_counter, 11, -text => "$newart");
+					$dir_hlist::hlist->itemCreate($main::hl_counter, 11, -text => "$newart");
 				}
 				if($newtra)
 				{
-					$main::hlist2->itemCreate($main::hl_counter, 12, -text => "$newtra");
+					$dir_hlist::hlist->itemCreate($main::hl_counter, 12, -text => "$newtra");
 				}
 				if($newtit)
 				{
-					$main::hlist2->itemCreate($main::hl_counter, 13, -text => "$newtit");
+					$dir_hlist::hlist->itemCreate($main::hl_counter, 13, -text => "$newtit");
 				}
 				if($newalb)
 				{
-					$main::hlist2->itemCreate($main::hl_counter, 14, -text => "$newalb");
+					$dir_hlist::hlist->itemCreate($main::hl_counter, 14, -text => "$newalb");
 				}
 				if($newgen)
 				{
-					$main::hlist2->itemCreate($main::hl_counter, 15, -text => "$newgen");
+					$dir_hlist::hlist->itemCreate($main::hl_counter, 15, -text => "$newgen");
 				}
 				if($newyear)
 				{
-					$main::hlist2->itemCreate($main::hl_counter, 16, -text => "$newyear");
+					$dir_hlist::hlist->itemCreate($main::hl_counter, 16, -text => "$newyear");
 				}
 				if($newcom)
 				{
-					$main::hlist2->itemCreate($main::hl_counter, 17, -text => "$newcom");
+					$dir_hlist::hlist->itemCreate($main::hl_counter, 17, -text => "$newcom");
 				}
 			}
 		}
@@ -202,22 +207,22 @@ sub nf_print
 		{
 			$s2 = $s1;
 		}
-		$main::hlist2->itemCreate($main::hl_counter, 1, -text => "$s1");
+		$dir_hlist::hlist->itemCreate($main::hl_counter, 1, -text => "$s1");
 		$main::hlist_file_row = 1;
 
 		if($main::LISTING == 0)
 		{
 			if($s1 ne "..")
 			{
-				&plog(4, "sub nf_print: normal mode, renaming adding new fields");
-				$main::hlist2->itemCreate($main::hl_counter, 2, -text => "$arrow");
-				$main::hlist2->itemCreate($main::hl_counter, 3, -text => "$s2");
+				&misc::plog(4, "sub nf_print: normal mode, renaming adding new fields");
+				$dir_hlist::hlist->itemCreate($main::hl_counter, 2, -text => "$arrow");
+				$dir_hlist::hlist->itemCreate($main::hl_counter, 3, -text => "$s2");
 				$main::hlist_newfile_row = 3;
 			}
 		}
 	}
 	$main::hl_counter++;
-	&fn_update_delay;
+	&dir_hlist::fn_update_delay;
 }
 
 1;

@@ -5,9 +5,9 @@ use warnings;
 # HTML Link List Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub show_links 
+sub show_links
 {
-	my $links_txt = join("", &readf($main::links));
+	my $links_txt = join("", &misc::readf($main::links));
 
         my $top = $main::mw -> Toplevel();
         $top -> title("Links");
@@ -44,7 +44,7 @@ sub show_links
 	(
         	-text=>"Close",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
 		{
         		destroy $top;
         	}

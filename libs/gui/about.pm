@@ -5,9 +5,9 @@
 use strict;
 use warnings;
 
-sub show_about 
+sub show_about
 {
-my $help_text = join("", &readf($main::about));
+my $help_text = join("", &misc::readf($main::about));
 
 	my $row = 1;
         my $top = $main::mw -> Toplevel();
@@ -54,7 +54,7 @@ my $help_text = join("", &readf($main::about));
 	(
         	-text=>"Close",
         	-activebackground=>'cyan',
-        	-command => sub 
+        	-command => sub
 		{
         		destroy $top;
         	}

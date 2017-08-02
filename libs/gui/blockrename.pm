@@ -1,3 +1,9 @@
+package blockrename;
+require Exporter;
+@ISA = qw(Exporter);
+
+
+
 use strict;
 use warnings;
 
@@ -5,11 +11,11 @@ use warnings;
 # blockrename - displays block rename window
 #-----------------------------------------------------------------------------------------------------
 
-sub blockrename 
+sub blockrename
 {
-	&plog(3, "sub blockrename");
+	&misc::plog(3, "sub blockrename");
 
-	my @tmp = ();	
+	my @tmp = ();
 
 	# create block rename window
 
@@ -46,7 +52,7 @@ sub blockrename
 		-wrap=>'none',
         )
         ->grid
-	( 
+	(
 		-in => $txt_frame,
 		-row=>1,
 		-column => '1',
@@ -69,7 +75,7 @@ sub blockrename
 		-wrap=>'none',
         )
         ->grid
-	( 
+	(
 		-in => $txt_frame,
 		-row=>1,
 		-column => '2',
@@ -97,7 +103,7 @@ sub blockrename
         (
         	-text=>"Cleanup",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
         		&br_cleanup;
         	}
@@ -112,7 +118,7 @@ sub blockrename
         (
         	-text=>"Clear",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
         		$main::txt_r->delete('0.0','end');
         	}
@@ -131,11 +137,11 @@ sub blockrename
 	(
 		-text=>"Filter",
 		-variable=>\$main::FILTER,
-		-command=> sub 
+		-command=> sub
 		{
 			if($main::FILTER && $main::filter_string eq "")	# dont enable filter on an empty string
 			{
-				&plog(1, "sub blockrename: tried to enable filtering with an empty filter");
+				&misc::plog(1, "sub blockrename: tried to enable filtering with an empty filter");
 				$main::FILTER = 0;
 			}
 			else
@@ -205,7 +211,7 @@ sub blockrename
         (
         	-text=>"RUN",
         	-activebackground => 'green',
-        	-command => sub 
+        	-command => sub
         	{
 			if($main::testmode == 0)
 			{
@@ -233,12 +239,12 @@ sub blockrename
         (
         	-text=>"Close",
         	-activebackground => 'white',
-        	-command => sub 
+        	-command => sub
         	{
 			if($main::BR_DONE)
 			{
 				$main::BR_DONE = 0;
-        			&ls_dir;
+        			&dir::ls_dir;
 			}
         		destroy $br_window;
         	}
@@ -249,7 +255,7 @@ sub blockrename
 
 sub br_cleanup
 {
-	&plog(3, "sub br_cleanup");
+	&misc::plog(3, "sub br_cleanup");
 	&prep_globals;
 	my @flist = ();
 	my @list = ();
@@ -269,11 +275,11 @@ sub br_cleanup
 		{
 			next;
 		}
-		&plog(4, "sub br_cleanup: processing \"$file\" -> \"$i\"");
+		&misc::plog(4, "sub br_cleanup: processing \"$file\" -> \"$i\"");
 		$i = &br_ed2k_cleanup($i);		# strip ed2k link info
 		$i = &br_txt_cleanup($i);		# strip cleanup any crap trailing filename
 		$i = run_fixname_subs($file, $i);	# apply fixname routines ($file is needed, else some funcs mangle extensions)
-		
+
 	}
 
 	$dtext = join ("\n", @list);
@@ -286,16 +292,16 @@ sub br_cleanup
 
 sub br_txt_r_clear
 {
-	&plog(3, "sub br_txt_r_clear");
+	&misc::plog(3, "sub br_txt_r_clear");
 	$main::txt_r->delete('0.0','end');
 }
 
 sub txt_reset
 {
-	&plog(3, "sub txt_reset");
+	&misc::plog(3, "sub txt_reset");
 	&prep_globals;
         my $dtext = join ("\n", &br_readdir($main::dir));
-        &plog(4, "sub txt_reset: dtext: $dtext");
+        &misc::plog(4, "sub txt_reset: dtext: $dtext");
 
 	$main::txt->delete('0.0','end');
 	$main::txt_r->delete('0.0','end');
@@ -314,19 +320,19 @@ sub txt_reset
 
 sub br
 {
-	&plog(3, "sub br:");
-	
+	&misc::plog(3, "sub br:");
+
 	if($main::LISTING)
 	{
-		&plog(0, "sub br: error, a listing is currently being preformed - aborting rename");
+		&misc::plog(0, "sub br: error, a listing is currently being preformed - aborting rename");
 		return 0;
 	}
 	elsif($main::RUN)
 	{
-		&plog(0, "sub br: error, a rename is currently being preformed - aborting rename");
+		&misc::plog(0, "sub br: error, a rename is currently being preformed - aborting rename");
 		return 0;
 	}
-	
+
 	$main::STOP 	= 0;
 	$main::RUN 	= 1;
 
@@ -354,13 +360,13 @@ sub br
 	&clear_undo;
 	&prep_globals;
 
-	&plog(4, "sub br: checking that files to be renamed exist");
+	&misc::plog(4, "sub br: checking that files to be renamed exist");
 	for $of(@old_l)
 	{
-		&plog(4, "sub br: checking \"$of\"");
+		&misc::plog(4, "sub br: checking \"$of\"");
 		if(!-f $of)
 		{
-			&plog(0, "sub br: ERROR: old file \"$of\" does not exist");
+			&misc::plog(0, "sub br: ERROR: old file \"$of\" does not exist");
 			$main::RUN = 1;
 			return 0;
 		}
@@ -368,7 +374,7 @@ sub br
 
 	if($#old_l < $#new_l || $#old_l > $#new_l)
 	{
-		&plog(0, "sub br: ERROR: length of new and old list does not match");	# prevent possible user cockup
+		&misc::plog(0, "sub br: ERROR: length of new and old list does not match");	# prevent possible user cockup
 		$main::RUN = 0;
 		return 0;
 	}
@@ -385,17 +391,17 @@ sub br
 		$nf = $new_l[$c];
 		$c++;
 
-		&plog(4, "sub br: processing \"$of\" -> \"$nf\"");
+		&misc::plog(4, "sub br: processing \"$of\" -> \"$nf\"");
 
 		if(!$nf) # finish when we hit a blank line, else we risk zero'ing the rest of the filenames
 		{
-			&plog(4, "sub br: no new filename for \"$of\" provided, assuming end of renaming");
+			&misc::plog(4, "sub br: no new filename for \"$of\" provided, assuming end of renaming");
 			last;
 		}
 
-		
-		$nf = &br_ed2k_cleanup($nf);		
-		&plog(4, "sub br: renaming \"$of\" -> \"$nf\"");
+
+		$nf = &br_ed2k_cleanup($nf);
+		&misc::plog(4, "sub br: renaming \"$of\" -> \"$nf\"");
 
 		if($of eq $nf)
 		{
@@ -409,11 +415,11 @@ sub br
 			push @a, $of;
 			push @b, $nf;
 			$result_text .= "\"$of\" -> \"$nf\"\n";
-			&plog(4, "sub br: renamed");
+			&misc::plog(4, "sub br: renamed");
 		}
 		else
 		{
-			&plog(0, "sub br: rename failed !");
+			&misc::plog(0, "sub br: rename failed !");
 		}
 	}
 	&br_show_lists("Block Rename Results", \@a, \@b);
@@ -427,10 +433,10 @@ sub br
 sub br_ed2k_cleanup
 {
 	my $link = shift;
-	&plog(3, "sub br_ed2k_cleanup: \"$link\"");
+	&misc::plog(3, "sub br_ed2k_cleanup: \"$link\"");
 	if($link =~ m/^ed2k:\/\/\|file\|(.*?)\|/i)
 	{
-		&plog(4, "sub br_ed2k_cleanup: \"$link\" -> \"$1\"");
+		&misc::plog(4, "sub br_ed2k_cleanup: \"$link\" -> \"$1\"");
 		$link = $1;
 	}
 
@@ -439,38 +445,38 @@ sub br_ed2k_cleanup
 sub br_txt_cleanup
 {
 	my $link = shift;
-	&plog(3, "sub br_txt_cleanup: \"$link\"");
+	&misc::plog(3, "sub br_txt_cleanup: \"$link\"");
 	if($link =~ m/^\s*(.*\.($main::file_ext_2_proc))\s+/)
 	{
-		&plog(4, "sub br_txt_cleanup: \"$link\" -> \"$1\"");
+		&misc::plog(4, "sub br_txt_cleanup: \"$link\" -> \"$1\"");
 		$link = $1;
 	}
 
 	return $link;
 }
 
-	
-sub br_readdir 
+
+sub br_readdir
 {
 	my $d = shift;
         my @dl_1 = ();
         my @dl_2 = ();
 
-	&plog(3, "sub br_readdir: \"$d\"");
+	&misc::plog(3, "sub br_readdir: \"$d\"");
 
-	opendir(DIR, "$d") or &plog(0, "sub br_readdir: cant open directory $d, $!");
+	opendir(DIR, "$d") or &misc::plog(0, "sub br_readdir: cant open directory $d, $!");
 	@dl_1 = CORE::readdir(DIR);
        	closedir DIR;
 
-        for(@dl_1) 
+        for(@dl_1)
         {
         	s/^\s+|\s+$//g;
-        	if($_ eq "." || $_ eq ".." || $_ eq "") 
+        	if($_ eq "." || $_ eq ".." || $_ eq "")
         	{
                 	next;
                 }
 
-                if(!$main::proc_dirs && -d $_) 
+                if(!$main::proc_dirs && -d $_)
                 {
                 	next;
                 }

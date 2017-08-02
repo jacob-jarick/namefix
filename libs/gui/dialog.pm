@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use File::stat;
-use Time::localtime; 
+use Time::localtime;
 
 #--------------------------------------------------------------------------------------------------------------
 # Show dialog
@@ -10,7 +10,7 @@ use Time::localtime;
 # no plogging is this func will be called from plog at times
 # also its a very simple funtion non related to renaming
 
-sub show_dialog 
+sub show_dialog
 {
 	my $title = shift;
 	my $text = shift;
@@ -46,7 +46,7 @@ sub show_dialog
 	(
         	-text=>"Close",
         	-activebackground => "white",
-        	-command => sub 
+        	-command => sub
 		{
         		destroy $top;
         	}
@@ -91,7 +91,7 @@ sub show_file_prop
 	(
 		-text=>"Close",
 		-activebackground => "white",
-		-command => sub 
+		-command => sub
 		{
 			destroy $top;
 		}
@@ -107,18 +107,18 @@ sub show_file_prop
 
 
 	my $size = stat($ff)->size;
-	my $ff_date = ctime(stat($ff)->mtime); 
+	my $ff_date = ctime(stat($ff)->mtime);
 
-	my @txt = 
+	my @txt =
 	(
 		"File:		$ff",
 		"Size:		$size",
-		"Date Created:	$ff_date",	
+		"Date Created:	$ff_date",
 		"",
 	);
 
 	my $txt_str = join("\n", @txt);
-	
+
 	# display text last
 	$txt->menu(undef);
 	$txt -> insert('end', "$txt_str");
@@ -127,7 +127,7 @@ sub show_file_prop
 }
 
 
-sub show_del_dialog 
+sub show_del_dialog
 {
 	my $ff = shift;
 	my $top = $main::mw -> Toplevel();
@@ -158,10 +158,10 @@ sub show_del_dialog
 	(
         		-text=>"Yes",
         		-activebackground => "white",
-        		-command => sub 
+        		-command => sub
 		{
 			unlink($ff);
-			&ls_dir;
+			&dir::ls_dir;
 			destroy $top;
 
 		}
@@ -176,7 +176,7 @@ sub show_del_dialog
 	(
 		-text=>"No",
 		-activebackground => "white",
-		-command => sub 
+		-command => sub
 		{
 			destroy $top;
 		}

@@ -1,4 +1,9 @@
 # home to all my small misc functions.
+package misc;
+require Exporter;
+@ISA = qw(Exporter);
+
+
 
 use strict;
 use warnings;
@@ -32,7 +37,7 @@ sub plog
 			close(FILE);
 
 			print "$text\n";
-			
+
 			return 1;
 		}
 	}
@@ -68,12 +73,12 @@ sub clog
 # save_file
 #--------------------------------------------------------------------------------------------------------------
 
-sub save_file 
+sub save_file
 {
         my $file = shift;
         my $t = shift;
 
-	&plog(3, "sub save_file: \"$file\"");	
+	&plog(3, "sub save_file: \"$file\"");
 #	print "savefile: $file : $t\n";
         $t =~ s/^\n//g;		# no blank line @ start of file
         $t =~ s/\n\n+/\n/g;	# no blank lines in file
@@ -82,7 +87,7 @@ sub save_file
         close(FILE);
 }
 
-sub file_append 
+sub file_append
 {
 	my $file = shift;
 	my $string = shift;
@@ -98,7 +103,7 @@ sub file_append
 # read file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readf 
+sub readf
 {
         my $file = $_[0];
 
@@ -119,7 +124,7 @@ sub readf
 # read and sort file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readsf 
+sub readsf
 {
         my $file = $_[0];
 
@@ -142,7 +147,7 @@ sub readsf
 # read, sort and join file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readsjf 
+sub readsjf
 {
         my $file = $_[0];
 	&plog(3, "sub readsjf: \"$file\"");
@@ -160,7 +165,7 @@ sub readsjf
 # read and join file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readjf 
+sub readjf
 {
         my $file = $_[0];
 	&plog(3, "sub readjf: \"$file\"");
@@ -179,7 +184,7 @@ sub readjf
 # clear options
 #--------------------------------------------------------------------------------------------------------------
 
-sub clr_no_save 
+sub clr_no_save
 {
 	&plog(3, "sub clr_no_save ");
 	# clear options that are never saved
@@ -212,7 +217,7 @@ sub clr_no_save
 # Escape strings for use in regexp - wrote my own cos uri is fucked.
 #--------------------------------------------------------------------------------------------------------------
 
-sub escape_string 
+sub escape_string
 {
 	my $s = shift;
 	&plog(5, "sub escape_string: \"$s\"");	# very noisy sub

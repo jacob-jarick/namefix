@@ -1,22 +1,26 @@
+package undo_gui;
+require Exporter;
+@ISA = qw(Exporter);
 
-sub undo_gui
+
+sub show_undo_gui
 {
-	&plog(3, "sub undo_gui:");
+	&misc::plog(3, "sub undo_gui:");
 	my $title = "Undo GUI";
 	my @a = @main::undo_cur;
 	my @b = @main::undo_pre;
 	my $row = 0;
 	my $col = 0;
 	my $c = 0;
-	
+
 	# -----------------------
 	# start drawing gui
-	
+
         my $top = $main::mw -> Toplevel();
         $top -> title("$title");
 
 	# hlist here
-	
+
         my $hlist = $top -> Scrolled
         (
 		"HList",
@@ -25,7 +29,7 @@ sub undo_gui
 		-columns=>3,
 		-selectbackground => 'Cyan',
 		-width=>80,
-		
+
 	)
         -> grid
 	(
@@ -38,11 +42,11 @@ sub undo_gui
 	(
         	-text=>"Preform Undo",
         	-activebackground => "white",
-        	-command => sub 
+        	-command => sub
 		{
         		&undo_rename;
         		destroy $top;
-        		&ls_dir;
+        		&dir::ls_dir;
         	}
         )
         -> grid
@@ -56,7 +60,7 @@ sub undo_gui
 	(
         	-text=>"Close",
         	-activebackground => "white",
-        	-command => sub 
+        	-command => sub
 		{
         		destroy $top;
         	}
@@ -72,7 +76,7 @@ sub undo_gui
 
 	# --------------------------------
 	# Gui drawn, add contents
-	
+
 	$hlist->header('create', 0, -text =>'Current Filename');
 	$hlist->header('create', 1, -text =>'->');
 	$hlist->header('create', 2, -text =>'Previous Filename');

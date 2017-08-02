@@ -31,27 +31,32 @@ use Tk::JComboBox;
 
 use FindBin qw($Bin);
 
+use lib		"$Bin/libs/";
+use lib		"$Bin/libs/gui";
+
+
 # mems libs
-require "$Bin/libs/fixname.pm";
-require "$Bin/libs/run_namefix.pm";
-require "$Bin/libs/misc.pm";
+use fixname;
+use run_namefix;
+use misc;
 require "$Bin/libs/config.pm";
 require "$Bin/libs/global_variables.pm";
-require "$Bin/libs/nf_print.pm";
+use nf_print;
 
-
-require "$Bin/libs/dir.pm";
+use dir;
+# require "$Bin/libs/dir.pm";
 require "$Bin/libs/mp3.pm";
 require "$Bin/libs/filter.pm";
-require "$Bin/libs/undo.pm";
+use undo;
 require "$Bin/libs/html.pm";
 
 # gui requires
-require "$Bin/libs/gui/dir_hlist.pm";
+# require "$Bin/libs/gui/dir_hlist.pm";
+use dir_hlist;
 require "$Bin/libs/gui/about.pm";
 require "$Bin/libs/gui/config_dialog.pm";
 require "$Bin/libs/gui/help.pm";
-require "$Bin/libs/gui/blockrename.pm";
+use blockrename;
 require "$Bin/libs/gui/bookmarks.pm";
 require "$Bin/libs/gui/changelog.pm";
 require "$Bin/libs/gui/dialog.pm";
@@ -62,7 +67,9 @@ require "$Bin/libs/gui/menu.pm";
 require "$Bin/libs/gui/thanks.pm";
 require "$Bin/libs/gui/todo.pm";
 require "$Bin/libs/gui/br_preview.pm";
-require "$Bin/libs/gui/undo.pm";
+use undo_gui;
+
+&undo::clear_undo;
 
 # ----------------------------------------------------------------------------
 # Vars
@@ -144,11 +151,11 @@ if(-f $main::fonts_file)
 
 if($main::ZERO_LOG)
 {
-	&clog;
+	&misc::clog;
 }
 
-&plog(1, "**** namefix.pl $main::version start *************************************************");
-&plog(4, "main: \$Bin = \"$Bin\"");
+&misc::plog(1, "**** namefix.pl $main::version start *************************************************");
+&misc::plog(4, "main: \$Bin = \"$Bin\"");
 
 #--------------------------------------------------------------------------------------------------------------
 # Begin Gui
@@ -174,13 +181,13 @@ $mw->bind('<KeyPress>' => sub
     {
 	print "refresh\n";
 	$testmode = 1;
-	&ls_dir;
+	&dir::ls_dir;
     }
     if($Tk::event->K eq 'F6')
     {
 	print "preview\n";
 	$testmode = 1;
-	&run_namefix;
+	&run_namefix::run_namefix;
     }
     # Escape
     if($Tk::event->K eq 'Escape')
@@ -470,11 +477,11 @@ $frm_bottom -> Button
 	{
 		if($main::STOP)	# stub
 		{
-			&plog(1, "namefix.pl: STOP flag allready enabled, turning off LISTING flag as well");
+			&misc::plog(1, "namefix.pl: STOP flag allready enabled, turning off LISTING flag as well");
 			$main::LISTING = 0;
 		}
 		$main::STOP = 1;
-		&plog(0, "namefix.pl: Stop button pressed");
+		&misc::plog(0, "namefix.pl: Stop button pressed");
 	}
 )
 -> grid
@@ -499,7 +506,7 @@ my $ls_but = $frm_bottom -> Button
 (
 	-text=>"LIST",
 	-activebackground => "orange",
-	-command =>\&ls_dir
+	-command =>\&dir::ls_dir
 )
 -> grid
 (
@@ -529,7 +536,7 @@ $frm_bottom -> Button
 (
 	-text=>"RUN",
 	-activebackground => "green",
-	-command =>\&run_namefix
+	-command =>\&run_namefix::run_namefix
 )
 -> grid
 (
@@ -882,7 +889,7 @@ my $id3_mode_chk = $tab2 -> Checkbutton
 (
 	-text=>"Process Tags",
 	-variable=>\$main::id3_mode,
-	-command=>\&draw_list,
+	-command=>\&dir_hlist::draw_list,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1799,12 +1806,12 @@ $f_frame -> Checkbutton
 	{
 		if($main::FILTER && $main::filter_string eq "")	# dont enable filter on an empty string
 		{
-			&plog(1, "namefix: tried to enable filtering with an empty filter");
+			&misc::plog(1, "namefix: tried to enable filtering with an empty filter");
 			$main::FILTER = 0;
 		}
 		else
 		{
-			&ls_dir;
+			&dir::ls_dir;
 		}
 	}
 )
@@ -1865,7 +1872,7 @@ if($main::window_g ne "")
 }
 
 &draw_menu;
-&draw_list;
+&dir_hlist::draw_list;
 MainLoop;
 
 
