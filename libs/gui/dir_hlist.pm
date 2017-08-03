@@ -7,6 +7,7 @@ use warnings;
 use Cwd;
 
 our $hlist;
+our $rc_menu;
 
 #--------------------------------------------------------------------------------------------------------------
 # clear list
@@ -33,7 +34,7 @@ sub show_rc_menu
 	$hlist->selectionClear();
 	$hlist->selectionSet($s);
 	$main::hlist_selection = $s;
-	$main::rc_menu->post($x,$y);
+	$rc_menu->post($x,$y);
 }
 
 sub hide_rc_menu
@@ -162,7 +163,7 @@ sub draw_list
 		$hlist->header('create', 3, -text => 'New Filename');
 	}
 
-        our $rc_menu = $hlist->Menu(-tearoff=>0);
+        $rc_menu = $hlist->Menu(-tearoff=>0);
         $rc_menu -> command
         (
 		-label=>"Properties",

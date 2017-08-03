@@ -1,8 +1,15 @@
+package br_preview;
+require Exporter;
+@ISA = qw(Exporter);
+
+use strict;
+use warnings;
+
 #--------------------------------------------------------------------------------------------------------------
 # br_preview
 #--------------------------------------------------------------------------------------------------------------
 
-sub br_preview
+sub preview
 {
 	&misc::plog(3, "sub br_preview");
 	&prep_globals;
@@ -58,11 +65,11 @@ sub br_show_lists
 {
 	&misc::plog(3, "sub br_preview_list");
 	my $title = shift;
-	my $a = shift;
-	my $b = shift;
+	my $aref = shift;
+	my $bref = shift;
 
-	@a = @$a;
-	@b = @$b;
+	my @a = @$aref;
+	my @b = @$bref;
 
 	my $row = 0;
 	my $col = 0;

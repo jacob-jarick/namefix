@@ -1,18 +1,11 @@
 --------------------------------------------------------------------------------
-Below is a list of my favourite p2p sites, go forth and leech:
+namefix.pl
 
-http://eztv.it (mem reccomends)
-* For all your TV show needs
+github: https://github.com/jacob-jarick/namefix
+blog: http://namefix.blogspot.com.au/
+linkedin: https://www.linkedin.com/in/jacob-jarick-aa9ba730/
 
-http://tvu.org.ru/index.php (mem reccomends)
-* Excellent source of TV series and anime for ed2k.
-
-http://www.mininova.org/ (mem reccomends)
-* Has everything, excellent for new movies.
-
-Other Links reccomended by namefix.pl users
-
-http://www.isohunt.com
+email: mem.namefix@gmail.com
 
 --------------------------------------------------------------------------------
 General Sites I like:

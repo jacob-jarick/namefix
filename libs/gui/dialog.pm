@@ -1,3 +1,7 @@
+package dialog;
+require Exporter;
+@ISA = qw(Exporter);
+
 use strict;
 use warnings;
 use File::stat;
@@ -10,7 +14,7 @@ use Time::localtime;
 # no plogging is this func will be called from plog at times
 # also its a very simple funtion non related to renaming
 
-sub show_dialog
+sub show
 {
 	my $title = shift;
 	my $text = shift;

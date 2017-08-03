@@ -1,3 +1,8 @@
+package edit_lists;
+require Exporter;
+@ISA = qw(Exporter);
+
+
 use strict;
 use warnings;
 
@@ -5,13 +10,13 @@ use warnings;
 # Edit Word Casing List Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_cas_list
+sub cas_list
 {
         my $dtext = "";
 
         if(-f $main::casing_file)
         {
-                $dtext = &readjf("$main::casing_file");
+                $dtext = &misc::readjf("$main::casing_file");
         } else
         {
                 $dtext = join("\n", @main::word_casing_arr);
@@ -88,7 +93,7 @@ sub edit_cas_list
 # Edit Kill Word List Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_word_list
+sub word_list
 {
         my $dtext = "";
 
@@ -164,14 +169,15 @@ sub edit_word_list
 # Edit Pattern List Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_pat_list
+sub pat_list
 {
         my $dtext = "";
 
         if(-f $main::killpat_file)
         {
                 $dtext = &readsjf("$main::killpat_file");
-        } else
+        }
+        else
         {
                 $dtext = join("\n", sort @main::kill_patterns_arr);
         }
@@ -215,7 +221,8 @@ sub edit_pat_list
         	-sticky=>"ne"
         );
 
-        my $but_close = $top -> Button(
+        my $but_close = $top -> Button
+        (
         	-text=>"Close",
         	-activebackground => 'white',
         	-command => sub {

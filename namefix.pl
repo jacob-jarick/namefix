@@ -53,20 +53,15 @@ require "$Bin/libs/html.pm";
 # gui requires
 # require "$Bin/libs/gui/dir_hlist.pm";
 use dir_hlist;
-require "$Bin/libs/gui/about.pm";
+use about;
 require "$Bin/libs/gui/config_dialog.pm";
-require "$Bin/libs/gui/help.pm";
 use blockrename;
-require "$Bin/libs/gui/bookmarks.pm";
-require "$Bin/libs/gui/changelog.pm";
+use bookmarks;
 require "$Bin/libs/gui/dialog.pm";
-require "$Bin/libs/gui/edit_lists.pm";
-require "$Bin/libs/gui/links.pm";
-require "$Bin/libs/gui/manual.pm";
-require "$Bin/libs/gui/menu.pm";
-require "$Bin/libs/gui/thanks.pm";
-require "$Bin/libs/gui/todo.pm";
-require "$Bin/libs/gui/br_preview.pm";
+use edit_lists;
+use manual;
+use menu;
+use br_preview;
 use undo_gui;
 
 &undo::clear_undo;
@@ -174,7 +169,7 @@ $mw->bind('<KeyPress>' => sub
 	if(defined $main::hlist_file && defined $main::hlist_cwd)
 	{
 		print "Manual Rename '$main::hlist_file' \n";
-		&manual_edit($main::hlist_file, $main::hlist_cwd);
+		&main::manual_edit($main::hlist_file, $main::hlist_cwd);
 	}
     }
     if($Tk::event->K eq 'F5')
@@ -1871,7 +1866,7 @@ if($main::window_g ne "")
 	$mw ->geometry($main::window_g);
 }
 
-&draw_menu;
+&menu::draw;
 &dir_hlist::draw_list;
 MainLoop;
 

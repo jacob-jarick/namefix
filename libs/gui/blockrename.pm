@@ -2,8 +2,6 @@ package blockrename;
 require Exporter;
 @ISA = qw(Exporter);
 
-
-
 use strict;
 use warnings;
 
@@ -221,7 +219,7 @@ sub blockrename
 			}
 			else
 			{
-				&br_preview();
+				&br_preview::preview();
 			}
         	}
         )

@@ -1,3 +1,8 @@
+package manual;
+require Exporter;
+@ISA = qw(Exporter);
+
+
 use strict;
 use warnings;
 

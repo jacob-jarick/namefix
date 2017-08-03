@@ -1,5 +1,12 @@
 4.1.1 - ie refresh in progress
 
+* bookmarks.pm no longer uses self generating code.
+  hacked some checkbutton to make it work
+
+* mass libraries updated to proper libs
+
+* about.pm is a proper lib now
+
 * .msi & .exe's updated
 
 * nsis installer script updated so it doesnt include .git

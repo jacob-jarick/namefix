@@ -1,19 +1,23 @@
-#!/usr/bin/perl
+package menu;
+require Exporter;
+@ISA = qw(Exporter);
 
 use strict;
 use warnings;
+
+our $mbar;
 
 #--------------------------------------------------------------------------------------------------------------
 # Menu Bar
 #--------------------------------------------------------------------------------------------------------------
 
 # Menubar buttons
-sub draw_menu 
+sub draw
 {
-	our $mbar = $main::mw -> Menu();
-	$main::mw->configure(-menu=>$main::mbar);
+	$mbar = $main::mw -> Menu();
+	$main::mw->configure(-menu=>$mbar);
 
-	my $file = $main::mbar -> cascade
+	my $file = $mbar -> cascade
 	(
 	        -label=>'File',
 	        -underline=>0,
@@ -58,22 +62,22 @@ sub draw_menu
 	$settings -> command
 	(
 	        -label=>'Specific Casing List',
-	        -command=>\&edit_cas_list
+	        -command=>\&edit_lists::cas_list
 	);
 
 	$settings -> command
 	(
 	        -label=>'Remove Word List',
-	        -command=>\&edit_word_list
+	        -command=>\&edit_lists::word_list
 	);
 
 	$settings -> command
 	(
 	        -label=>'Remove Pattern List',
-	        -command=>\&edit_pat_list
+	        -command=>\&edit_lists::pat_list
 	);
 
-	&bm_redraw_menu;     # creates bookmark menu, still wip
+	&bookmark::bm_redraw_menu;     # creates bookmark menu, still wip
 
 }
 

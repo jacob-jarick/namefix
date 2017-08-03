@@ -1,8 +1,14 @@
-# bookmark functions
+package bookmark;
+require Exporter;
+@ISA = qw(Exporter);
 
+# bookmark functions
 use strict;
 use warnings;
 
+our $bookmarks;
+our %bmhash = ();
+my $bookmark_dir = '';
 # bm_add -> bm_redraw_menu -> bm_list_bookmarks
 
 #--------------------------------------------------------------------------------------------------------------
@@ -53,20 +59,20 @@ sub bm_redraw_menu
 
 	# delete bookmarks menu (also have to delete help as it comes after bookmarks else menu ordering gets screwed up).
 
-        if($main::bookmarks)
+        if($bookmarks)
         {
-        	my $index = $main::mbar->index("Bookmarks");
-		$main::mbar->delete($index);
+        	my $index = $menu::mbar->index("Bookmarks");
+		$menu::mbar->delete($index);
 	}
         if($main::help)
         {
-        	my $index = $main::mbar->index("Help");
-		$main::mbar->delete($index);
+        	my $index = $menu::mbar->index("Help");
+		$menu::mbar->delete($index);
 	}
 
 	# create empty bookmarks menu
 
-        $main::bookmarks = $main::mbar -> cascade
+        $bookmarks = $menu::mbar -> cascade
         (
         	-label=>"Bookmarks",
 	        -underline=>0,
@@ -74,7 +80,7 @@ sub bm_redraw_menu
 	);
 
 	# menu command - bookmark cur dir
-	$main::bookmarks -> command
+	$bookmarks -> command
 	(
 	        -label=>"Bookmark current Directory",
 	        -command=> sub
@@ -84,7 +90,7 @@ sub bm_redraw_menu
 	);
 
 	# menu command - edit bookmarks
-	$main::bookmarks -> command
+	$bookmarks -> command
 	(
 	        -label=>"Edit Bookmarks",
 	        -command=> sub
@@ -96,7 +102,7 @@ sub bm_redraw_menu
         #create help menu
         # NOTE: this is here, to stop the bookmarks menu switch places upon updating.
 
-	$main::help = $main::mbar -> cascade
+	$main::help = $menu::mbar -> cascade
 	(
 	        -label =>"Help",
 	        -underline=>0,
@@ -105,7 +111,21 @@ sub bm_redraw_menu
 	$main::help -> command
 	(
 	        -label=>'Help',
-	        -command=>\&show_help
+	        -command=> sub
+	        {
+	        my $help_text =
+"Welcome to the very basic help txt:
+
+DEBUG LEVELS:
+0	ERROR
+1	warnings & startup messages
+2	not used
+3	Sub routine called
+4	Important but noisy sub details
+5	Very noisy sub details
+";
+			&dialog::show("Help", $help_text);
+	        }
 	);
 
         $main::help -> separator();
@@ -113,25 +133,38 @@ sub bm_redraw_menu
 	$main::help -> command
 	(
 	        -label=>'About',
-	        -command=>\&show_about
+	        -command=> sub {&about::show_about; }
 	);
 
 	$main::help -> command
 	(
 	        -label=>"Changelog",
-	        -command=>\&show_changelog
+	        -command=> sub
+	        {
+			my $text = join("", &misc::readf($main::changelog));
+			&dialog::show("Changelog", $text);
+	        }
 	);
 
 	$main::help -> command
 	(
 	        -label=>"Todo List",
-	        -command=>\&show_todo
+	        -command=> sub
+	        {
+			my $todo_txt = join("", &misc::readf($main::todo));
+			&dialog::show("Todo", $todo_txt);
+	        }
 	);
 
 	$main::help -> command
 	(
 	        -label=>'Credits/ Thanks',
-	        -command=>\&show_thanks
+	        -command=> sub
+	        {
+			my $text = join("", &misc::readf($main::thanks));
+			&dialog::show("Thanks", $text);
+
+	        }
 	);
 
         $main::help -> separator();
@@ -139,7 +172,12 @@ sub bm_redraw_menu
 	$main::help -> command
 	(
 	        -label=>"Links",
-	        -command=>\&show_links
+	        -command=> sub
+	        {
+			print $_;
+			my $links_txt = join("", &misc::readf($main::links));
+			&dialog::show("Link", $links_txt);
+	        }
 	);
 
 	&bm_list_bookmarks;
@@ -164,7 +202,7 @@ sub bm_list_bookmarks
 	my $u = "";
         # add bookmarks, this is where code gets ugly
 
-	$main::bookmarks -> separator();
+	$bookmarks -> separator();
 
 
 	&misc::plog(4, "sub bm_list_bookmarks: generating bookmark code");
@@ -176,15 +214,12 @@ sub bm_list_bookmarks
 	}
 
 	my @tmp_arr = &misc::readf($main::bookmark_file);
+	%bmhash = ();
 
-	open(FILE, ">$main::bm_pl") or die "couldnt open $main::bm_pl $!\n";
-
-	print FILE "\# add bookmarks to menu\n# Dont edit me.\n\n";
-
-	for(@tmp_arr)
+	for my $line(@tmp_arr)
 	{
-		if(/^\n/) { next; }
-		($n, $u) = split(/\t+/);
+		if($line =~ /^\n/) { next; }
+		($n, $u) = split(/\t+/, $line);
 		chomp $n;
 		chomp $u;
 
@@ -194,25 +229,22 @@ sub bm_list_bookmarks
                 {
                 	$u =~ s/\\/\//g;
                 }
+                $bookmarks -> checkbutton
+		(
+			-label=>"$n",
+  			-onvalue=>$u,
+			-variable=>\$bookmark_dir,
+			-command=> sub
+			{
+				$main::dir = $bookmark_dir;
+				print "bookmark.pm: \$main::dir = $main::dir\n";
 
-print FILE
-"
-\$bookmarks -> command
-(
-        -label=>\"$n\",
-        -command=> sub
-        {
-                \$main::dir = q\{$u\};
-                &dir::ls_dir;
-        }
-);
-"
-;
+				&dir::ls_dir;
+			}
+		);
 	}
-	close(FILE);
 
 	&misc::plog(3, "sub bm_list_bookmarks: executing generated bookmark code");
-	do "$main::bm_pl" or die "ERROR: dir.pm, cant do $main::bm_pl: $! $@\n";
 
 	return 1;
 }
@@ -229,7 +261,7 @@ sub edit_bookmark_list
 
         if(-f $main::bookmark_file)
         {
-                $dtext = &readjf("$main::bookmark_file");
+                $dtext = &misc::readjf($main::bookmark_file);
         }
         else
         {
