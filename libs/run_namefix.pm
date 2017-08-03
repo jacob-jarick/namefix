@@ -29,22 +29,12 @@ sub prep_globals
         my @tmp_arr		= "";
 
         # escape replace word if regexp is disabled
-        if($main::disable_regexp == 1)
+        if($main::FILTER_REGEX == 1)
         {
         	$main::rpwold_escaped = quotemeta $main::rpwold;
         } else
         {
         	$main::rpwold_escaped = $main::rpwold;
-        }
-
-	# escape filter string if option enabled
-        if($main::filter_use_re == 0)
-        {
-        	$main::filter_string_escaped = quotemeta $main::filter_string;
-        }
-        else
-        {
-        	$main::filter_string_escaped = $main::filter_string;
         }
 
 	# update killword list if file exists
@@ -71,11 +61,11 @@ sub prep_globals
         {
                 @main::word_casing_arr = &misc::readf("$main::casing_file");
 
-		@main::word_casing_arr_escaped = ();	# clear escaped list
-                for(@main::word_casing_arr) 		# then update
-                {
-                	push (@main::word_casing_arr_escaped, quotemeta $_);
-                }
+# 		@main::word_casing_arr_escaped = ();	# clear escaped list
+#                 for(@main::word_casing_arr) 		# then update
+#                 {
+#                 	push (@main::word_casing_arr_escaped, quotemeta $_);
+#                 }
         }
 }
 

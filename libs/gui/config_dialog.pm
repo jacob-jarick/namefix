@@ -241,7 +241,7 @@ sub edit_prefs
 	my $tab7_regexp_chk = $tab7 -> Checkbutton
 	(
 		-text=>"Disable Regexp pattern matching for Remove option",
-		-variable=>\$main::disable_regexp,
+		-variable=>\$main::FILTER_REGEX,
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -309,10 +309,10 @@ sub edit_prefs
 		-sticky=>"nw"
 	);
 
-	my $overwrite_chk = $tab7 -> Checkbutton
+	my $OVERWRITE_chk = $tab7 -> Checkbutton
 	(
 		-text=>"Overwrite",
-		-variable=>\$main::overwrite,
+		-variable=>\$main::OVERWRITE,
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -324,7 +324,7 @@ sub edit_prefs
 
 	$main::balloon->attach
 	(
-		$overwrite_chk,
+		$OVERWRITE_chk,
 		-msg => "Overwrite: Preform rename without checking if new filename exists.\n\nThis Option is not saved, Please be carefull witht this option"
 	);
 

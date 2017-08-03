@@ -24,7 +24,7 @@ sub save
 	"\$max_fn_length	= $main::max_fn_length;\n",
 	"\n",
 	"\$fat32fix		= $main::fat32fix;\n",
-	"\$disable_regexp 	= $main::disable_regexp;\n",
+	"\$FILTER_REGEX 	= $main::FILTER_REGEX;\n",
 	"\$file_ext_2_proc	= \"$main::file_ext_2_proc\";\n",
 	"\$debug		= $main::debug;\n",
 	"\$LOG_STDOUT		= $main::LOG_STDOUT;\n",

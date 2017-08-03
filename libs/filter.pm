@@ -35,10 +35,10 @@ sub match
 	}
 
 	$filt = $main::filter_string;
-	if($main::disable_regexp == 1)
+	if($main::FILTER_REGEX == 0)
 	{
 		&misc::plog(4, "sub match: regexp disabled, using escaped string");
-		$filt = $main::filter_string_escaped;
+		$filt = quotemeta $filt;
 	}
 
 	if

@@ -64,7 +64,7 @@ our $id3v1_rm;
 our $rpwold;
 our $pad_digits;
 our $kill_cwords;
-our $filter_use_re;
+our $FILTER_REGEX;
 our $pad_dash;
 our $id3_com_set;
 our $recr;
@@ -1880,7 +1880,7 @@ $f_frame -> Checkbutton
 $f_frame -> Checkbutton
 (
 	-text=>"Use RE",
-	-variable=>\$main::filter_use_re,
+	-variable=>\$main::FILTER_REGEX,
 	-activeforeground => "blue"
 )
 ->pack

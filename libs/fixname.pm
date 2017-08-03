@@ -345,7 +345,7 @@ sub run_fixname
 
 # returns 1 if succesfull rename, errors are printed to console
 
-# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$main::overwrite) "
+# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$main::OVERWRITE) "
 # bloody fat32 returns positive when we dont want it, ie case correcting
 
 sub fn_rename
@@ -365,7 +365,7 @@ sub fn_rename
 	if($main::fat32fix) 	# work around case insensitive filesystem renaming problems
 	{
 
-		if( -e $tmpfile && !$main::overwrite)
+		if( -e $tmpfile && !$main::OVERWRITE)
 		{
 			$main::tmpfilefound++;
 			$main::tmpfilelist .= "$tmpfile\n";
@@ -373,7 +373,7 @@ sub fn_rename
 			return 0;
 		}
 		rename $file, $tmpfile;
-		if(-e $newfile && !$main::overwrite)
+		if(-e $newfile && !$main::OVERWRITE)
 		{
 			rename $tmpfile, $file;
 			&misc::plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");
@@ -387,7 +387,7 @@ sub fn_rename
 	}
 	else
 	{
-		if(-e $newfile && !$main::overwrite)
+		if(-e $newfile && !$main::OVERWRITE)
 		{
 			$main::suggestF++;
 			&misc::plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");

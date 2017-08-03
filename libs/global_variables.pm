@@ -21,7 +21,7 @@ our $dir = $ARGV[0];
 our $home = "";
 our $fs_fix_default = 0;
 
-our $overwrite	= 0;
+our $OVERWRITE	= 0;
 
 # Detect enviroment and setup namefix directories
 
@@ -143,10 +143,9 @@ our $CLI		= 0;
 
 # filter options
 
-our $filter_string = "";
-our $filter_use_re = 0;
-our $filter_string_escaped = "";
-our $filter_cs = 0;
+our $filter_string		= "";
+our $FILTER_REGEX		= 0;
+our $filter_cs			= 0;
 
 # preference options - save enabled
 
@@ -164,7 +163,6 @@ our $id3_mode		= 0;
 our $window_g		= "";
 
 our $fat32fix 		= $fs_fix_default;
-our $disable_regexp 	= 1;
 our $file_ext_2_proc 	= "jpeg|jpg|mp3|mpc|mpg|mpeg|avi|asf|wmf|wmv|ogg|ogm|rm|rmvb|mkv";
 
 our $enum_opt		= 1;
@@ -351,7 +349,7 @@ our $undo_dir	= "";	# directory to preform undo in
         '- A', '- At', '- An', '- And', 'Are', '- For', '- In', '- Is', '- It', '- Of', '- On', '- The', '- To'
 );
 
-@main::word_casing_arr_escaped = @main::word_casing_arr; # default list does not need escaping
+# @main::word_casing_arr_escaped = @main::word_casing_arr; # default list does not need escaping
 
 @main::kill_patterns_arr =
 (

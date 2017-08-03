@@ -67,7 +67,7 @@ our $front_a;
 our $ZERO_LOG;
 our $id3_alb_set;
 our $truncate_style;
-our $overwrite;
+our $OVERWRITE;
 our $intr_char;
 our $links;
 our $split_dddd;
@@ -87,7 +87,7 @@ our $enum_pad;
 our $id3v1_rm;
 our $id3_art_set;
 our $LOG_STDOUT;
-our $filter_use_re;
+our $FILTER_REGEX;
 our $truncate_to;
 our $sp_char;
 our $log_file;
@@ -295,7 +295,7 @@ for(@ARGV)
 	}
 	elsif($_ eq "--regexp")
 	{
-		 $main::disable_regexp = 0;
+		 $main::FILTER_REGEX = 0;
 	}
   	elsif(/---remove=(.*)/ || /--rm=(.*)/)
  	{
@@ -359,7 +359,7 @@ for(@ARGV)
 
 	elsif($_ eq "--overwrite")
 	{
-		$main::overwrite = 1;
+		$main::OVERWRITE = 1;
 	}
  	elsif($_ eq "--all-files")
  	{
@@ -371,7 +371,7 @@ for(@ARGV)
 	}
 	elsif($_ eq "--filt-regexp")
 	{
-		$main::filter_use_re = 1;
+		$main::FILTER_REGEX = 1;
 	}
 	elsif(/--space-char=(.*)/ || /--spc=(.*)/)
 	{
@@ -716,7 +716,7 @@ sub proc_short_opts
 		elsif($_ eq "p") { $main::spaces = 1; }
 		elsif($_ eq "s") { $main::scene = 1; }
 		elsif($_ eq "u") { $main::unscene = 1; }
-		elsif($_ eq "x") { $main::disable_regexp = 0; }
+		elsif($_ eq "x") { $main::FILTER_REGEX = 0; }
 
 		elsif($_ eq "0") { $main::pad_digits_w_zero = 1; }
 		elsif($_ eq "A") { $main::ig_type = 1; }

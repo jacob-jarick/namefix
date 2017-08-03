@@ -1,6 +1,10 @@
 
 4.1.2 - ie refresh in progress
 
+* filter regex
+  now users quotemeta
+  swapped to clear flag named $FILTER_REGEX
+
 * fn_sp_word now uses quotemeta
 * $fn_sp flag renamed to $WORD_SPECIAL_CASING
 * more tidy ups
