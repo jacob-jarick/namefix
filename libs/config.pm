@@ -1,3 +1,7 @@
+package config;
+require Exporter;
+@ISA = qw(Exporter);
+
 use strict;
 use warnings;
 
@@ -8,7 +12,7 @@ use FindBin qw($Bin);
 #--------------------------------------------------------------------------------------------------------------
 
 # MEMO: to self, config file is for stuff under prefs dialog only and defaults is for mainwindow vars
-sub save_config
+sub save
 {
 	open(FILE, ">$main::config_file");
 	print FILE "\# namefix.pl $main::version config file\n",

@@ -1,4 +1,7 @@
-#!/usr/bin/perl
+package filter;
+require Exporter;
+@ISA = qw(Exporter);
+
 
 use strict;
 use warnings;
@@ -7,7 +10,7 @@ use warnings;
 # currently in namefix gui filter is always on, it always returns a positive match
 # if the filter is blank
 
-sub match_filter
+sub match
 {
 	my $string = shift;
 	my $filt = "";
@@ -17,24 +20,24 @@ sub match_filter
 		return 1;
 	}
 
-	&misc::plog(3, "sub match_filter: \"$string\"");
+	&misc::plog(3, "sub match: \"$string\"");
 
 	if($string eq "")
 	{
-		&misc::plog(0, "sub match_filter: ERROR: blank file passed");
+		&misc::plog(0, "sub match: ERROR: blank file passed");
 		return 1;
 	}
 
 	if($string eq "..")
 	{
-		&misc::plog(4, "sub match_filter: got .. passed");
+		&misc::plog(4, "sub match: got .. passed");
 		return 1;
 	}
 
 	$filt = $main::filter_string;
 	if($main::disable_regexp == 1)
 	{
-		&misc::plog(4, "sub match_filter: regexp disabled, using escaped string");
+		&misc::plog(4, "sub match: regexp disabled, using escaped string");
 		$filt = $main::filter_string_escaped;
 	}
 
@@ -44,10 +47,10 @@ sub match_filter
 		($main::filter_cs == 0 && $string =~ /.*($filt).*/i)
 	)
 	{
-		&misc::plog(4, "sub match_filter: string \"$string\" matched filter \"$filt\"");
+		&misc::plog(4, "sub match: string \"$string\" matched filter \"$filt\"");
 		return 1;
 	}
-	&misc::plog(4, "sub match_filter: string \"$string\" failed matched filter \"$filt\"");
+	&misc::plog(4, "sub match: string \"$string\" failed matched filter \"$filt\"");
         return 0;
 }
 

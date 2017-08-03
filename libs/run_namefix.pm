@@ -105,7 +105,7 @@ sub run_namefix
 
         chdir $main::dir;
 	$main::dir = cwd();
-	&undo::clear_undo;
+	&undo::clear;
 	&prep_globals;
 
 	if(!$main::CLI)

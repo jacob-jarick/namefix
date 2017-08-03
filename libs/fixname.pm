@@ -85,7 +85,7 @@ sub run_fixname
                 $tmpr = 0;
         }
 
-        if($main::FILTER && &match_filter($file) == 0)
+        if($main::FILTER && &filter::match($file) == 0)
 	{
 		&misc::plog(4, "sub fixname: \"$file\" didnt match filter");
         	return;
@@ -119,7 +119,7 @@ sub run_fixname
 	if($main::id3_mode & $file =~ /.*\.mp3$/)
 	{
 	&misc::plog(4, "sub fixname: getting mp3 tags");
-		@tmp_arr = &get_tags($file);
+		@tmp_arr = &mp3::get_tags($file);
 		if($tmp_arr[0] eq "id3v1")
 		{
 			$tag = 1;
@@ -382,7 +382,7 @@ sub fn_rename
 		else
 		{
 			rename $tmpfile, $newfile;
-			&undo_add("$main::cwd/$file", "$main::cwd/$newfile");
+			&undo::add("$main::cwd/$file", "$main::cwd/$newfile");
 		}
 	}
 	else
@@ -396,7 +396,7 @@ sub fn_rename
 		else
 		{
 			rename $file, $newfile;
-			&undo_add("$main::cwd/$file", "$main::cwd/$newfile");
+			&undo::add("$main::cwd/$file", "$main::cwd/$newfile");
 		}
 	}
 	&misc::plog(4, "sub fn_rename: \"$file\" to \"$newfile\" renamed.");

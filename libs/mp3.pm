@@ -2,6 +2,12 @@
 # mems mp3 funcs
 # -----------------------------------------------------------------------------------
 
+package mp3;
+require Exporter;
+@ISA = qw(Exporter);
+
+
+
 use strict;
 #use warnings;
 

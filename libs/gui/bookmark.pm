@@ -42,7 +42,7 @@ sub bm_add
 	{
 		$name =~ s/(.*)(\\|\/)(.*?$)/$3/;	# set name to directory
 	}
-	&file_append($main::bookmark_file, "$name\t\t$dir\n");
+	&misc::file_append($main::bookmark_file, "$name\t\t$dir\n");
 
         &bm_redraw_menu;
 }

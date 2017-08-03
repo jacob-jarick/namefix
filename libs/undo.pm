@@ -6,10 +6,10 @@ require Exporter;
 use warnings;
 use strict;
 
-sub clear_undo
+sub clear
 {
  	# clear undo arrays, atm we only have 1 level of undo
-	&misc::plog(3, "sub clear_undo: wiping undo history");
+	&misc::plog(3, "sub undo::clear: wiping undo history");
 	@main::undo_cur		= ();
 	@main::undo_pre		= ();
 
@@ -19,7 +19,7 @@ sub clear_undo
 	$main::undo_dir = $main::dir;
 }
 
-sub undo_add
+sub add
 {
 	my $f1 = shift;
 	my $f2 = shift;
@@ -27,8 +27,8 @@ sub undo_add
 	push @main::undo_pre, $f1;
 	push @main::undo_cur, $f2;
 
-	&file_append($main::undo_pre_file, "$f1\n");
-	&file_append($main::undo_cur_file, "$f2\n");
+	&misc::file_append($main::undo_pre_file, "$f1\n");
+	&misc::file_append($main::undo_cur_file, "$f2\n");
 }
 
 sub undo_rename

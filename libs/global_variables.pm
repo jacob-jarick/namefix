@@ -3,7 +3,7 @@
 # variables that need to be declacred 1st
 # for use with home directory and os dependant variables
 
-our $version 		= "4.1.1";
+our $version 		= "4.1.2";
 our $author 		= "Jacob Jarick";
 our $debug		= "0";
 

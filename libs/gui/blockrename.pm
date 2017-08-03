@@ -355,7 +355,7 @@ sub br
 		s/\n|\r//g;
 	}
 
-	&clear_undo;
+	&undo::clear;
 	&prep_globals;
 
 	&misc::plog(4, "sub br: checking that files to be renamed exist");
@@ -484,7 +484,7 @@ sub br_readdir
                 	next;
                 }
 
-		if($main::FILTER && !&match_filter($_))
+		if($main::FILTER && !&filter::match($_))
 		{
 			next;
 		}

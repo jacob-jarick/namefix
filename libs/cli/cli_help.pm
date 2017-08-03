@@ -1,9 +1,12 @@
 # namefix cli help
+package cli_help;
+require Exporter;
+@ISA = qw(Exporter);
 
 use warnings;
 use strict;
 
-sub cli_help
+sub show
 {
 
 my $mode = shift;

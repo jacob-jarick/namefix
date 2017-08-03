@@ -1,3 +1,8 @@
+package htmlh;	# htmlhack
+require Exporter;
+@ISA = qw(Exporter);
+
+
 use strict;
 use warnings;
 
@@ -10,7 +15,7 @@ sub html
 	if($main::HTML_HACK)
 	{
 		my $string = shift;
-		&file_append($main::html_file, $string);
+		&misc::file_append($main::html_file, $string);
 	}
 	return;
 }

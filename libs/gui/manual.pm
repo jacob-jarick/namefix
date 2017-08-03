@@ -204,7 +204,7 @@ sub manual_edit
 	}
 	if($file =~ /.*\.mp3$/i) {
 		&misc::plog(4, "sub manual_edit: \"$file\" is a mp3, using mp3 rename gui ");
-        	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &get_tags($file);
+        	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
         	$frame1->Label(
 			-text=>"Artist: "
 		)
@@ -363,7 +363,7 @@ sub manual_edit
                         	$main::id3_mode == 1 &&
                                 $file =~ /.*\.mp3/i
 			) {
-                        	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &get_tags($file);
+                        	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
                           }
         	}
         )

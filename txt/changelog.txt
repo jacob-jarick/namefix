@@ -1,4 +1,9 @@
-4.1.1 - ie refresh in progress
+
+4.1.2 - ie refresh in progress
+
+* all libraries updated to proper library format
+  need to untangle global_variables.pm still.
+  namefix-cli.pl is likely broken currently. been focusing on gui tidyup mainly.
 
 * bookmarks.pm no longer uses self generating code.
   hacked some checkbutton to make it work

@@ -182,7 +182,7 @@ sub ls_dir_print
 	if($file =~ /.*\.mp3$/i && $main::id3_mode == 1)
 	{
 		&misc::plog(4, "sub ls_dir_print: if is mp3 & id3_mode enabled then grab id3 tags");
-		($tag, $art, $tit, $tra, $alb, $gen, $year, $com) = &get_tags($file);
+		($tag, $art, $tit, $tra, $alb, $gen, $year, $com) = &mp3::get_tags($file);
 
        		if ($tag eq "id3v1")
        		{
@@ -270,7 +270,7 @@ sub dir_filtered
  		}
 		if($main::FILTER)
 		{
-			if(&match_filter($i) == 1)	# apply listing filter
+			if(&filter::match($i) == 1)	# apply listing filter
 			{
 				&misc::plog(4, "sub dir_filtered: $i passed");
 				push @d, $i;

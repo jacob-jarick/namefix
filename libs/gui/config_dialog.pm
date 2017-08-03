@@ -1,3 +1,7 @@
+package config_dialog;
+require Exporter;
+@ISA = qw(Exporter);
+
 use strict;
 use warnings;
 
@@ -5,7 +9,7 @@ use warnings;
 # Edit Preferences
 #--------------------------------------------------------------------------------------------------------------
 
-sub edit_prefs 
+sub edit_prefs
 {
 	$main::load_defaults = 0;
 	my $n = 0;
@@ -421,7 +425,7 @@ sub edit_prefs
         	-text=>"Save",
         	-activebackground => 'white',
         	-command => sub {
-        		\&save_config();
+        		\&config::save();
         	}
         )
         -> grid(
@@ -454,7 +458,7 @@ sub edit_prefs
 # Save Fonts Config File
 #--------------------------------------------------------------------------------------------------------------
 
-sub save_fonts 
+sub save_fonts
 {
 	open(FILE, ">$main::fonts_file") or die "ERROR: couldnt open $main::fonts_file to write to\n$!\n";
 

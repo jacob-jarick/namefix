@@ -14,30 +14,31 @@ use FindBin qw($Bin);
 use FindBin qw($Bin);
 
 use lib		"$Bin/libs/";
+use lib		"$Bin/libs/cli";
 # $0 = location of scipt either full or relative, usefull to determine scripts location
 
 # mems libs
 use fixname;
 use run_namefix;
 use misc;
-require "$Bin/libs/config.pm";
+use config;
 require "$Bin/libs/global_variables.pm";
 use nf_print;
 
-require "$Bin/libs/dir.pm";
-require "$Bin/libs/mp3.pm";
-require "$Bin/libs/filter.pm";
+use dir;
+use mp3;
+use filter;
 use undo;
-require "$Bin/libs/html.pm";
+use htmlh;
 
-require "$Bin/libs/cli/help.pm";
-require "$Bin/libs/cli/print.pm";
+use cli_help;
+use cli_print;
+
+use config;
 
 #--------------------------------------------------------------------------------------------------------------
 # define global vars
 #--------------------------------------------------------------------------------------------------------------
-
-
 
 our $ERROR_STDOUT;
 our $id3_art_str;
@@ -132,7 +133,7 @@ my $text = "";
 if(!-f $main::config_file)
 {
 	&cli_print("No config file found, Creating.", "<MSG>");
-	&save_config;
+	&config::save;
 }
 
 if(!-f $main::casing_file)
@@ -629,7 +630,7 @@ for(@ARGV)
 
 	elsif($_ eq "--save-options" || $_ eq "--save-opt" || $_ eq "--save-config")
 	{
-		&save_config;
+		&config::save;
 		&cli_print("Options Saved, exiting", "<MSG>");
 		exit 1;
 	}
@@ -647,7 +648,7 @@ for(@ARGV)
 
 if(!$main::testmode && !$main::UNDO)
 {
-	&clear_undo;
+	&undo::clear;
 	$main::undo_dir = $main::dir;
 	&misc::save_file($main::undo_dir_file, $main::dir);
 }
@@ -657,8 +658,8 @@ print "*** Processing dir: $main::dir\n";
 
 &misc::save_file($main::html_file, " ");	# clear html file
 
-&html("<table border=1>");
-&html("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
+&htmlh::html("<table border=1>");
+&htmlh::html("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
 
 
 if($main::UNDO)
@@ -667,14 +668,14 @@ if($main::UNDO)
 	@main::undo_cur = &misc::readf($main::undo_cur_file);
 	@tmp = &misc::readf($main::undo_dir_file);
 	$main::undo_dir = $tmp[0];
-	&undo_rename;
+	&undo::undo_rename;
 }
 else
 {
 	&run_namefix;
 }
 
-&html("</table>");
+&htmlh::html("</table>");
 
 if($main::HTML_HACK)
 {

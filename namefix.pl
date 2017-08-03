@@ -39,32 +39,29 @@ use lib		"$Bin/libs/gui";
 use fixname;
 use run_namefix;
 use misc;
-require "$Bin/libs/config.pm";
+use config;
 require "$Bin/libs/global_variables.pm";
 use nf_print;
 
 use dir;
-# require "$Bin/libs/dir.pm";
-require "$Bin/libs/mp3.pm";
-require "$Bin/libs/filter.pm";
+use mp3;
+use filter;
 use undo;
-require "$Bin/libs/html.pm";
 
 # gui requires
-# require "$Bin/libs/gui/dir_hlist.pm";
 use dir_hlist;
 use about;
-require "$Bin/libs/gui/config_dialog.pm";
+use config_dialog;
 use blockrename;
-use bookmarks;
-require "$Bin/libs/gui/dialog.pm";
+use bookmark;
+use dialog;
 use edit_lists;
 use manual;
 use menu;
 use br_preview;
 use undo_gui;
 
-&undo::clear_undo;
+&undo::clear;
 
 # ----------------------------------------------------------------------------
 # Vars
@@ -142,7 +139,7 @@ if(-f $main::fonts_file)
 	do $main::fonts_file;		# if font file exists
 }
 
-&save_fonts;
+&config_dialog::save_fonts;
 
 if($main::ZERO_LOG)
 {

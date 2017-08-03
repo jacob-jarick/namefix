@@ -28,7 +28,7 @@ sub draw
 	(
 	        -label =>'Preferences',
 	        -underline => 1,
-	        -command =>\&edit_prefs
+	        -command => sub { config_dialog::edit_prefs; }
 	);
 
 	$file -> command
