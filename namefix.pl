@@ -179,7 +179,7 @@ $mw->bind('<KeyPress>' => sub
     {
 	print "preview\n";
 	$testmode = 1;
-	&run_namefix::run_namefix;
+	&run_namefix::run;
     }
     # Escape
     if($Tk::event->K eq 'Escape')
@@ -528,7 +528,7 @@ $frm_bottom -> Button
 (
 	-text=>"RUN",
 	-activebackground => "green",
-	-command =>\&run_namefix::run_namefix
+	-command =>\&run_namefix::run
 )
 -> grid
 (

@@ -65,7 +65,7 @@ if(!-d "$home/.namefix.pl")
 
 our $config_file	= "$home/.namefix.pl/config.ini";
 our $fonts_file		= "$home/.namefix.pl/fonts.ini";
-our $bm_pl		= "$home/.namefix.pl/bm.ini";
+# our $bm_pl		= "$home/.namefix.pl/bm.ini";
 our $log_file		= "$home/.namefix.pl/logfile.txt";
 our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";

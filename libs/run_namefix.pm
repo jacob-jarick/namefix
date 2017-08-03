@@ -79,18 +79,18 @@ sub prep_globals
         }
 }
 
-sub run_namefix
+sub run
 {
-	&misc::plog(3, "sub run_namefix:");
+	&misc::plog(3, "sub run::namefix:");
 
 	if($main::LISTING)
 	{
-		&misc::plog(0, "sub run_namefix: error, a listing is currently being preformed - aborting rename");
+		&misc::plog(0, "sub run::namefix: error, a listing is currently being preformed - aborting rename");
 		return 0;
 	}
 	elsif($main::RUN)
 	{
-		&misc::plog(0, "sub run_namefix: error, a rename is currently being preformed - aborting rename");
+		&misc::plog(0, "sub run::namefix: error, a rename is currently being preformed - aborting rename");
 		return 0;
 	}
 
@@ -142,7 +142,7 @@ sub run_namefix
         }
         if($main::recr)
         {
-		&misc::plog(4, "sub run_namefix: recursive mode");
+		&misc::plog(4, "sub run::namefix: recursive mode");
 		@main::find_arr = ();
 		find(\&find_fix, "$main::dir");
 		&find_fix_process;

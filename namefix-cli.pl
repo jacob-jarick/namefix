@@ -114,8 +114,8 @@ if($main::ZERO_LOG)
 	&misc::clog;
 }
 
-&misc::readf(1, "**** namefix.pl $main::version start *************************************************");
-&misc::readf(4, "main: \$Bin = \"$Bin\"");
+&misc::plog(1, "**** namefix.pl $main::version start *************************************************");
+&misc::plog(4, "main: \$Bin = \"$Bin\"");
 
 $main::CLI = 1;	# set cli mode flag
 
@@ -160,6 +160,11 @@ if(!-f $main::killpat_file)
 
 $main::dir = $ARGV[$#ARGV];
 
+if (!defined $main::dir)
+{
+	$main::dir = cwd;
+}
+
 if(-d $main::dir)
 {
 	chdir $main::dir;
@@ -200,63 +205,63 @@ for(@ARGV)
 
 	if($_ eq "--help")
 	{
-		&cli_help("help");
+		&cli_help::show("help");
 		exit 0;
 	}
 	if($_ eq "--help-short")
 	{
-		&cli_help("short");
+		&cli_help::show("short");
 		exit 0;
 	}
 	if($_ eq "--help-long")
 	{
-		&cli_help("log");
+		&cli_help::show("log");
 		exit 0;
 	}
 	if($_ eq "--help-misc")
 	{
-		&cli_help("misc");
+		&cli_help::show("misc");
 		exit 0;
 	}
 	if($_ eq "--help-adv")
 	{
-		&cli_help("adv");
+		&cli_help::show("adv");
 		exit 0;
 	}
 	elsif($_ eq "--help-mp3")
 	{
-		&cli_help("mp3");
+		&cli_help::show("mp3");
 		exit 0;
 	}
 	elsif($_ eq "--help-trunc")
 	{
-		&cli_help("trunc");
+		&cli_help::show("trunc");
 		exit 0;
 	}
 	elsif($_ eq "--help-enum")
 	{
-		&cli_help("enum");
+		&cli_help::show("enum");
 		exit 0;
 	}
 	elsif($_ eq "--help-doc")
 	{
-		&cli_help("doc");
+		&cli_help::show("doc");
 		exit 0;
 	}
 	elsif($_ eq "--help-debug")
 	{
-		&cli_help("debug");
+		&cli_help::show("debug");
 		exit 0;
 	}
 	elsif($_ eq "--help-hacks")
 	{
-		&cli_help("hacks");
+		&cli_help::show("hacks");
 		exit 0;
 	}
 
 	elsif($_ eq "--help-all")
 	{
-		&cli_help("all");
+		&cli_help::show("all");
 		exit 0;
 	}
 
@@ -636,7 +641,7 @@ for(@ARGV)
 	}
 	else
 	{
-		&misc::readf(0, "main: unkown long option \"$_\", cowardly refusing to run.");
+		&misc::plog(0, "main: unkown long option \"$_\", cowardly refusing to run.");
 		exit 0;
 	}
 }
@@ -672,7 +677,7 @@ if($main::UNDO)
 }
 else
 {
-	&run_namefix;
+	&run_namefix::run;
 }
 
 &htmlh::html("</table>");
@@ -723,7 +728,7 @@ sub proc_short_opts
 
 		else
 		{
-			&misc::readf(0, "main: unkown short option \"$_\", cowardly refusing to run.");
+			&misc::plog(0, "main: unkown short option \"$_\", cowardly refusing to run.");
 			exit 0;
 		}
 	}

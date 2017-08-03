@@ -1,6 +1,8 @@
 
 4.1.2 - ie refresh in progress
 
+* fixed up namefix-cli.pl - works with updated libs. bugs may still occur
+
 * all libraries updated to proper library format
   need to untangle global_variables.pm still.
   namefix-cli.pl is likely broken currently. been focusing on gui tidyup mainly.
@@ -9,6 +11,8 @@
   hacked some checkbutton to make it work
 
 * mass libraries updated to proper libs
+
+4.1.1 - ie refresh in progress
 
 * about.pm is a proper lib now
 

@@ -15,7 +15,7 @@ sub p
 	if($main::CLI)		# redirect old print calls for CLI mode
 	{
 		&misc::plog(1, "sub nf_print: use of this sub in CLI mode is depreciated");
-		&cli_print(@_);
+		&cli_print::print(@_);
 		return 1;
 	}
 
