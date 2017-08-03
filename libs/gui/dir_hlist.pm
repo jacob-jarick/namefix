@@ -228,7 +228,7 @@ sub draw_list
 			# update file current selected file
 			($main::hlist_file, $main::hlist_cwd) = $hlist->info("data", $main::hlist_selection);
 			my $ff = $main::hlist_cwd . "/" . $main::hlist_file;
-			show_del_dialog($ff);
+			&dialog::show_del_dialog($ff);
        		}
 	);
 

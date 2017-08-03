@@ -1,6 +1,9 @@
 
 4.1.2 - ie refresh in progress
 
+* rc_menu
+  delete can now delete a directory - shows dir contents in dialog
+
 * config
   slowly moving all config to a hash which is stored as a tsv
   all configurable options shifted to TSV $HOME/.namefix.pl/config_hash.tsv

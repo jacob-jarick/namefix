@@ -163,7 +163,7 @@ sub load_hash
 	}
 	for my $k(keys %hash)
 	{
-		if(!defined $h{$k}{'value'})
+		if(!defined $h{$k}{'value'} && $h{$k}{'value'} ne '')
 		{
 			next;
 		}

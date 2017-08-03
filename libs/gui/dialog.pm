@@ -6,6 +6,8 @@ use strict;
 use warnings;
 use File::stat;
 use Time::localtime;
+use File::Find;
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Show dialog
@@ -107,9 +109,6 @@ sub show_file_prop
 		-columnspan => 2
 	);
 
-#	$top->resizable(0,0);
-
-
 	my $size = stat($ff)->size;
 	my $ff_date = ctime(stat($ff)->mtime);
 
@@ -139,44 +138,104 @@ sub show_del_dialog
 
 	$top -> title("Confirm Delete");
 
-	my $txt = $top -> Scrolled
+	my $frm_top = $top -> Frame()
+	-> pack
+	(
+		-side => 'top',
+		-fill => 'both',
+		-expand=> 1,
+		-anchor => 'n'
+	);
+
+	my $frm_bottom = $top -> Frame()
+	-> pack
+	(
+		-side => 'bottom',
+		-fill => 'x',
+		-expand=> 0,
+		-anchor => 's'
+	);
+
+	my $txt = $frm_top -> Scrolled
 	(
 		"ROText",
 		-scrollbars=>"osoe",
 		-wrap=>'none',
 		-font=>$main::dialog_font,
-		-height=>4,
+		-height=>10,
 		-width=>$ffl
         )
-        -> grid
+        -> pack
 	(
-        		-row => 1,
-        		-column => 1,
-        		-columnspan => 2
+		-side => "top",
+		-expand=> 1,
+		-fill => "both",
         );
 
         $txt->menu(undef);
-        $txt -> insert('end', "Do you want to delete\n\"$ff\"");
 
-	$top -> Button
+        if(-d $ff)
+        {
+		find(\&run_namefix::find_fix, $ff);
+		$txt -> insert('end', "\nWarning Deleting Directory - ARE YOU SURE ?\nDirectory Tree:\n\n");
+
+		for my $f3(@main::find_arr)
+		{
+			$txt -> insert('end', "$f3\n");
+		}
+        }
+        else
+        {
+	        $txt -> insert('end', "Do you want to delete\n\"$ff\"\n");
+        }
+
+	$frm_bottom -> Button
 	(
         		-text=>"Yes",
         		-activebackground => "white",
         		-command => sub
 		{
-			unlink($ff);
+			if(-d $ff)
+			{
+
+
+				my @tmp = ();
+				for my $f3(@main::find_arr)
+				{
+					if(-f $f3)
+					{
+						unlink($f3);
+					}
+					elsif(-d $f3)
+					{
+						push @tmp, $f3;
+					}
+
+
+				}
+				for my $d(reverse @tmp)
+				{
+					rmdir($d);
+				}
+
+			}
+			else
+			{
+				unlink($ff);
+			}
 			&dir::ls_dir;
 			destroy $top;
 
 		}
 	)
-	-> grid
+	->pack
 	(
-		-row => 2,
-        		-column => 1,
+		-side => "left",
+		-expand=> 1,
+		-fill => "x",
 	);
 
-	$top -> Button
+	$frm_bottom -> Button
 	(
 		-text=>"No",
 		-activebackground => "white",
@@ -185,10 +244,11 @@ sub show_del_dialog
 			destroy $top;
 		}
 	)
-	-> grid
+	->pack
 	(
-		-row => 2,
-		-column => 2,
+		-side => "left",
+		-expand=> 1,
+		-fill => "x",
 	);
 }
 
