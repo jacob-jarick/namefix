@@ -105,8 +105,9 @@ our $WORD_SPECIAL_CASING;
 use fixname;
 use run_namefix;
 use misc;
-use config;
 require "$Bin/libs/global_variables.pm";
+use config;
+
 use nf_print;
 
 use dir;
@@ -153,6 +154,8 @@ if($main::ZERO_LOG)
 
 &misc::plog(1, "**** namefix.pl $main::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
+
+&config::load_hash;
 
 #--------------------------------------------------------------------------------------------------------------
 # Begin Gui

@@ -89,6 +89,24 @@ sub clog
 # save_file
 #--------------------------------------------------------------------------------------------------------------
 
+sub get_home
+{
+	if($^O eq "MSWin32")
+	{
+		return $ENV{"USERPROFILE"};
+	}
+	return $ENV{"HOME"},
+}
+
+sub null_file
+{
+        my $file = shift;
+
+	&plog(3, "sub null_file: \"$file\"");
+        open(FILE, ">$file") or die "ERROR: sub null_file, Couldnt open $file to write to. $!";
+        close(FILE);
+}
+
 sub save_file
 {
         my $file = shift;
@@ -237,8 +255,8 @@ sub escape_string
 {
 	my $s = shift;
 	&plog(5, "sub escape_string: \"$s\"");	# very noisy sub
-	$s =~ s/(\~|\`|\!|@|\#|\$|\%|\^|\&|\(|\)|\=|\+|\{|\[|\]|\}|\:|\;|\"|\'|\<|\,|\.|\>|\?)/"\\".$1/eg;
-	return $s;
+# 	$s =~ s/(\~|\`|\!|@|\#|\$|\%|\^|\&|\(|\)|\=|\+|\{|\[|\]|\}|\:|\;|\"|\'|\<|\,|\.|\>|\?)/"\\".$1/eg;
+	return quotemeta $s;
 }
 
 
