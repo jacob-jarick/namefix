@@ -25,43 +25,15 @@ use Tk::DynaTabFrame;
 use Tk::Menu;
 use Tk::ProgressBar;
 
-# redirect warnings for Tk::JComboBox
-$SIG{'__WARN__'} = sub { warn $_[0] unless (caller eq "Tk::JComboBox"); };
-use Tk::JComboBox;
-
 use FindBin qw($Bin);
 
 use lib		"$Bin/libs/";
 use lib		"$Bin/libs/gui";
 
 
-# mems libs
-use fixname;
-use run_namefix;
-use misc;
-use config;
-require "$Bin/libs/global_variables.pm";
-use nf_print;
-
-use dir;
-use mp3;
-use filter;
-use undo;
-
-# gui requires
-use dir_hlist;
-use about;
-use config_dialog;
-use blockrename;
-use bookmark;
-use dialog;
-use edit_lists;
-use manual;
-use menu;
-use br_preview;
-use undo_gui;
-
-&undo::clear;
+# redirect warnings for Tk::JComboBox
+$SIG{'__WARN__'} = sub { warn $_[0] unless (caller eq "Tk::JComboBox"); };
+use Tk::JComboBox;
 
 # ----------------------------------------------------------------------------
 # Vars
@@ -112,7 +84,7 @@ our $dot2space;
 our $trunc_char;
 our $ZERO_LOG;
 our $proc_dirs;
-our $sp_word;
+# our $sp_word;
 our $id3_alb_str;
 our $replace;
 our $enum;
@@ -122,7 +94,40 @@ our $sp_char;
 our $front_a;
 
 our $percent_done = 0;
+our $WORD_SPECIAL_CASING;
 
+#--------------------------------------------------------------------------------------------------------------
+# mems libs
+#--------------------------------------------------------------------------------------------------------------
+
+
+# mems libs
+use fixname;
+use run_namefix;
+use misc;
+use config;
+require "$Bin/libs/global_variables.pm";
+use nf_print;
+
+use dir;
+use mp3;
+use filter;
+use undo;
+
+# gui requires
+use dir_hlist;
+use about;
+use config_dialog;
+use blockrename;
+use bookmark;
+use dialog;
+use edit_lists;
+use manual;
+use menu;
+use br_preview;
+use undo_gui;
+
+&undo::clear;
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
@@ -195,6 +200,14 @@ our $fileimage   	= $mw->Getimage("file");
 
 our $balloon = $mw->Balloon();
 
+our $frm_bottom3 = $mw -> Frame()
+-> pack
+(
+	-side => 'bottom',
+	-fill => 'x',
+	-anchor => 'w'
+);
+
 our $frm_bottom2 = $mw -> Frame()
 -> pack
 (
@@ -226,6 +239,25 @@ my $progress = $frm_bottom2->ProgressBar
 	-fill => "x",
 #  	-anchor => 's'
 );
+
+# log box
+our $log_box = $frm_bottom3->Scrolled
+(
+	'Text',
+	-scrollbars => 'se',
+	-background => 'black',
+	-foreground => 'white',
+	-wrap => 'none',
+	-height => 8,
+# 	-insertmode => "insert",
+)->pack
+(
+ 	-side => "bottom",
+	-expand=> 1,
+	-fill => "x",
+#  	-anchor => 's'
+);
+$log_box->Contents();
 
 
 #--------------------------------------------------------------------------------------------------------------
@@ -473,6 +505,8 @@ $frm_bottom -> Button
 			$main::LISTING = 0;
 		}
 		$main::STOP = 1;
+		$main::RUN = 0;
+		$main::testmode = 1;
 		&misc::plog(0, "namefix.pl: Stop button pressed");
 	}
 )
@@ -615,7 +649,7 @@ $balloon->attach
 my $w_chk = $frm_left -> Checkbutton
 (
 	-text=>"Specific Casing",
-	-variable=>\$main::sp_word,
+	-variable=>\$main::WORD_SPECIAL_CASING,
 	-activeforeground => "blue"
 )
 -> grid

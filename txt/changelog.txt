@@ -1,6 +1,11 @@
 
 4.1.2 - ie refresh in progress
 
+* fn_sp_word now uses quotemeta
+* $fn_sp flag renamed to $WORD_SPECIAL_CASING
+* more tidy ups
+* fn_sp_word works again
+
 * fixed up namefix-cli.pl - works with updated libs. bugs may still occur
 
 * all libraries updated to proper library format

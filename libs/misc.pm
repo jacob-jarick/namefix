@@ -8,6 +8,8 @@ require Exporter;
 use strict;
 use warnings;
 
+my @output = ();
+
 sub ci_sort
 {
 	&plog(3, "sub ci_sort:");
@@ -24,6 +26,20 @@ sub plog
 {
 	my $level = shift;
 	my $text = shift;
+
+	if($main::CLI == 0) # gui mode
+	{
+		push @output, "$text\n";
+		if(scalar @output > 200)
+		{
+			@output = @output[scalar @output - 50 .. scalar @output];
+		}
+		if(defined $main::log_box) # plog can occur before gui is ready
+		{
+		$main::log_box->Contents(@output);
+			$main::log_box->GotoLineNumber(scalar @output);
+		}
+	}
 
 	if($level == 0)
 	{

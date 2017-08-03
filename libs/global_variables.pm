@@ -178,13 +178,13 @@ our $trunc_char		= "";
 
 # main window options - save enabled
 
-our $sp_word		= 0;
-our $spaces		= 1;
-our $dot2space		= 0;
-our $intr_char 		= 0;
-our $kill_cwords 	= 0;
-our $kill_sp_patterns 	= 0;
-our $sp_char		= 0;
+$main::WORD_SPECIAL_CASING	= 0;
+our $spaces			= 1;
+our $dot2space			= 0;
+our $intr_char 			= 0;
+our $kill_cwords	 	= 0;
+our $kill_sp_patterns 		= 0;
+our $sp_char			= 0;
 
 # main window, misc options - no save allowed
 

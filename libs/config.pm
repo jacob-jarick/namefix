@@ -48,7 +48,7 @@ sub save
 		"\n\# main window options\n\n",
 
 		"\$case 		= $main::case;\n",
-		"\$sp_word		= $main::sp_word;\n",
+		"\$WORD_SPECIAL_CASING	= $main::WORD_SPECIAL_CASING;\n",
 
 		"\$spaces		= $main::spaces;\n",
 		"\$dot2space		= $main::dot2space;\n",

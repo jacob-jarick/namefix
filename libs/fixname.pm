@@ -705,18 +705,19 @@ sub fn_sp_word
 	my $f = shift;
 	if(!$f)
 	{
-		&misc::plog(4, "sub fn_sp_word, got passed null");
+		&misc::plog(0, "sub fn_sp_word, got passed null");
 		return;
 	}
 	my $fn = shift;
 	my $fn_old = $fn;
 
-        if($main::sp_word)
+        if($main::WORD_SPECIAL_CASING)
         {
         	my $word = "";
-                foreach $word(@main::word_casing_arr_escaped)
+                foreach $word(@main::word_casing_arr)
                 {
-                	chomp $word;
+                	$word =~ s/(\s+|\n+|\r+)+$//;
+                	$word = quotemeta $word;
 			if(-f $f && !-d $f)	# is file and not a directory
 			{
 				$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\)|\]|\..{3,4}$)/$1.$word.$3/egi;

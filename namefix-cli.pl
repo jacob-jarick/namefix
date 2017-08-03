@@ -99,6 +99,10 @@ our $about;
 our $rpwnew;
 our $undo_pre_file;
 
+our $WORD_SPECIAL_CASING;
+
+$main::CLI = 1;
+
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
@@ -328,7 +332,7 @@ for(@ARGV)
 	}
 	elsif($_ eq "--case-sp")
 	{
-		$main::sp_word = 1;
+		$main::WORD_SPECIAL_CASING = 1;
 	}
 	elsif($_ eq "--fs-fix")
 	{
@@ -716,7 +720,7 @@ sub proc_short_opts
 
 		elsif($_ eq "0") { $main::pad_digits_w_zero = 1; }
 		elsif($_ eq "A") { $main::ig_type = 1; }
-		elsif($_ eq "C") { $main::sp_word = 1; }
+		elsif($_ eq "C") { $main::WORD_SPECIAL_CASING = 1; }
 		elsif($_ eq "D") { $main::proc_dirs = 1; }
 		elsif($_ eq "F") { $main::fat32fix = 1; }
 		elsif($_ eq "H") { $main::pad_dash = 1;	}
