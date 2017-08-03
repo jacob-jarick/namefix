@@ -57,7 +57,7 @@ sub run_fixname
 
         $main::cwd 		= cwd;	# RM - legacy code ???
 
-	if($main::id3_mode && !-f $file)
+	if($config::hash{id3_mode}{value} && !-f $file)
 	{
 		&misc::plog(0, "sub fixname: \"$file\" does not exist");
 		&misc::plog(0, "sub fixname: current directory = \"$main::dir\"");
@@ -67,7 +67,7 @@ sub run_fixname
 	# make sure file is allowed to be renamed
         # -----------------------------------------
 
-        if((!-d $file) && ($main::ig_type || $file =~ /\.($main::file_ext_2_proc)$/i))
+        if((!-d $file) && ($main::ig_type || $file =~ /\.($conf::hash{file_ext_2_proc}{value})$/i))
 	{
 		&misc::plog(4, "sub fixname: \"$file\" passed file extionsion check");
                 $tmpr = 0;
@@ -116,7 +116,7 @@ sub run_fixname
 	# Fetch mp3 tags, if file is a mp3 and id3 mode is enabled
 	# $tag will =1 only if tags r found & id3 mode is enabled
 
-	if($main::id3_mode & $file =~ /.*\.mp3$/)
+	if($config::hash{id3_mode}{value} & $file =~ /.*\.mp3$/)
 	{
 	&misc::plog(4, "sub fixname: getting mp3 tags");
 		@tmp_arr = &mp3::get_tags($file);
@@ -168,7 +168,7 @@ sub run_fixname
 	$newfile = &run_fixname_subs($file, $newfile);
 
 	# guess id3 tags
-	if($main::id3_guess_tag == 1 && $_ =~ /.*\.mp3$/)
+	if($config::hash{id3_guess_tag}{value} == 1 && $_ =~ /.*\.mp3$/)
         {
 		($newart, $newtra, $newtit, $newalb) = &guess_tags($newfile);
 	}
@@ -362,7 +362,7 @@ sub fn_rename
 
 	&misc::plog(4, "sub fn_rename: \"$file\" \"$newfile\"");
 
-	if($main::fat32fix) 	# work around case insensitive filesystem renaming problems
+	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
 	{
 
 		if( -e $tmpfile && !$main::OVERWRITE)
@@ -498,7 +498,7 @@ sub fn_kill_cwords
 	{
 		$fn = $f;
 	}
-        if($main::kill_cwords)
+        if($config::hash{kill_cwords}{value})
         {
         	if(-d $f)	# if directory process as normal
                 {
@@ -547,7 +547,7 @@ sub fn_kill_sp_patterns
 	my $fn = shift;
 	my $f = $fn;
 
-        if($main::kill_sp_patterns)
+        if($config::hash{kill_sp_patterns}{value})
         {
                 for (@main::kill_patterns_arr)
                 {
@@ -604,10 +604,10 @@ sub fn_spaces
 	my $fn = shift;
 	my $f = $fn;
 
-        if($main::spaces)
+        if($config::hash{spaces}{value})
         {
                 # underscores to spaces
-                $fn =~ s/(\s|_)+/$main::space_character/g;
+                $fn =~ s/(\s|_)+/$config::hash{space_character}{value}/g;
 	}
 	if($f ne $fn)
 	{
@@ -621,7 +621,7 @@ sub fn_sp_char
 	&misc::plog(3, "sub fn_sp_char");
 	my $fn = shift;
 	my $f = $fn;
-        if($main::sp_char)
+        if($config::hash{sp_char}{value})
         {
                 $fn =~ s/[\~\@\%\{\}\[\]\"\<\>\!\`\'\,\#\(|\)]//g;
         }
@@ -678,7 +678,7 @@ sub fn_case_fl
 	my $fn = shift;
 	my $f = $fn;
 
-	if($main::case)
+	if($config::hash{case}{value})
 	{
                 $fn =~ s/^(\w)/uc($1)/e;
 	}
@@ -711,7 +711,7 @@ sub fn_sp_word
 	my $fn = shift;
 	my $fn_old = $fn;
 
-        if($main::WORD_SPECIAL_CASING)
+        if($config::hash{WORD_SPECIAL_CASING}{value})
         {
         	my $word = "";
                 foreach $word(@main::word_casing_arr)
@@ -740,18 +740,18 @@ sub fn_dot2space
 	&misc::plog(3, "sub fn_dot2space");
 	my $f = shift;
 	my $fn = shift;
-        if($main::dot2space)
+        if($config::hash{dot2space}{value})
         {
         	if(-f $f && !-d $f)	# is file and not a directory
         	{
-                	$fn =~ s/\./$main::space_character/g;
+                	$fn =~ s/\./$config::hash{space_character}{value}/g;
 	                # put last dot back in front of the ext
         	        # there may be a cleaner way to do this but oh well
-                	$fn =~ s/(.*)($main::space_character)(.{3,4}$)/$1\.$3/g;
+                	$fn =~ s/(.*)($config::hash{space_character}{value})(.{3,4}$)/$1\.$3/g;
                 }
 		else			# not a file treat as a string
 		{
-			$fn =~ s/\./$main::space_character/g;
+			$fn =~ s/\./$config::hash{space_character}{value}/g;
 		}
         }
 	if($f ne $fn)
@@ -771,10 +771,10 @@ sub fn_pad_digits
 	{
 		# optimize me
 
-		my $tmp = $main::space_character."-".$main::space_character;
-		$fn =~ s/($main::space_character)+(\d\d|\d+x\d+)($main::space_character)+/$tmp.$2.$tmp/ie;
-		$fn =~ s/($main::space_character)+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
-		$fn =~ s/^(\d\d|\d+x\d+)($main::space_character)+/$1.$tmp/ie;
+		my $tmp = $config::hash{space_character}{value}."-".$config::hash{space_character}{value};
+		$fn =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$tmp.$2.$tmp/ie;
+		$fn =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
+		$fn =~ s/^(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$1.$tmp/ie;
 	}
 	if($f ne $fn)
 	{
@@ -839,13 +839,13 @@ sub fn_enum
 	{
         	my $enum_n = $main::enum_count;
 
-        	if($main::enum_pad == 1)
+        	if($config::hash{enum_pad}{value} == 1)
         	{
-        		$a = "%.$main::enum_pad_zeros"."d";
+        		$a = "%.$config::hash{enum_pad_zeros}{value}"."d";
         		$enum_n = sprintf($a, $enum_n);
  		}
 
-        	if($main::enum_opt == 0)
+        	if($config::hash{enum_opt}{value} == 0)
         	{
         		if(-d $f)
         		{
@@ -857,11 +857,11 @@ sub fn_enum
         			$fn =~ s/^.*\././;
         			$fn = "$enum_n"."$fn";
         		}
-        	} elsif($main::enum_opt == 1)
+        	} elsif($config::hash{enum_opt}{value} == 1)
         	{
 			# Insert N at begining of filename
         	        $fn = "$enum_n"."$fn";
-		} elsif($main::enum_opt == 2)
+		} elsif($config::hash{enum_opt}{value} == 2)
 		{
 			# Insert N at end of filename but before file ext
 			$fn =~ s/(.*)(\..*$)/$1$enum_n$2/g;
@@ -883,24 +883,24 @@ sub fn_truncate
 	my $tl = "";
 
 	my $l = length $fn;
-	if($l > $main::max_fn_length && $main::truncate == 0)
+	if($l > $config::hash{'max_fn_length'}{'value'} && $config::hash{'truncate_to'}{'value'} == 0)
 	{
 		&misc::plog(0, "sub fn_truncate: $fn exceeds maximum filename length.");
 		return;
 	}
-	if($l > $main::truncate_to && $main::truncate == 1)
+	if($l > $config::hash{'truncate_to'}{'value'} && $main::truncate == 1)
 	{
 		my $file_ext = $fn;
 		$file_ext =~ s/^(.*)(\.)(.{3,4})$/$3/e;
 		my $file_ext_length = length $file_ext;	# doesnt include . in length
 
 		# var for adjusted truncate to, gotta take into account file ext length
-		$tl = $main::truncate_to - ($file_ext_length + 1);	# tl = truncate length
+		$tl = $config::hash{'truncate_to'}{'value'} - ($file_ext_length + 1);	# tl = truncate length
 
 		# adjust tl to allow for added enum digits if enum mode is enabled
-		if($main::enum && $main::enum_pad)
+		if($main::enum && $config::hash{enum_pad}{value})
 		{
-			$tl = $tl - $main::enum_pad_zeros
+			$tl = $tl - $config::hash{enum_pad_zeros}{value};
 		}
 		elsif($main::enum)
 		{
@@ -910,23 +910,23 @@ sub fn_truncate
 		# start truncating
 
 		# from front
-		if($main::truncate_style == 0)
+		if($config::hash{truncate_style}{value} == 0)
 		{
 			$fn =~ s/^(.*)(.{$tl})(\..{$file_ext_length})$/$2.$3/e;
 		}
 
 		# from end
-		elsif($main::truncate_style == 1)
+		elsif($config::hash{truncate_style}{value} == 1)
 		{
  			$fn =~ s/^(.{$tl})(.*)(\..{$file_ext_length})$/$1.$3/e;
 		}
 
 		# from middle
-		elsif($main::truncate_style == 2)
+		elsif($config::hash{truncate_style}{value} == 2)
 		{
-			$tl = int ($tl - length $main::trunc_char) / 2;
+			$tl = int ($tl - length $config::hash{trunc_char}{value}) / 2;
 
-			$fn =~ s/^(.{$tl})(.*)(.{$tl})(\..{$file_ext_length})$/$1.$main::trunc_char.$3.$4/e;
+			$fn =~ s/^(.{$tl})(.*)(.{$tl})(\..{$file_ext_length})$/$1.$config::hash{trunc_char}{value}.$3.$4/e;
 		}
 	}
 	if($f ne $fn)
@@ -990,7 +990,7 @@ sub fn_post_clean
 
                 # rm extra whitespaces
                 $fn =~ s/\s+/ /g;
-                $fn =~ s/$main::space_character+/$main::space_character/g;
+                $fn =~ s/$config::hash{space_character}{value}+/$config::hash{space_character}{value}/g;
 
 		# change file extension to lower case and remove anyspaces before file ext
                 $fn =~ s/^(.*)(\..{3,4})$/$1.lc($2)/e;
@@ -1046,7 +1046,7 @@ sub fn_pad_dash
 	my $f = $fn;
 	if($main::pad_dash == 1)
 	{
-		$fn =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$main::space_character."-".$main::space_character/eg;
+		$fn =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$config::hash{space_character}{value}."-".$config::hash{space_character}{value}/eg;
 	}
 	if($f ne $fn)
 	{
@@ -1078,7 +1078,7 @@ sub fn_lc_all
 	# lowercase all
 	my $fn = shift;
 	my $f = $fn;
-        if($main::lc_all)
+        if($config::hash{lc_all}{value})
 	{
                 $fn = lc($fn);
         }
@@ -1095,7 +1095,7 @@ sub fn_uc_all
 	# uppercase all
 	my $fn = shift;
 	my $f = $fn;
-        if($main::uc_all)
+        if($config::hash{uc_all}{value})
 	{
                 $fn = uc($fn);
         }
@@ -1116,7 +1116,7 @@ sub fn_intr_char
 	my $fn = shift;
 	my $f = $fn;
 
-        if($main::intr_char)
+        if($config::hash{intr_char}{value})
         {
                 $fn =~ s/�/Aa/g;
                 $fn =~ s/�/Ae/g;
@@ -1178,7 +1178,7 @@ sub fn_case
 	&misc::plog(3, "sub fn_case");
 	my $fn = shift;
 	my $f = $fn;
-        if($main::case)
+        if($config::hash{case}{value})
         {
                 $fn =~ s/(^| |\.|_|\(|-)([A-Za-z������������������������������])(([A-Za-z������������������������������]|\'|\�|\�|\�)*)/$1.uc($2).lc($3)/eg;
 	}

@@ -3,6 +3,7 @@
 
 * config
   slowly moving all config to a hash which is stored as a tsv
+  all configurable options shifted to TSV $HOME/.namefix.pl/config_hash.tsv
 
 * filter regex
   now users quotemeta

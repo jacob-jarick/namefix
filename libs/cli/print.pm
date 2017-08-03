@@ -46,7 +46,7 @@ sub cli_print
 		return 1;
 	}
 
-	if($main::id3_mode == 1)
+	if($config::hash{id3_mode}{value} == 1)
 	{
 		$art = shift;
 		$tit = shift;
@@ -58,7 +58,7 @@ sub cli_print
 	}
 
 	# When renaming or previewing in id3 mode we will be sent the "after" id3 tags
-	if($main::id3_mode == 1 && $main::LISTING == 0)
+	if($config::hash{id3_mode}{value} == 1 && $main::LISTING == 0)
 	{
 		$newart = shift;
 		$newtit = shift;
@@ -71,7 +71,7 @@ sub cli_print
 
 	# normal listing
 
-	if(!$main::id3_mode)
+	if(!$config::hash{id3_mode}{value})
 	{
 		print "old> $s1\nnew> $s2\n\n";
 		&htmlh::html("<TR><TD  colspan=2 nowrap>$s1</TD><TD  colspan=2 nowrap>$s2</TD></TR>");

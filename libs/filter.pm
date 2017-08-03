@@ -35,7 +35,7 @@ sub match
 	}
 
 	$filt = $main::filter_string;
-	if($main::FILTER_REGEX == 0)
+	if($config::hash{FILTER_REGEX}{value} == 0)
 	{
 		&misc::plog(4, "sub match: regexp disabled, using escaped string");
 		$filt = quotemeta $filt;

@@ -360,7 +360,7 @@ sub manual_edit
                         $new_ext = $old_ext;
 
                         if(
-                        	$main::id3_mode == 1 &&
+                        	$config::hash{id3_mode}{value} == 1 &&
                                 $file =~ /.*\.mp3/i
 			) {
                         	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
@@ -374,7 +374,7 @@ sub manual_edit
         );
 
         if(
-        	$main::id3_mode == 1 &&
+        	$config::hash{id3_mode}{value} == 1 &&
 		$file =~ /.*\.mp3$/i
         ) {
 	        $button_frame -> Button(
@@ -408,7 +408,7 @@ sub manual_edit
                                 $file = $newfile;
                         }
                         if(
-                        	$main::id3_mode == 1 &&
+                        	$config::hash{id3_mode}{value} == 1 &&
                                 $file =~ /.*\.mp3$/i
                         ) {
                         	&write_tags($file, $art, $tit, $tra, $alb, $com, $gen, $year);
@@ -457,7 +457,7 @@ sub me_rename
         	return;
         }
 
-	if($main::fat32fix)
+	if($config::hash{fat32fix}{value})
 	{
 		my $tmpfile = $file."tmp";
 

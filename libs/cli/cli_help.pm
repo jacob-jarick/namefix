@@ -53,7 +53,7 @@ g	--clean			general cleanup (reccomend)
 
 c	--case			Fix case
 p	--spaces		Convert _ and \" \" to set space delimiter
-				current space delimiter: \"$main::space_character\"
+				current space delimiter: \"$config::hash{space_character}{value}\"
 o	--dots			Dots \".\" to Space Delimiter
 x	--regexp		Enable regexp in remove option
 
@@ -131,7 +131,7 @@ L	--lc			lowercase all letters of filename
 	--rm-all-digits		remove all digits from filename
 	--rad			Excluding file extension
 
-H	--pad-hyphen		pad / hyphen dashes with space delimiter \"$main::space_character\"
+H	--pad-hyphen		pad / hyphen dashes with space delimiter \"$config::hash{space_character}{value}\"
 	--ph
 
 N	--pad-num		pad digits with -
@@ -153,7 +153,7 @@ my $txt_advance =
 
 	--save-options		Save current options as default
 	--save-opt		config file is located at:
-	--save-config		$main::config_file
+	--save-config		$config::hash_tsv
 
 	--recr			Recursive mode
 				Warning: Use with caution
@@ -170,13 +170,13 @@ A	--all-files		Process all files, not just media files.
 	--filt-regexp		filter STRING is a regexp
 
 	--space-char=C		C = Space Delimiter character
-	--spc=C			Override default space delimiter \"$main::space_character\"
+	--spc=C			Override default space delimiter \"$config::hash{space_character}{value}\"
 				and use C
 
 	--media-types=STRING	only process the file extensions listed in STRING
 	--mt=STRING		STRING format: \"<file_ext1>|<file_ext2>\"
 				Default file types processed:
-				$main::file_ext_2_proc
+				$conf::hash{file_ext_2_proc}{value}
 
 ";
 my $txt_hacks =
@@ -184,7 +184,7 @@ my $txt_hacks =
 
 	--html			output is formatted as html
 				Then viewed in a console mode browser:
-				$main::browser
+				$config::hash{browser}{value}
 
 	--browser		set browser to use for html hack
 

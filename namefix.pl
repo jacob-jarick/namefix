@@ -50,7 +50,7 @@ our $truncate;
 our $eaw;
 our $id3_year_set;
 our $ig_type;
-our $truncate_to;
+# our $truncate_to;
 our $pad_digits_w_zero;
 our $faw;
 our $id3_art_str;
@@ -64,7 +64,6 @@ our $id3v1_rm;
 our $rpwold;
 our $pad_digits;
 our $kill_cwords;
-our $FILTER_REGEX;
 our $pad_dash;
 our $id3_com_set;
 our $recr;
@@ -82,9 +81,7 @@ our $id3_force_guess_tag;
 our $enum_pad;
 our $dot2space;
 our $trunc_char;
-our $ZERO_LOG;
 our $proc_dirs;
-# our $sp_word;
 our $id3_alb_str;
 our $replace;
 our $enum;
@@ -135,9 +132,9 @@ use undo_gui;
 #--------------------------------------------------------------------------------------------------------------
 
 
-if(-f $main::config_file)
+if(-f $config::hash_tsv)
 {
-	do $main::config_file;	# executes config file
+	&config::load_hash;
 }
 
 if(-f $main::fonts_file)
@@ -147,7 +144,7 @@ if(-f $main::fonts_file)
 
 &config_dialog::save_fonts;
 
-if($main::ZERO_LOG)
+if($config::hash{ZERO_LOG}{value})
 {
 	&misc::clog;
 }
@@ -633,7 +630,7 @@ $balloon->attach
 my $case_chk = $frm_left -> Checkbutton
 (
 	-text=>"Normal Casing",
-	-variable=>\$main::case,
+	-variable=>\$config::hash{case}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -652,7 +649,7 @@ $balloon->attach
 my $w_chk = $frm_left -> Checkbutton
 (
 	-text=>"Specific Casing",
-	-variable=>\$main::WORD_SPECIAL_CASING,
+	-variable=>\$config::hash{WORD_SPECIAL_CASING}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -670,7 +667,7 @@ $balloon->attach
 my $p_chk = $frm_left -> Checkbutton
 (
 	-text=>"Spaces",
-	-variable=>\$main::spaces,
+	-variable=>\$config::hash{spaces}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -688,7 +685,7 @@ $balloon->attach
 my $o_chk = $frm_left -> Checkbutton
 (
 	-text=>". to Space",
-	-variable=>\$main::dot2space,
+	-variable=>\$config::hash{dot2space}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -717,7 +714,7 @@ $frm_left -> Label
 my $K_chk = $frm_left -> Checkbutton
 (
 	-text=>"RM Word List",
-	-variable=>\$main::kill_cwords,
+	-variable=>\$config::hash{kill_cwords}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -735,7 +732,7 @@ $balloon->attach
 my $P_chk = $frm_left -> Checkbutton
 (
 	-text=>"RM Pattern List",
-	-variable=>\$main::kill_sp_patterns,
+	-variable=>\$config::hash{kill_sp_patterns}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -917,7 +914,7 @@ $tab2->Label
 my $id3_mode_chk = $tab2 -> Checkbutton
 (
 	-text=>"Process Tags",
-	-variable=>\$main::id3_mode,
+	-variable=>\$config::hash{id3_mode}{value},
 	-command=>\&dir_hlist::draw_list,
 	-activeforeground => "blue"
 )
@@ -944,7 +941,7 @@ $tab2->Label(-text=>" ")
 my $id3_guess_tag_chk = $tab2 -> Checkbutton
 (
 	-text=>"Guess tags",
-	-variable=>\$main::id3_guess_tag,
+	-variable=>\$config::hash{id3_guess_tag}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1200,13 +1197,13 @@ $tab5 -> Label
 my $U_chk = $tab5 -> Checkbutton
 (
 	-text=>"Uppercase All",
-	-variable=>\$main::uc_all,
+	-variable=>\$config::hash{uc_all}{value},
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($main::uc_all == 1)
+		if($config::hash{uc_all}{value} == 1)
 		{
-			$main::lc_all = 0;
+			$config::hash{lc_all}{value} = 0;
 		}
 	}
 )
@@ -1220,13 +1217,13 @@ my $U_chk = $tab5 -> Checkbutton
 my $L_chk = $tab5 -> Checkbutton
 (
 	-text=>"Lowercase All",
-	-variable=>\$main::lc_all,
+	-variable=>\$config::hash{lc_all}{value},
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($main::lc_all == 1)
+		if($config::hash{lc_all}{value} == 1)
 		{
-			$main::uc_all = 0;
+			$config::hash{uc_all}{value} = 0;
 		}
 	}
 )
@@ -1240,7 +1237,7 @@ my $L_chk = $tab5 -> Checkbutton
 my $i_chk = $tab5 -> Checkbutton
 (
 	-text=>"International",
-	-variable=>\$main::intr_char,
+	-variable=>\$config::hash{intr_char}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1258,7 +1255,7 @@ $balloon->attach
 my $b_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM Chars",
-	-variable=>\$main::sp_char,
+	-variable=>\$config::hash{sp_char}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1523,7 +1520,7 @@ my $rdb_a = $tab6 -> Radiobutton
 (
 	-text=>"Numbers only",
 	-value=>"0",
-	-variable=>\$main::enum_opt,
+	-variable=>\$config::hash{enum_opt}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1537,7 +1534,7 @@ my $rdb_b = $tab6 -> Radiobutton
 (
 	-text=>"Insert at Start",
 	-value=>"1",
-	-variable=>\$main::enum_opt,
+	-variable=>\$config::hash{enum_opt}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1551,7 +1548,7 @@ my $rdb_c = $tab6 -> Radiobutton
 (
 	-text=>"Insert at End",
 	-value=>"2",
-	-variable=>\$main::enum_opt,
+	-variable=>\$config::hash{enum_opt}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1578,7 +1575,7 @@ $tab6 -> Label
 my $enum_pad_chk = $tab6 -> Checkbutton
 (
 	-text=>"Pad with zeros",
-	-variable=>\$main::enum_pad,
+	-variable=>\$config::hash{enum_pad}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1596,7 +1593,7 @@ $balloon->attach
 
 my $spin_pad_enum = $tab6 -> Spinbox
 (
-	-textvariable=>\$main::enum_pad_zeros,
+	-textvariable=>\$config::hash{enum_pad_zeros}{value},
 	-from=>1,
 	-to=>1000,
 	-increment=>1,
@@ -1681,7 +1678,7 @@ $tab7 -> Label
 
 my $tfl_ent = $tab7 -> Entry
 (
-	-textvariable=>\$main::truncate_to,
+	-textvariable=>\$config::hash{'truncate_to'}{'value'},
 )
 -> grid
 (
@@ -1711,7 +1708,7 @@ my $rdb_ts_a = $tab7 -> Radiobutton
 (
 	-text=>"From Start",
 	-value=>"0",
-	-variable=>\$main::truncate_style,
+	-variable=>\$config::hash{truncate_style}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1730,7 +1727,7 @@ my $rdb_ts_b = $tab7 -> Radiobutton
 (
 	-text=>"From Middle",
 	-value=>"2",
-	-variable=>\$main::truncate_style,
+	-variable=>\$config::hash{truncate_style}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1748,7 +1745,7 @@ my $rdb_ts_c = $tab7 -> Radiobutton
 (
 	-text=>"From End",
 	-value=>"1",
-	-variable=>\$main::truncate_style,
+	-variable=>\$config::hash{truncate_style}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1789,7 +1786,7 @@ $tab7 -> Label
 
 my $tab7_trunc_ent = $tab7 -> Entry
 (
-	-textvariable=>\$main::trunc_char,
+	-textvariable=>\$config::hash{trunc_char}{value},
 )
 -> grid
 (
@@ -1883,7 +1880,7 @@ $f_frame -> Checkbutton
 $f_frame -> Checkbutton
 (
 	-text=>"Use RE",
-	-variable=>\$main::FILTER_REGEX,
+	-variable=>\$config::hash{FILTER_REGEX}{value},
 	-activeforeground => "blue"
 )
 ->pack
@@ -1895,9 +1892,9 @@ $f_frame -> Checkbutton
 # No more frames
 #--------------------------------------------------------------------------------------------------------------
 
-if($main::window_g ne "")
+if($config::hash{window_g}{value} ne "")
 {
-	$mw ->geometry($main::window_g);
+	$mw ->geometry($config::hash{window_g}{value});
 }
 
 &menu::draw;

@@ -12,7 +12,7 @@ use warnings;
 
 sub html
 {
-	if($main::HTML_HACK)
+	if($config::hash{HTML_HACK}{value})
 	{
 		my $string = shift;
 		&misc::file_append($main::html_file, $string);

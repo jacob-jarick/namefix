@@ -29,7 +29,7 @@ sub prep_globals
         my @tmp_arr		= "";
 
         # escape replace word if regexp is disabled
-        if($main::FILTER_REGEX == 1)
+        if($config::hash{FILTER_REGEX}{value} == 1)
         {
         	$main::rpwold_escaped = quotemeta $main::rpwold;
         } else
@@ -148,7 +148,7 @@ sub run
         &nf_print::p(" ", "<MSG>");
 	&nf_print::p("$main::change files $t_s been modified", "<MSG>");
 
-	if($main::id3_mode)
+	if($config::hash{id3_mode}{value})
 	{
 		&nf_print::p("$main::id3_change mp3s tags $t_s been updated.", "<MSG>");
 	}

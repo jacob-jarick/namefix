@@ -62,17 +62,17 @@ sub plog
 		$text = "DBG".$level."> ".$text;
 	}
 
-	if($level <= $main::debug)
+	if($level <= $config::hash{'debug'}{'value'})
 	{
 		open(FILE, ">>$main::log_file");
 		print FILE "$text\n";
 		close(FILE);
-		if($main::LOG_STDOUT)
+		if($config::hash{LOG_STDOUT}{value})
 		{
 			print "$text\n";
 		}
 	}
-	if($level == 0 && $main::ERROR_NOTIFY)
+	if($level == 0 && $config::hash{ERROR_NOTIFY}{value})
 	{
 		&show_dialog("namefix.pl ERROR", "$text");
 	}

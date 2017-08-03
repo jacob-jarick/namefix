@@ -14,8 +14,8 @@ our $hash_tsv = &misc::get_home."/.namefix.pl/config_hash.tsv";
 $hash{'space_character'}{'save'}	= 'norm';
 $hash{'space_character'}{'value'}	= ' ';
 
-$hash{'$max_fn_length'}{'save'}		= 'norm';
-$hash{'$max_fn_length'}{'value'}	= 256;
+$hash{'max_fn_length'}{'save'}		= 'norm';
+$hash{'max_fn_length'}{'value'}		= 256;
 
 $hash{'fat32fix'}{'save'}		= 'norm';
 $hash{'fat32fix'}{'value'}		= 0;
@@ -48,7 +48,7 @@ $hash{'browser'}{'save'}		= 'norm';
 $hash{'browser'}{'value'}		= '';
 
 $hash{'editor'}{'save'}			= 'norm';
-$hash{'editor'}{'value'}		= '';
+$hash{'editor'}{'value'}		= 'vim';
 
 $hash{'case'}{'save'}			= 'mw';
 $hash{'case'}{'value'}			= 0;
@@ -93,7 +93,7 @@ $hash{'enum_pad'}{'save'}		= 'mw';
 $hash{'enum_pad'}{'value'}		= 0;
 
 $hash{'enum_pad_zeros'}{'save'}		= 'mw';
-$hash{'enum_pad_zeros'}{'value'}	= 0;
+$hash{'enum_pad_zeros'}{'value'}	= 4;
 
 $hash{'truncate'}{'save'}		= 'mw';
 $hash{'truncate'}{'value'}		= 0;
@@ -105,7 +105,7 @@ $hash{'trunc_char'}{'save'}		= 'mw';
 $hash{'trunc_char'}{'value'}		= 0;
 
 $hash{'truncate_to'}{'save'}		= 'mw';
-$hash{'truncate_to'}{'value'}		= 0;
+$hash{'truncate_to'}{'value'}		= 256;
 
 $hash{'save_window_size'}{'save'}	= 'mwg';
 $hash{'save_window_size'}{'value'}	= 0;
@@ -118,16 +118,33 @@ sub save_hash
 {
 	&misc::plog(0, "config::save_hash $hash_tsv");
 	&misc::null_file($hash_tsv);
-	for my $k(keys %hash)
+
+	my @types = ('norm', 'mw', 'mwg');
+
+	for my $t (@types)
 	{
-		if(!defined $hash{$k}{'value'})
+		&misc::file_append($hash_tsv, "\n######## $t ########\n\n");
+		for my $k(sort { $a cmp $b } keys %hash)
 		{
-			&misc::plog(0, "config::save_hash key $k has no value");
-			print "$k = \n" . Dumper($hash{$k});
-			next;
+			next if $hash{$k}{'save'} ne $t;
+			save_hash_helper($k);
 		}
-		&misc::file_append($hash_tsv, "$k\t".$hash{$k}{'value'}."\n");
 	}
+}
+
+sub save_hash_helper
+{
+	$config::hash{window_g}{value} = $main::mw->geometry;
+
+	my $k = shift;
+	if(!defined $hash{$k}{'value'})
+	{
+		my $w = "config::save_hash key $k has no value";
+		&misc::plog(0, $w);
+		print "$w\n$k = \n" . Dumper($hash{$k});
+		next;
+	}
+	&misc::file_append($hash_tsv, "$k\t\t".$hash{$k}{'value'}."\n");
 }
 
 
@@ -138,15 +155,16 @@ sub load_hash
 	my %h = ();
 	for my $line(@tmp)
 	{
-		my ($k, $v) = split(/\t/, $line);
+		next if $line !~ /.*\t.*/;
+		$line =~ s/\n$//;
+		$line =~ s/\r$//;
+		my ($k, $v) = split(/\t+/, $line);
 		$h{$k}{value} = $v;
 	}
 	for my $k(keys %hash)
 	{
 		if(!defined $h{$k}{'value'})
 		{
-			&misc::plog(0, "config::load_hash key $k has no value");
-			print "$k = \n" . Dumper($hash{$k});
 			next;
 		}
 		$hash{$k}{value} = $h{$k}{value};
@@ -161,78 +179,6 @@ sub load_hash
 sub save
 {
 	&save_hash;
-	open(FILE, ">$main::config_file");
-	print FILE "\# namefix.pl $main::version config file\n",
-		   "\# treated as perl script - dont fuck up if doing manual edit.\n\n";
-
-	print FILE
-
-	"\$space_character	= \"$main::space_character\";\n",
-	"\$max_fn_length	= $main::max_fn_length;\n",
-	"\n",
-	"\$fat32fix		= $main::fat32fix;\n",
-	"\$FILTER_REGEX 	= $main::FILTER_REGEX;\n",
-	"\$file_ext_2_proc	= \"$main::file_ext_2_proc\";\n",
-	"\$debug		= $main::debug;\n",
-	"\$LOG_STDOUT		= $main::LOG_STDOUT;\n",
-	"\$ERROR_STDOUT		= $main::ERROR_STDOUT;\n",
-	"\$ERROR_NOTIFY		= $main::ERROR_NOTIFY;\n",
-	"\$ZERO_LOG		= $main::ZERO_LOG;\n",
-	"\$HTML_HACK		= $main::HTML_HACK;\n",
-	"\$browser		= \"$main::browser\";\n",
-	"\$editor		= \"$main::editor\";\n",
-	"\n",
-	 "\n";
-
-	if
-	(
-		$main::load_defaults == 1 || 	# gui option user selects to save mainwindow options
-		$main::CLI			# if running from cli, save options
-	) {
-
-		print FILE
-
-		"\n\# main window options\n\n",
-
-		"\$case 		= $main::case;\n",
-		"\$WORD_SPECIAL_CASING	= $main::WORD_SPECIAL_CASING;\n",
-
-		"\$spaces		= $main::spaces;\n",
-		"\$dot2space		= $main::dot2space;\n",
-		"\$kill_cwords		= $main::kill_cwords;\n",
-		"\$kill_sp_patterns	= $main::kill_sp_patterns;\n",
-		"\$sp_char		= $main::sp_char;\n",
-		"\$intr_char		= $main::intr_char;\n",
-
-		"\$lc_all		= $main::lc_all;\n",
-		"\$uc_all		= $main::uc_all;\n",
-
-		"\$id3_mode		= $main::id3_mode;\n",
-		"\$id3_guess_tag	= $main::id3_guess_tag;\n",
-
-		"\$enum_opt		= $main::enum_opt;\n",
-		"\$enum_pad		= $main::enum_pad;\n",
-		"\$enum_pad_zeros	= $main::enum_pad_zeros;\n",
-
-		"\$truncate		= $main::truncate;\n",
-		"\$truncate_style	= $main::truncate_style;\n",
-		"\$trunc_char		= \"$main::trunc_char\";\n",
-                "\$truncate_to		= \"$main::truncate_to\";\n",
-
-		"\n";
-	}
-
-	if($main::SAVE_WINDOW_SIZE == 1 && !$main::CLI)
-	{
-		$main::window_g = $main::mw->geometry;
-
-		print FILE
-
-                "\$save_window_size = 1;\n",
-		"\$window_g = \"$main::window_g\";\n\n";
-	}
-	print FILE	   "\# end of config file";
-	close(FILE);
 }
 
 

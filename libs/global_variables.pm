@@ -5,7 +5,7 @@
 
 our $version 		= "4.1.2";
 our $author 		= "Jacob Jarick";
-our $debug		= "0";
+# our $debug		= "0";
 
 # DEBUG LEVELS - WIP
 # 0 = log always - important errors etc
@@ -89,7 +89,6 @@ our $undo_pre_file	= "$home/.namefix.pl/undo.previous.filenames.txt";
 our $undo_dir_file	= "$home/.namefix.pl/undo.dir.txt";
 
 our $browser		= "elinks";
-our $editor		= "vim";
 
 # system internal vars
 
@@ -130,11 +129,7 @@ our $FIRST_DIR_LISTED	= 0;
 our $BR_DONE		= 0;	# a block rename has occured
 our $MR_DONE		= 0;	# a manual rename has occured
 our $FILTER		= 0;	# filter flag, to be used for main gui in future - atm just used in block renaming
-our $ERROR_NOTIFY	= 0;
-our $ERROR_STDOUT	= 1;
 our $LOG_STDOUT		= 0;
-our $ZERO_LOG		= 1;
-our $HTML_HACK		= 0;
 our $UNDO		= 0;
 
 our $SAVE_WINDOW_SIZE	= 0;
@@ -152,9 +147,6 @@ our $filter_cs			= 0;
 our $cleanup		= 1;
 our $case 		= 1;
 our $advance		= 0;
-our $space_character 	= " ";
-our $max_fn_length 	= 256;
-our $truncate_to    	= $max_fn_length;
 
 our $id3_guess_tag	= 0;
 our $id3_force_guess_tag	= 0;
@@ -162,27 +154,10 @@ our $id3_mode		= 0;
 
 our $window_g		= "";
 
-our $fat32fix 		= $fs_fix_default;
-our $file_ext_2_proc 	= "jpeg|jpg|mp3|mpc|mpg|mpeg|avi|asf|wmf|wmv|ogg|ogm|rm|rmvb|mkv";
-
-our $enum_opt		= 1;
-our $enum_pad		= 1;
-our $enum_pad_zeros 	= "4";
-$enum_pad_zeros		= 4;
-
 our $truncate_style 	= 0;
-our $trunc_char		= "";
 
 
 # main window options - save enabled
-
-$main::WORD_SPECIAL_CASING	= 0;
-our $spaces			= 1;
-our $dot2space			= 0;
-our $intr_char 			= 0;
-our $kill_cwords	 	= 0;
-our $kill_sp_patterns 		= 0;
-our $sp_char			= 0;
 
 # main window, misc options - no save allowed
 
@@ -198,7 +173,6 @@ our $pad_digits_w_zero	= 0;
 
 # main window options - no save allowed
 
-our $enum		= 0;	# enumerate mode
 our $truncate		= 0;
 our $uc_all		= 0;
 our $lc_all		= 0;

@@ -107,7 +107,7 @@ sub p
 		);
 	}
 
-	if($main::id3_mode == 1)
+	if($config::hash{id3_mode}{value} == 1)
 	{
 		&misc::plog(4, "sub nf_print: id3_mode enabled");
 		my $art = shift;

@@ -77,7 +77,7 @@ sub edit_prefs
 
 	my $e_ent = $tab1 -> Entry
 	(
-		-textvariable=>\$main::space_character,
+		-textvariable=>\$config::hash{space_character}{value},
 		-width=>5
 	)
 	-> grid
@@ -117,7 +117,7 @@ sub edit_prefs
 
 	my $mfnl_ent = $tab1 -> Entry
 	(
-		-textvariable=>\$main::max_fn_length,
+		-textvariable=>\$config::hash{'max_fn_length'}{'value'},
 		-width=>5
         )
 	-> grid
@@ -158,7 +158,7 @@ sub edit_prefs
 	my $save_window_size_chk = $tab1 -> Checkbutton
 	(
 		-text=>"Save main window size and position",
-		-variable=>\$main::SAVE_WINDOW_SIZE,
+		-variable=>\$config::hash{save_window_size}{value},
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -222,7 +222,7 @@ sub edit_prefs
 	my $F_chk = $tab7 -> Checkbutton
 	(
 		-text=>"FS Fix (Case insensitive file system workaround)",
-		-variable=>\$main::fat32fix,
+		-variable=>\$config::hash{fat32fix}{value},
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -241,7 +241,7 @@ sub edit_prefs
 	my $tab7_regexp_chk = $tab7 -> Checkbutton
 	(
 		-text=>"Disable Regexp pattern matching for Remove option",
-		-variable=>\$main::FILTER_REGEX,
+		-variable=>\$config::hash{FILTER_REGEX}{value},
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -282,7 +282,7 @@ sub edit_prefs
 
 	my $mfe_ent = $tab7 -> Entry
 	(
-		-textvariable=>\$main::file_ext_2_proc,
+		-textvariable=>\$conf::hash{file_ext_2_proc}{value},
 		-width=>60
 	)
 	-> grid
@@ -353,7 +353,7 @@ sub edit_prefs
 
 	my $spin_pad_enum = $tab_debug -> Spinbox
 	(
-		-textvariable=>\$main::debug,
+		-textvariable=>\$config::hash{'debug'}{'value'},
 		-from=>0,
 		-to=>10,
 		-increment=>1,
@@ -369,7 +369,7 @@ sub edit_prefs
 	$tab_debug -> Checkbutton
 	(
 		-text=>"Print log to stdout",
-		-variable=>\$main::LOG_STDOUT,
+		-variable=>\$config::hash{LOG_STDOUT}{value},
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -382,7 +382,7 @@ sub edit_prefs
 	$tab_debug -> Checkbutton
 	(
 		-text=>"Print errors to stdout",
-		-variable=>\$main::ERROR_STDOUT,
+		-variable=>\$config::hash{ERROR_STDOUT}{value},
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -395,7 +395,7 @@ sub edit_prefs
 	$tab_debug -> Checkbutton
 	(
 		-text=>"Pop up errors in a dialog box",
-		-variable=>\$main::ERROR_NOTIFY,
+		-variable=>\$config::hash{ERROR_NOTIFY}{value},
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -408,7 +408,7 @@ sub edit_prefs
 	$tab_debug -> Checkbutton
 	(
 		-text=>"Zero logfile on start",
-		-variable=>\$main::ZERO_LOG,
+		-variable=>\$config::hash{ZERO_LOG}{value},
 		-activeforeground => "blue"
 	)
 	-> grid

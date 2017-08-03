@@ -179,7 +179,7 @@ sub ls_dir_print
 	}
 
 	# if is mp3 & id3_mode enabled then grab id3 tags
-	if($file =~ /.*\.mp3$/i && $main::id3_mode == 1)
+	if($file =~ /.*\.mp3$/i && $config::hash{id3_mode}{value} == 1)
 	{
 		&misc::plog(4, "sub ls_dir_print: if is mp3 & id3_mode enabled then grab id3 tags");
 		($tag, $art, $tit, $tra, $alb, $gen, $year, $com) = &mp3::get_tags($file);

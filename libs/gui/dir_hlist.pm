@@ -99,7 +99,7 @@ sub draw_list
 {
 	&misc::plog(3, "sub draw_list ");
 	my $columns = 4;
-	if($main::id3_mode == 1)
+	if($config::hash{id3_mode}{value} == 1)
 	{
 		$columns = 18;
 	}
@@ -137,7 +137,7 @@ sub draw_list
 	$hlist->header('create', 0, -text =>' ');		# these 2 columns are the same
 	$hlist->header('create', 1, -text =>'Filename');      # for norm & id3 mode
 
-	if($main::id3_mode == 1)
+	if($config::hash{id3_mode}{value} == 1)
 	{
 		$hlist->header('create', 2, -text => 'Artist');
 		$hlist->header('create', 3, -text => 'Track');
