@@ -17,9 +17,16 @@ my $dir = $ARGV[0];
 
 my @vid_filetypes = ('mpg','mpeg','avi','asf','wmf','wmv','mkv');
 my @pic_filetypes = ('jpeg','jpg','gif','bmp','png');
-my @music_filetypes = ('mp3','mpc','ogg','flac');
+my @music_filetypes = ('mp3', 'ogg', 'flac');
 
 my @bands = ('acdc', 'Blur', 'ZZ Top', 'NIN', 'Queen');
+
+my %mime = ();
+
+$mime{mp3} = 'audio/mpeg';
+$mime{ogg} = 'audio/ogg';
+$mime{flac} = 'audio/flac';
+
 
 my $music_dir = "$dir/music";
 mkdir $music_dir;
@@ -42,6 +49,13 @@ for my $band(@bands)
 			print "$filename\n";
 
 			touch $filename;
+
+			if(defined $mime{$ext})
+			{
+				open(FILE, ">$filename");
+				print FILE $mime{$ext};
+				close (FILE);
+			}
 		}
 	}
 }

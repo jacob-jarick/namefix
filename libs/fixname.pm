@@ -306,7 +306,7 @@ sub run_fixname
 			&misc::plog(4, "sub fixname: one or more tags changed, write n bump counter");
         		if(!$main::testmode)
 			{
-				&write_tags($file, $newart, $newtit, $newtra, $newalb, $newcom, $newgen, $newyear);
+				&mp3::write_tags($file, $newart, $newtit, $newtra, $newalb, $newcom, $newgen, $newyear);
 			}
 			$main::id3_change++;
 		}

@@ -411,7 +411,7 @@ sub manual_edit
                         	$config::hash{id3_mode}{value} == 1 &&
                                 $file =~ /.*\.mp3$/i
                         ) {
-                        	&write_tags($file, $art, $tit, $tra, $alb, $com, $gen, $year);
+                        	&mp3::write_tags($file, $art, $tit, $tra, $alb, $com, $gen, $year);
                         }
         	}
         )

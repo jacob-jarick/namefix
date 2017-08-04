@@ -1,6 +1,8 @@
 
 4.1.2 - ie refresh in progress
 
+* make_test_dir.pl updated. now sets mimetypes for music files (allows testing of mp3 tags)
+
 * rc_menu
   delete can now delete a directory - shows dir contents in dialog
 
