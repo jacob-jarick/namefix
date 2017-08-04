@@ -1,1 +1,1 @@
-git grep -l '$config::hash_tsv' | xargs sed -i 's/\$config::hash_tsv/\$config::hash_tsv/g'
+git grep -l '$conf::' | xargs sed -i 's/\$conf::/\$config::/g'

@@ -4,6 +4,8 @@ require Exporter;
 
 use strict;
 use warnings;
+
+use Data::Dumper::Concise;
 use Cwd;
 
 #--------------------------------------------------------------------------------------------------------------
@@ -67,7 +69,18 @@ sub run_fixname
 	# make sure file is allowed to be renamed
         # -----------------------------------------
 
-        if((!-d $file) && ($main::ig_type || $file =~ /\.($conf::hash{file_ext_2_proc}{value})$/i))
+        if(! defined $main::ig_type)
+        {
+		print "ERROR ig_type is undef\n";
+        }
+        if(! defined $config::hash{file_ext_2_proc}{value})
+        {
+		print "ERROR file_ext_2_proc - not defined \$config::hash\n";
+		print Dumper(\%config::hash);
+		exit;
+        }
+
+        if((!-d $file) && ($main::ig_type || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i))
 	{
 		&misc::plog(4, "sub fixname: \"$file\" passed file extionsion check");
                 $tmpr = 0;

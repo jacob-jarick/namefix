@@ -102,7 +102,7 @@ $main::CLI = 1;
 
 if(-f $config::hash_tsv)
 {
-	do $config::hash_tsv;	# executes config file
+	&config::load_hash;
 }
 
 if($config::hash{ZERO_LOG}{value})
@@ -373,7 +373,7 @@ for(@ARGV)
 	}
 	elsif(/--media-types=(.*)/ || /--mt=(.*)/)
 	{
-		$conf::hash{file_ext_2_proc}{value} = $1;
+		$config::hash{file_ext_2_proc}{value} = $1;
 	}
 
 	#######################

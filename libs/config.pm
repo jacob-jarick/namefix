@@ -10,6 +10,7 @@ use FindBin qw($Bin);
 our %hash = ();
 
 our $hash_tsv = &misc::get_home."/.namefix.pl/config_hash.tsv";
+$hash_tsv =~ s/\\/\//g;
 
 $hash{'space_character'}{'save'}	= 'norm';
 $hash{'space_character'}{'value'}	= ' ';

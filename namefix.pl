@@ -137,13 +137,6 @@ if(-f $config::hash_tsv)
 	&config::load_hash;
 }
 
-if(-f $main::fonts_file)
-{
-	do $main::fonts_file;		# if font file exists
-}
-
-&config_dialog::save_fonts;
-
 if($config::hash{ZERO_LOG}{value})
 {
 	&misc::clog;

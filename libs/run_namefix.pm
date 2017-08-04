@@ -176,7 +176,6 @@ sub run
 
 	$main::testmode = 1;	# return to test mode for safety :)
 	$main::RUN = 0;		# finished renaming - turn off run flag
-	&misc::plog(0, "RUN = $main::RUN");
 	chdir $main::dir;	# return to users working dir
 }
 

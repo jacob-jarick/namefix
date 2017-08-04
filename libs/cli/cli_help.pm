@@ -176,7 +176,7 @@ A	--all-files		Process all files, not just media files.
 	--media-types=STRING	only process the file extensions listed in STRING
 	--mt=STRING		STRING format: \"<file_ext1>|<file_ext2>\"
 				Default file types processed:
-				$conf::hash{file_ext_2_proc}{value}
+				$config::hash{file_ext_2_proc}{value}
 
 ";
 my $txt_hacks =

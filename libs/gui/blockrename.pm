@@ -444,7 +444,7 @@ sub br_txt_cleanup
 {
 	my $link = shift;
 	&misc::plog(3, "sub br_txt_cleanup: \"$link\"");
-	if($link =~ m/^\s*(.*\.($conf::hash{file_ext_2_proc}{value}))\s+/)
+	if($link =~ m/^\s*(.*\.($config::hash{file_ext_2_proc}{value}))\s+/)
 	{
 		&misc::plog(4, "sub br_txt_cleanup: \"$link\" -> \"$1\"");
 		$link = $1;
@@ -479,7 +479,7 @@ sub br_readdir
                 	next;
                 }
 
-                if(!$main::ig_type == 0 && $_ !~ /\.($conf::hash{file_ext_2_proc}{value})$/i)
+                if(!$main::ig_type == 0 && $_ !~ /\.($config::hash{file_ext_2_proc}{value})$/i)
                 {
                 	next;
                 }

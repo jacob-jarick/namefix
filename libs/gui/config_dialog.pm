@@ -282,7 +282,7 @@ sub edit_prefs
 
 	my $mfe_ent = $tab7 -> Entry
 	(
-		-textvariable=>\$conf::hash{file_ext_2_proc}{value},
+		-textvariable=>\$config::hash{file_ext_2_proc}{value},
 		-width=>60
 	)
 	-> grid
