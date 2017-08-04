@@ -264,7 +264,7 @@ sub br_cleanup
 	@flist = split(/\n/, $main::txt -> get('1.0', 'end'));
 	@list = split(/\n/, $main::txt_r -> get('1.0', 'end'));
 
-	&br_txt_r_clear;
+	$main::txt_r->delete('0.0','end');
 	for my $i(@list)
 	{
 		$file = $flist[$c];
@@ -286,12 +286,6 @@ sub br_cleanup
         	'end',
         	"$dtext"
         );
-}
-
-sub br_txt_r_clear
-{
-	&misc::plog(3, "sub br_txt_r_clear");
-	$main::txt_r->delete('0.0','end');
 }
 
 sub txt_reset

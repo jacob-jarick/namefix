@@ -2,30 +2,12 @@ package bookmark;
 require Exporter;
 @ISA = qw(Exporter);
 
-# bookmark functions
 use strict;
 use warnings;
 
 our $bookmarks;
 our %bmhash = ();
 my $bookmark_dir = '';
-# bm_add -> bm_redraw_menu -> bm_list_bookmarks
-
-#--------------------------------------------------------------------------------------------------------------
-# Regarding the bookmark hack:
-#
-# before any1 says anything !, I couldnt see any other way to quickly make a bookmarks menu,
-# without printing to file then executing, $u is always the last url in the bookmarks file.
-#
-# -command=> function floats around until called rather being declared as it literally is
-# this is the normal behaviour, but when I try to spool off several menu commands from a loop
-# problems are encountered - cant use variables that are redeclared, Ive tried hashes and breifly constants
-# ended up with grief
-#
-# I know there is a proper way todo this, but for the life of me I dont know - and Ive googled all the topics I
-# can think of, will post to a forum for help after 3.5 (tried with no luck).
-#
-# Feel free tu suggest a better way, hack is nicely documented :)
 
 #--------------------------------------------------------------------------------------------------------------
 # Bookmark add
@@ -186,13 +168,8 @@ DEBUG LEVELS:
 #--------------------------------------------------------------------------------------------------------------
 # bookmark list bookmarks
 #--------------------------------------------------------------------------------------------------------------
-# This is the hack mentioned above
 
-# Explanation:
-# this code reads from namefix.pl's simple bookmark list,
-# generates some perl/tk code to draw the menu
-# writes said code to bm.pl
-# executes bm.pl
+# no hacks on me :D
 
 sub bm_list_bookmarks
 {
@@ -243,9 +220,6 @@ sub bm_list_bookmarks
 			}
 		);
 	}
-
-	&misc::plog(3, "sub bm_list_bookmarks: executing generated bookmark code");
-
 	return 1;
 }
 
