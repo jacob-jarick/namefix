@@ -7,7 +7,6 @@ use Data::Dumper::Concise;
 
 use English;
 use Cwd;
-use MP3::Tag;
 use File::Find;
 use File::Basename qw(&basename &dirname);
 
@@ -975,23 +974,9 @@ $tab2->Label(-text=>" ")
 	-column=>1
 );
 
-my $rm_id3v1 = $tab2 -> Checkbutton
-(
-	-text=>"RM id3v1 tags",
-	-variable=>\$main::id3v1_rm,
-	-activeforeground => "blue"
-)
--> grid
-(
-	-row=>$row++,
-	-column=>1,
-	-sticky=>"nw",
-	-columnspan=>2
-);
-
 my $rm_id3v2 = $tab2 -> Checkbutton
 (
-	-text=>"RM id3v2 tags",
+	-text=>"RM id3 tags",
 	-variable=>\$id3v2_rm,
 	-activeforeground => "blue"
 )

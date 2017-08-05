@@ -15,6 +15,7 @@ sub manual::edit
 	my $file_original = $file;
 	my $row 		= 1;
 	my $EXT		= 0;
+	my $TAGS	= 0;
 	my $new_fn;
 	my $old_fn;
 	my $new_ext;
@@ -23,6 +24,8 @@ sub manual::edit
 	my $ent_min_l 	= 2;
 	my $ent_l;
 	my $l 		= length $file;
+
+	my %tag_hash	= ();
 
 	&misc::plog(3, "sub manual::edit: \"$file\"");
 
@@ -48,19 +51,23 @@ sub manual::edit
                 $EXT = 1;
         }
 
-        if(!$file) {
+
+        if(!$file)
+        {
         	&misc::plog(0, "sub manual::edit: \$file isnt defined.");
         	return;
         }
 
+        $TAGS = &misc::is_in_array($old_ext, \@config::id3v2_exts);
+
         my $tag	= "";
         my $art = "";
         my $tit = "";
-        my $tra = "";
+        my $tra = 0;
         my $alb = "";
         my $com = "";
         my $gen = "";
-        my $year = "";
+        my $year = '';
 
 	&misc::plog(4, "sub manual::edit: chdir to  \$main::hlist_cwd = \"$main::hlist_cwd\" ");
 	chdir $main::hlist_cwd;	# shift to correct dir (needed for recursive mode).
@@ -70,38 +77,37 @@ sub manual::edit
 	my $w = $main::mw->Toplevel();
 	$w->title("Manual Rename");
 
-	$w->Label(
+	$w->Label
+	(
         	-text=>"Manual Rename",
         	-font=>$main::dialog_title_font
         )
-        -> grid(
+        -> grid
+        (
         	-row=>1,
         	-column=>1,
         	-columnspan=>1
         );
 
-	my $frame1 = $w->Frame(
-		-borderwidth=>1
-	)
-	->grid(
+	my $frame1 = $w->Frame(-borderwidth=>1)
+	->grid
+	(
 		-row=>2,
 		-column=>1,
 		-columnspan=>1
 	);
 
-	my $button_frame = $w->Frame(
-		-borderwidth=>1
-	)
-	->grid(
+	my $button_frame = $w->Frame(-borderwidth=>1)
+	->grid
+	(
 		-row=>3,
 		-column=>1,
 		-columnspan=>1
 	);
 
-	$frame1->Label(
-		-text=>"Old Filename: "
-	)
-	->grid(
+	$frame1->Label(-text=>"Old Filename: ")
+	->grid
+	(
 		-row=>1,
 		-column=>1
 	);
@@ -120,10 +126,9 @@ sub manual::edit
 	                -column=>2
 	        );
 
-	        $frame1->Label(
-	                -text=>" . "
-	        )
-	        ->grid(
+	        $frame1->Label(-text=>" . ")
+	        ->grid
+	        (
 	                -row=>1,
 	                -column=>3
 	        );
@@ -155,10 +160,9 @@ sub manual::edit
 	        );
 	}
 
-	$frame1->Label(
-		-text=>"New Filename: "
-	)
-	->grid(
+	$frame1->Label(-text=>"New Filename: ")
+	->grid
+	(
 		-row=>2,
 		-column=>1
 	);
@@ -170,14 +174,14 @@ sub manual::edit
 	                -textvariable=>\$new_fn,
 	                -width=>$ent_l
 	        )
-	        ->grid(
+	        ->grid
+	        (
 	                -row=>2,
 	                -column=>2
 	        );
-	        $frame1->Label(
-	                -text=>" . "
-	        )
-	        ->grid(
+	        $frame1->Label(-text=>" . ")
+	        ->grid
+	        (
 	                -row=>2,
 	                -column=>3
 	        );
@@ -186,99 +190,85 @@ sub manual::edit
 	                -textvariable=>\$new_ext,
 	                -width=>5
 	        )
-	        ->grid(
+	        ->grid
+	        (
 	                -row=>2,
 	                -column=>4
 	        );
         }
         else
         {
-	        $frame1->Entry(
+	        $frame1->Entry
+	        (
 	                -textvariable=>\$newfile,
 	                -width=>$ent_l
 	        )
-	        ->grid(
+	        ->grid
+	        (
 	                -row=>2,
 	                -column=>2
 	        );
 	}
-	my $ext = $file; $ext =~ s/^.*\.(.*?)$//;
-	if(&misc::is_in_array($ext, \@config::id3v2_exts))
+	if($TAGS)
 	{
 		&misc::plog(4, "sub manual::edit: \"$file\" is a mp3, using mp3 rename gui ");
-        	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
-        	$frame1->Label(
-			-text=>"Artist: "
-		)
-		->grid(
+        	my $ref = &mp3::get_tags($file);
+        	%tag_hash = %$ref;
+        	$frame1->Label(-text=>"Artist: ")
+		->grid
+		(
 			-row=>3,
 			-column=>1
 		);
 
-	        $frame1->Entry(
-                	-textvariable=>\$art,
+	        $frame1->Entry
+	        (
+                	-textvariable=>\$tag_hash{artist},
                         -width=>30
         	)
-	        ->grid(
+	        ->grid
+	        (
                 	-row=>3,
                         -column=>2,
                         -sticky=>"nw",
                         -columnspan=>3
         	);
 
-        	$frame1->Label(
-			-text=>"Track: "
-		)
-		->grid(
+        	$frame1->Label(-text=>"Track: ")
+		->grid
+		(
 			-row=>4,
 			-column=>1
 		);
 
-	        $frame1->Entry(
-                	-textvariable=>\$tra,
+	        $frame1->Entry
+	        (
+                	-textvariable=>\$tag_hash{track},
                         -width=>2
         	)
-	        ->grid(
+	        ->grid
+	        (
                 	-row=>4,
                         -column=>2,
                         -sticky=>"nw",
                         -columnspan=>3
         	);
 
-        	$frame1->Label(
-			-text=>"Title: "
-		)
-		->grid(
+        	$frame1->Label(-text=>"Title: ")
+		->grid
+		(
 			-row=>5,
 			-column=>1
 		);
 
-		$frame1->Entry(
-                	-textvariable=>\$tit,
+		$frame1->Entry
+		(
+                	-textvariable=>\$tag_hash{title},
                         -width=>30
         	)
-	        ->grid(
+	        ->grid
+	        (
                 	-row=>5,
-                        -column=>2,
-                        -sticky=>"nw",
-                        -columnspan=>3
-        	);
-
-                $frame1->Label(
-			-text=>"Album: "
-		)
-		->grid(
-			-row=>6,
-			-column=>1
-		);
-
-		$frame1->Entry
-                (
-                	-textvariable=>\$alb,
-                        -width=>30,
-        	)
-	        ->grid(
-                	-row=>6,
                         -column=>2,
                         -sticky=>"nw",
                         -columnspan=>3
@@ -286,8 +276,28 @@ sub manual::edit
 
                 $frame1->Label
                 (
-			-text=>"Genre: "
+			-text=>"Album: "
 		)
+		->grid
+		(
+			-row=>6,
+			-column=>1
+		);
+
+		$frame1->Entry
+                (
+                	-textvariable=>\$tag_hash{album},
+                        -width=>30,
+        	)
+	        ->grid
+	        (
+                	-row=>6,
+                        -column=>2,
+                        -sticky=>"nw",
+                        -columnspan=>3
+        	);
+
+                $frame1->Label(-text=>"Genre: ")
 		->grid
                 (
 			-row=>7,
@@ -298,7 +308,7 @@ sub manual::edit
                 (
  	                -mode=>'readonly',
 	                -relief=>'groove',
-	                -textvariable =>\$gen,
+	                -textvariable =>\$tag_hash{genre},
 	                -choices=>\@main::genres,
 	                -entrywidth=>16,
 		)
@@ -310,17 +320,16 @@ sub manual::edit
                         -columnspan=>3
 		);
 
-                $frame1->Label(
-			-text=>"Year: "
-		)
-		->grid(
+                $frame1->Label(-text=>"Year: ")
+		->grid
+		(
 			-row=>8,
 			-column=>1
 		);
 
 	        $frame1->Entry
                 (
-                	-textvariable=>\$year,
+                	-textvariable=>\$tag_hash{year},
                         -width=>30
         	)
 	        ->grid
@@ -331,17 +340,16 @@ sub manual::edit
 			-columnspan=>3
         	);
 
-                $frame1->Label(
-			-text=>"comment: "
-		)
-		->grid(
+                $frame1->Label(-text=>"comment: ")
+		->grid
+		(
 			-row=>9,
 			-column=>1
 		);
 
 	        $frame1->Entry
                 (
-                	-textvariable=>\$com,
+                	-textvariable=>\$tag_hash{comment},
                         -width=>30
         	)
 	        ->grid
@@ -353,17 +361,20 @@ sub manual::edit
         	);
 
 	}
-	my $but_reset = $button_frame -> Button(
+	my $but_reset = $button_frame -> Button
+	(
         	-text=>"Reset",
         	-activebackground=>'white',
-        	-command => sub {
+        	-command => sub
+        	{
         		$newfile = $file = $file_original;
                         $new_fn = $old_fn;
                         $new_ext = $old_ext;
 
-                        if($config::hash{id3_mode}{value} == 1 && $file =~ /.*\.$config::id3_ext_regex$/i)
+                        if($TAGS)
                         {
-				($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
+				my $ref = &mp3::get_tags($file);
+				%tag_hash = %$ref;
 			}
         	}
         )
@@ -374,11 +385,7 @@ sub manual::edit
         	-columnspan => 1
         );
 
-        if
-        (
-        	$config::hash{id3_mode}{value} == 1 &&
-		$file =~ /.*\.$config::id3_ext_regex$/i
-        )
+	if ($TAGS)
         {
 	        $button_frame -> Button
 	        (
@@ -386,47 +393,51 @@ sub manual::edit
 	                -activebackground=>'white',
 	                -command => sub
 	                {
-                        	($art, $tra, $tit, $alb) = &guess_tags($file);
+                        	($tag_hash{artist}, $tag_hash{track}, $tag_hash{title}, $tag_hash{album}) = &mp3::guess_tags($file);
 				print "button\n";
 	                }
 	        )
-	        -> grid(
+	        -> grid
+	        (
 	                -row => 4,
 	                -column => 2,
 	                -columnspan => 1
 	        );
 	}
 
-	my $but_apply = $button_frame -> Button(
+	my $but_apply = $button_frame -> Button
+	(
         	-text=>"Apply",
         	-activebackground=>'white',
-        	-command => sub {
+        	-command => sub
+        	{
                 	if($EXT)
                         {
         			&me_rename($file, "$new_fn.$new_ext");
-                                $old_fn = $new_fn;
-                                $old_ext = $new_ext;
+				$old_fn = $new_fn;
+				$old_ext = $new_ext;
                         }
                         else
                         {
                         	&me_rename($file, $newfile);
                                 $file = $newfile;
                         }
-                        if(
-                        	$config::hash{id3_mode}{value} == 1 &&
-                                $file =~ /.*\.$config::id3_ext_regex$/i
-                        ) {
-                        	&mp3::write_tags($file, $art, $tit, $tra, $alb, $com, $gen, $year);
-                        }
-        	}
+
+                        if($TAGS)
+			{
+				&mp3::write_tags($file, \%tag_hash);
+			}
+		}
         )
-        -> grid(
+        -> grid
+	(
         	-row => 4,
         	-column => 3,
         	-columnspan => 1
         );
 
-	my $but_close = $button_frame -> Button(
+	my $but_close = $button_frame -> Button
+	(
         	-text=>"Close",
         	-activebackground=>'white',
         	-command => sub
@@ -439,7 +450,8 @@ sub manual::edit
 			}
         	}
         )
-        -> grid(
+        -> grid
+        (
         	-row=>4,
         	-column=>4,
         	-columnspan=>1

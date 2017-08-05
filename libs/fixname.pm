@@ -47,7 +47,7 @@ sub run_fixname
         my $newyear		= "";
         my $newcom		= "";
 
-        my $tmp	       		= "";
+#         my $tmp	       		= "";
         my $t_s	       		= "";
         my $tl	       		= 0;
         my $file_ext_length	= 0;
@@ -56,6 +56,8 @@ sub run_fixname
         my $enum_n		= 0;
         my $file_ext		= "";
         my $tmpfile		= "";
+
+        my $PRINT		= 0;
 
         $main::cwd 		= cwd;	# RM - legacy code ???
 
@@ -132,18 +134,17 @@ sub run_fixname
 	if($config::hash{id3_mode}{value} && $file =~ /\.$config::id3_ext_regex$/i)
 	{
 	&misc::plog(4, "sub fixname: getting mp3 tags");
-		@tmp_arr = &mp3::get_tags($file);
-		if($tmp_arr[0] eq "id3v1")
-		{
-			$tag = 1;
-			$newart 	= $art 		= $tmp_arr[1];
-			$newtit 	= $tit 		= $tmp_arr[2];
-			$newtra 	= $tra 		= $tmp_arr[3];
-			$newalb 	= $alb 		= $tmp_arr[4];
-                        $newgen		= $gen	 	= $tmp_arr[5];
-                        $newyear 	= $year		= $tmp_arr[6];
-			$newcom 	= $com 		= $tmp_arr[7];
-		}
+		my $ref = &mp3::get_tags($file);
+		my %h = %$ref;
+
+		$tag = 1;
+		$newart 	= $art 		= $h{artist};
+		$newtit 	= $tit 		= $h{title};
+		$newtra 	= $tra 		= $h{track};
+		$newalb 	= $alb 		= $h{album};
+		$newgen		= $gen	 	= $h{genre};
+		$newyear 	= $year		= $h{year};
+		$newcom 	= $com 		= $h{comment};
 
 		# Do tag stuff now
 
@@ -235,7 +236,7 @@ sub run_fixname
 		{
                 	$main::tags_rm++;
                 }
-                $tmp = "printme";
+                $PRINT++;
         }
 
 	# rm mp3 id3v2 tags
@@ -249,7 +250,7 @@ sub run_fixname
 		{
                 	$main::tags_rm++;
                 }
-                $tmp = "printme";
+                $PRINT++;
         }
 
 	# rm mp3 id3v1 tags
@@ -260,7 +261,7 @@ sub run_fixname
 
 	if($tag == 0 && $file eq $newfile)
 	{
-        	if($tmp eq "printme")
+        	if($PRINT)
 		{
                 	&nf_print::p($file, $newfile);
                 }
@@ -285,7 +286,7 @@ sub run_fixname
 			$year eq $newyear
         	)
 		{
-			if($tmp eq "printme")
+			if($PRINT)
 			{
 				&nf_print::p($file, $newfile);
 			}
@@ -307,7 +308,16 @@ sub run_fixname
 			&misc::plog(4, "sub fixname: one or more tags changed, write n bump counter");
         		if(!$main::testmode)
 			{
-				&mp3::write_tags($file, $newart, $newtit, $newtra, $newalb, $newcom, $newgen, $newyear);
+				my %h = ();
+				$h{artist}	= $newart;
+				$h{title}	= $newtit;
+				$h{track}	= $newtra;
+				$h{album}	= $newalb;
+				$h{genre}	= $newgen;
+				$h{year}	= $newyear;
+				$h{comment}	= $newcom;
+
+				&mp3::write_tags($file, \%h);
 			}
 			$main::id3_change++;
 		}

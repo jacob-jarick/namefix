@@ -1,6 +1,18 @@
 
 4.1.2 - ie refresh in progress
 
+* drastic overhaul of mp3 library.
+  updated to use new methods of writing tags, as my old method is now depreciated
+  new methods enabled writing to ogg files and other audio formats.
+  information for mp3 (audio files) tags are stored in a hash whenever possible
+
+* id3v1 tags no longer supported (what is this the 90's ?)
+  id3v1 tags are read only, removed and upgraded to id3v2 at every chance
+  large update for get_tags
+  rm_tags now removed both id3v1 and id3v2
+
+* removed $tmp var from fixname. now using local flag $PRINT
+
 * id3 tags supported on the following file types: mp3, mp2, ogg, mpg, mpeg, mp4, aiff, flac, ape, ram, mpc
   WIP - currently ogg's dont get their id3 tags written
 

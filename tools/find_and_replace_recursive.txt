@@ -1,1 +1,1 @@
-git grep -l 'manual::edit' | xargs sed -i 's/\manual::edit/\manual::edit/g'
+git grep -l 'mp3::' | xargs sed -i 's/\manual::edit/\manual::edit/g'
