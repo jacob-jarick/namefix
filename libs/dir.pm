@@ -17,7 +17,7 @@ use Cwd;
 
 sub ls_dir
 {
-	&misc::plog(3, "sub ls_dir");
+# 	&misc::plog(3, "sub ls_dir");
 	&run_namefix::prep_globals;
 	&dir_hlist::hlist_clear;
 
@@ -41,7 +41,7 @@ sub ls_dir
 
         if($main::recr)
         {
-		&misc::plog(4, "sub ls_dir: recursive mode");
+# 		&misc::plog(4, "sub ls_dir: recursive mode");
 		@main::find_arr = ();
 	        find(\&find_fix, "$main::dir");
 		&ls_dir_find_fix;
@@ -55,7 +55,7 @@ sub ls_dir
 		my $total = scalar @dirlist + scalar @file_list;
 		$main::percent_done = int(($count / $total) * 100);
 
-		&misc::plog(4, "sub ls_dir: non recursive mode");
+# 		&misc::plog(4, "sub ls_dir: non recursive mode");
         	for my $f (@dirlist)
         	{
 			$count++;
@@ -104,7 +104,7 @@ sub ls_dir_find_fix
 	my $file = "";
 	my $dir = "";
 
-	&misc::plog(3, "sub ls_dir_find_fix:");
+# 	&misc::plog(3, "sub ls_dir_find_fix:");
 	$main::percent_done = 0;
 	my $total = scalar @main::find_arr;
 	my $count = 1;
@@ -112,21 +112,16 @@ sub ls_dir_find_fix
 	for $file(@main::find_arr)
 	{
 		$main::percent_done = int(($count++/$total) * 100);
-		&misc::plog(4, "sub ls_dir_find_fix: list line \"$file\"");
 		$file =~ m/^(.*)\/(.*?)$/;
 		$dir = $1;
 		$file = $2;
-		&misc::plog(4, "sub ls_dir_find_fix: dir = \"$dir\"");
-		&misc::plog(4, "sub ls_dir_find_fix: file = \"$file\"");
 
 		chdir $dir;	# change to dir containing file
 		&ls_dir_print($file);
 		chdir $d;	# change back to dir sub started in
 	}
-	&misc::plog(3, "sub find_fix_process: done");
 	return 1;
 }
-
 
 # this function is only called from ls_dir & ls_dir_find_fix
 
@@ -134,30 +129,13 @@ sub ls_dir_print
 {
 	my $file = shift;
 
-	if($main::STOP == 1)
-	{
-		&misc::plog(1, "sub ls_dir_print: \$main::STOP = \"$main::STOP\" - not printing");
-		return 0;
-	}
-	&misc::plog(3, "sub ls_dir_print: \"$file\"");
+	return 0 if $main::STOP == 1;
 
 	$main::hlist_cwd = cwd;
 
-        my $tag = "";
-        my $art = "";
-        my $tit = "";
-        my $tra = "";
-        my $alb = "";
-        my $com = "";
-        my $gen = "";
-        my $year = "";
 	my $d = cwd();
 
-        if(!$file || $file eq "" || $file eq ".")
-        {
-		&misc::plog(4, "sub ls_dir_print: \$file = \"$file\" not printing");
-        	return;
-        }
+        return if !$file || $file eq "" || $file eq ".";
 
 	if($file eq "..")
 	{
@@ -173,24 +151,20 @@ sub ls_dir_print
 
 	if(-d $file && $main::recr)
 	{
-		&nf_print::p(" ", "<MSG>");
+		&nf_print::p(" ", "<BLANK>");
 		&nf_print::p("$d/$file", "$d/$file");
 		return;
 	}
 
-	# if is mp3 & id3_mode enabled then grab id3 tags
-	my $ext = $file; $ext =~ s/^.*\.(.*?)$//;
-	if($config::hash{id3_mode}{value} == 1 && &misc::is_in_array($ext, \@config::id3v2_exts))
+	# check for audio tags
+	if($config::hash{id3_mode}{value} == 1)
 	{
-		&misc::plog(4, "sub ls_dir_print: if is mp3 & id3_mode enabled then grab id3 tags");
 		my $ref = &mp3::get_tags($file);
 		my %h = %$ref;
 
-		&nf_print::p($file, $file, $h{artist}, $h{title}, $h{track}, $h{album}, $h{comment}, $h{genre}, $h{year});
+		&nf_print::p($file, $file, \%h, \%h);
 		return;
 	}
-
-	&misc::plog(4, "sub ls_dir_print: doesnt meet any special conditions, just print it");
 	&nf_print::p($file, $file);
 }
 
@@ -200,7 +174,6 @@ sub ls_dir_print
 
 sub dir_dialog
 {
-	&misc::plog(3, "sub dir_dialog");
 	my $old_dir = $main::dir;
 
 	my $dd_dir = $main::mw->chooseDirectory
@@ -227,7 +200,7 @@ sub dir_dialog
 
 sub fn_readdir
 {
-	&misc::plog(3, "sub fn_readdir");
+# 	&misc::plog(3, "sub fn_readdir");
 	my $dir = shift;
 	my @dirlist = ();
 	my @dirlist_clean = ();
@@ -257,33 +230,17 @@ sub dir_filtered
 	my @d = ();
 	my @dirlist = &fn_readdir($dir);
 
-	&misc::plog(3, "sub dir_filtered \"$dir\"");
-
 	for my $i(@dirlist)
 	{
-		if(-d $i && (!$main::LISTING && !$main::proc_dirs))	# ta tibbsy for help
- 		{
-			&misc::plog(4, "sub dir_filtered: $i is dir, didnt pass");
- 			next;
- 		}
+		# $i is dir, didnt pass
+		next if(!$main::proc_dirs && -d $i && !$main::LISTING);	# ta tibbsy for help
 		if($main::FILTER)
 		{
-			if(&filter::match($i) == 1)	# apply listing filter
-			{
-				&misc::plog(4, "sub dir_filtered: $i passed");
-				push @d, $i;
-				next;
-			}
-			else
-			{
-				&misc::plog(4, "sub dir_filtered: $i didnt pass");
-				next;
-			}
+			push @d, $i if(&filter::match($i) == 1);	# apply listing filter
 		}
 		else
 		{
 			push @d, $i;
-			next;
 		}
 	}
 	return @d;

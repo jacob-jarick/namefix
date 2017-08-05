@@ -265,19 +265,17 @@ sub br_cleanup
 	@list = split(/\n/, $main::txt_r -> get('1.0', 'end'));
 
 	$main::txt_r->delete('0.0','end');
-	for my $i(@list)
+	for my $new_file(@list)
 	{
 		$file = $flist[$c];
 		$c++;
-		if(!$i || !$file)	# avoid sending null entrys to subs below
+		if(!$new_file || !$file)	# avoid sending null entrys to subs below
 		{
 			next;
 		}
-		&misc::plog(4, "sub br_cleanup: processing \"$file\" -> \"$i\"");
-		$i = &br_ed2k_cleanup($i);		# strip ed2k link info
-		$i = &br_txt_cleanup($i);		# strip cleanup any crap trailing filename
-		$i = run_fixname_subs($file, $i);	# apply fixname routines ($file is needed, else some funcs mangle extensions)
-
+		&misc::plog(4, "sub br_cleanup: processing \"$file\" -> \"$new_file\"");
+		$new_file = &br_txt_cleanup($new_file);				# strip cleanup any crap trailing filename
+		$new_file = &fixname::run_fixname_subs($file, $new_file);	# apply fixname routines ($file is needed, else some funcs mangle extensions)
 	}
 
 	$dtext = join ("\n", @list);

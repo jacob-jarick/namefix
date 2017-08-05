@@ -18,10 +18,21 @@ $id3h{artist}	= 'TPE1';
 $id3h{title}	= 'TIT2';
 $id3h{track}	= 'TRCK';
 $id3h{album}	= 'TALB';
-$id3h{comment}	= 'COMM(fre,fra,eng,#0)';
+$id3h{comment}	= 'COMM';
 $id3h{genre}	= 'TCON';
 $id3h{year}	= 'TYER';
 
+my %id3_order = ();
+{
+	my $count = 0;
+	$id3_order{artist}	= $count++;
+	$id3_order{title}	= $count++;
+	$id3_order{track}	= $count++;
+	$id3_order{album}	= $count++;
+	$id3_order{comment}	= $count++;
+	$id3_order{genre}	= $count++;
+	$id3_order{year}	= $count++;
+}
 # -----------------------------------------------------------------------------------
 # get tags
 # -----------------------------------------------------------------------------------
@@ -41,39 +52,15 @@ sub get_tags
         $tag_hash{comment} = '';	# comment
 
 	my $audio_tags = MP3::Tag->new($file);
-	$audio_tags->get_tags();
 
-       	if (exists $audio_tags->{ID3v1})
-	{
-		$tag_hash{artist}	= $audio_tags->{ID3v1}->artist	if defined $audio_tags->{ID3v1}->artist;
-		$tag_hash{title}	= $audio_tags->{ID3v1}->title	if defined $audio_tags->{ID3v1}->title;
-		$tag_hash{track}	= $audio_tags->{ID3v1}->track	if defined $audio_tags->{ID3v1}->track;
-		$tag_hash{album}	= $audio_tags->{ID3v1}->album	if defined $audio_tags->{ID3v1}->album;
-		$tag_hash{comment}	= $audio_tags->{ID3v1}->comment	if defined $audio_tags->{ID3v1}->comment;
-                $tag_hash{genre}	= $audio_tags->{ID3v1}->genre	if defined $audio_tags->{ID3v1}->genre;
-                $tag_hash{year}		= $audio_tags->{ID3v1}->year	if defined $audio_tags->{ID3v1}->year;
-	}
+	$tag_hash{title}	= $audio_tags->title;
+	$tag_hash{artist} 	= $audio_tags->artist;
+	$tag_hash{album}	= $audio_tags->album;
+	$tag_hash{year}		= $audio_tags->year;
+	$tag_hash{comment}	= $audio_tags->comment;
+	$tag_hash{track}	= $audio_tags->track;
+	$tag_hash{genre}	= $audio_tags->genre;
 
-       	if (exists $audio_tags->{ID3v2})
-	{
-		for my $k(keys %mp3::id3h)
-		{
-			my $tmp = $audio_tags->{ID3v2}->getFrame($mp3::id3h{$k});
-			if (defined $tmp)
-			{
-				if($k eq 'comment')
-				{
-					$tag_hash{$k} = '';
-					if(defined $tmp->{Text})
-					{
-						$tag_hash{$k} = $tmp->{Text};
-					}
-					next;
-				}
-				$tag_hash{$k} = $tmp;
-			}
-		}
-	}
 	$audio_tags->close();
 
 	return (\%tag_hash);
@@ -130,18 +117,6 @@ sub write_tags
         }
 
 	my $audio_tags = MP3::Tag->new($file);
-
-# 	if (!$audio_tags->{ID3v1})
-# 	{
-# 		print "sub write_tags: id3v1 is undef, creating\n";
-# 		$audio_tags->new_tag("ID3v1");
-# 	}
-#
-# 	if (!$audio_tags->{ID3v2})
-# 	{
-# 		print "sub write_tags: id3v2 tag did not exist, creating\n";
-# 		$audio_tags->new_tag("ID3v2");
-# 	}
 
 	$audio_tags->title_set	($tag_hash{title});
 	$audio_tags->artist_set	($tag_hash{artist});

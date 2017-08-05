@@ -27,7 +27,7 @@ sub hlist_clear
 
 sub show_rc_menu
 {
-	&misc::plog(3, "sub show_rc_menu ");
+# 	&misc::plog(3, "sub show_rc_menu ");
 	my ($x, $y) = $main::mw->pointerxy;
 
 	my $s = $hlist->nearest($y - $hlist->rooty);
@@ -39,7 +39,7 @@ sub show_rc_menu
 
 sub hide_rc_menu
 {
-	&misc::plog(3, "sub hide_rc_menu ");
+# 	&misc::plog(3, "sub hide_rc_menu ");
 	my ($l,$m)=@_;
 	$m->unpost();
 }
@@ -55,8 +55,8 @@ sub hlist_cd
 	my $old = $main::dir;
 	my $path = $wd . "/" . "$file";
 
-	&misc::plog(3, "sub hlist_cd: \"$file\"");
-	&misc::plog(4, "sub hlist_cd: \$path = \"$path\"");
+# 	&misc::plog(3, "sub hlist_cd: \"$file\"");
+# 	&misc::plog(4, "sub hlist_cd: \$path = \"$path\"");
 
         if(-d $path)
 	{
@@ -65,13 +65,14 @@ sub hlist_cd
 		{
 			$main::dir = cwd();
 	        	&dir::ls_dir;
+	        	&misc::plog(3, "sub hlist_cd: \"$file\"");
 	        	return;
 		}
-		&misc::plog(4, "sub hlist_cd: couldnt chdir to $main::dir");
-		&misc::plog(4, "sub hlist_cd: setting \$main::dir to old value \"$old\"");
+# 		&misc::plog(4, "sub hlist_cd: couldnt chdir to $main::dir");
+# 		&misc::plog(4, "sub hlist_cd: setting \$main::dir to old value \"$old\"");
 		$main::dir = $old;
         }
-	&misc::plog(4, "sub hlist_cd: \$path not a valid directory ignoring");
+# 	&misc::plog(4, "sub hlist_cd: \$path not a valid directory ignoring");
         # not a valid path, ignore
         return;
 }
@@ -97,7 +98,7 @@ sub fn_update_delay
 
 sub draw_list
 {
-	&misc::plog(3, "sub draw_list ");
+# 	&misc::plog(3, "sub draw_list ");
 	my $columns = 4;
 	if($config::hash{id3_mode}{value} == 1)
 	{

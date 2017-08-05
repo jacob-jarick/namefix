@@ -12,7 +12,6 @@ my @output = ();
 
 sub ci_sort
 {
-	&plog(3, "sub ci_sort:");
 	my @sortme2 = sort { lc($a) cmp lc($b) } @_;
 	return @sortme2;
 }
@@ -29,7 +28,11 @@ sub plog
 
 	if($main::CLI == 0) # gui mode
 	{
-		push @output, "$text\n";
+		if($text !~ /\n/ && length $text > 2 && $text ne ' ' && $text ne '')
+		{
+			$text .= "\n";
+		}
+		push @output, "$text";
 		if(scalar @output > 200)
 		{
 			@output = @output[scalar @output - 50 .. scalar @output];
@@ -102,7 +105,6 @@ sub null_file
 {
         my $file = shift;
 
-	&plog(3, "sub null_file: \"$file\"");
         open(FILE, ">$file") or die "ERROR: sub null_file, Couldnt open $file to write to. $!";
         close(FILE);
 }
@@ -112,8 +114,6 @@ sub save_file
         my $file = shift;
         my $t = shift;
 
-	&plog(3, "sub save_file: \"$file\"");
-#	print "savefile: $file : $t\n";
         $t =~ s/^\n//g;		# no blank line @ start of file
         $t =~ s/\n\n+/\n/g;	# no blank lines in file
         open(FILE, ">$file") or die "ERROR: sub save_file, Couldnt open $file to write to. $!";
@@ -125,8 +125,6 @@ sub file_append
 {
 	my $file = shift;
 	my $string = shift;
-
-	&plog(3, "sub file_append: \"$file\"");
 
 	open(FILE, ">>$file") or die "ERROR: Couldnt open $file to append to. $!";
         print FILE $string;
@@ -140,8 +138,6 @@ sub file_append
 sub readf
 {
         my $file = $_[0];
-
-	&plog(3, "sub readf: \"$file\"");
 
         open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
@@ -161,8 +157,6 @@ sub readf
 sub readsf
 {
         my $file = $_[0];
-
-	&plog(3, "sub readsf: \"$file\"");
 
         open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
@@ -184,7 +178,6 @@ sub readsf
 sub readsjf
 {
         my $file = $_[0];
-	&plog(3, "sub readsjf: \"$file\"");
         open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
@@ -202,7 +195,6 @@ sub readsjf
 sub readjf
 {
         my $file = $_[0];
-	&plog(3, "sub readjf: \"$file\"");
 
         open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
@@ -220,7 +212,6 @@ sub readjf
 
 sub clr_no_save
 {
-	&plog(3, "sub clr_no_save ");
 	# clear options that are never saved
 
         $main::replace		= 0;

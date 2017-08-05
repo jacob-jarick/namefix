@@ -9,107 +9,72 @@ use Data::Dumper::Concise;
 use Cwd;
 
 #--------------------------------------------------------------------------------------------------------------
-# fixname
+#
 #--------------------------------------------------------------------------------------------------------------
 
-sub run_fixname
+sub fix
 {
 	return 0 if $main::STOP == 1;
-
-	&misc::plog(3, "sub fixname");
 
         # -----------------------------------------
 	# Vars
         # -----------------------------------------
 
 	my $file 	= shift;
-        if(!$file) { return; }     # prevent null entrys being processed
-	&misc::plog(3, "sub fixname: processing \"$file\"");
+	my $dir		= shift;
 
-        $main::id3_writeme 	= 0;
+	die "fixname::fix : ERROR file is undef.\n"	if ! defined $file;
+	die "fixname::fix : ERROR dir is undef.\n"	if ! defined $dir;
+
         my $newfile		= $file;
-        my $tmpr 		= 1;
+        my $tmpfile		= '';
+
         my @tmp_arr;
 
         my $tag 		= 0;
-        my $art 		= "";
-        my $tit			= "";
-        my $tra			= "";
-        my $alb			= "";
-        my $gen			= "";
-        my $year		= "";
-        my $com			= "";
-        my $newart 		= "";
-        my $newtit		= "";
-        my $newtra		= "";
-        my $newalb		= "";
-        my $newgen		= "";
-        my $newyear		= "";
-        my $newcom		= "";
 
-#         my $tmp	       		= "";
-        my $t_s	       		= "";
-        my $tl	       		= 0;
+        my $tl	       		= 0;	# used for truncating - TODO rename to something obvious
         my $file_ext_length	= 0;
         my $trunc_char_length	= 0;
-        my $l	       		= 0;
+#         my $l			= 0;
         my $enum_n		= 0;
         my $file_ext		= "";
-        my $tmpfile		= "";
 
         my $PRINT		= 0;
 
         $main::cwd 		= cwd;	# RM - legacy code ???
 
+	my $IS_AUDIO_FILE = 0;
+	$IS_AUDIO_FILE = 1 if $file =~ /\.$config::id3_ext_regex$/i;
+
 	if($config::hash{id3_mode}{value} && !-f $file)
 	{
 		&misc::plog(0, "sub fixname: \"$file\" does not exist");
 		&misc::plog(0, "sub fixname: current directory = \"$main::dir\"");
+		return;
 	}
 
         # -----------------------------------------
 	# make sure file is allowed to be renamed
         # -----------------------------------------
+        die "ERROR ig_type is undef\n" if(! defined $main::ig_type);
 
-        if(! defined $main::ig_type)
-        {
-		print "ERROR ig_type is undef\n";
-        }
-        if(! defined $config::hash{file_ext_2_proc}{value})
-        {
-		print "ERROR file_ext_2_proc - not defined \$config::hash\n";
-		print Dumper(\%config::hash);
-		exit;
-        }
+        my $RENAME 		= 0;
 
-        if((!-d $file) && ($main::ig_type || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i))
-	{
-		&misc::plog(4, "sub fixname: \"$file\" passed file extionsion check");
-                $tmpr = 0;
-        }
+        # file extionsion check
+        $RENAME = 1 if(-f $file && ($main::ig_type || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
 
-        if($main::proc_dirs && -d $file)
-	{
-		&misc::plog(4, "sub fixname: \"$file\" passed dir check, is a directory, dir mode is enabled");
-                $tmpr = 0;
-        }
+#	dir check, is a directory, dir mode is enabled
+        $RENAME = 1 if($main::proc_dirs && -d $file);
 
-        if($main::proc_dirs && $main::ig_type)
-	{
-		&misc::plog(4, "sub fixname: \"$file\" being passed regardless, we are processing all file types");
-                $tmpr = 0;
-        }
+#	processing all file types & dirs
+        $RENAME = 1 if($main::proc_dirs && $main::ig_type);
 
-        if($main::FILTER && &filter::match($file) == 0)
-	{
-		&misc::plog(4, "sub fixname: \"$file\" didnt match filter");
-        	return;
-        }
-        if($tmpr == 1)
-	{
-		&misc::plog(4, "sub fixname: rules say file shouldnt be renamed");
-        	return;
-        }
+#	didnt match filter
+        return if($main::FILTER && &filter::match($file) == 0);
+
+#	rules say file shouldnt be renamed
+	return if !$RENAME;
 
 	# recursive, print stuff
 	# this code inserts a line between directorys and prints the parent directory.
@@ -121,72 +86,57 @@ sub run_fixname
                 $main::proc_dirs == 0
         )
 	{
-		&misc::plog(4, "sub fixname: Printing dir in gui dirlist");
 		$main::last_recr_dir = $main::cwd;
 
 		&nf_print::p(" ", "<MSG>");
 		&nf_print::p($main::cwd, $main::cwd);
 	}
 
-	# Fetch id3 tags
+	#------------------------------------------------------------------------------
+	# Fetch & process audio tags
 	# $tag = 1 only if tags are found & id3 mode is enabled
 
-	if($config::hash{id3_mode}{value} && $file =~ /\.$config::id3_ext_regex$/i)
+	my %tags_h = ();
+	my %tags_h_new = ();
+
+	if($config::hash{id3_mode}{value} && $IS_AUDIO_FILE)
 	{
-	&misc::plog(4, "sub fixname: getting mp3 tags");
 		my $ref = &mp3::get_tags($file);
-		my %h = %$ref;
+		my %tags_h = %$ref;
+		my %tags_h_new = %tags_h;
 
 		$tag = 1;
-		$newart 	= $art 		= $h{artist};
-		$newtit 	= $tit 		= $h{title};
-		$newtra 	= $tra 		= $h{track};
-		$newalb 	= $alb 		= $h{album};
-		$newgen		= $gen	 	= $h{genre};
-		$newyear 	= $year		= $h{year};
-		$newcom 	= $com 		= $h{comment};
 
 		# Do tag stuff now
 
-		$newart = &fn_replace($newart);
-		$newtit = &fn_replace($newtit);
-		$newalb = &fn_replace($newalb);
-		$newcom = &fn_replace($newcom);
-
-		$newart = &fn_spaces($newart);
-		$newtit = &fn_spaces($newtit);
-		$newalb = &fn_spaces($newalb);
-		$newcom = &fn_spaces($newcom);
-
-		$newart = &fn_case($newart);
-		$newtit = &fn_case($newtit);
-		$newalb = &fn_case($newalb);
-		$newcom = &fn_case($newcom);
-
-		$newart = &fn_sp_word($file, $newart);
-		$newtit = &fn_sp_word($file, $newtit);
-		$newalb = &fn_sp_word($file, $newalb);
-		$newcom = &fn_sp_word($file, $newcom);
-
-		$newart = &fn_case_fl($newart);
-		$newtit = &fn_case_fl($newtit);
-		$newalb = &fn_case_fl($newalb);
-		$newcom = &fn_case_fl($newcom);
-
-		$newart = &fn_post_clean($newart);
-		$newtit = &fn_post_clean($newtit);
-		$newalb = &fn_post_clean($newalb);
-		$newcom = &fn_post_clean($newcom);
+		my @tags_to_fix = ('artist', 'title', 'album', 'comment');
+		for my $k(@tags_to_fix)
+		{
+			next if $k eq 'track' || $k eq 'year';
+			$tags_h_new{$k} = &fn_replace	($tags_h_new{$k});
+			$tags_h_new{$k} = &fn_spaces	($tags_h_new{$k});
+			$tags_h_new{$k} = &fn_case	($tags_h_new{$k});
+			$tags_h_new{$k} = &fn_sp_word	($tags_h_new{$k});
+			$tags_h_new{$k} = &fn_case_fl	($tags_h_new{$k});
+			$tags_h_new{$k} = &fn_post_clean($tags_h_new{$k});
+		}
 	}
+
+	# guess id3 tags
+	if($config::hash{id3_guess_tag}{value} && $IS_AUDIO_FILE)
+        {
+		(
+			$tags_h_new{artist},
+			$tags_h_new{track},
+			$tags_h_new{title},
+			$tags_h_new{album},
+		) = &mp3::guess_tags($newfile);
+	}
+
+	#------------------------------------------------------------------------------
 
 	$newfile = &run_fixname_subs($file, $newfile);
 
-	# guess id3 tags
-# 	print Dumper(\%config::hash{id3_guess_tag});
-	if($config::hash{id3_guess_tag}{value} == 1 && $file =~ /\.$config::id3_ext_regex$/i)
-        {
-		($newart, $newtra, $newtit, $newalb) = &mp3::guess_tags($newfile);
-	}
 
 	# End of cleanups
 
@@ -194,57 +144,44 @@ sub run_fixname
 	# check for and apply filename/ id3 changes
 	#==========================================================================================================================================
 
-	&misc::plog(4, "sub fixname: set user entered tags if any");
+	# set user entered audio tags overrides if any
 
-	if($main::id3_art_set && $file =~ /\.$config::id3_ext_regex$/i)
+	if($main::id3_art_set && $IS_AUDIO_FILE)
 	{
-		$newart = $main::id3_art_str;
+		$tags_h_new{artist} = $main::id3_art_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_alb_set && $file =~ /\.$config::id3_ext_regex$/i)
+	if($main::id3_alb_set && $IS_AUDIO_FILE)
 	{
-		$newalb = $main::id3_alb_str;
+		$tags_h_new{album} = $main::id3_alb_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_gen_set && $file =~ /\.$config::id3_ext_regex$/i)
+	if($main::id3_gen_set && $IS_AUDIO_FILE)
 	{
-		$newgen = $main::id3_gen_str;
+		$tags_h_new{genre} = $main::id3_gen_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_year_set && $file =~ /\.$config::id3_ext_regex$/i)
+	if($main::id3_year_set && $IS_AUDIO_FILE)
 	{
-		$newyear = $main::id3_year_str;
+		$tags_h_new{year} = $main::id3_year_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_com_set && $file =~ /\.$config::id3_ext_regex$/i)
+	if($main::id3_com_set && $IS_AUDIO_FILE)
 	{
-		$newcom = $main::id3_com_str;
+		$tags_h_new{comment} = $main::id3_com_str;
 		$tag	= 1;
 	}
-
-        if($main::id3v1_rm && $file =~ /\.$config::id3_ext_regex$/i)
-	{
-        	if(!$main::testmode)
-		{
-        		&rm_tags($file, "id3v1");
-                }
-                else
-		{
-                	$main::tags_rm++;
-                }
-                $PRINT++;
-        }
 
 	# rm mp3 id3v2 tags
         if($main::id3v2_rm && $_ =~ /\.$config::id3_ext_regex$/i)
 	{
         	if(!$main::testmode)
 		{
-        		&rm_tags($file, "id3v2");
+        		&mp3::rm_tags($file);
                 }
                 else
 		{
@@ -254,37 +191,40 @@ sub run_fixname
         }
 
 	# rm mp3 id3v1 tags
-        if($main::id3v1_rm && $main::id3v2_rm && $file =~ /\.$config::id3_ext_regex$/i)
+        if($main::id3v1_rm && $main::id3v2_rm && $IS_AUDIO_FILE)
 	{
         	$tag = 0;
         }
 
+        # no tags and no fn change, dont rename
 	if($tag == 0 && $file eq $newfile)
 	{
         	if($PRINT)
 		{
                 	&nf_print::p($file, $newfile);
                 }
-		&misc::plog(3, "sub fixname: no tags and no fn change, dont rename");
 		return;
 	}
 
        	if($tag)
 	{
        		# fn & tags havent changed
-
+       		my $TAGS_CHANGED = 0;
 		if
 		(
-			$main::id3_writeme == 0 &&
-			$file eq $newfile &&
-			$art eq $newart &&
-			$tit eq $newtit &&
-			$tra eq $newtra &&
-			$alb eq $newalb &&
-			$com eq $newcom &&
-			$gen eq $newgen &&
-			$year eq $newyear
-        	)
+			$tags_h{artist}		ne $tags_h_new{artist}	||
+			$tags_h{title}		ne $tags_h_new{title}	||
+			$tags_h{track}		ne $tags_h_new{track}	||
+			$tags_h{album}		ne $tags_h_new{album}	||
+			$tags_h{genre}		ne $tags_h_new{genre}	||
+			$tags_h{comment}	ne $tags_h_new{comment}	||
+			$tags_h{year}		ne $tags_h_new{year}
+		)
+		{
+			$TAGS_CHANGED = 1;
+		}
+
+		if($file eq $newfile && !$TAGS_CHANGED)	# nothing happened to file or tags
 		{
 			if($PRINT)
 			{
@@ -293,32 +233,9 @@ sub run_fixname
         		return;
         	}
 
-		if
-		(
-			$main::id3_writeme == 1 ||
-			$art ne $newart ||
-			$tit ne $newtit ||
-			$tra ne $newtra ||
-			$alb ne $newalb ||
-			$com ne $newcom ||
-			$gen ne $newgen ||
-			$year ne $newyear
-        	)
+		if($TAGS_CHANGED && !$main::testmode)
 		{
-			&misc::plog(4, "sub fixname: one or more tags changed, write n bump counter");
-        		if(!$main::testmode)
-			{
-				my %h = ();
-				$h{artist}	= $newart;
-				$h{title}	= $newtit;
-				$h{track}	= $newtra;
-				$h{album}	= $newalb;
-				$h{genre}	= $newgen;
-				$h{year}	= $newyear;
-				$h{comment}	= $newcom;
-
-				&mp3::write_tags($file, \%h);
-			}
+			&mp3::write_tags($file, \%tags_h_new);
 			$main::id3_change++;
 		}
 	}
@@ -345,21 +262,8 @@ sub run_fixname
 		$file,
 		$newfile,
 
-		$art,
-		$tit,
-		$tra,
-		$alb,
-		$com,
-		$gen,
-		$year,
-
-		$newart,
-		$newtit,
-		$newtra,
-		$newalb,
-		$newcom,
-		$newgen,
-		$newyear
+		\%tags_h,
+		\%tags_h_new,
 	);
 };
 
@@ -379,12 +283,9 @@ sub fn_rename
 		return 0;
 	}
 
-	&misc::plog(3, "sub fn_rename");
 	my $file = shift;
 	my $newfile = shift;
 	my $tmpfile = $newfile."-FSFIX";
-
-	&misc::plog(4, "sub fn_rename: \"$file\" \"$newfile\"");
 
 	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
 	{
@@ -423,7 +324,6 @@ sub fn_rename
 			&undo::add("$main::cwd/$file", "$main::cwd/$newfile");
 		}
 	}
-	&misc::plog(4, "sub fn_rename: \"$file\" to \"$newfile\" renamed.");
 	$main::change++;
 	return 1;
 }
@@ -435,14 +335,9 @@ sub run_fixname_subs
 	my $file = shift;
 	my $newfile = shift;
 
-	&misc::plog(3, "sub run_fixname_subs:");
 	if(!$newfile)
 	{
-		&misc::plog(4, "sub run_fixname_subs: processing \"$file\"");
-	}
-	else
-	{
-		&misc::plog(4, "sub run_fixname_subs: processing \"$file\", \"$newfile\"");
+ 		$newfile = $file;
 	}
 
 	# ---------------------------------------
@@ -497,14 +392,6 @@ sub run_fixname_subs
 	$newfile = &fn_truncate($file, $newfile);	# truncate file
 	$newfile = &fn_enum($file, $newfile); 		# Enumerate
 
-	if($file eq $newfile)
-	{
-		&misc::plog(4, "sub run_fixname_subs: no modifications to \"$file\"");
-	}
-	else
-	{
-		&misc::plog(4, "sub run_fixname_subs: \"$file\" to \"$newfile\"");
-	}
 	return $newfile;
 }
 
@@ -513,7 +400,6 @@ sub run_fixname_subs
 
 sub fn_kill_cwords
 {
-	&misc::plog(3, "sub fn_kill_cwords");
 	my $f = shift;
 	my $fn = shift;
 	my $a = "";
@@ -540,17 +426,11 @@ sub fn_kill_cwords
 	                }
                 }
         }
-
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_kill_cwords: \$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_replace
 {
-	&misc::plog(3, "sub fn_replace ");
 	my $fn = shift;
 	my $f = $fn;
 
@@ -558,16 +438,11 @@ sub fn_replace
         {
                 $fn =~ s/($main::rpwold_escaped)/$main::rpwnew/ig;
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_replace: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_kill_sp_patterns
 {
-	&misc::plog(3, "sub fn_kill_sp_patterns ");
 	my $fn = shift;
 	my $f = $fn;
 
@@ -579,16 +454,11 @@ sub fn_kill_sp_patterns
                 }
         }
 
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_kill_sp_patterns: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_unscene
 {
-	&misc::plog(3, "sub fn_unscene ");
 	my $fn = shift;
 	my $f = $fn;
 
@@ -597,16 +467,11 @@ sub fn_unscene
 		$fn =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie;
 	}
 
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_unscene: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_scene
 {
-	&misc::plog(3, "sub fn_scene ");
 	my $fn = shift;
 	my $f = $fn;
 
@@ -615,16 +480,11 @@ sub fn_scene
 		$fn =~ s/(^|\W)(\d+)(x)(\d+)/$1.qw(S).$2.qw(E).$4/ie;
 	}
 
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_scene: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_spaces
 {
-	&misc::plog(3, "sub fn_spaces");
 	my $fn = shift;
 	my $f = $fn;
 
@@ -633,26 +493,17 @@ sub fn_spaces
                 # underscores to spaces
                 $fn =~ s/(\s|_)+/$config::hash{space_character}{value}/g;
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_spaces: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_sp_char
 {
-	&misc::plog(3, "sub fn_sp_char");
 	my $fn = shift;
 	my $f = $fn;
         if($config::hash{sp_char}{value})
         {
                 $fn =~ s/[\~\@\%\{\}\[\]\"\<\>\!\`\'\,\#\(|\)]//g;
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_sp_char: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
@@ -661,7 +512,6 @@ sub fn_sp_char
 
 sub fn_split_dddd
 {
-	&misc::plog(3, "sub fn_split_dddd");
 	my $fn = shift;
 	my $f = $fn;
 
@@ -686,10 +536,6 @@ sub fn_split_dddd
 
                 }
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_split_dddd: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
@@ -698,18 +544,12 @@ sub fn_split_dddd
 
 sub fn_case_fl
 {
-	&misc::plog(3, "sub fn_case_fl");
 	my $fn = shift;
 	my $f = $fn;
 
 	if($config::hash{case}{value})
 	{
                 $fn =~ s/^(\w)/uc($1)/e;
-	}
-
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_case_fl: \"$f\" to \"$fn\"");
 	}
 	return $fn;
 }
@@ -725,13 +565,9 @@ sub fn_case_fl
 
 sub fn_sp_word
 {
-	&misc::plog(3, "sub fn_sp_word");
 	my $f = shift;
-	if(!$f)
-	{
-		&misc::plog(0, "sub fn_sp_word, got passed null");
-		return;
-	}
+	die "sub fn_sp_word, got passed null" if ! defined $f || !$f || $f eq '';
+
 	my $fn = shift;
 	my $fn_old = $fn;
 
@@ -752,16 +588,11 @@ sub fn_sp_word
 			}
                 }
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_sp_word: \"$fn_old\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_dot2space
 {
-	&misc::plog(3, "sub fn_dot2space");
 	my $f = shift;
 	my $fn = shift;
         if($config::hash{dot2space}{value})
@@ -778,17 +609,12 @@ sub fn_dot2space
 			$fn =~ s/\./$config::hash{space_character}{value}/g;
 		}
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_dot2space: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 # Pad digits with " - " (must come after pad digits with 0 to catch any new
 sub fn_pad_digits
 {
-	&misc::plog(3, "sub fn_pad_digits");
 	my $fn = shift;
 	my $f = $fn;
 	if($main::pad_digits)
@@ -800,16 +626,11 @@ sub fn_pad_digits
 		$fn =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
 		$fn =~ s/^(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$1.$tmp/ie;
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_pad_digits: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_pad_digits_w_zero
 {
-	&misc::plog(3, "sub fn_pad_digits_w_zero");
 	my $fn = shift;
 	my $f = $fn;
 	if($main::pad_digits_w_zero)
@@ -830,16 +651,11 @@ sub fn_pad_digits_w_zero
 		$fn =~ s/(^s|\s+s|\.s|_s)(\d\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2.$3."0".$4.$5/ie;		# sNNeN to sNNe0N
 		$fn =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4.$5/ie;		# SNeNN to S0NeNN
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_pad_digits_w_zero: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_digits
 {
-	&misc::plog(3, "sub fn_digits");
 	my $fn = shift;
 	my $f = $fn;
 	if($main::digits)
@@ -847,16 +663,11 @@ sub fn_digits
 		# remove leading digits (Track Nr)
 		$fn =~ s/^\d*\s*//;
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_digits: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_enum
 {
-	&misc::plog(3, "sub fn_enum");
 	my $f = shift;
 	my $fn = shift;
 	if($main::enum)
@@ -892,16 +703,11 @@ sub fn_enum
 		}
                 $main::enum_count++;
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_enum: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_truncate
 {
-	&misc::plog(3, "sub fn_truncate");
 	my $f = shift;
 	my $fn = shift;
 	my $tl = "";
@@ -953,16 +759,11 @@ sub fn_truncate
 			$fn =~ s/^(.{$tl})(.*)(.{$tl})(\..{$file_ext_length})$/$1.$config::hash{trunc_char}{value}.$3.$4/e;
 		}
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_truncate: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_pre_clean
 {
-	&misc::plog(3, "sub fn_pre_clean");
 	my $fn = shift;
 	my $f = $fn;
         if($main::cleanup == 1)
@@ -980,16 +781,11 @@ sub fn_pre_clean
                 $fn =~ s/\.mpeg$/\.mpg/i;
                 $fn =~ s/\.jpeg$/\.jpg/i;
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_pre_clean: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_post_clean
 {
-	&misc::plog(3, "sub fn_post_clean");
 	my $f = shift;
 	my $fn = shift;
 
@@ -1024,64 +820,44 @@ sub fn_post_clean
                 	$fn =~ s/(\s|\+|_|\.|-)+$//;
                 }
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_post_clean: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_front_a
 {
-	&misc::plog(3, "sub fn_front_a");
 	my $fn = shift;
 	my $f = $fn;
         if($main::front_a)
         {
                 $fn = $main::faw.$fn;
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_front_a: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_end_a
 {
-	&misc::plog(3, "sub fn_end_a");
 	my $fn = shift;
 	my $f = $fn;
         if($main::end_a)
         {
                 $fn =~ s/(.*)(\..*$)/$1$main::eaw$2/g;
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_end_a:  \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_pad_dash
 {
-	&misc::plog(3, "sub fn_pad_dash");
 	my $fn = shift;
 	my $f = $fn;
 	if($main::pad_dash == 1)
 	{
 		$fn =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$config::hash{space_character}{value}."-".$config::hash{space_character}{value}/eg;
 	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_pad_dash: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_rm_digits
 {
-	&misc::plog(3, "sub fn_rm_digits");
 	my $fn = shift;
 	my $f = $fn;
         if($main::rm_digits)
@@ -1089,16 +865,11 @@ sub fn_rm_digits
         	my $t_s = "";
                 $fn =~ s/\d+//g;
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_rm_digits: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_lc_all
 {
-	&misc::plog(3, "sub fn_lc_all");
 	# lowercase all
 	my $fn = shift;
 	my $f = $fn;
@@ -1106,16 +877,11 @@ sub fn_lc_all
 	{
                 $fn = lc($fn);
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_lc_all: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_uc_all
 {
-	&misc::plog(3, "sub fn_uc_all");
 	# uppercase all
 	my $fn = shift;
 	my $f = $fn;
@@ -1123,16 +889,11 @@ sub fn_uc_all
 	{
                 $fn = uc($fn);
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_uc_all: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_intr_char
 {
-	&misc::plog(3, "sub fn_intr_char");
 	# International Character translation
         # WARNING: This might break really badly on some systems, esp. non-Unix ones...
 	# if you see alot of ? in your filenames, you need to add the correct codepage for the filesystem.
@@ -1190,25 +951,16 @@ sub fn_intr_char
 		$fn =~ s/�//g;
 		$fn =~ s/�//g;
         }
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_intr_char: \"$f\" to \"$fn\"");
-	}
 	return $fn;
 }
 
 sub fn_case
 {
-	&misc::plog(3, "sub fn_case");
 	my $fn = shift;
 	my $f = $fn;
         if($config::hash{case}{value})
         {
                 $fn =~ s/(^| |\.|_|\(|-)([A-Za-z������������������������������])(([A-Za-z������������������������������]|\'|\�|\�|\�)*)/$1.uc($2).lc($3)/eg;
-	}
-	if($f ne $fn)
-	{
-		&misc::plog(4, "sub fn_case: \"$f\" to \"$fn\"");
 	}
 	return $fn;
 }

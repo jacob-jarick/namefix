@@ -71,7 +71,6 @@ our $end_a;
 our $id3_gen_str;
 our $kill_sp_patterns;
 our $split_dddd;
-our $id3_mode;
 our $id3_art_set;
 our $author;
 our $spaces;
@@ -920,7 +919,7 @@ my $id3_mode_chk = $tab2 -> Checkbutton
 $balloon->attach
 (
 	$id3_mode_chk,
-	-msg => "Enable processing of id3v1 and id3v2 tags"
+	-msg => "Enable processing of id3v1 and id3v2 tags on audio files"
 );
 
 $tab2->Label(-text=>" ")

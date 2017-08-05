@@ -9,7 +9,7 @@ use strict;
 sub clear
 {
  	# clear undo arrays, atm we only have 1 level of undo
-	&misc::plog(3, "sub undo::clear: wiping undo history");
+# 	&misc::plog(3, "sub undo::clear: wiping undo history");
 	@main::undo_cur		= ();
 	@main::undo_pre		= ();
 
@@ -43,7 +43,6 @@ sub undo_rename
 	# changes to directory
 	# chops FQ filename to filename.
 
-	&misc::plog(3, "sub undo_rename");
 	&misc::plog(1, "Preforming Undo");
 	my $c = 0;
 	my $pre = "";
@@ -68,7 +67,7 @@ sub undo_rename
  			&misc::plog(0, "sub undo_rename: \"$pre\" previous filename to revert undo to allready exists");
  		}
 
-		&misc::plog(4, "sub undo_rename: rename $cur $pre");
+		&misc::plog(1, "sub undo_rename: rename $cur $pre");
 		rename $cur, $pre;
 		&nf_print::p($cur, $pre);
 		$c++;

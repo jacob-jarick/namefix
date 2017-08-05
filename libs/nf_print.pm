@@ -5,6 +5,7 @@ require Exporter;
 use strict;
 use warnings;
 use Cwd;
+use Carp;
 
 #--------------------------------------------------------------------------------------------------------------
 # namefix print
@@ -12,217 +13,124 @@ use Cwd;
 
 sub p
 {
-	if($main::CLI)		# redirect old print calls for CLI mode
+	my $file1	= shift;
+	my $file2	= shift;
+
+	&dir_hlist::fn_update_delay;
+
+	if($file2 eq "<MSG>")
 	{
-		&misc::plog(1, "sub nf_print: use of this sub in CLI mode is depreciated");
-		&cli_print::print(@_);
+		&misc::plog(1, "$file1\n");	# just a message
 		return 1;
 	}
 
-	my $s1 = shift;
-	my $s2 = shift;
+	my $ref1	= shift;
+	my $ref2	= shift;
+	my $hlpos	= $main::hl_counter;	# short hand ref
+	$main::hl_counter++;	# now we have a ref, incr for next time
+	my $NEWFILE	= 0;
 
-	$main::hlist_file = $s1;
-	my $c = "";
+	$main::hlist_file_new = $file1;
+	if(defined $file2 && $file2 ne '' && !$main::LISTING)
+	{
+		$NEWFILE = 1;
+		$main::hlist_file_new = $file2;
+	}
+
+	print "p: file1 = $file1, file2 = $file2, \$NEWFILE = $NEWFILE\n";
+
+	# file check - if no file passed, return
+
+	# listing - file1 must be a file/dir
+	if(!$NEWFILE && !(-f $file1 || -d $file1) )
+	{
+		&misc::plog(1, "nf_print: \$file1 $file1 not a file/dir - listing failure ?\n");
+		&misc::plog(1, "$file1 -> $file2\n");
+		return 1;
+	}
+	# renaming / previewing rename - file2 must be a file/dir
+	if($NEWFILE && !(-f $file2 || -d $file2) )
+	{
+		&misc::plog(1, "nf_print: \$file2 $file2 not a file/dir - rename failed ?\n");
+		&misc::plog(1, "$file1 -> $file2\n");
+		return 1;
+	}
+
+	$main::hlist_file = $file1;
 	my $arrow = " -> ";
-	chomp $s1;
-
-	# cli print does not guess at how to print anylonger
-	# it expects <MSG> for plain text
-	# the gui print will recieve the same treatment in the future.
-	if($s2 eq "<MSG>")
-	{
-		$s2 = $s1;
-	}
-
-	if(!$s2)
-	{
-		$s2 = "";
-		$main::hlist_file_new = $s1;
-	}
-	else
-	{
-		chomp $s2;
-		$main::hlist_file_new = $s2;
-	}
-
-	&misc::plog(3, "sub nf_print: \"$s1\", \"$s2\"");
-
-	if(!$main::LISTING && !$main::testmode)	# files are being renamed - not a dir list or preview
-	{
-		$main::hlist_file = $s2;
-	}
 
 	$dir_hlist::hlist->add
 	(
-		$main::hl_counter,
+		$hlpos,
 		-data=>[$main::hlist_file, $main::hlist_cwd, $main::hlist_file_new]
 	);
+	my $count = 0;
 
 	if	# if file is a directory, attach dir icon
 	(
-		$s1 !~ /^\s+$/ && 					# for some reason -d \s+ returns positive, so check for it here.
-		(
-			$s1 eq ".." ||					# .. doesnt get detected as a dir when renaming, identify by value instead
-			(($main::LISTING || $main::testmode) && -d $s1) ||	# listing check if s1 is file
-			(!$main::LISTING && -d $s2)			# file renamed, check if s2 is file :)
-		)
+		$file1 eq ".."		||	# .. doesnt get detected as a dir when renaming, identify by value instead
+		(!$NEWFILE && -d $file1)||	# listing check if s1 is file
+		( $NEWFILE && -d $file2)	# file renamed, check if s2 is file :)
 	)
 	{
-		&misc::plog(4, "sub nf_print: \"$s1\" is a dir, attaching dir icon");
 		$dir_hlist::hlist->itemCreate
 		(
-			$main::hl_counter,
-			0,
+			$hlpos,
+			$count++,
 			-itemtype=>'imagetext',
 			-image=>$main::folderimage
 		);
 	}
-	elsif	# if file is file, attach file icon
-	(
-		(($main::LISTING || $main::testmode) && -f $s1) ||
-		(!$main::LISTING && -f $s2)
-	)
+	else
 	{
-		&misc::plog(4, "sub nf_print: \"$s1\" is a file, attaching file icon");
 		$dir_hlist::hlist->itemCreate
 		(
-			$main::hl_counter,
-			0,
+			$hlpos,
+			$count++,
 			-itemtype=>'imagetext',
 			-image=>$main::fileimage
 		);
 	}
-	else	# just been given text to print, no icon and no arrow
+
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1);
+	$main::hlist_file_row = 1;
+	if($file1 eq ".." || -d $file1)
 	{
-		$c = cwd();
-		&misc::plog(4, "sub nf_print: \"$s1\" not detected as a file / dir, attaching black icon");
-		$arrow = "";
-		$dir_hlist::hlist->itemCreate
-		(
-			$main::hl_counter,
-			0,
-			-itemtype => "text",
-			-text => " "
-		);
+		return;
 	}
 
-	if($config::hash{id3_mode}{value} == 1)
+	if($config::hash{id3_mode}{value})
 	{
-		&misc::plog(4, "sub nf_print: id3_mode enabled");
-		my $art = shift;
-		my $tit = shift;
-		my $tra = shift;
-		my $alb = shift;
-		my $com = shift;
-		my $gen = shift;
-		my $year = shift;
+		croak "nf_print id3_mode enabled but \$ref1 is undef\n" if !defined $ref1;
+		my %h = %$ref1;
 
-		$dir_hlist::hlist->itemCreate($main::hl_counter, 1, -text => "$s1");
-		$main::hlist_file_row = 1;
-
-		if($art)
+		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 		{
-			$dir_hlist::hlist->itemCreate($main::hl_counter, 2, -text => "$art");
-		}
-		if($tra)
-		{
-			$dir_hlist::hlist->itemCreate($main::hl_counter, 3, -text => "$tra");
-		}
-		if($tit)
-		{
-			$dir_hlist::hlist->itemCreate($main::hl_counter, 4, -text => "$tit");
-		}
-		if($alb)
-		{
-			$dir_hlist::hlist->itemCreate($main::hl_counter, 5, -text => "$alb");
-		}
-
-		if($gen)
-		{
-			$dir_hlist::hlist->itemCreate($main::hl_counter, 6, -text => "$gen");
-		}
-
-		if($year)
-		{
-			$dir_hlist::hlist->itemCreate($main::hl_counter, 7, -text => "$year");
-		}
-
-		if($com)
-		{
-			$dir_hlist::hlist->itemCreate($main::hl_counter, 8, -text => "$com");
-		}
-
-		if($main::LISTING == 0) # if renaming or previewing print 'after' fields
-		{
-			my $newart = shift;
-			my $newtit = shift;
-			my $newtra = shift;
-			my $newalb = shift;
-			my $newcom = shift;
-			my $newgen = shift;
-			my $newyear = shift;
-
-			if($s1 ne "..")
-			{
-				&misc::plog(4, "sub nf_print: id3_mode, renaming mode, adding new fields");
-				$dir_hlist::hlist->itemCreate($main::hl_counter, 9, -text => "$arrow");
-				$dir_hlist::hlist->itemCreate($main::hl_counter, 10, -text => "$main::hlist_file_new");
-				$main::hlist_newfile_row = 10;
-
-				if($newart)
-				{
-					$dir_hlist::hlist->itemCreate($main::hl_counter, 11, -text => "$newart");
-				}
-				if($newtra)
-				{
-					$dir_hlist::hlist->itemCreate($main::hl_counter, 12, -text => "$newtra");
-				}
-				if($newtit)
-				{
-					$dir_hlist::hlist->itemCreate($main::hl_counter, 13, -text => "$newtit");
-				}
-				if($newalb)
-				{
-					$dir_hlist::hlist->itemCreate($main::hl_counter, 14, -text => "$newalb");
-				}
-				if($newgen)
-				{
-					$dir_hlist::hlist->itemCreate($main::hl_counter, 15, -text => "$newgen");
-				}
-				if($newyear)
-				{
-					$dir_hlist::hlist->itemCreate($main::hl_counter, 16, -text => "$newyear");
-				}
-				if($newcom)
-				{
-					$dir_hlist::hlist->itemCreate($main::hl_counter, 17, -text => "$newcom");
-				}
-			}
+			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 	}
-	else
-	{
-		if(!$s2)
-		{
-			$s2 = $s1;
-		}
-		$dir_hlist::hlist->itemCreate($main::hl_counter, 1, -text => "$s1");
-		$main::hlist_file_row = 1;
 
-		if($main::LISTING == 0)
-		{
-			if($s1 ne "..")
-			{
-				&misc::plog(4, "sub nf_print: normal mode, renaming adding new fields");
-				$dir_hlist::hlist->itemCreate($main::hl_counter, 2, -text => "$arrow");
-				$dir_hlist::hlist->itemCreate($main::hl_counter, 3, -text => "$s2");
-				$main::hlist_newfile_row = 3;
-			}
-		}
+	if(!$NEWFILE)
+	{
+		return;
 	}
-	$main::hl_counter++;
-	&dir_hlist::fn_update_delay;
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$arrow");
+	$main::hlist_newfile_row = $count;
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$file2");
+
+	if($config::hash{id3_mode}{value})
+	{
+		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$arrow");
+		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file2);
+
+		croak "nf_print id3_mode enabled but \$ref2 is undef\n" if !defined $ref2;
+		my %h = %$ref2;
+		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
+		{
+			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
+		}
+		return;
+	}
 }
 
 1;

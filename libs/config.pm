@@ -12,7 +12,7 @@ our @id3v2_exts = ("mp3", "mp2", "ogg", "mpg", "mpeg", "mp4", "aiff", "flac", "a
 
 our $id3_ext_regex = join('|', @config::id3v2_exts);
 
-print "\$id3_ext_regex = $id3_ext_regex\n";
+# print "\$id3_ext_regex = $id3_ext_regex\n";
 
 our %hash = ();
 

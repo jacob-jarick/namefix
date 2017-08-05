@@ -1,6 +1,14 @@
 
 4.1.2 - ie refresh in progress
 
+* massive overhaul of nf_print::p
+  only shows files & dirs
+  code is much much cleaner
+  likely broke several things buuut listing and previews work correctly again
+
+* print command tidyup. nf_print::p is being overhauled for files and directories only
+* all other printing will be done to the new console on gui. cli does not change
+
 * drastic overhaul of mp3 library.
   updated to use new methods of writing tags, as my old method is now depreciated
   new methods enabled writing to ogg files and other audio formats.

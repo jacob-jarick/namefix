@@ -53,19 +53,13 @@ sub prep_globals
 	# update kill pattern array if file exists
         if(-f $main::killpat_file)
         {
-                @main::kill_patterns_arr = &misc::readsf("$main::killpat_file");
+                @main::kill_patterns_arr = &misc::readf($main::killpat_file);
         }
 
 	# update casing list if file exists
         if(-f $main::casing_file)
         {
-                @main::word_casing_arr = &misc::readf("$main::casing_file");
-
-# 		@main::word_casing_arr_escaped = ();	# clear escaped list
-#                 for(@main::word_casing_arr) 		# then update
-#                 {
-#                 	push (@main::word_casing_arr_escaped, quotemeta $_);
-#                 }
+                @main::word_casing_arr = &misc::readf($main::casing_file);
         }
 }
 
@@ -121,12 +115,12 @@ sub run
                         }
                         if($main::proc_dirs)
                         {
-                                &fixname::run_fixname($_);
+                                &fixname::fix($_, cwd);
                                 next;
                         }
                         elsif(! -d $_)
                         {
-                                &fixname::run_fixname($_);
+                                &fixname::fix($_, cwd);
                         }
                 }
         }

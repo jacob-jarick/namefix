@@ -18,7 +18,7 @@ sub bm_add
 	my $name = shift;
 	my $dir = shift;
 
-	print "\$name = $name\n";
+# 	print "\$name = $name\n";
 
 	if($name !~ /\:(\\|\/)$/)
 	{
@@ -173,7 +173,7 @@ DEBUG LEVELS:
 
 sub bm_list_bookmarks
 {
-	&misc::plog(3, "sub bm_list_bookmarks:");
+# 	&misc::plog(3, "sub bm_list_bookmarks:");
 
 	my $n = "";
 	my $u = "";
@@ -182,7 +182,6 @@ sub bm_list_bookmarks
 	$bookmarks -> separator();
 
 
-	&misc::plog(4, "sub bm_list_bookmarks: generating bookmark code");
 	if(!-f $main::bookmark_file)
 	{
 		# no bookmarks, return
@@ -230,7 +229,7 @@ sub bm_list_bookmarks
 
 sub edit_bookmark_list
 {
-	&misc::plog(3, "sub edit_bookmark_list:");
+# 	&misc::plog(3, "sub edit_bookmark_list:");
         my $dtext = "";
 
         if(-f $main::bookmark_file)
