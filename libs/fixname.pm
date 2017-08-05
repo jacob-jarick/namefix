@@ -126,10 +126,10 @@ sub run_fixname
 		&nf_print::p($main::cwd, $main::cwd);
 	}
 
-	# Fetch mp3 tags, if file is a mp3 and id3 mode is enabled
-	# $tag will =1 only if tags r found & id3 mode is enabled
+	# Fetch id3 tags
+	# $tag = 1 only if tags are found & id3 mode is enabled
 
-	if($config::hash{id3_mode}{value} & $file =~ /.*\.mp3$/)
+	if($config::hash{id3_mode}{value} && $file =~ /\.$config::id3_ext_regex$/i)
 	{
 	&misc::plog(4, "sub fixname: getting mp3 tags");
 		@tmp_arr = &mp3::get_tags($file);
@@ -181,9 +181,10 @@ sub run_fixname
 	$newfile = &run_fixname_subs($file, $newfile);
 
 	# guess id3 tags
-	if($config::hash{id3_guess_tag}{value} == 1 && $_ =~ /.*\.mp3$/)
+# 	print Dumper(\%config::hash{id3_guess_tag});
+	if($config::hash{id3_guess_tag}{value} == 1 && $file =~ /\.$config::id3_ext_regex$/i)
         {
-		($newart, $newtra, $newtit, $newalb) = &guess_tags($newfile);
+		($newart, $newtra, $newtit, $newalb) = &mp3::guess_tags($newfile);
 	}
 
 	# End of cleanups
@@ -194,37 +195,37 @@ sub run_fixname
 
 	&misc::plog(4, "sub fixname: set user entered tags if any");
 
-	if($main::id3_art_set && $file =~ /.*\.mp3$/i)
+	if($main::id3_art_set && $file =~ /\.$config::id3_ext_regex$/i)
 	{
 		$newart = $main::id3_art_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_alb_set && $file =~ /.*\.mp3$/i)
+	if($main::id3_alb_set && $file =~ /\.$config::id3_ext_regex$/i)
 	{
 		$newalb = $main::id3_alb_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_gen_set && $file =~ /.*\.mp3$/i)
+	if($main::id3_gen_set && $file =~ /\.$config::id3_ext_regex$/i)
 	{
 		$newgen = $main::id3_gen_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_year_set && $file =~ /.*\.mp3$/i)
+	if($main::id3_year_set && $file =~ /\.$config::id3_ext_regex$/i)
 	{
 		$newyear = $main::id3_year_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_com_set && $file =~ /.*\.mp3$/i)
+	if($main::id3_com_set && $file =~ /\.$config::id3_ext_regex$/i)
 	{
 		$newcom = $main::id3_com_str;
 		$tag	= 1;
 	}
 
-        if($main::id3v1_rm && $file =~ /.*\.mp3$/i)
+        if($main::id3v1_rm && $file =~ /\.$config::id3_ext_regex$/i)
 	{
         	if(!$main::testmode)
 		{
@@ -238,7 +239,7 @@ sub run_fixname
         }
 
 	# rm mp3 id3v2 tags
-        if($main::id3v2_rm && $_ =~ /.*\.mp3$/i)
+        if($main::id3v2_rm && $_ =~ /\.$config::id3_ext_regex$/i)
 	{
         	if(!$main::testmode)
 		{
@@ -252,7 +253,7 @@ sub run_fixname
         }
 
 	# rm mp3 id3v1 tags
-        if($main::id3v1_rm && $main::id3v2_rm && $file =~ /.*\.mp3$/i)
+        if($main::id3v1_rm && $main::id3v2_rm && $file =~ /\.$config::id3_ext_regex$/i)
 	{
         	$tag = 0;
         }
@@ -318,7 +319,7 @@ sub run_fixname
 		{
 			if(!&fn_rename($file, $newfile) )
 			{
-				plog(0, "sub fixname: \"$newfile\" cannot preform rename, file allready exists");
+				&misc::plog(0, "sub fixname: \"$newfile\" cannot preform rename, file allready exists");
 				return 0;
 			}
 		}

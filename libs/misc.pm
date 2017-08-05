@@ -251,14 +251,21 @@ sub clr_no_save
 # Escape strings for use in regexp - wrote my own cos uri is fucked.
 #--------------------------------------------------------------------------------------------------------------
 
+# TODO remove
 sub escape_string
 {
 	my $s = shift;
-	&plog(5, "sub escape_string: \"$s\"");	# very noisy sub
-# 	$s =~ s/(\~|\`|\!|@|\#|\$|\%|\^|\&|\(|\)|\=|\+|\{|\[|\]|\}|\:|\;|\"|\'|\<|\,|\.|\>|\?)/"\\".$1/eg;
 	return quotemeta $s;
 }
 
+sub is_in_array
+{
+	my $string = shift;
+	my $array_ref = shift;
 
+	return 1 if grep { $_ eq $string} @$array_ref;
+
+	return 0;
+}
 
 1;

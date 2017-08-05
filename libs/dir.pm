@@ -136,7 +136,7 @@ sub ls_dir_print
 
 	if($main::STOP == 1)
 	{
-		&misc::plog(4, "sub ls_dir_print: \$main::STOP = \"$main::STOP\" - not printing");
+		&misc::plog(1, "sub ls_dir_print: \$main::STOP = \"$main::STOP\" - not printing");
 		return 0;
 	}
 	&misc::plog(3, "sub ls_dir_print: \"$file\"");
@@ -179,7 +179,8 @@ sub ls_dir_print
 	}
 
 	# if is mp3 & id3_mode enabled then grab id3 tags
-	if($file =~ /.*\.mp3$/i && $config::hash{id3_mode}{value} == 1)
+	my $ext = $file; $ext =~ s/^.*\.(.*?)$//;
+	if(&misc::is_in_array($ext, \@config::id3v2_exts) && $config::hash{id3_mode}{value} == 1)
 	{
 		&misc::plog(4, "sub ls_dir_print: if is mp3 & id3_mode enabled then grab id3 tags");
 		($tag, $art, $tit, $tra, $alb, $gen, $year, $com) = &mp3::get_tags($file);

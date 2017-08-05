@@ -1,6 +1,9 @@
 
 4.1.2 - ie refresh in progress
 
+* id3 tags supported on the following file types: mp3, mp2, ogg, mpg, mpeg, mp4, aiff, flac, ape, ram, mpc
+  WIP - currently ogg's dont get their id3 tags written
+
 * make_test_dir.pl updated. now sets mimetypes for music files (allows testing of mp3 tags)
 
 * rc_menu

@@ -1,1 +1,1 @@
-git grep -l '$conf::' | xargs sed -i 's/\$conf::/\$config::/g'
+git grep -l 'manual::edit' | xargs sed -i 's/\manual::edit/\manual::edit/g'

@@ -8,7 +8,7 @@ use warnings;
 
 # routines for manual renaming etc
 
-sub manual_edit
+sub manual::edit
 {
 	($main::hlist_file, $main::hlist_cwd) = $dir_hlist::hlist->info("data", $main::hlist_selection);
 	my $file 	= $main::hlist_file;
@@ -24,7 +24,7 @@ sub manual_edit
 	my $ent_l;
 	my $l 		= length $file;
 
-	&misc::plog(3, "sub manual_edit: \"$file\"");
+	&misc::plog(3, "sub manual::edit: \"$file\"");
 
        if($ent_min_l <= $l && $l <= $ent_max_l)
         {
@@ -49,7 +49,7 @@ sub manual_edit
         }
 
         if(!$file) {
-        	&misc::plog(0, "sub manual_edit: \$file isnt defined.");
+        	&misc::plog(0, "sub manual::edit: \$file isnt defined.");
         	return;
         }
 
@@ -62,7 +62,7 @@ sub manual_edit
         my $gen = "";
         my $year = "";
 
-	&misc::plog(4, "sub manual_edit: chdir to  \$main::hlist_cwd = \"$main::hlist_cwd\" ");
+	&misc::plog(4, "sub manual::edit: chdir to  \$main::hlist_cwd = \"$main::hlist_cwd\" ");
 	chdir $main::hlist_cwd;	# shift to correct dir (needed for recursive mode).
 
 	my $newfile = $file;
@@ -202,8 +202,10 @@ sub manual_edit
 	                -column=>2
 	        );
 	}
-	if($file =~ /.*\.mp3$/i) {
-		&misc::plog(4, "sub manual_edit: \"$file\" is a mp3, using mp3 rename gui ");
+	my $ext = $file; $ext =~ s/^.*\.(.*?)$//;
+	if(&misc::is_in_array($ext, \@config::id3v2_exts))
+	{
+		&misc::plog(4, "sub manual::edit: \"$file\" is a mp3, using mp3 rename gui ");
         	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
         	$frame1->Label(
 			-text=>"Artist: "
@@ -359,28 +361,31 @@ sub manual_edit
                         $new_fn = $old_fn;
                         $new_ext = $old_ext;
 
-                        if(
-                        	$config::hash{id3_mode}{value} == 1 &&
-                                $file =~ /.*\.mp3/i
-			) {
-                        	($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
-                          }
+                        if($config::hash{id3_mode}{value} == 1 && $file =~ /.*\.$config::id3_ext_regex$/i)
+                        {
+				($tag, $art, $tit, $tra, $alb, $com, $gen, $year) = &mp3::get_tags($file);
+			}
         	}
         )
-        -> grid(
+        -> grid
+        (
         	-row => 4,
         	-column => 1,
         	-columnspan => 1
         );
 
-        if(
+        if
+        (
         	$config::hash{id3_mode}{value} == 1 &&
-		$file =~ /.*\.mp3$/i
-        ) {
-	        $button_frame -> Button(
+		$file =~ /.*\.$config::id3_ext_regex$/i
+        )
+        {
+	        $button_frame -> Button
+	        (
 	                -text=>"Guess Tag",
 	                -activebackground=>'white',
-	                -command => sub {
+	                -command => sub
+	                {
                         	($art, $tra, $tit, $alb) = &guess_tags($file);
 				print "button\n";
 	                }
@@ -409,7 +414,7 @@ sub manual_edit
                         }
                         if(
                         	$config::hash{id3_mode}{value} == 1 &&
-                                $file =~ /.*\.mp3$/i
+                                $file =~ /.*\.$config::id3_ext_regex$/i
                         ) {
                         	&mp3::write_tags($file, $art, $tit, $tra, $alb, $com, $gen, $year);
                         }

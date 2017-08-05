@@ -7,6 +7,13 @@ use warnings;
 use Data::Dumper::Concise;
 use FindBin qw($Bin);
 
+# writable_extensions - stolen from mp3::tag and tidied
+our @id3v2_exts = ("mp3", "mp2", "ogg", "mpg", "mpeg", "mp4", "aiff", "flac", "ape", "ram", "mpc");
+
+our $id3_ext_regex = join('|', @config::id3v2_exts);
+
+print "\$id3_ext_regex = $id3_ext_regex\n";
+
 our %hash = ();
 
 our $hash_tsv = &misc::get_home."/.namefix.pl/config_hash.tsv";

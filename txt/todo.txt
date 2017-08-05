@@ -5,6 +5,8 @@
 ....
 * apply preview fails on recursive
 
+* currently ogg's dont get their id3 tags written
+
 
 ===============
 =- Base Todo -=

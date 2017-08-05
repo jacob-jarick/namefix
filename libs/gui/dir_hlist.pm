@@ -216,7 +216,7 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			&manual_edit($main::hlist_file, $main::hlist_cwd);
+			&manual::manual::edit($main::hlist_file, $main::hlist_cwd);
        		}
 	);
         $rc_menu -> command

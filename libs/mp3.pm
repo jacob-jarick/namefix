@@ -6,8 +6,6 @@ package mp3;
 require Exporter;
 @ISA = qw(Exporter);
 
-
-
 use strict;
 #use warnings;
 
@@ -268,7 +266,9 @@ sub guess_tags
         my $alb = "";
         my $com = "";
 
-	if($file =~ /^(\d+)( - |\. )(.*?)( - )(.*?)(\.mp3)/)
+        my $exts = join('|', @config::id3v2_exts);
+
+	if($file =~ /^(\d+)( - |\. )(.*?)( - )(.*?)(\.$exts)/)
 	{
 		&misc::plog(4, "sub guess_tags: track - artist - title");
 		$tra = $1;
@@ -276,14 +276,14 @@ sub guess_tags
 		$tit = $5;
 	}
 
-	elsif($file =~ /^(\d+)( - |\. )(.*?)(\.mp3)/)
+	elsif($file =~ /^(\d+)( - |\. )(.*?)(\.$exts)/)
 	{
 		&misc::plog(4, "sub guess_tags: track - title");
 		$tra = $1;
 		$tit = $3;
 	}
 
-	elsif($file =~ /^(.*?)( - )(.*?)( - )(\d+)( - )(.*)(\.mp3)/)
+	elsif($file =~ /^(.*?)( - )(.*?)( - )(\d+)( - )(.*)(\.$exts)/)
 	{
 		&misc::plog(4, "sub guess_tags: artist - ablum - track - title");
 		$art = $1;
@@ -293,7 +293,7 @@ sub guess_tags
 	}
 
 	# mems prefered format
-	elsif($file =~ /^(.*?)( - )(\d+)( - )(.*)(\.mp3)/)
+	elsif($file =~ /^(.*?)( - )(\d+)( - )(.*)(\.$exts)/)
 	{
 		&misc::plog(4, "sub guess_tags: artist - track - title");
 		$art = $1;
@@ -302,7 +302,7 @@ sub guess_tags
 		$alb = "";	# get this later
 	}
 
-	elsif($file =~ /^(.*?)( - )(.*)(\.mp3)/)
+	elsif($file =~ /^(.*?)( - )(.*)(\.$exts)/)
 	{
 		&misc::plog(4, "sub guess_tags: artist - title");
 		$art = $1;
