@@ -43,12 +43,12 @@ use config;
 
 our $version;
 
-our $CLI	= 1;
-our $OVERWRITE;
-our $LOG_STDOUT;
-our $WORD_SPECIAL_CASING;
+our $CLI		= 1;
+our $CLEANUP_GENERAL	= 1;
 
-
+our $OVERWRITE		= 0;
+our $LOG_STDOUT		= 0;
+our $WORD_SPECIAL_CASING= 0;
 
 # files
 our $log_file	= "$home/.namefix.pl/namefix-cli.pl.$version.log";
@@ -201,9 +201,6 @@ else
 # Parse Options
 #--------------------------------------------------------------------------------------------------------------
 
-$main::advance = 1;	# since general cleanup is an option, enable advanced mode by default
-			# and have the general cleanup option  turn it off.
-
 $config::hash{ERROR_STDOUT}{value} = 1;
 
 for my $arg(@ARGV)
@@ -283,7 +280,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq "--cleanup" || $arg eq "--clean" )
 	{
-		$main::advance = 0;
+		$main::our $CLEANUP_GENERAL = 1;
 	}
 	elsif($arg eq "--rename" || $arg eq "--ren")
 	{
@@ -513,7 +510,7 @@ for my $arg(@ARGV)
 	elsif($arg eq "--id3-rm-v1")
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3v1_rm = 1;
+		$main::RM_AUDIO_TAGS = 1;
 	}
 	elsif($arg eq "--id3-rm-v2")
 	{
@@ -717,7 +714,7 @@ sub proc_short_opts
 		elsif($short_opt eq "!") { $main::testmode				= 0; }
 
 		elsif($short_opt eq "c") { $config::hash{case}{value}			= 1; }
-		elsif($short_opt eq "g") { $main::advance = 0; }
+		elsif($short_opt eq "g") { $main::CLEANUP_GENERAL			= 1; }
 		elsif($short_opt eq "o") { $config::hash{dot2space}{value}		= 1; }
 		elsif($short_opt eq "p") { $config::hash{spaces}{value}			= 1; }
 		elsif($short_opt eq "s") { $main::scene = 1; }

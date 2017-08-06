@@ -60,7 +60,7 @@ sub fix
         # -----------------------------------------
 	# make sure file is allowed to be renamed
         # -----------------------------------------
-        die "ERROR ig_type is undef\n" if(! defined $main::ig_type);
+        &main::quit("ERROR ig_type is undef\n") if(! defined $main::ig_type);
 
         my $RENAME 		= 0;
 
@@ -123,17 +123,6 @@ sub fix
 		}
 	}
 
-	# guess id3 tags
-	if($config::hash{id3_guess_tag}{value} && $IS_AUDIO_FILE)
-        {
-		(
-			$tags_h_new{artist},
-			$tags_h_new{track},
-			$tags_h_new{title},
-			$tags_h_new{album},
-		) = &mp3::guess_tags($newfile);
-	}
-
 	#------------------------------------------------------------------------------
 
 	$newfile = run_fixname_subs($file, $newfile);
@@ -177,7 +166,7 @@ sub fix
 	}
 
 	# rm mp3 id3v2 tags
-        if($main::RM_AUDIO_TAGS && $_ =~ /\.$config::id3_ext_regex$/i)
+        if($IS_AUDIO_FILE && $main::RM_AUDIO_TAGS)
 	{
         	if(!$main::testmode)
 		{
@@ -188,23 +177,23 @@ sub fix
                 	$main::tags_rm++;
                 }
                 $PRINT++;
+        	$tag = 1;
         }
 
-	# rm mp3 id3v1 tags
-        if($main::id3v1_rm && $main::RM_AUDIO_TAGS && $IS_AUDIO_FILE)
-	{
-        	$tag = 0;
-        }
+        # guess id3 tags
+	if($config::hash{id3_guess_tag}{value} && $IS_AUDIO_FILE)
+        {
+		(
+			$tags_h_new{artist},
+			$tags_h_new{track},
+			$tags_h_new{title},
+			$tags_h_new{album},
+		) = &mp3::guess_tags($newfile);
+	}
+
 
         # no tags and no fn change, dont rename
-	if($tag == 0 && $file eq $newfile)
-	{
-        	if($PRINT)
-		{
-                	&nf_print::p($file, $newfile);
-                }
-		return;
-	}
+	return if !$tag && $file eq $newfile;
 
        	if($tag)
 	{
@@ -252,8 +241,7 @@ sub fix
 		}
 		else
 		{
-			# increment change for preview count
-			$main::change++;
+			$main::change++; # increment change for preview count
 		}
 	}
 
@@ -816,7 +804,7 @@ sub fn_pre_clean
 	&main::quit("fn_pre_clean \$fn eq ''\n")	if $FILE && $fn eq '';
 
 	my $f = $fn;
-        if($main::cleanup == 1)
+        if($main::CLEANUP_GENERAL == 1)
         {
                 # "fix Artist - - track" type filenames that can pop up when stripping words
                 $fn =~ s/-(\s|_|\.)+-/-/g;
@@ -850,7 +838,7 @@ sub fn_post_clean
 		$fn = $f;
 	}
 
-        if($main::cleanup == 1)
+        if($main::CLEANUP_GENERAL == 1)
 	{
                 # remove childless brackets () [] {}
                 $fn =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;

@@ -105,7 +105,7 @@ sub null_file
 {
         my $file = shift;
 
-        open(FILE, ">$file") or die "ERROR: sub null_file, Couldnt open $file to write to. $!";
+        open(FILE, ">$file") or &main::quit("ERROR: sub null_file, Couldnt open $file to write to. $!");
         close(FILE);
 }
 
@@ -116,7 +116,7 @@ sub save_file
 
         $t =~ s/^\n//g;		# no blank line @ start of file
         $t =~ s/\n\n+/\n/g;	# no blank lines in file
-        open(FILE, ">$file") or die "ERROR: sub save_file, Couldnt open $file to write to. $!";
+        open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldnt open $file to write to. $!");
         print FILE $t;
         close(FILE);
 }
@@ -126,7 +126,7 @@ sub file_append
 	my $file = shift;
 	my $string = shift;
 
-	open(FILE, ">>$file") or die "ERROR: Couldnt open $file to append to. $!";
+	open(FILE, ">>$file") or &main::quit("ERROR: Couldnt open $file to append to. $!");
         print FILE $string;
         close(FILE);
 }
@@ -139,7 +139,7 @@ sub readf
 {
         my $file = $_[0];
 
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
 
@@ -158,7 +158,7 @@ sub readsf
 {
         my $file = $_[0];
 
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
 
@@ -178,7 +178,7 @@ sub readsf
 sub readsjf
 {
         my $file = $_[0];
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
         $file = join('', sort @file);
@@ -196,7 +196,7 @@ sub readjf
 {
         my $file = $_[0];
 
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
         $file = join('', @file);
@@ -234,7 +234,6 @@ sub clr_no_save
 	$main::AUDIO_SET_GENRE 	= 0;
         $main::id3_year_set 	= 0;
 
-	$main::id3v1_rm		= 0;
 	$main::RM_AUDIO_TAGS		= 0;
 }
 

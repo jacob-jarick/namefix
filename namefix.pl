@@ -70,7 +70,6 @@ our $case;
 our $intr_char;
 our $id3_com_str;
 our $enum_pad_zeros;
-our $id3v1_rm;
 our $ins_str_old	= '';
 our $pad_digits;
 our $kill_cwords;
@@ -603,18 +602,9 @@ $frm_left -> Label
 my $clean_chk = $frm_left -> Checkbutton
 (
 	-text=>"General Cleanup",
-	-variable=>\$main::cleanup,
+	-variable=>\$main::CLEANUP_GENERAL,
 	-activeforeground => "blue",
-	-command=> sub {
-		if($main::cleanup == 0)
-		{
-			$main::advance = 1;
-		}
-		else
-		{
-			$main::advance = 0;
-		}
-	}
+	-command=> sub {}
 )
 -> grid
 (
@@ -895,7 +885,7 @@ $balloon->attach
 );
 
 #--------------------------------------------------------------------------------------------------------------
-# id3v1 tab options
+# id3v2 tab options
 #--------------------------------------------------------------------------------------------------------------
 
 $row = 1;
@@ -929,7 +919,7 @@ my $id3_mode_chk = $tab2 -> Checkbutton
 $balloon->attach
 (
 	$id3_mode_chk,
-	-msg => "Enable processing of id3v1 and id3v2 tags on audio files"
+	-msg => "Enable processing of audio file tags"
 );
 
 $tab2->Label(-text=>" ")

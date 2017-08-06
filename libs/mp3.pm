@@ -52,7 +52,7 @@ $template{comment}	= '';
 sub get_tags
 {
 	my $file	= shift;
-	die "get_tags \$file is undef\n" if(!defined $file);
+	&main::quit("get_tags \$file is undef") if(!defined $file);
 
         my %tag_hash = ();
         $tag_hash{artist}	= '';	# artist

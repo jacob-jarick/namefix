@@ -133,9 +133,7 @@ our $filter_cs			= 0;
 
 # preference options - save enabled
 
-our $cleanup		= 1;
 our $case 		= 1;
-our $advance		= 0;
 
 our $id3_mode		= 0;
 
@@ -177,19 +175,18 @@ our $ig_type 		= 0;
 # main window, id3 tag vars
 
 our $AUDIO_SET_ARTIST	= 0;
-our $id3_art_str	= "";
+our $id3_art_str	= '';
 
-our $id3_alb_str	= "";
+our $id3_alb_str	= '';
 
-our $id3_com_str	= "";
+our $id3_com_str	= '';
 
-our $id3v1_rm		= 0;
-our $RM_AUDIO_TAGS		= 0;
+our $RM_AUDIO_TAGS	= 0;
 
 $main::id3_gen_str 	= "Metal";
 
 $main::id3_year_set 	= 0;
-$main::id3_year_str 	= "";
+$main::id3_year_str 	= '';
 
 $main::split_dddd	= 0;
 

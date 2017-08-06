@@ -3,6 +3,6 @@ $faw
 git grep -l 'eaw' | xargs sed -i 's/eaw/ins_end_str/g'
 
 
-git grep -l '$end_a' | xargs sed -i 's/\$end_a/\$INS_END/g'
-git grep -l '$main::end_a' | xargs sed -i 's/\$main::rpwnew/\$main::INS_END/g'
+git grep -l 'cleanup' | xargs sed -i 's/\$cleanup/\$CLEANUP_GENERAL/g'
+git grep -l 'cleanup' | xargs sed -i 's/\$main::cleanup/\$main::CLEANUP_GENERAL/g'
 

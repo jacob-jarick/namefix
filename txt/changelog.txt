@@ -1,6 +1,9 @@
 
 4.1.2 - ie refresh in progress
 
+* guess tags now correctly guesses tags AFTER all tag modifications
+
+* more cleanups. all die's replaced with &main::quit
 
 * fixed columns issue in dir_hlist
   only show needed amont of columns (correctly this time).

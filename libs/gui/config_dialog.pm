@@ -460,7 +460,7 @@ sub edit_prefs
 
 sub save_fonts
 {
-	open(FILE, ">$main::fonts_file") or die "ERROR: couldnt open $main::fonts_file to write to\n$!\n";
+	open(FILE, ">$main::fonts_file") or &main::quit("ERROR: couldnt open $main::fonts_file to write to\n$!\n");
 
 	print FILE
 

@@ -179,12 +179,12 @@ sub dir_dialog
 
 sub fn_readdir
 {
-	my $dir = shift;
-	my @dirlist = ();
-	my @dirlist_clean = ();
-	my @d = ();
+	my $dir			= shift;
+	my @dirlist		= ();
+	my @dirlist_clean	= ();
+	my @d			= ();
 
-	opendir(DIR, "$dir") or die "can't open dir \"$dir\": $!";
+	opendir(DIR, "$dir") or &main::quit("can't open dir \"$dir\": $!");
 	@dirlist = CORE::readdir(DIR);
 	closedir DIR;
 
