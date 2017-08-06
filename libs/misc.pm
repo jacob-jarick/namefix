@@ -215,12 +215,12 @@ sub clr_no_save
 	# clear options that are never saved
 
         $main::replace		= 0;
-	$main::rpwold         	= "";
-        $main::rpwnew         	= "";
-        $main::front_a		= 0;
-        $main::faw            	= "";
+	$main::ins_str_old         	= "";
+        $main::ins_str         	= "";
+        $main::INS_START		= 0;
+        $main::ins_front_str            	= "";
         $main::end_a		= 0;
-        $main::eaw            	= "";
+        $main::ins_end_str            	= "";
 
 	$main::id3_art_str	= "";
 	$main::id3_alb_str	= "";
@@ -228,14 +228,14 @@ sub clr_no_save
 	$main::id3_gen_str 	= "Metal";
 	$main::id3_year_str 	= "";
 
-	$main::id3_art_set	= 0;
-	$main::id3_alb_set	= 0;
-	$main::id3_com_set	= 0;
-	$main::id3_gen_set 	= 0;
+	$main::AUDIO_SET_ARTIST	= 0;
+	$main::AUDIO_SET_ALBUM	= 0;
+	$main::AUDIO_SET_COMMENT	= 0;
+	$main::AUDIO_SET_GENRE 	= 0;
         $main::id3_year_set 	= 0;
 
 	$main::id3v1_rm		= 0;
-	$main::id3v2_rm		= 0;
+	$main::RM_AUDIO_TAGS		= 0;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -258,5 +258,7 @@ sub is_in_array
 
 	return 0;
 }
+
+
 
 1;

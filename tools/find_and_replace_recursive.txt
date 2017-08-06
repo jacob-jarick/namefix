@@ -1,1 +1,8 @@
-git grep -l 'fixname::run_fixname' | xargs sed -i 's/\fixname::run_fixname/\fixname::fix/g'
+$faw
+
+git grep -l 'eaw' | xargs sed -i 's/eaw/ins_end_str/g'
+
+
+git grep -l '$end_a' | xargs sed -i 's/\$end_a/\$INS_END/g'
+git grep -l '$main::end_a' | xargs sed -i 's/\$main::rpwnew/\$main::INS_END/g'
+

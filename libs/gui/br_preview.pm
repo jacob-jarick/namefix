@@ -39,7 +39,6 @@ sub preview
 			return;
 		}
 
-		$nf = &br_ed2k_cleanup($nf);
 		if($of ne $nf)
 		{
 			&misc::plog(4, "sub br_preview preview rename:\n\t\"$of\"\n\t\"$nf\"");
@@ -64,24 +63,21 @@ sub preview
 sub br_show_lists
 {
 	&misc::plog(3, "sub br_preview_list");
-	my $title = shift;
-	my $aref = shift;
-	my $bref = shift;
+	my $title	= shift;
+	my $aref	= shift;
+	my $bref	= shift;
 
-	my @a = @$aref;
-	my @b = @$bref;
+	my @a		= @$aref;
+	my @b		= @$bref;
 
-	my $row = 0;
-	my $col = 0;
-	my $c = 0;
+	my $row		= 0;
+	my $col		= 0;
 
 	# -----------------------
 	# start drawing gui
 
         my $top = $main::mw -> Toplevel();
-        $top -> title("$title");
-
-	# hlist here
+        $top->title($title);
 
         my $hlist = $top -> Scrolled
         (
@@ -91,7 +87,6 @@ sub br_show_lists
 		-columns=>3,
 		-selectbackground => 'Cyan',
 		-width=>80,
-
 	)
         -> pack
 	(
@@ -104,17 +99,9 @@ sub br_show_lists
 	(
         	-text=>"Close",
         	-activebackground => "white",
-        	-command => sub
-		{
-        		destroy $top;
-        	}
+        	-command => sub { destroy $top; }
         )
-        -> pack
-	(
-		-side=>"bottom",
-        );
-
-#	$top->resizable(0,0);
+        -> pack( -side=>"bottom", );
 
 	# --------------------------------
 	# Gui drawn, add contents
@@ -123,17 +110,12 @@ sub br_show_lists
 	$hlist->header('create', 1, -text =>'->');
 	$hlist->header('create', 2, -text =>'New Filename');
 
-
-	$c = 0;
-	for(@a)
+	for my $c(0..$#a)
 	{
-		$hlist->add
-		(
-			$c
-		);
-		$hlist->itemCreate($c, 0, -text => $_);
+		$hlist->add($c);
+		$hlist->itemCreate($c, 0, -text => $a[$c]);
 		$hlist->itemCreate($c, 1, -text => " -> ");
-		$hlist->itemCreate($c, 2, -text => "$b[$c]");
+		$hlist->itemCreate($c, 2, -text => $b[$c]);
 		$c++;
 	}
 }

@@ -67,8 +67,6 @@ sub blockrename
         (
         	'Text',
                 -scrollbars=>"osoe",
-#                -width=>$lw,
-#                -height=>$lh,
         	-font=>$main::dialog_font,
 		-wrap=>'none',
         )
@@ -82,9 +80,9 @@ sub blockrename
         $txt_r->menu(undef);
 
 	# weight text boxes in txt_frame (ensures even resive apparently)
-	$txt_frame->gridRowconfigure(1, -weight=>1, -minsize =>50 );
-	$txt_frame->gridColumnconfigure(1, -weight=>1, -minsize =>50 );
-	$txt_frame->gridColumnconfigure(2, -weight=>1, -minsize =>50 );
+	$txt_frame->gridRowconfigure	(1, -weight=>1, -minsize =>50 );
+	$txt_frame->gridColumnconfigure	(1, -weight=>1, -minsize =>50 );
+	$txt_frame->gridColumnconfigure	(2, -weight=>1, -minsize =>50 );
 
 	my $frm = $button_frame -> Frame()
         -> grid
@@ -101,43 +99,30 @@ sub blockrename
         (
         	-text=>"Cleanup",
         	-activebackground => 'white',
-        	-command => sub
-        	{
-        		&br_cleanup;
-        	}
+        	-command => sub { &br_cleanup; }
         )
         -> pack(-side => 'left');
 
-	# Clear button
-	# clears text in right hand box
+	# Clear button - clears text in right hand box
 	# usefull for pasting filenames from clipboard.
 
         my $clear = $frm -> Button
         (
         	-text=>"Clear",
         	-activebackground => 'white',
-        	-command => sub
-        	{
-        		$main::txt_r->delete('0.0','end');
-        	}
+        	-command => sub { $main::txt_r->delete('0.0','end'); }
         )
         -> pack(-side => 'left');
-	$balloon->attach
-	(
-		$clear,
-		-msg => "Clears Text In Right hand text box"
-	);
+	$balloon->attach($clear, -msg => "Clears Text In Right hand text box");
 
-	# Filter button
-	# enables use of mainwindows filter
-
+	# Filter button - enables use of mainwindows filter
 	my $filt = $frm -> Checkbutton
 	(
 		-text=>"Filter",
 		-variable=>\$main::FILTER,
 		-command=> sub
 		{
-			if($main::FILTER && $main::filter_string eq "")	# dont enable filter on an empty string
+			if($main::FILTER && $main::filter_string eq '')	# dont enable filter on an empty string
 			{
 				&misc::plog(1, "sub blockrename: tried to enable filtering with an empty filter");
 				$main::FILTER = 0;
@@ -152,8 +137,7 @@ sub blockrename
 	)
         -> pack(-side => 'left');
 
-	# Preview button
-	# displays a window with preview of results
+	# Preview button - displays a window with preview of results
 
 	my $preview = $frm -> Checkbutton
 	(
@@ -162,22 +146,14 @@ sub blockrename
 		-activeforeground => "blue"
 	)
         -> pack(-side => 'left');
-	$balloon->attach
-	(
-		$preview,
-		-msg => "Preview changes that will be made.\n\nNote: This option always re-enables after a run for safety."
-	);
+	$balloon->attach($preview, -msg => "Preview changes that will be made.\n\nNote: This option always re-enables after a run for safety.");
 
 	# STOP button
-
         $frm -> Button
         (
         	-text=>"STOP !",
         	-activebackground => 'red',
-        	-command => sub
-		{
-			$main::STOP = 1;
-		}
+        	-command => sub {$main::STOP = 1;}
         )
         -> pack(-side => 'left');
 
@@ -191,17 +167,9 @@ sub blockrename
         )
         -> pack(-side => 'left');
 
-	$balloon->attach
-	(
-		$list,
-		-msg => "List Directory / Reset Text"
-	);
+	$balloon->attach($list, -msg => "List Directory / Reset Text");
 
-	$frm -> Label
-	(
-		-text=>"  "
-	)
-	-> pack(-side => 'left');
+	$frm -> Label( -text=>"  " )-> pack(-side => 'left');
 
 	# RUN button
 
@@ -225,11 +193,7 @@ sub blockrename
         )
         -> pack(-side => 'left');
 
-	$frm -> Label
-	(
-		-text=>"    "
-	)
-	-> pack(-side => 'left');
+	$frm -> Label(-text=>"    ")-> pack(-side => 'left');
 
 	# Close button
 
@@ -253,16 +217,15 @@ sub blockrename
 
 sub br_cleanup
 {
-	&misc::plog(3, "sub br_cleanup");
 	&prep_globals;
-	my @flist = ();
-	my @list = ();
-	my $c = 0;
-	my $file = "";
-	my $dtext	= "";
+	my @flist	= ();
+	my @list	= ();
+	my $c		= 0;
+	my $file	= '';
+	my $dtext	= '';
 
-	@flist = split(/\n/, $main::txt -> get('1.0', 'end'));
-	@list = split(/\n/, $main::txt_r -> get('1.0', 'end'));
+	@flist	= split(/\n/, $main::txt -> get('1.0', 'end'));
+	@list	= split(/\n/, $main::txt_r -> get('1.0', 'end'));
 
 	$main::txt_r->delete('0.0','end');
 	for my $new_file(@list)
@@ -293,19 +256,10 @@ sub txt_reset
         my $dtext = join ("\n", &br_readdir($main::dir));
         &misc::plog(4, "sub txt_reset: dtext: $dtext");
 
-	$main::txt->delete('0.0','end');
-	$main::txt_r->delete('0.0','end');
-
-        $main::txt-> insert
-        (
-        	'end',
-        	"$dtext"
-        );
-        $main::txt_r-> insert
-        (
-        	'end',
-        	"$dtext"
-        );
+	$main::txt	->delete('0.0','end');
+        $main::txt	->insert('end', "$dtext");
+	$main::txt_r	->delete('0.0','end');
+        $main::txt_r	->insert('end', "$dtext");
 }
 
 sub br
@@ -326,25 +280,24 @@ sub br
 	$main::STOP 	= 0;
 	$main::RUN 	= 1;
 
-	my $result_text	= "";
-	my @new_l 	= split(/\n/, $main::txt_r -> get('1.0', 'end'));
-	my @old_l 	= split(/\n/, $main::txt -> get('1.0', 'end'));
+	my $result_text	= '';
+	my @new_l 	= split(/\n/, $main::txt_r	-> get('1.0', 'end'));
+	my @old_l 	= split(/\n/, $main::txt	-> get('1.0', 'end'));
 	my @a 		= ();
 	my @b 		= ();
-	my $c 		= 0;
-	my $of 		= "";	# old file
-	my $nf 		= "";	# new file
+	my $of 		= '';	# old file
+	my $nf 		= '';	# new file
 
 	# clean arrarys of return chars
 	# using chomp caused issues with filenames containing whitespaces at beginging or the end
 	# such as "hello.mp3 " or " hello.mp3"
-	for(@new_l)
+	for my $i(0..$#new_l)
 	{
-		s/\n|\r//g;
+		$new_l[$i] =~ s/\n|\r//g;
 	}
-	for(@old_l)
+	for my $i(0..$#old_l)
 	{
-		s/\n|\r//g;
+		$old_l[$i] =~ s/\n|\r//g;
 	}
 
 	&undo::clear;
@@ -362,14 +315,14 @@ sub br
 		}
 	}
 
-	if($#old_l < $#new_l || $#old_l > $#new_l)
+	if($#old_l != $#new_l)
 	{
 		&misc::plog(0, "sub br: ERROR: length of new and old list does not match");	# prevent possible user cockup
 		$main::RUN = 0;
 		return 0;
 	}
 
-	while($c <= $#old_l)	# check for changes - then rename
+	for my $c(0 .. $#old_l)	# check for changes - then rename
 	{
 		if($main::STOP == 1)
 		{
@@ -379,7 +332,6 @@ sub br
 
 		$of = $old_l[$c];
 		$nf = $new_l[$c];
-		$c++;
 
 		&misc::plog(4, "sub br: processing \"$of\" -> \"$nf\"");
 
@@ -390,7 +342,6 @@ sub br
 		}
 
 
-		$nf = &br_ed2k_cleanup($nf);
 		&misc::plog(4, "sub br: renaming \"$of\" -> \"$nf\"");
 
 		if($of eq $nf)
@@ -417,32 +368,6 @@ sub br
 
 	$main::RUN = 0;
 	return 1;
-}
-
-
-sub br_ed2k_cleanup
-{
-	my $link = shift;
-	&misc::plog(3, "sub br_ed2k_cleanup: \"$link\"");
-	if($link =~ m/^ed2k:\/\/\|file\|(.*?)\|/i)
-	{
-		&misc::plog(4, "sub br_ed2k_cleanup: \"$link\" -> \"$1\"");
-		$link = $1;
-	}
-
-	return $link;
-}
-sub br_txt_cleanup
-{
-	my $link = shift;
-	&misc::plog(3, "sub br_txt_cleanup: \"$link\"");
-	if($link =~ m/^\s*(.*\.($config::hash{file_ext_2_proc}{value}))\s+/)
-	{
-		&misc::plog(4, "sub br_txt_cleanup: \"$link\" -> \"$1\"");
-		$link = $1;
-	}
-
-	return $link;
 }
 
 

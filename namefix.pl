@@ -39,44 +39,51 @@ use Tk::JComboBox;
 # Vars
 # ----------------------------------------------------------------------------
 
+my $version			= '4.1.2.1';
+
 my $row	= 1;
 my $col	= 1;
 
-our $id3v2_rm;
-our $id3_guess_tag;
+our $LISTING			= 0;
+
+our $INS_START			= 0;
+our $WORD_SPECIAL_CASING	= 0;
+
+
+our $RM_AUDIO_TAGS		= 0;
+our $AUDIO_SET_ALBUM		= 0;
+our $AUDIO_SET_COMMENT		= 0;
+our $AUDIO_FORCE		= 0;
+our $AUDIO_SET_GENRE		= 0;
+our $AUDIO_SET_ARTIST		= 0;
+
 our $id3_year_str;
-our $LISTING;
 our $truncate;
-our $eaw;
+our $ins_end_str;
 our $id3_year_set;
 our $ig_type;
-# our $truncate_to;
 our $pad_digits_w_zero;
-our $faw;
+our $ins_front_str;
 our $id3_art_str;
-our $id3_alb_set;
-our $rpwnew;
+our $ins_str;
 our $case;
 our $intr_char;
 our $id3_com_str;
 our $enum_pad_zeros;
 our $id3v1_rm;
-our $rpwold;
+our $ins_str_old	= '';
 our $pad_digits;
 our $kill_cwords;
 our $pad_dash;
-our $id3_com_set;
 our $recr;
 our $filter_cs;
-our $end_a;
+our $INS_END;
 our $id3_gen_str;
 our $kill_sp_patterns;
 our $split_dddd;
-our $id3_art_set;
 our $author;
 our $spaces;
 our $testmode;
-our $id3_force_guess_tag;
 our $enum_pad;
 our $dot2space;
 our $trunc_char;
@@ -85,12 +92,9 @@ our $id3_alb_str;
 our $replace;
 our $enum;
 our $genres;
-our $id3_gen_set;
 our $sp_char;
-our $front_a;
 
 our $percent_done = 0;
-our $WORD_SPECIAL_CASING;
 
 #--------------------------------------------------------------------------------------------------------------
 # mems libs
@@ -124,12 +128,17 @@ use menu;
 use br_preview;
 use undo_gui;
 
-&undo::clear;
+#--------------------------------------------------------------------------------------------------------------
+# define any remaining vars - usually vars that require libs loaded
+#--------------------------------------------------------------------------------------------------------------
+
+our $home	= &misc::get_home();
+our $log_file	= "$home/.namefix.pl/namefix.pl.$version.log";
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
-
+&undo::clear;
 
 if(-f $config::hash_tsv)
 {
@@ -771,7 +780,7 @@ $balloon->attach
 
 my $R_ent1 = $frm_left -> Entry
 (
-	-textvariable=>\$main::rpwold
+	-textvariable=>\$main::ins_str_old
 )
 -> grid
 (
@@ -797,7 +806,7 @@ $frm_left -> Label
 );
 my $R_ent2 = $frm_left -> Entry
 (
-	-textvariable=>\$main::rpwnew
+	-textvariable=>\$main::ins_str
 )
 -> grid(
 	-row=>19,
@@ -813,7 +822,7 @@ $balloon->attach
 my $f_chk = $frm_left -> Checkbutton
 (
 	-text=>"Front Append:",
-	-variable=>\$main::front_a,
+	-variable=>\$main::INS_START,
 	-activeforeground => "blue"
 )
 -> grid
@@ -830,7 +839,7 @@ $balloon->attach
 
 my $f_ent = $frm_left -> Entry
 (
-	-textvariable=>\$main::faw
+	-textvariable=>\$main::ins_front_str
 )
 -> grid
 (
@@ -858,7 +867,7 @@ $balloon->attach
 );
 my $e_ent = $frm_left -> Entry
 (
-	-textvariable=>\$main::eaw
+	-textvariable=>\$main::ins_end_str
 )
 -> grid
 (
@@ -949,10 +958,10 @@ $balloon->attach
 	-msg => "Guess tag from filename\n\nNote: Only works when mp3s are named in 1 of the formats.\n\nTrack Number - Title\nTrack Number - Artist - Title\nArtist - Album - Track Number - Title\nArtist - Track Number - Title\nArtist - Title"
 );
 
-my $id3_force_guess_tag_chk = $tab2 -> Checkbutton
+my $AUDIO_FORCE_chk = $tab2 -> Checkbutton
 (
 	-text=>"Overwrite",
-	-variable=>\$main::id3_force_guess_tag,
+	-variable=>\$main::AUDIO_FORCE,
 	-activeforeground => "blue"
 )
 -> grid
@@ -964,7 +973,7 @@ my $id3_force_guess_tag_chk = $tab2 -> Checkbutton
 );
 $balloon->attach
 (
-	$id3_force_guess_tag_chk,
+	$AUDIO_FORCE_chk,
 	-msg => "Overwrite pre-existing tags when using above option."
 );
 
@@ -977,7 +986,7 @@ $tab2->Label(-text=>" ")
 my $rm_id3v2 = $tab2 -> Checkbutton
 (
 	-text=>"RM id3 tags",
-	-variable=>\$id3v2_rm,
+	-variable=>\$RM_AUDIO_TAGS,
 	-activeforeground => "blue"
 )
 -> grid
@@ -998,7 +1007,7 @@ $tab2->Label(-text=>" ")
 my $id3_art_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Artist as:",
-	-variable=>\$main::id3_art_set,
+	-variable=>\$main::AUDIO_SET_ARTIST,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1027,7 +1036,7 @@ my $id3_art_ent = $tab2 -> Entry
 my $id3_alb_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Album as:",
-	-variable=>\$main::id3_alb_set,
+	-variable=>\$main::AUDIO_SET_ALBUM,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1054,7 +1063,7 @@ my $id3_alb_ent = $tab2 -> Entry(
 my $id3_genre_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Genre as:",
-	-variable=>\$main::id3_gen_set,
+	-variable=>\$main::AUDIO_SET_GENRE,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1119,7 +1128,7 @@ my $id3_year_ent = $tab2 -> Entry
 my $id3_com_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Comment as:",
-	-variable=>\$main::id3_com_set,
+	-variable=>\$main::AUDIO_SET_COMMENT,
 	-activeforeground => "blue"
 )
 -> grid

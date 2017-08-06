@@ -26,8 +26,8 @@ sub prep_globals
         $main::percent_done	= 0;
 
         # escape replace word if regexp is disabled
-        $main::rpwold_escaped = $main::rpwold;
-	$main::rpwold_escaped = quotemeta $main::rpwold			if($config::hash{FILTER_REGEX}{value} == 1);
+        $main::ins_str_old_escaped = $main::ins_str_old;
+	$main::ins_str_old_escaped = quotemeta $main::ins_str_old			if($config::hash{FILTER_REGEX}{value} == 1);
 
 	# update killword list if file exists
         @main::kill_words_arr = misc::readsf("$main::killwords_file")	if(-f $main::killwords_file);

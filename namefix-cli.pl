@@ -41,60 +41,73 @@ use config;
 # define global vars
 #--------------------------------------------------------------------------------------------------------------
 
-our $id3_art_str;
-our $undo_cur_file;
-our $id3_gen_str;
-our $kill_patterns_arr;
-our $id3_alb_str;
-our $enum;
-our $truncate;
-our $thanks;
-our $id3v2_rm;
-our $rpwold;
-our $word_casing_arr;
-our $eaw;
-our $faw;
-our $rm_digits;
-our $id3_com_set;
-our $digits;
-our $enum_opt;
-our $id3_year_str;
 our $version;
-our $id3_guess_tag;
-# our $file_ext_2_proc;
-our $front_a;
-our $id3_alb_set;
-our $truncate_style;
-our $OVERWRITE;
-our $intr_char;
-our $links;
-our $split_dddd;
-our $kill_words_arr;
-our $undo_cur;
-our $trunc_char;
-our $id3_force_guess_tag;
-our $id3_gen_set;
-our $CLI;
-our $todo;
-our $end_a;
-our $changelog;
-our $id3_year_set;
-our $id3v1_rm;
-our $id3_art_set;
-our $LOG_STDOUT;
-our $sp_char;
-our $log_file;
-our $undo_pre;
-our $id3_com_str;
-our $filter_string;
-our $recr;
-our $about;
-our $rpwnew;
-our $undo_pre_file;
 
+our $CLI	= 1;
+our $OVERWRITE;
+our $LOG_STDOUT;
 our $WORD_SPECIAL_CASING;
 
-$main::CLI = 1;
+
+
+# files
+our $log_file	= "$home/.namefix.pl/namefix-cli.pl.$version.log";
+
+# id3 tag options
+our $RM_AUDIO_TAGS	= 0;
+our $AUDIO_SET_ALBUM	= 0;
+our $AUDIO_FORCE	= 0;
+our $AUDIO_SET_COMMENT	= 0;
+our $AUDIO_SET_ARTIST	= 0;
+our $AUDIO_SET_GENRE	= 0;
+
+# id3 tag txt
+our $id3_art_str	= '';
+our $id3_gen_str	= '';
+our $id3_alb_str	= '';
+our $id3_year_str	= '';
+our $id3_year_set	= '';
+our $id3_com_str	= '';
+
+# txt
+our $INS_START		= 0;
+our $INS_END		= 0;
+our $ins_str_old	= '';
+our $ins_str		= '';
+our $ins_front_str	= '';
+our $filter_string	= '';
+
+our $thanks	= "$Bin/txt/thanks.txt";
+our $todo	= "$Bin/txt/todo.txt";
+our $about	= "$Bin/txt/about.txt";
+our $links	= "$Bin/txt/links.txt";
+our $changelog	= "$Bin/txt/changelog.txt";;
+
+# arrarys
+our $kill_patterns_arr;
+our $word_casing_arr;
+our $kill_words_arr;
+
+# binary options
+our $enum;
+our $truncate;
+our $rm_digits;
+our $digits;
+our $enum_opt;
+our $intr_char;
+our $split_dddd;
+our $recr;
+our $sp_char;
+
+# truncate options
+our $truncate_style;
+our $trunc_char;
+
+# undo options
+our $undo_cur;
+our $undo_pre;
+our $undo_pre_file;
+our $undo_cur_file;
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
@@ -295,7 +308,7 @@ for my $arg(@ARGV)
   	elsif($arg =~ /---remove=(.*)/ || $arg =~ /--rm=(.*)/)
  	{
  		$main::replace = 1;
-		$main::rpwold = $1;
+		$main::ins_str_old = $1;
  	}
 	elsif($arg =~ /--replace=(.*)/ || $arg =~ /--rp=(.*)/)
 	{
@@ -304,17 +317,17 @@ for my $arg(@ARGV)
 			plog(0, "main: option replace present but remove option not");
 			exit;
 		}
-		$main::rpwnew = $1;
+		$main::ins_str = $1;
 	}
 	elsif($arg =~ /--append-front=(.*)/ || $arg =~ /--af=(.*)/ )
 	{
-		$main::front_a = 1;
-		$main::faw = $1;
+		$main::INS_START = 1;
+		$main::ins_front_str = $1;
 	}
 	elsif($arg =~ /--end-front=(.*)/ || $arg =~ /--ea=(.*)/ )
 	{
 		$main::end_a = 1;
-		$main::eaw = $1;
+		$main::ins_end_str = $1;
 	}
 	elsif($arg eq "--rm-words")
 	{
@@ -495,7 +508,7 @@ for my $arg(@ARGV)
 	elsif($arg eq "--id3-overwrite")
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3_force_guess_tag = 1;
+		$main::AUDIO_FORCE = 1;
 	}
 	elsif($arg eq "--id3-rm-v1")
 	{
@@ -505,12 +518,12 @@ for my $arg(@ARGV)
 	elsif($arg eq "--id3-rm-v2")
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3v2_rm = 1;
+		$main::RM_AUDIO_TAGS = 1;
 	}
 	elsif($arg =~ /--id3-art=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3_art_set = 1;
+		$main::AUDIO_SET_ARTIST = 1;
 		$main::id3_art_str = $1;
 	}
 	elsif($arg =~ /--id3-tit=(.*)/)
@@ -526,13 +539,13 @@ for my $arg(@ARGV)
 	elsif($arg =~ /--id3-alb=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3_alb_set = 1;
+		$main::AUDIO_SET_ALBUM = 1;
 		$main::id3_alb_str = $1;
 	}
 	elsif($arg =~ /--id3-gen=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3_gen_set = 1;
+		$main::AUDIO_SET_GENRE = 1;
 		$main::id3_gen_str = $1;
 	}
 	elsif($arg =~ /--id3-yer=(.*)/)
@@ -544,7 +557,7 @@ for my $arg(@ARGV)
 	elsif($arg =~ /--id3-com=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3_com_set = 1;
+		$main::AUDIO_SET_COMMENT = 1;
 		$main::id3_com_str = $1;
 	}
 

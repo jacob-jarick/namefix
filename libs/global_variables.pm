@@ -18,7 +18,6 @@ our $load_defaults 	= 0;
 our $config_version  	= "";
 
 our $dir = $ARGV[0];
-our $home = "";
 our $fs_fix_default = 0;
 
 our $OVERWRITE	= 0;
@@ -34,7 +33,7 @@ if(!$dir)
 
 if($^O eq "MSWin32")
 {
-        $home = $ENV{"USERPROFILE"};
+        $main::home = $ENV{"USERPROFILE"};
         $fs_fix_default		= 1;
         our $dialog_font	= "ansi 8 bold";
         our $dialog_title_font	= "ansi 12 bold";
@@ -44,7 +43,7 @@ if($^O eq "MSWin32")
 else
 {
         $fs_fix_default = 0;
-        $home = $ENV{"HOME"},
+        $main::home = $ENV{"HOME"},
         our $dialog_font	= "ansi 10";
         our $dialog_title_font	= "ansi 16 bold";
         our $edit_pat_font	= "ansi 18 bold";
@@ -63,21 +62,12 @@ if(!-d "$home/.namefix.pl")
 
 # File locations
 
-our $config_file	= "$home/.namefix.pl/config.ini";
 our $fonts_file		= "$home/.namefix.pl/fonts.ini";
-# our $bm_pl		= "$home/.namefix.pl/bm.ini";
-our $log_file		= "$home/.namefix.pl/logfile.txt";
 our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killpat_file   	= "$home/.namefix.pl/list_rm_patterns.txt";
 our $bookmark_file	= "$home/.namefix.pl/list_bookmarks.txt";
-our $changelog		= "$Bin/txt/changelog.txt";
-our $about		= "$Bin/txt/about.txt";
-our $todo		= "$Bin/txt/todo.txt";
-our $thanks		= "$Bin/txt/thanks.txt";
-our $links		= "$Bin/txt/links.txt";
 
-our $namefix_log_file	= "$home/.namefix.pl/namefix.pl"."$version"."log";
 our $namefix_error_file	= "$home/.namefix.pl/namefix.pl"."$version"."error.log";
 
 our $mempic 		= $nf_dir."mem.jpg";
@@ -107,7 +97,6 @@ our $suggestF 		= 0;	# suggest using fsfix var
 our $tmpfilefound 	= 0;
 our $tmpfilelist 	= "";
 our $enum_count 	= 0;
-our $rpwold_escaped	= "";
 our $last_recr_dir 	= "";
 our $hl_counter		= 0;
 our @bm_arr 		= "";	# bookmark array
@@ -148,8 +137,6 @@ our $cleanup		= 1;
 our $case 		= 1;
 our $advance		= 0;
 
-our $id3_guess_tag	= 0;
-our $id3_force_guess_tag	= 0;
 our $id3_mode		= 0;
 
 our $window_g		= "";
@@ -178,13 +165,10 @@ our $uc_all		= 0;
 our $lc_all		= 0;
 
 our $replace		= 0;
-our $rpwold		= "";
-our $rpwnew		= "";
+our $ins_str		= "";
 
-our $front_a 		= 0;
-our $faw		= "";
-our $end_a 		= 0;
-our $eaw		= "";
+our $INS_END 		= 0;
+our $ins_end_str		= "";
 
 our $recr		= 0;
 our $proc_dirs  	= 0;
@@ -192,19 +176,16 @@ our $ig_type 		= 0;
 
 # main window, id3 tag vars
 
-our $id3_art_set	= 0;
+our $AUDIO_SET_ARTIST	= 0;
 our $id3_art_str	= "";
 
-our $id3_alb_set	= 0;
 our $id3_alb_str	= "";
 
-our $id3_com_set	= 0;
 our $id3_com_str	= "";
 
 our $id3v1_rm		= 0;
-our $id3v2_rm		= 0;
+our $RM_AUDIO_TAGS		= 0;
 
-$main::id3_gen_set 	= 0;
 $main::id3_gen_str 	= "Metal";
 
 $main::id3_year_set 	= 0;

@@ -146,19 +146,19 @@ sub fix
 
 	# set user entered audio tags overrides if any
 
-	if($main::id3_art_set && $IS_AUDIO_FILE)
+	if($main::AUDIO_SET_ARTIST && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{artist} = $main::id3_art_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_alb_set && $IS_AUDIO_FILE)
+	if($main::AUDIO_SET_ALBUM && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{album} = $main::id3_alb_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_gen_set && $IS_AUDIO_FILE)
+	if($main::AUDIO_SET_GENRE && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{genre} = $main::id3_gen_str;
 		$tag	= 1;
@@ -170,14 +170,14 @@ sub fix
 		$tag	= 1;
 	}
 
-	if($main::id3_com_set && $IS_AUDIO_FILE)
+	if($main::AUDIO_SET_COMMENT && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{comment} = $main::id3_com_str;
 		$tag	= 1;
 	}
 
 	# rm mp3 id3v2 tags
-        if($main::id3v2_rm && $_ =~ /\.$config::id3_ext_regex$/i)
+        if($main::RM_AUDIO_TAGS && $_ =~ /\.$config::id3_ext_regex$/i)
 	{
         	if(!$main::testmode)
 		{
@@ -191,7 +191,7 @@ sub fix
         }
 
 	# rm mp3 id3v1 tags
-        if($main::id3v1_rm && $main::id3v2_rm && $IS_AUDIO_FILE)
+        if($main::id3v1_rm && $main::RM_AUDIO_TAGS && $IS_AUDIO_FILE)
 	{
         	$tag = 0;
         }
@@ -451,7 +451,7 @@ sub fn_replace
 
 	if($main::replace)
         {
-                $fn =~ s/($main::rpwold_escaped)/$main::rpwnew/ig;
+                $fn =~ s/($main::ins_str_old_escaped)/$main::ins_str/ig;
         }
 	return $fn;
 }
@@ -885,9 +885,9 @@ sub fn_front_a
 	&main::quit("fn_front_a \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_front_a \$fn eq ''\n")		if $fn eq '';
 
-        if($main::front_a)
+        if($main::INS_START)
         {
-                $fn = $main::faw.$fn;
+                $fn = $main::ins_front_str.$fn;
         }
 	return $fn;
 }
@@ -900,7 +900,7 @@ sub fn_end_a
 
         if($main::end_a)
         {
-                $fn =~ s/(.*)(\..*?$)/$1$main::eaw$2/g;
+                $fn =~ s/(.*)(\..*?$)/$1$main::ins_end_str$2/g;
         }
 	return $fn;
 }
