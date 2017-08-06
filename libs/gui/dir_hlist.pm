@@ -94,10 +94,24 @@ sub draw_list
 	$hlist->destroy if defined $hlist;
 
 	my $count	= 0;
-	my $columns	= 4;	# icon, filename, arrow, newfilename
-	$columns	= 19 if $config::hash{id3_mode}{value};
+	my $columns	= 0;
+	my @id3_headers = ('Artist', 'Track', 'Title', 'Album', 'Genre', 'Year', 'Comment');
 
-        $hlist = $main::frm_right2 -> Scrolled
+	my $ic = scalar(@id3_headers);	# count of id3 headers
+
+	# with id3 tags: icon, filename
+	if($config::hash{id3_mode}{value})
+	{
+		$columns	= 9;			# listing
+		$columns	= 18 if  $main::RUN;	# preview / rename
+	}
+	else
+	{
+		$columns	= 2;			# listing
+		$columns	= 4 if  $main::RUN;	# preview / rename
+	}
+
+	$hlist = $main::frm_right2 -> Scrolled
         (
 		"HList",
 		-scrollbars		=> 'osoe',
@@ -123,19 +137,21 @@ sub draw_list
 		-fill=>'both'
 	);
 
+	# listing/ rename / preview - add '<VALUE>' column headers
 	$hlist->header('create', $count++, -text =>'Icon');
-
 	$hlist->header('create', $count++, -text =>'Filename');      # for norm & id3 mode
 
-	my @id3_headers = ('Artist', 'Track', 'Title', 'Album', 'Genre', 'Year', 'Comment');
-	if($config::hash{id3_mode}{value} == 1)
+
+	if($config::hash{id3_mode}{value})
 	{
 		for my $header(@id3_headers)
 		{
 			$hlist->header('create', $count++, -text => $header);
 		}
 	}
-	if(!$main::LISTING)
+
+	# rename / preview - add 'New <VALUE>' column headers
+	if($main::RUN)
 	{
 		$hlist->header('create', $count++, -text => '#');
 		$hlist->header('create', $count++, -text => 'New Filename');
@@ -143,15 +159,14 @@ sub draw_list
 		{
 			for my $header(@id3_headers)
 			{
+# 				print "$count = New $header\n";
 				$hlist->header('create', $count++, -text => "New $header");
+
 			}
 		}
 	}
-	if($count > $columns)
-	{
-		&main::quit("draw_list \$count $count > \$columns $columns\n");
-	}
-	print "draw_list = \$count = $count, \$columns = $columns\n";
+	&main::quit("draw_list \$count $count > \$columns $columns\n") if($count > $columns);
+# 	print "draw_list = \$count = $count, \$columns = $columns\n";
 
 	# ----------------------------------------------------------------------------
 	# Right Click Menu

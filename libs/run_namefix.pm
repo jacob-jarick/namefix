@@ -60,6 +60,8 @@ sub run
 	}
 
 	$main::RUN		= 1;
+	&dir_hlist::draw_list;
+
         my $t_s 		= "";	# tmp string
 
         $main::orig_dir		= cwd;
@@ -84,11 +86,11 @@ sub run
                 foreach my $f (@dirlist)
                 {
 			$main::percent_done = int(($count++ / $total) * 100);
-			if (! defined $f)	{ confess "sub run: \$f is undef\n";			&main::quit;}
-			if ($f eq '')		{ confess "sub run: \$f eq ''\n";			&main::quit;}
-			if (!-f $f && !-d $f)	{ confess "sub run: \$f '$f' is not a dir or file\n";	&main::quit;}
+			&main::quit("sub run: \$f is undef\n")			if ! defined $f;
+			&main::quit("sub run: \$f eq ''\n")			if ($f eq '');
+			&main::quit("sub run: \$f '$f' is not a dir or file\n")	if (!-f $f && !-d $f);
 
-			&fixname::fix($f, cwd)	if -f $f || $main::proc_dirs && -d $f;
+			&fixname::fix($f, cwd)	if -f $f || ($main::proc_dirs && -d $f);
                 }
         }
         if($main::recr)

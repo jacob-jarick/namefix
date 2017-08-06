@@ -1,6 +1,14 @@
 
 4.1.2 - ie refresh in progress
 
+
+* fixed columns issue in dir_hlist
+  only show needed amont of columns (correctly this time).
+
+* fixname::fix - added quit errors to catch undef filenames and '' as filenames
+
+* alot of #'ed print debug messages
+
 * ls_dir now only shows neccesary headers + massive cleanup
 
 * fixname::fix - most subs can be sent a flag to enable STRING mode (dont do file detection)

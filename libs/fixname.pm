@@ -257,6 +257,9 @@ sub fix
 		}
 	}
 
+	print "fix: sending this info to nf_print::p\n\$file = $file\n\$newfile = $newfile\n\%tags_h = \n".
+	Dumper(\%tags_h) . "\n" . "\%tags_h_new = \n" . Dumper(\%tags_h_new) . "\n";
+
 	&nf_print::p
 	(
 		$file,

@@ -48,9 +48,9 @@ sub p
 		$NEWFILE = 1;
 		$main::hlist_file_new = $file2;
 
-		print "p: file1 = $file1, file2 = $file2, \$NEWFILE = $NEWFILE\n";
-		print Dumper($ref1);
-		print Dumper($ref2);
+ 		print "p: file1 = $file1, file2 = $file2, \$NEWFILE = $NEWFILE\n";
+# 		print Dumper($ref1);
+# 		print Dumper($ref2);
 	}
 	else
 	{
@@ -117,13 +117,13 @@ sub p
 	if($config::hash{id3_mode}{value})
 	{
 		&main::quit("nf_print id3_mode enabled but \$ref1 is undef\n") if !defined $ref1;
-		print "p: using \$ref1\n" . Dumper($ref1);
+# 		print "p: using \$ref1\n" . Dumper($ref1);
 		my %h = %$ref1;
 
 		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 		{
 			&main::quit("nf_print::p \$ref1 \$h{$k} is undef\n") if ! defined $h{$k};
-			print "add $k = '$h{$k}' at position $count\n";
+# 			print "add $k = '$h{$k}' at position $count\n";
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 	}
@@ -138,14 +138,12 @@ sub p
 
 	if($config::hash{id3_mode}{value})
 	{
-		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$arrow");
-		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file2);
-
 		&main::quit("nf_print id3_mode enabled but \$ref2 is undef\n") if !defined $ref2;
 		my %h = %$ref2;
 		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 		{
 			&main::quit("nf_print::p \$ref2 \$h{$k} is undef\n") if ! defined $h{$k};
+# 			print "add $k = '$h{$k}' at position $count\n";
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 		return;

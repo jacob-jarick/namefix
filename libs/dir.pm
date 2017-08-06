@@ -24,17 +24,14 @@ sub ls_dir
 		&misc::plog(0, "sub ls_dir: Allready preforming a list, aborting new list attempt");
 		return 0;
 	}
+	$main::LISTING		= 1;
+	$main::STOP		= 0;
 
 	$main::percent_done	= 0;
 	my @file_list		= ();
 	my @dirlist		= &dir_filtered($main::dir);
-	$main::STOP		= 0;
-	$main::LISTING		= 1;
 
-	chdir $main::dir;	# shift directory, not just list ;)
-
-	$main::dir	= cwd();
-
+	chdir $main::dir; $main::dir = cwd();
 	&dir_hlist::draw_list;
 
         if($main::recr)
