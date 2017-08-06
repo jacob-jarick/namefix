@@ -124,7 +124,7 @@ $hash{'window_g'}{'value'}		= '';
 
 sub save_hash
 {
-	&misc::plog(0, "config::save_hash $hash_tsv");
+	&misc::plog(1, "config::save_hash $hash_tsv");
 	&misc::null_file($hash_tsv);
 
 	my @types = ('norm', 'mw', 'mwg');
@@ -148,7 +148,7 @@ sub save_hash_helper
 	if(!defined $hash{$k}{'value'})
 	{
 		my $w = "config::save_hash key $k has no value";
-		&misc::plog(0, $w);
+		&misc::plog(1, $w);
 		print "$w\n$k = \n" . Dumper($hash{$k});
 		next;
 	}
@@ -158,7 +158,7 @@ sub save_hash_helper
 
 sub load_hash
 {
-	&misc::plog(0, "config::save_hash $hash_tsv");
+	&misc::plog(1, "config::save_hash $hash_tsv");
 	my @tmp = &misc::readf($hash_tsv);
 	my %h = ();
 	for my $line(@tmp)

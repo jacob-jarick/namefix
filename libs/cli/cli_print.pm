@@ -11,28 +11,29 @@ use warnings;
 
 sub print
 {
-	my $s1 = shift;
-	my $s2 = shift;
+	my $s1		= shift;
+	my $s2		= shift;
+	my $ref1	= shift;
+	my $ref2	= shift;
 
 	if(!$s2) { $s2 = $s1; }
 
-	my $art = "";
-	my $tit = "";
-	my $tra = "";
-	my $alb = "";
-	my $com = "";
-	my $gen = "";
-	my $year = "";
+	my %tag_h = ();
+	my %tag_h_new = ();
 
-	my $newart = "";
-	my $newtit = "";
-	my $newtra = "";
-	my $newalb = "";
-	my $newcom = "";
-	my $newgen = "";
-	my $newyear = "";
+	if($config::hash{id3_mode}{value})
+	{
+		if(defined $ref1)
+		{
+			%tag_h = %$ref1;
+		}
+		if(defined $ref2)
+		{
+			%tag_h_new = %$ref2;
+		}
+	}
 
-	my $tmp = "";
+	my $tmp = '';
 
 	&misc::plog(3, "sub cli_print: \"$s1\", \"$s2\"");
 
@@ -46,29 +47,6 @@ sub print
 		return 1;
 	}
 
-	if($config::hash{id3_mode}{value} == 1)
-	{
-		$art = shift;
-		$tit = shift;
-		$tra = shift;
-		$alb = shift;
-		$com = shift;
-                $gen = shift;
-                $year = shift;
-	}
-
-	# When renaming or previewing in id3 mode we will be sent the "after" id3 tags
-	if($config::hash{id3_mode}{value} == 1 && $main::LISTING == 0)
-	{
-		$newart = shift;
-		$newtit = shift;
-		$newtra = shift;
-		$newalb = shift;
-		$newcom = shift;
-		$newgen = shift;
-		$newyear = shift;
-	}
-
 	# normal listing
 
 	if(!$config::hash{id3_mode}{value})
@@ -80,45 +58,45 @@ sub print
 	else
 	{
 		print 	"old>\"$s1\"\nnew>\"$s2\"\n",
-			"\told-artist>$art\n\tnew-artist>$newart\n",
-			"\told-title>$tit\n\tnew-title>$newtit\n",
-			"\told-track>$tra\n\tnew-track>$newtra\n",
-			"\told-album>$alb\n\tnew-album>$newalb\n",
-			"\told-comment>$com\n\tnew-comment>$newcom\n",
-			"\told-genre>$gen\n\tnew-genre>$newgen\n",
-			"\told-year>$year\n\tnew-year>$newyear\n\n";
+			"\told-artist>	$tag_h{artist}\n\tnew-artist>	$tag_h_new{artist}\n",
+			"\told-title>	$tag_h{title}\n\tnew-title>	$tag_h_new{title}\n",
+			"\told-track>	$tag_h{track}\n\tnew-track>	$tag_h_new{track}\n",
+			"\told-album>	$tag_h{album}\n\tnew-album>	$tag_h_new{album}\n",
+			"\told-comment>	$tag_h{comment}\n\tnew-comment>	$tag_h_new{comment}\n",
+			"\told-genre>	$tag_h{genre}\n\tnew-genre>	$tag_h_new{genre}\n",
+			"\told-year>	$tag_h{year}\n\tnew-year>	$tag_h_new{year}\n\n";
 
 $tmp="
 <TR>
 	<TD colspan=2 nowrap>$s1</TD>
 	<TD colspan=2 nowrap>$s2</TD></TR>
 <TR>
-	<TD>Artist</TD><TD>$art</TD>
-	<TD colspan=2>$newart</TD>
+	<TD>Artist</TD><TD>$tag_h{artist}</TD>
+	<TD colspan=2>$tag_h_new{artist}</TD>
 </TR>
 <TR>
-	<TD>Title</TD><TD>$tit</TD>
-	<TD colspan=2>$newtit</TD>
+	<TD>Title</TD><TD>$tag_h{title}</TD>
+	<TD colspan=2>$tag_h_new{title}</TD>
 </TR>
 <TR>
-	<TD>Track</TD><TD>$tra</TD>
-	<TD colspan=2>$newtra</TD>
+	<TD>Track</TD><TD>$tag_h{track}</TD>
+	<TD colspan=2>$tag_h_new{track}</TD>
 </TR>
 <TR>
-	<TD>Album</TD><TD>$alb</TD>
-	<TD colspan=2>$newalb</TD>
+	<TD>Album</TD><TD>$tag_h{album}</TD>
+	<TD colspan=2>$tag_h_new{album}</TD>
 </TR>
 <TR>
-	<TD>Comment</TD><TD>$com</TD>
-	<TD colspan=2>$newcom</TD>
+	<TD>Comment</TD><TD>$tag_h{comment}</TD>
+	<TD colspan=2>$tag_h_new{comment}</TD>
 </TR>
 <TR>
-	<TD>Genre</TD><TD>$gen</TD>
-	<TD colspan=2>$newgen</TD>
+	<TD>Genre</TD><TD>$tag_h{genre}</TD>
+	<TD colspan=2>$tag_h_new{genre}</TD>
 </TR>
 <TR>
-	<TD>Year</TD><TD>$year</TD>
-	<TD colspan=2>$newyear</TD>
+	<TD>Year</TD><TD>$tag_h{year}</TD>
+	<TD colspan=2>$tag_h_new{year}</TD>
 </TR>
 <TR>
 	<TD colspan=4 align=center>***********</TD>

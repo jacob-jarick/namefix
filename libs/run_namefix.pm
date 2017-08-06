@@ -60,7 +60,7 @@ sub run
 	}
 
 	$main::RUN		= 1;
-	&dir_hlist::draw_list;
+	&dir_hlist::draw_list if !$main::CLI;
 
         my $t_s 		= "";	# tmp string
 

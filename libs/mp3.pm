@@ -33,6 +33,18 @@ our %id3_order = ();
 	$id3_order{year}	= $count++;
 	$id3_order{comment}	= $count++;
 }
+
+our %template = ();
+$template{artist}	= '';
+$template{track}	= '';
+$template{title}	= '';
+$template{album}	= '';
+$template{genre}	= '';
+$template{year}		= '';
+$template{comment}	= '';
+
+
+
 # -----------------------------------------------------------------------------------
 # get tags
 # -----------------------------------------------------------------------------------

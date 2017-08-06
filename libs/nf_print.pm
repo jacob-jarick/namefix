@@ -17,6 +17,14 @@ sub p
 {
 	my $file1	= shift;
 	my $file2	= shift;
+	my $ref1	= shift;
+	my $ref2	= shift;
+
+	if($main::CLI)
+	{
+		&cli_print::print($file1, $file2, $ref1, $ref2);
+		return;
+	}
 
 	&dir_hlist::fn_update_delay;
 
@@ -27,9 +35,8 @@ sub p
 	}
 
 	my $NEWFILE	= 0;
-	my $ref1	= shift;
-	my $ref2	= shift;
 	my $hlpos	= $main::hl_counter;	# short hand ref
+
 	$main::hl_counter++;			# now we have a ref, incr for next time
 
 	# add blank line in hlist
