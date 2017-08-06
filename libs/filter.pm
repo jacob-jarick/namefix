@@ -43,8 +43,8 @@ sub match
 
 	if
 	(
-		($main::filter_cs == 1 && $string =~ /.*($filt).*/) ||
-		($main::filter_cs == 0 && $string =~ /.*($filt).*/i)
+		($main::FILTER_IGNORE_CASE == 1 && $string =~ /.*($filt).*/) ||
+		($main::FILTER_IGNORE_CASE == 0 && $string =~ /.*($filt).*/i)
 	)
 	{
 		&misc::plog(4, "sub match: string \"$string\" matched filter \"$filt\"");

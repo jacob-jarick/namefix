@@ -41,17 +41,48 @@ use config;
 # define global vars
 #--------------------------------------------------------------------------------------------------------------
 
-our $version;
+our $version 		= "4.1.2";
 
-our $CLI		= 1;
+our $RUN		= 0;
+our $STOP		= 0;
+our $LISTING		= 0;
+our $FILTER_IGNORE_CASE	= 0;
+
 our $CLEANUP_GENERAL	= 1;
 
 our $OVERWRITE		= 0;
 our $LOG_STDOUT		= 0;
 our $WORD_SPECIAL_CASING= 0;
+our $IGNORE_FILE_TYPE	= 0;
+
+our $tags_rm		= 0;	# counter for number of tags removed
+
+our @find_arr		= ();
 
 # files
-our $log_file	= "$home/.namefix.pl/namefix-cli.pl.$version.log";
+our $log_file		= "$home/.namefix.pl/namefix-cli.pl.$version.log";
+our $html_file		= "$home/.namefix.pl/namefix_html_output_hack.html";
+
+our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
+our @kill_words_arr	= &misc::readf_clean($killwords_file);
+
+our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
+our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
+our @kill_words_arr	= &misc::readf_clean($killwords_defaults);
+@kill_words_arr		= &misc::readf_clean($killwords_file) if(!-f $killwords_file);
+
+our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
+our $casing_defaults   	= "$Bin/data/defaults/special_casing.txt";
+our @word_casing_arr	= misc::readf_clean($casing_defaults);
+@word_casing_arr	= misc::readf_clean($casing_file) if -f $casing_file;
+
+our $killpat_file   	= "$home/.namefix.pl/list_rm_patterns.txt";
+our $killpat_defaults  	= "$Bin/data/defaults/killpatterns.txt";
+our @kill_patterns_arr	= &misc::readf_clean($killpat_defaults);
+@kill_patterns_arr	= &misc::readf_clean($killpat_defaults) if -f $killpat_file;
+
+our $genres_file	= "$Bin/data/txt/genres.txt";
+our @genres		= misc::readf_clean($genres_file);
 
 # id3 tag options
 our $RM_AUDIO_TAGS	= 0;
@@ -66,15 +97,17 @@ our $id3_art_str	= '';
 our $id3_gen_str	= '';
 our $id3_alb_str	= '';
 our $id3_year_str	= '';
-our $id3_year_set	= '';
+our $AUDIO_SET_YEAR	= '';
 our $id3_com_str	= '';
 
 # txt
 our $INS_START		= 0;
 our $INS_END		= 0;
+our $ins_front_str	= '';
+our $ins_end_str	= '';
 our $ins_str_old	= '';
 our $ins_str		= '';
-our $ins_front_str	= '';
+
 our $filter_string	= '';
 
 our $thanks	= "$Bin/txt/thanks.txt";
@@ -83,11 +116,6 @@ our $about	= "$Bin/txt/about.txt";
 our $links	= "$Bin/txt/links.txt";
 our $changelog	= "$Bin/txt/changelog.txt";;
 
-# arrarys
-our $kill_patterns_arr;
-our $word_casing_arr;
-our $kill_words_arr;
-
 # binary options
 our $enum;
 our $truncate;
@@ -95,7 +123,7 @@ our $rm_digits;
 our $digits;
 our $enum_opt;
 our $intr_char;
-our $split_dddd;
+our $SPLIT_DDDD;
 our $recr;
 our $sp_char;
 
@@ -104,8 +132,10 @@ our $truncate_style;
 our $trunc_char;
 
 # undo options
-our $undo_cur;
-our $undo_pre;
+our @undo_cur	= ();	# undo array - current filenames
+our @undo_pre	= ();	# undo array - previous filenames
+our $undo_dir	= '';	# directory to preform undo in
+
 our $undo_pre_file;
 our $undo_cur_file;
 
@@ -114,20 +144,13 @@ our $undo_cur_file;
 #--------------------------------------------------------------------------------------------------------------
 
 
-if(-f $config::hash_tsv)
-{
-	&config::load_hash;
-}
-
-if($config::hash{ZERO_LOG}{value})
-{
-	&misc::clog;
-}
+&config::load_hash	if -f	$config::hash_tsv;
+&misc::clog		if	$config::hash{ZERO_LOG}{value};
 
 &misc::plog(1, "**** namefix.pl $main::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
-$main::CLI = 1;	# set cli mode flag
+$hash{CLI}{value} = 1;	# set cli mode flag
 
 #--------------------------------------------------------------------------------------------------------------
 # CLI Variables
@@ -323,8 +346,8 @@ for my $arg(@ARGV)
 	}
 	elsif($arg =~ /--end-front=(.*)/ || $arg =~ /--ea=(.*)/ )
 	{
-		$main::end_a = 1;
-		$main::ins_end_str = $1;
+		$end_a = 1;
+		$ins_end_str = $1;
 	}
 	elsif($arg eq "--rm-words")
 	{
@@ -358,7 +381,7 @@ for my $arg(@ARGV)
 	}
 	elsif($arg eq "--dir")
 	{
-		$main::proc_dirs = 1;
+		$hash{PROC_DIRS}{value} = 1;
 	}
 	elsif($arg eq "--overwrite")
 	{
@@ -366,7 +389,7 @@ for my $arg(@ARGV)
 	}
  	elsif($arg eq "--all-files")
  	{
- 		$main::ig_type = 1;
+ 		$IGNORE_FILE_TYPE = 1;
  	}
 	elsif($arg =~ /--filt=(.*)/)
 	{
@@ -477,7 +500,7 @@ for my $arg(@ARGV)
 	}
 	elsif($arg eq "--pad-nnnn-wx" || $arg eq "--px")
 	{
-		$main::split_dddd = 1;
+		$main::SPLIT_DDDD = 1;
 	}
 
 	#####################
@@ -520,7 +543,7 @@ for my $arg(@ARGV)
 	elsif($arg =~ /--id3-art=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::AUDIO_SET_ARTIST = 1;
+		$AUDIO_SET_ARTIST = 1;
 		$main::id3_art_str = $1;
 	}
 	elsif($arg =~ /--id3-tit=(.*)/)
@@ -548,7 +571,7 @@ for my $arg(@ARGV)
 	elsif($arg =~ /--id3-yer=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$main::id3_year_set = 1;
+		$main::AUDIO_SET_YEAR = 1;
 		$main::id3_year_str = $1;
 	}
 	elsif($arg =~ /--id3-com=(.*)/)
@@ -722,9 +745,9 @@ sub proc_short_opts
 		elsif($short_opt eq "x") { $config::hash{FILTER_REGEX}{value}		= 0; }
 
 		elsif($short_opt eq "0") { $main::pad_digits_w_zero			= 1; }
-		elsif($short_opt eq "A") { $main::ig_type				= 1; }
+		elsif($short_opt eq "A") { $IGNORE_FILE_TYPE				= 1; }
 		elsif($short_opt eq "C") { $config::hash{WORD_SPECIAL_CASING}{value}	= 1; }
-		elsif($short_opt eq "D") { $main::proc_dirs = 1; }
+		elsif($short_opt eq "D") { $hash{PROC_DIRS}{value} = 1; }
 		elsif($short_opt eq "F") { $config::hash{fat32fix}{value}		= 1; }
 		elsif($short_opt eq "H") { $main::pad_dash				= 1; }
 		elsif($short_opt eq "K") { $config::hash{kill_cwords}{value}		= 1; }

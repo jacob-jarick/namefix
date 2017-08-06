@@ -20,7 +20,7 @@ sub p
 	my $ref1	= shift;
 	my $ref2	= shift;
 
-	if($main::CLI)
+	if($hash{CLI}{value})
 	{
 		&cli_print::print($file1, $file2, $ref1, $ref2);
 		return;

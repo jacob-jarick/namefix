@@ -26,7 +26,7 @@ sub plog
 	my $level = shift;
 	my $text = shift;
 
-	if($main::CLI == 0) # gui mode
+	if($hash{CLI}{value} == 0) # gui mode
 	{
 		if($text !~ /\n/ && length $text > 2 && $text ne ' ' && $text ne '')
 		{
@@ -49,7 +49,7 @@ sub plog
 		$text = "ERROR>$text";
 
 		# CLI will (for now) always spit out & log errors
-		if($main::CLI)
+		if($hash{CLI}{value})
 		{
 			open(FILE, ">>$main::log_file");
 			print FILE "$text\n";
@@ -94,11 +94,17 @@ sub clog
 
 sub get_home
 {
-	if($^O eq "MSWin32")
+	my $home;
+	$home = $ENV{USERPROFILE}	if $^O eq 'MSWin32';
+	$home = $ENV{HOME}		if defined $ENV{HOME};
+
+	$home = $ENV{TMP};	# surely the os has a tmp if nothing else
+
+	if(!-d "$home/.namefix.pl")
 	{
-		return $ENV{"USERPROFILE"};
+		mkdir("$home/.namefix.pl", 0755) or &main::quit("Cannot mkdir :$home/.namefix.pl $!\n");
 	}
-	return $ENV{"HOME"},
+	return $home;
 }
 
 sub null_file
@@ -148,6 +154,33 @@ sub readf
         $file =~ s/\n\n+/\n/g;
 
         return @file;
+}
+
+#--------------------------------------------------------------------------------------------------------------
+# read file
+#--------------------------------------------------------------------------------------------------------------
+
+sub readf_clean
+{
+        my $file = $_[0];
+
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
+        my @file = <FILE>;
+        close(FILE);
+
+	my @tmp;
+        for my $l(@file)
+        {
+		# clean file of empty lines
+		$l =~ s/^\n+//g;
+		$l =~ s/\n+//g;
+		$l =~ s/\s+#.*?\n//g;
+
+		next if $l eq '';
+
+		push @tmp, $l;
+	}
+        return sort {lc $a cmp lc $b} @tmp;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -232,7 +265,7 @@ sub clr_no_save
 	$main::AUDIO_SET_ALBUM	= 0;
 	$main::AUDIO_SET_COMMENT	= 0;
 	$main::AUDIO_SET_GENRE 	= 0;
-        $main::id3_year_set 	= 0;
+        $main::AUDIO_SET_YEAR 	= 0;
 
 	$main::RM_AUDIO_TAGS		= 0;
 }

@@ -39,61 +39,73 @@ use Tk::JComboBox;
 # Vars
 # ----------------------------------------------------------------------------
 
-my $version			= '4.1.2.1';
+our $version			= '4.1.2.1';
+our $mempic 		= "$Bin/data/mem.jpg";
+our $dir = $ARGV[0];
 
 my $row	= 1;
 my $col	= 1;
-
+our $SAVE_WINDOW_SIZE		= 0;
+our $RUN			= 0;
+our $STOP			= 0;
 our $LISTING			= 0;
-
 our $INS_START			= 0;
 our $WORD_SPECIAL_CASING	= 0;
-
+our $INS_END			= 0;
+our $IGNORE_FILE_TYPE		= 0;
+our $SPLIT_DDDD			= 0;
+our $FILTER_IGNORE_CASE		= 0;
 
 our $RM_AUDIO_TAGS		= 0;
+our $AUDIO_FORCE		= 0;
 our $AUDIO_SET_ALBUM		= 0;
 our $AUDIO_SET_COMMENT		= 0;
-our $AUDIO_FORCE		= 0;
 our $AUDIO_SET_GENRE		= 0;
 our $AUDIO_SET_ARTIST		= 0;
+our $AUDIO_SET_YEAR		= 0;
 
-our $id3_year_str;
+our $id3_year_str		= '';
+our $id3_com_str		= '';
+
+our $filter_string		= '';
+our $ins_end_str		= '';
+our $ins_str_old		= '';
+
+our $hl_counter		= 0;
+our $hlist_selection	= 0;	# current line selected
+
+our $window_g		= '';
+
 our $truncate;
-our $ins_end_str;
-our $id3_year_set;
-our $ig_type;
+
 our $pad_digits_w_zero;
 our $ins_front_str;
-our $id3_art_str;
+our $id3_art_str	= '';
+
 our $ins_str;
 our $case;
 our $intr_char;
-our $id3_com_str;
 our $enum_pad_zeros;
-our $ins_str_old	= '';
 our $pad_digits;
+
 our $kill_cwords;
 our $pad_dash;
 our $recr;
-our $filter_cs;
-our $INS_END;
 our $id3_gen_str;
 our $kill_sp_patterns;
-our $split_dddd;
-our $author;
 our $spaces;
 our $testmode;
 our $enum_pad;
-our $dot2space;
 our $trunc_char;
-our $proc_dirs;
+our $hash{PROC_DIRS}{value};
 our $id3_alb_str;
 our $replace;
 our $enum;
-our $genres;
 our $sp_char;
 
 our $percent_done = 0;
+
+our @find_arr	= ();
 
 #--------------------------------------------------------------------------------------------------------------
 # mems libs
@@ -131,35 +143,69 @@ use undo_gui;
 # define any remaining vars - usually vars that require libs loaded
 #--------------------------------------------------------------------------------------------------------------
 
-our $home	= &misc::get_home();
-our $log_file	= "$home/.namefix.pl/namefix.pl.$version.log";
+our $tags_rm	= 0;	# counter for number of tags removed
+
+# undo options
+our @undo_cur	= ();	# undo array - current filenames
+our @undo_pre	= ();	# undo array - previous filenames
+our $undo_dir	= '';	# directory to preform undo in
+
+
+our $home		= &misc::get_home();
+our $log_file		= "$home/.namefix.pl/namefix.pl.$version.log";
+
+our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
+our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
+our @kill_words_arr	= &misc::readf_clean($killwords_defaults);
+@kill_words_arr		= &misc::readf_clean($killwords_file) if(!-f $killwords_file);
+
+our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
+our $casing_defaults   	= "$Bin/data/defaults/special_casing.txt";
+our @word_casing_arr	= misc::readf_clean($casing_defaults);
+@word_casing_arr	= misc::readf_clean($casing_file) if -f $casing_file;
+
+our $killpat_file   	= "$home/.namefix.pl/list_rm_patterns.txt";
+our $killpat_defaults  	= "$Bin/data/defaults/killpatterns.txt";
+our @kill_patterns_arr	= &misc::readf_clean($killpat_defaults);
+@kill_patterns_arr	= &misc::readf_clean($killpat_defaults) if -f $killpat_file;
+
+
+our $genres_file	= "$Bin/data/txt/genres.txt";
+our @genres		= misc::readf_clean($genres_file);
+
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
-&undo::clear;
-
-if(-f $config::hash_tsv)
-{
-	&config::load_hash;
-}
-
-if($config::hash{ZERO_LOG}{value})
-{
-	&misc::clog;
-}
 
 &misc::plog(1, "**** namefix.pl $main::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
-&config::load_hash;
+if($^O eq "MSWin32")
+{
+        $fs_fix_default		= 1;
+        $dialog_font		= "ansi 8 bold";
+        $dialog_title_font	= "ansi 12 bold";
+        $edit_pat_font		= "ansi 16 bold";
+}
+else
+{
+        $fs_fix_default		= 0;
+        $dialog_font		= "ansi 10";
+        $dialog_title_font	= "ansi 16 bold";
+        $edit_pat_font		= "ansi 18 bold";
+}
+
+&undo::clear;
+&misc::clog		if $config::hash{ZERO_LOG}{value};
+&config::load_hash	if -f $config::hash_tsv;
 
 #--------------------------------------------------------------------------------------------------------------
 # Begin Gui
 #--------------------------------------------------------------------------------------------------------------
 
 our $mw = new MainWindow; # Main Window
-$mw -> title("namefix.pl $main::version by $main::author");
+$mw -> title("namefix.pl $main::version by Jacob Jarick");
 
 $mw->bind('<KeyPress>' => sub
 {
@@ -412,7 +458,7 @@ my $recr_chk = $frm_bottom -> Checkbutton
 my $D_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Process Dirs",
-	-variable=>\$main::proc_dirs,
+	-variable=>\$hash{PROC_DIRS}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -438,7 +484,7 @@ $frm_bottom -> Label()
 my $I_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Process ALL Files",
-	-variable=>\$main::ig_type,
+	-variable=>\$IGNORE_FILE_TYPE,
 	-activeforeground => "blue"
 )
 -> grid
@@ -997,7 +1043,7 @@ $tab2->Label(-text=>" ")
 my $id3_art_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Artist as:",
-	-variable=>\$main::AUDIO_SET_ARTIST,
+	-variable=>\$AUDIO_SET_ARTIST,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1089,7 +1135,7 @@ my $genre_combo = $tab2 -> JComboBox
 my $id3_year_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Year as:",
-	-variable=>\$main::id3_year_set,
+	-variable=>\$main::AUDIO_SET_YEAR,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1176,13 +1222,7 @@ my $U_chk = $tab5 -> Checkbutton
 	-text=>"Uppercase All",
 	-variable=>\$config::hash{uc_all}{value},
 	-activeforeground => "blue",
-	-command=> sub
-	{
-		if($config::hash{uc_all}{value} == 1)
-		{
-			$config::hash{lc_all}{value} = 0;
-		}
-	}
+	-command=> sub { $config::hash{lc_all}{value} = 0 if $config::hash{uc_all}{value}; }
 )
 -> grid
 (
@@ -1196,13 +1236,7 @@ my $L_chk = $tab5 -> Checkbutton
 	-text=>"Lowercase All",
 	-variable=>\$config::hash{lc_all}{value},
 	-activeforeground => "blue",
-	-command=> sub
-	{
-		if($config::hash{lc_all}{value} == 1)
-		{
-			$config::hash{uc_all}{value} = 0;
-		}
-	}
+	-command=> sub { $config::hash{uc_all}{value} = 0 if $config::hash{lc_all}{value}; }
 )
 -> grid
 (
@@ -1419,7 +1453,7 @@ $balloon->attach
 my $chk_split_dddd = $tab5 -> Checkbutton
 (
 	-text=>"Pad NNNN with x",
-	-variable=>\$main::split_dddd,
+	-variable=>\$main::SPLIT_DDDD,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1846,7 +1880,7 @@ $f_frame->Entry
 $f_frame -> Checkbutton
 (
 	-text=>"Case Sensitive",
-	-variable=>\$main::filter_cs,
+	-variable=>\$main::FILTER_IGNORE_CASE,
 	-activeforeground => "blue"
 )
 ->pack

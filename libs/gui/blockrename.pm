@@ -341,13 +341,9 @@ sub br
 			last;
 		}
 
-
 		&misc::plog(4, "sub br: renaming \"$of\" -> \"$nf\"");
 
-		if($of eq $nf)
-		{
-			next;
-		}
+		next if $of eq $nf;
 
 		if(&fn_rename ($of, $nf))
 		{
@@ -391,12 +387,12 @@ sub br_readdir
                 	next;
                 }
 
-                if(!$main::proc_dirs && -d $_)
+                if(!$hash{PROC_DIRS}{value} && -d $_)
                 {
                 	next;
                 }
 
-                if(!$main::ig_type == 0 && $_ !~ /\.($config::hash{file_ext_2_proc}{value})$/i)
+                if(!$main::IGNORE_FILE_TYPE == 0 && $_ !~ /\.($config::hash{file_ext_2_proc}{value})$/i)
                 {
                 	next;
                 }

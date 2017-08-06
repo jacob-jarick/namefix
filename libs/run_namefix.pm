@@ -60,7 +60,7 @@ sub run
 	}
 
 	$main::RUN		= 1;
-	&dir_hlist::draw_list if !$main::CLI;
+	&dir_hlist::draw_list if !$hash{CLI}{value};
 
         my $t_s 		= "";	# tmp string
 
@@ -70,7 +70,7 @@ sub run
 	&undo::clear;
 	prep_globals;
 
-	if(!$main::CLI)
+	if(!$hash{CLI}{value})
 	{
 		&dir_hlist::hlist_clear;
 		nf_print::p("..");
@@ -90,7 +90,7 @@ sub run
 			&main::quit("sub run: \$f eq ''\n")			if ($f eq '');
 			&main::quit("sub run: \$f '$f' is not a dir or file\n")	if (!-f $f && !-d $f);
 
-			&fixname::fix($f, cwd)	if -f $f || ($main::proc_dirs && -d $f);
+			&fixname::fix($f, cwd)	if -f $f || ($hash{PROC_DIRS}{value} && -d $f);
                 }
         }
         if($main::recr)

@@ -1,8 +1,8 @@
 $faw
 
-git grep -l 'eaw' | xargs sed -i 's/eaw/ins_end_str/g'
+git grep -l 'ig_type' | xargs sed -i 's/ig_type/IGNORE_FILE_TYPE/g'
 
 
-git grep -l 'cleanup' | xargs sed -i 's/\$cleanup/\$CLEANUP_GENERAL/g'
-git grep -l 'cleanup' | xargs sed -i 's/\$main::cleanup/\$main::CLEANUP_GENERAL/g'
+git grep -l 'proc_dirs' | xargs sed -i 's/\$hash{PROC_DIRS}{value}/\$hash{PROC_DIRS}{value}/g'
+git grep -l 'proc_dirs' | xargs sed -i 's/\$hash{PROC_DIRS}{value}/\$hash{PROC_DIRS}{value}/g'
 

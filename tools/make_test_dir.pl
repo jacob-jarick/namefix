@@ -35,11 +35,13 @@ for my $band(@bands)
 {
 	for my $y (0..int(rand(8)))
 	{
-		my $year = &get_year;
-		my $album = "$band - $year - " . join(" ", rand_words( size => int(rand(3)+1) ));
-		my $album_dir = "$music_dir/$album";
+		my $year	= &get_year;
+		my $album	= "$band - $year - " . join(" ", rand_words( size => int(rand(3)+1) ));
+		my $album_dir	= "$music_dir/$album";
+		my $ext		= $music_filetypes[int(rand($#music_filetypes))];
+		
 		mkdir $album_dir;
-		my $ext = $music_filetypes[int(rand($#music_filetypes))];
+
 		for my $i (1..13)
 		{
 			my $r = int (rand(3)+1);

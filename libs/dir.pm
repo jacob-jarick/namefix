@@ -208,7 +208,7 @@ sub dir_filtered
 	for my $i(@dirlist)
 	{
 		# $i is dir, didnt pass
-		next if(!$main::proc_dirs && -d $i && !$main::LISTING);	# ta tibbsy for help
+		next if(!$hash{PROC_DIRS}{value} && -d $i && !$main::LISTING);	# ta tibbsy for help
 		if($main::FILTER)
 		{
 			push @d, $i if(&filter::match($i) == 1);	# apply listing filter

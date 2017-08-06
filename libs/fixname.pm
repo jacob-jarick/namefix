@@ -60,18 +60,18 @@ sub fix
         # -----------------------------------------
 	# make sure file is allowed to be renamed
         # -----------------------------------------
-        &main::quit("ERROR ig_type is undef\n") if(! defined $main::ig_type);
+        &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $main::IGNORE_FILE_TYPE);
 
         my $RENAME 		= 0;
 
         # file extionsion check
-        $RENAME = 1 if(-f $file && ($main::ig_type || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
+        $RENAME = 1 if(-f $file && ($main::IGNORE_FILE_TYPE || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
 
 #	dir check, is a directory, dir mode is enabled
-        $RENAME = 1 if($main::proc_dirs && -d $file);
+        $RENAME = 1 if($hash{PROC_DIRS}{value} && -d $file);
 
 #	processing all file types & dirs
-        $RENAME = 1 if($main::proc_dirs && $main::ig_type);
+        $RENAME = 1 if($hash{PROC_DIRS}{value} && $main::IGNORE_FILE_TYPE);
 
 #	didnt match filter
         return if($main::FILTER && &filter::match($file) == 0);
@@ -86,7 +86,7 @@ sub fix
 	(
         	$main::recr &&
                 $main::last_recr_dir ne "$main::cwd" &&	# if pwd != last dir
-                $main::proc_dirs == 0
+                $hash{PROC_DIRS}{value} == 0
         )
 	{
 		$main::last_recr_dir = $main::cwd;
@@ -153,7 +153,7 @@ sub fix
 		$tag	= 1;
 	}
 
-	if($main::id3_year_set && $IS_AUDIO_FILE)
+	if($main::AUDIO_SET_YEAR && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{year} = $main::id3_year_str;
 		$tag	= 1;
@@ -527,7 +527,7 @@ sub fn_split_dddd
 	&main::quit("fn_split_dddd \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_split_dddd \$fn eq ''\n")	if $fn eq '';
 
-        if($main::split_dddd)
+        if($main::SPLIT_DDDD)
 	{
         	if($fn =~ /(.*?)(\d{3,4})(.*)/)
                 {

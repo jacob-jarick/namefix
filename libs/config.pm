@@ -53,7 +53,7 @@ $hash{'HTML_HACK'}{'save'}		= 'norm';
 $hash{'HTML_HACK'}{'value'}		= 0;
 
 $hash{'browser'}{'save'}		= 'norm';
-$hash{'browser'}{'value'}		= '';
+$hash{'browser'}{'value'}		= 'elinks';
 
 $hash{'editor'}{'save'}			= 'norm';
 $hash{'editor'}{'value'}		= 'vim';
@@ -120,6 +120,18 @@ $hash{'save_window_size'}{'value'}	= 0;
 
 $hash{'window_g'}{'save'}		= 'mwg';
 $hash{'window_g'}{'value'}		= '';
+
+$hash{CLI}{save}			= 'sys';
+$hash{CLI}{value}			= 0;
+
+$hash{RUN}{save}			= 'sys';
+$hash{RUN}{value}			= 0;
+
+$hash{LISTING}{save}			= 'sys';
+$hash{LISTING}{value}			= 0;
+
+$hash{PROC_DIRS}{save}			= 'sys';
+$hash{PROC_DIRS}{value}			= 0;
 
 
 sub save_hash
