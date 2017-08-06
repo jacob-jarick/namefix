@@ -58,7 +58,7 @@ sub manual::edit
         	return;
         }
 
-        $TAGS = &misc::is_in_array($old_ext, \@config::id3v2_exts);
+        $TAGS = &misc::is_in_array(lc $old_ext, \@config::id3v2_exts);
 
         my $tag	= "";
         my $art = "";

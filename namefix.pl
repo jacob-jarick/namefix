@@ -7,6 +7,7 @@ use Data::Dumper::Concise;
 
 use English;
 use Cwd;
+use Carp qw(cluck longmess shortmess);
 use File::Find;
 use File::Basename qw(&basename &dirname);
 
@@ -1875,7 +1876,8 @@ if($config::hash{window_g}{value} ne "")
 }
 
 &menu::draw;
-&dir_hlist::draw_list;
+# &dir_hlist::draw_list;
+&dir::ls_dir;
 MainLoop;
 
 
@@ -1883,10 +1885,24 @@ MainLoop;
 # End
 #--------------------------------------------------------------------------------------------------------------
 
-sub callback {
+sub callback
+{
     print "\n";
     print "callback args  = @_\n";
     print "\$Tk::event     = $Tk::event\n";
     print "\$Tk::widget    = $Tk::widget\n";
     print "\$Tk::event->W  = ", $Tk::event->W, "\n";
+}
+
+sub quit
+{
+	my $string = shift;
+
+	$string .= "\n" if $string !~ /\n$/;
+
+	cluck longmess("quit $string\n");
+	Tk::exit;
+	die "Trying to quit via die";
+	print "Trying to quit via CORE::exit";
+	CORE::exit;
 }

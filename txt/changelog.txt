@@ -1,6 +1,26 @@
 
 4.1.2 - ie refresh in progress
 
+* ls_dir now only shows neccesary headers + massive cleanup
+
+* fixname::fix - most subs can be sent a flag to enable STRING mode (dont do file detection)
+  large overhaul - likely breaks namefix-cli.pl atm
+  if fixname is passed an undefined file - quit out
+  if fixname is file eq '' and mode eq FILE - quit out
+
+* main::quit
+  todo: add to namefix-cli as it quits differently depending on mode.
+  clucks backtrace and prints quit message - so useful for debugging
+
+* mp3.pm
+  quit out if a tag is undefined
+
+
+
+
+
+* get_tags should no longer return undef tags
+
 * massive overhaul of nf_print::p
   only shows files & dirs
   code is much much cleaner

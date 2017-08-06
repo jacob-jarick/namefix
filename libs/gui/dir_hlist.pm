@@ -16,6 +16,7 @@ our $rc_menu;
 sub hlist_clear
 {
 	$main::hl_counter = 0;
+	&draw_list if !defined $hlist;
 	$hlist->delete("all");
 
 	return 1;
@@ -27,19 +28,18 @@ sub hlist_clear
 
 sub show_rc_menu
 {
-# 	&misc::plog(3, "sub show_rc_menu ");
-	my ($x, $y) = $main::mw->pointerxy;
+	my ($x, $y)	= $main::mw->pointerxy;
+	my $s		= $hlist->nearest($y - $hlist->rooty);
 
-	my $s = $hlist->nearest($y - $hlist->rooty);
 	$hlist->selectionClear();
 	$hlist->selectionSet($s);
+
 	$main::hlist_selection = $s;
 	$rc_menu->post($x,$y);
 }
 
 sub hide_rc_menu
 {
-# 	&misc::plog(3, "sub hide_rc_menu ");
 	my ($l,$m)=@_;
 	$m->unpost();
 }
@@ -55,9 +55,6 @@ sub hlist_cd
 	my $old = $main::dir;
 	my $path = $wd . "/" . "$file";
 
-# 	&misc::plog(3, "sub hlist_cd: \"$file\"");
-# 	&misc::plog(4, "sub hlist_cd: \$path = \"$path\"");
-
         if(-d $path)
 	{
         	$main::dir = $path;
@@ -68,12 +65,8 @@ sub hlist_cd
 	        	&misc::plog(3, "sub hlist_cd: \"$file\"");
 	        	return;
 		}
-# 		&misc::plog(4, "sub hlist_cd: couldnt chdir to $main::dir");
-# 		&misc::plog(4, "sub hlist_cd: setting \$main::dir to old value \"$old\"");
 		$main::dir = $old;
         }
-# 	&misc::plog(4, "sub hlist_cd: \$path not a valid directory ignoring");
-        # not a valid path, ignore
         return;
 }
 
@@ -98,25 +91,19 @@ sub fn_update_delay
 
 sub draw_list
 {
-# 	&misc::plog(3, "sub draw_list ");
-	my $columns = 4;
-	if($config::hash{id3_mode}{value} == 1)
-	{
-		$columns = 18;
-	}
+	$hlist->destroy if defined $hlist;
 
-	if($hlist)
-	{
-		$hlist->destroy;
-	}
+	my $count	= 0;
+	my $columns	= 4;	# icon, filename, arrow, newfilename
+	$columns	= 19 if $config::hash{id3_mode}{value};
 
-        our $hlist = $main::frm_right2 -> Scrolled
+        $hlist = $main::frm_right2 -> Scrolled
         (
 		"HList",
-		-scrollbars=>"osoe",
-		-header => 1,
-		-columns=>$columns,
-		-selectbackground => 'Cyan',
+		-scrollbars		=> 'osoe',
+		-header			=> 1,
+		-columns		=> $columns,
+		-selectbackground	=> 'Cyan',
 		-browsecmd => sub
 		{
                 	# when user clicks on an entry update global variables
@@ -135,34 +122,39 @@ sub draw_list
 		-expand=>1,
 		-fill=>'both'
 	);
-	$hlist->header('create', 0, -text =>' ');		# these 2 columns are the same
-	$hlist->header('create', 1, -text =>'Filename');      # for norm & id3 mode
 
+	$hlist->header('create', $count++, -text =>'Icon');
+
+	$hlist->header('create', $count++, -text =>'Filename');      # for norm & id3 mode
+
+	my @id3_headers = ('Artist', 'Track', 'Title', 'Album', 'Genre', 'Year', 'Comment');
 	if($config::hash{id3_mode}{value} == 1)
 	{
-		$hlist->header('create', 2, -text => 'Artist');
-		$hlist->header('create', 3, -text => 'Track');
-		$hlist->header('create', 4, -text => 'Title');
-		$hlist->header('create', 5, -text => 'Album');
-		$hlist->header('create', 6, -text => 'Genre');
-		$hlist->header('create', 7, -text => 'Year');
-		$hlist->header('create', 8, -text => 'Comment');
-
-		$hlist->header('create', 9, -text => '#');
-		$hlist->header('create', 10, -text => 'New Filename');
-		$hlist->header('create', 11, -text => 'New Artist');
-		$hlist->header('create', 12, -text => 'New Track');
-		$hlist->header('create', 13, -text => 'New Title');
-		$hlist->header('create', 14, -text => 'New Album');
-		$hlist->header('create', 15, -text => 'New Genre');
-		$hlist->header('create', 16, -text => 'New Year');
-		$hlist->header('create', 17, -text => 'New Comment');
+		for my $header(@id3_headers)
+		{
+			$hlist->header('create', $count++, -text => $header);
+		}
 	}
-	else
+	if(!$main::LISTING)
 	{
-		$hlist->header('create', 2, -text => '#');
-		$hlist->header('create', 3, -text => 'New Filename');
+		$hlist->header('create', $count++, -text => '#');
+		$hlist->header('create', $count++, -text => 'New Filename');
+		if($config::hash{id3_mode}{value} == 1)
+		{
+			for my $header(@id3_headers)
+			{
+				$hlist->header('create', $count++, -text => "New $header");
+			}
+		}
 	}
+	if($count > $columns)
+	{
+		&main::quit("draw_list \$count $count > \$columns $columns\n");
+	}
+	print "draw_list = \$count = $count, \$columns = $columns\n";
+
+	# ----------------------------------------------------------------------------
+	# Right Click Menu
 
         $rc_menu = $hlist->Menu(-tearoff=>0);
         $rc_menu -> command
@@ -177,7 +169,7 @@ sub draw_list
 			($main::hlist_file, $main::hlist_cwd) = $hlist->info("data", $main::hlist_selection);
 			my $ff = $main::hlist_cwd . "/" . $main::hlist_file;
 
-			show_file_prop($ff);
+			&show_file_prop($ff);
        		}
 	);
         $rc_menu -> command

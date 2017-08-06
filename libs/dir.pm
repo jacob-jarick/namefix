@@ -17,11 +17,7 @@ use Cwd;
 
 sub ls_dir
 {
-# 	&misc::plog(3, "sub ls_dir");
 	&run_namefix::prep_globals;
-	&dir_hlist::hlist_clear;
-
-	$main::percent_done = 0;
 
 	if($main::LISTING)
 	{
@@ -29,66 +25,58 @@ sub ls_dir
 		return 0;
 	}
 
-	$main::STOP = 0;
-	$main::LISTING = 1;
+	$main::percent_done	= 0;
+	my @file_list		= ();
+	my @dirlist		= &dir_filtered($main::dir);
+	$main::STOP		= 0;
+	$main::LISTING		= 1;
+
 	chdir $main::dir;	# shift directory, not just list ;)
-	$main::dir = cwd();
 
-        my @file_list = ();
-        my @dirlist = &dir_filtered($main::dir);
+	$main::dir	= cwd();
 
-	&ls_dir_print("..");
+	&dir_hlist::draw_list;
 
         if($main::recr)
         {
-# 		&misc::plog(4, "sub ls_dir: recursive mode");
 		@main::find_arr = ();
-	        find(\&find_fix, "$main::dir");
+	        find(\&find_fix, $main::dir);
 		&ls_dir_find_fix;
                 $main::LISTING = 0;
                 $main::FIRST_DIR_LISTED = 0;
 	        return;
         }
-        else
-        {
-		my $count = 1;
-		my $total = scalar @dirlist + scalar @file_list;
+
+	&ls_dir_print('..');
+
+        my $count		= 1;
+	my $total		= scalar @dirlist + scalar @file_list;
+	$main::percent_done	= int(($count / $total) * 100);
+
+	for my $f (@dirlist)
+	{
+		$count++;
 		$main::percent_done = int(($count / $total) * 100);
 
-# 		&misc::plog(4, "sub ls_dir: non recursive mode");
-        	for my $f (@dirlist)
-        	{
-			$count++;
-			$main::percent_done = int(($count / $total) * 100);
+		next if $f eq '..';
+		if(-d $f)
+		{
+			&ls_dir_print($f);	# print directorys 1st
+			next;
+		}
+		push @file_list, $f;
+	}
+	for my $f (@file_list)
+	{
+		$count++;
+		$main::percent_done = int(($count / $total) * 100);
 
-			if($f eq "..")
-			{
-				next;
-			}
-                	if(-d $f)
-                	{
-	                	&ls_dir_print($f);	# print directorys 1st
-                        }
-                        else
-                        {
-                        	push @file_list, $f;	# push files to array
-                        }
-                }
-                for my $f (@file_list)
-                {
-			$count++;
-			$main::percent_done = int(($count / $total) * 100);
-
-                	if($main::STOP == 1)
-			{
-				return 0;
-			}
-                	&ls_dir_print($f);		# then print the file array after all dirs have been printed
-                }
-                $main::LISTING = 0;
-                $main::FIRST_DIR_LISTED = 0;
-                return;
-        }
+		return 0 if $main::STOP;
+		&ls_dir_print($f);		# then print the file array after all dirs have been printed
+	}
+	$main::LISTING = 0;
+	$main::FIRST_DIR_LISTED = 0;
+	return;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -99,12 +87,11 @@ sub ls_dir_find_fix
 {
 	# this sub should recieve an array of files from find_fix
 
-	my @list = @main::find_arr;
-	my $d = cwd();
-	my $file = "";
-	my $dir = "";
+	my @list	= @main::find_arr;
+	my $d		= cwd();
+	my $file	= '';
+	my $dir		= '';
 
-# 	&misc::plog(3, "sub ls_dir_find_fix:");
 	$main::percent_done = 0;
 	my $total = scalar @main::find_arr;
 	my $count = 1;
@@ -112,9 +99,10 @@ sub ls_dir_find_fix
 	for $file(@main::find_arr)
 	{
 		$main::percent_done = int(($count++/$total) * 100);
-		$file =~ m/^(.*)\/(.*?)$/;
-		$dir = $1;
-		$file = $2;
+
+		$file	=~ m/^(.*)\/(.*?)$/;
+		$dir	= $1;
+		$file	= $2;
 
 		chdir $dir;	# change to dir containing file
 		&ls_dir_print($file);
@@ -127,45 +115,39 @@ sub ls_dir_find_fix
 
 sub ls_dir_print
 {
-	my $file = shift;
-
 	return 0 if $main::STOP == 1;
 
-	$main::hlist_cwd = cwd;
+	my $file	= shift;
+	my $d 		= $main::hlist_cwd	= cwd;
 
-	my $d = cwd();
-
-        return if !$file || $file eq "" || $file eq ".";
+        &main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
+        &main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
+        return if $file eq '.';
 
 	if($file eq "..")
 	{
-		&nf_print::p("..", "..");
+		&nf_print::p('..');
 		return;
 	}
 
 	# recursive padding
 
-	# when doing recursive, pad new dir with a blank line
-	# since when doing recursive we step through each directory while listing,
-	# we simply print cwd for a full dir path.
-
 	if(-d $file && $main::recr)
 	{
-		&nf_print::p(" ", "<BLANK>");
+		&nf_print::p(' ', '<BLANK>');
 		&nf_print::p("$d/$file", "$d/$file");
 		return;
 	}
 
 	# check for audio tags
-	if($config::hash{id3_mode}{value} == 1)
+	if($config::hash{id3_mode}{value})
 	{
+		print "ls_dir_print getting audio tags for $file\n";
 		my $ref = &mp3::get_tags($file);
-		my %h = %$ref;
-
-		&nf_print::p($file, $file, \%h, \%h);
+		&nf_print::p($file, undef, $ref);
 		return;
 	}
-	&nf_print::p($file, $file);
+	&nf_print::p($file);
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -200,7 +182,6 @@ sub dir_dialog
 
 sub fn_readdir
 {
-# 	&misc::plog(3, "sub fn_readdir");
 	my $dir = shift;
 	my @dirlist = ();
 	my @dirlist_clean = ();
@@ -213,10 +194,7 @@ sub fn_readdir
 	# -- make sure we dont have . and .. in array --
 	for my $item(@dirlist)
 	{
-		if($item eq "." || $item eq "..")
-		{
-			next;
-		}
+		next if $item eq "." || $item eq "..";
 		push @dirlist_clean, $item;
 	}
 
@@ -226,9 +204,9 @@ sub fn_readdir
 
 sub dir_filtered
 {
-	my $dir = shift;
-	my @d = ();
-	my @dirlist = &fn_readdir($dir);
+	my $dir		= shift;
+	my @d		= ();
+	my @dirlist	= &fn_readdir($dir);
 
 	for my $i(@dirlist)
 	{

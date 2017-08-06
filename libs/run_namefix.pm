@@ -6,6 +6,7 @@ use strict;
 use warnings;
 
 use Cwd;
+use Carp;
 
 #--------------------------------------------------------------------------------------------------------------
 # Run Namefix
@@ -22,80 +23,55 @@ sub prep_globals
         $main::enum_count 	= 0;
         $main::tags_rm		= 0;
         $main::last_recr_dir 	= "";
-
         $main::percent_done	= 0;
 
-        my $t_s 		= "";	# tmp string
-        my @tmp_arr		= "";
-
         # escape replace word if regexp is disabled
-        if($config::hash{FILTER_REGEX}{value} == 1)
-        {
-        	$main::rpwold_escaped = quotemeta $main::rpwold;
-        } else
-        {
-        	$main::rpwold_escaped = $main::rpwold;
-        }
+        $main::rpwold_escaped = $main::rpwold;
+	$main::rpwold_escaped = quotemeta $main::rpwold			if($config::hash{FILTER_REGEX}{value} == 1);
 
 	# update killword list if file exists
-        if(-f $main::killwords_file)
-        {
-		@main::kill_words_arr = &misc::readsf("$main::killwords_file");
-	}
-
-	# update escaped list of kill_word_arr
-	@main::kill_words_arr_escaped = ();
-	for(@main::kill_words_arr)
-	{
-		push (@main::kill_words_arr_escaped, quotemeta $_);
-	}
+        @main::kill_words_arr = misc::readsf("$main::killwords_file")	if(-f $main::killwords_file);
 
 	# update kill pattern array if file exists
-        if(-f $main::killpat_file)
-        {
-                @main::kill_patterns_arr = &misc::readf($main::killpat_file);
-        }
+        @main::kill_patterns_arr = &misc::readf($main::killpat_file)	if(-f $main::killpat_file);
 
 	# update casing list if file exists
-        if(-f $main::casing_file)
-        {
-                @main::word_casing_arr = &misc::readf($main::casing_file);
-        }
+        @main::word_casing_arr = &misc::readf($main::casing_file)	if(-f $main::casing_file);
+
+        # update escaped list of kill_word_arr
+	@main::kill_words_arr_escaped = ();
+	for my $word(@main::kill_words_arr)
+	{
+		push (@main::kill_words_arr_escaped, quotemeta $word);
+	}
 }
 
 sub run
 {
-	&misc::plog(3, "sub run::namefix:");
-
 	if($main::LISTING)
 	{
-		&misc::plog(0, "sub run::namefix: error, a listing is currently being preformed - aborting rename");
+		misc::plog(0, "sub run::namefix: error, a listing is currently being preformed - aborting rename");
 		return 0;
 	}
 	elsif($main::RUN)
 	{
-		&misc::plog(0, "sub run::namefix: error, a rename is currently being preformed - aborting rename");
+		misc::plog(0, "sub run::namefix: error, a rename is currently being preformed - aborting rename");
 		return 0;
 	}
 
 	$main::RUN		= 1;
-	$main::orig_dir 	= cwd;
-
         my $t_s 		= "";	# tmp string
-        my @tmp_arr		= "";
-	my $txt			= "";
-	my $a			= "";
-	my $b			= "";
 
+        $main::orig_dir		= cwd;
         chdir $main::dir;
-	$main::dir = cwd();
+	$main::dir		= cwd();
 	&undo::clear;
-	&prep_globals;
+	prep_globals;
 
 	if(!$main::CLI)
 	{
 		&dir_hlist::hlist_clear;
-		&nf_print::p("..", "<MSG>");
+		nf_print::p("..");
 	}
 
         if(!$main::recr)
@@ -105,23 +81,14 @@ sub run
 		my $count = 1;
 		my $total = scalar @dirlist;
 
-                foreach(@dirlist)
+                foreach my $f (@dirlist)
                 {
 			$main::percent_done = int(($count++ / $total) * 100);
+			if (! defined $f)	{ confess "sub run: \$f is undef\n";			&main::quit;}
+			if ($f eq '')		{ confess "sub run: \$f eq ''\n";			&main::quit;}
+			if (!-f $f && !-d $f)	{ confess "sub run: \$f '$f' is not a dir or file\n";	&main::quit;}
 
-                        if(!$_) # stop warnings getting spat out
-                        {
-                                next;
-                        }
-                        if($main::proc_dirs)
-                        {
-                                &fixname::fix($_, cwd);
-                                next;
-                        }
-                        elsif(! -d $_)
-                        {
-                                &fixname::fix($_, cwd);
-                        }
+			&fixname::fix($f, cwd)	if -f $f || $main::proc_dirs && -d $f;
                 }
         }
         if($main::recr)
@@ -135,38 +102,15 @@ sub run
 	# print info
 
         $t_s = "have";
-        if ($main::testmode == 1)
-        {
-        	$t_s = "would have";
-        }
-        &nf_print::p(" ", "<MSG>");
-	&nf_print::p("$main::change files $t_s been modified", "<MSG>");
+        $t_s = "would have" if ($main::testmode);
 
-	if($config::hash{id3_mode}{value})
-	{
-		&nf_print::p("$main::id3_change mp3s tags $t_s been updated.", "<MSG>");
-	}
-        if($main::tags_rm)
-        {
-        	&nf_print::p("$main::tags_rm mp3 tags $t_s been removed", "<MSG>");
-        }
-        &nf_print::p(" ", "<MSG>");
+        &misc::plog(1, "$main::change files $t_s been modified");
+	&misc::plog(1, "$main::id3_change mp3s tags $t_s been updated.")			if($config::hash{id3_mode}{value});
+        &misc::plog(1, "$main::tags_rm mp3 tags $t_s been removed")				if($main::tags_rm);
+	&misc::plog(0, "unable to rename $main::suggestF files.\nTry enabling \"FS Fix\".")	if($main::suggestF != 0);
+	&misc::plog(0, "tmp file found. check the following files.\n$main::tmpfilelist\n")	if($main::tmpfilefound);
 
-
-        if($main::suggestF != 0)
-        {
-	        &nf_print::p("namefix.pl was unable to rename $main::suggestF files.\nPerhaps you should enable \"FS Fix\".", "<MSG>");
-		&nf_print::p(" ", "<MSG>");
-        }
-
-        if($main::tmpfilefound != 0)
-        {
-		&misc::plog(0, "namefix.pl found tmp some of its own tmp files, this should not happen. Please check the following list of files.\n$main::tmpfilelist\n");
-	}
-
-	&nf_print::p("namefix.pl $main::version by $main::author", "<MSG>");
-
-        # cleanup
+	# cleanup
 
 	$main::testmode = 1;	# return to test mode for safety :)
 	$main::RUN = 0;		# finished renaming - turn off run flag
@@ -177,21 +121,15 @@ sub find_fix
 {
 	my $file = $_;
 	my $d = cwd();
-	&misc::plog(3, "sub find_fix: \"$d\" \"$file\"");
 	push @main::find_arr, "$d/$file";
 	return 1;
 }
 
-
 sub find_fix_process
 {
 	# this sub should recieve an array of files from find_fix
-
-# 	my @list = @main::find_arr;
-	my $d = cwd();
 	my $dir = "";
 
-	&misc::plog(3, "sub find_fix_process:");
 	my $count = 1;
 	my $total = scalar @main::find_arr;
 	$main::percent_done = 0;
@@ -200,18 +138,9 @@ sub find_fix_process
 	{
 		$main::percent_done = int(($count++ / $total) * 100);
 
-		&misc::plog(4, "sub find_fix_process: list line \"$file\"");
 		$file =~ m/^(.*)\/(.*?)$/;
-		$dir = $1;
-		$file = $2;
-		&misc::plog(4, "sub find_fix_process: dir = \"$dir\"");
-		&misc::plog(4, "sub find_fix_process: file = \"$file\"");
-
-		chdir $dir;	# change to dir containing file
-		&fixname::run_fixname($file);
-		chdir $d;	# change back to dir sub started in
+		&fixname::fix($2, $1);
 	}
-	&misc::plog(3, "sub find_fix_process: done");
 	return 1;
 }
 

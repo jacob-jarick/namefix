@@ -22,16 +22,16 @@ $id3h{comment}	= 'COMM';
 $id3h{genre}	= 'TCON';
 $id3h{year}	= 'TYER';
 
-my %id3_order = ();
+our %id3_order = ();
 {
 	my $count = 0;
 	$id3_order{artist}	= $count++;
-	$id3_order{title}	= $count++;
 	$id3_order{track}	= $count++;
+	$id3_order{title}	= $count++;
 	$id3_order{album}	= $count++;
-	$id3_order{comment}	= $count++;
 	$id3_order{genre}	= $count++;
 	$id3_order{year}	= $count++;
+	$id3_order{comment}	= $count++;
 }
 # -----------------------------------------------------------------------------------
 # get tags
@@ -43,23 +43,25 @@ sub get_tags
 	die "get_tags \$file is undef\n" if(!defined $file);
 
         my %tag_hash = ();
-        $tag_hash{artist} = '';		# artist
-        $tag_hash{title} = '';		# track title
-        $tag_hash{track} = '';		# track number
-        $tag_hash{album} = '';		# album
-        $tag_hash{genre} = '';		# genre
-        $tag_hash{year} = '';		# year
-        $tag_hash{comment} = '';	# comment
+        $tag_hash{artist}	= '';	# artist
+        $tag_hash{title}	= '';	# track title
+        $tag_hash{track}	= '';	# track number
+        $tag_hash{album}	= '';	# album
+        $tag_hash{genre}	= '';	# genre
+        $tag_hash{year}		= '';	# year
+        $tag_hash{comment}	= '';	# comment
 
-	my $audio_tags = MP3::Tag->new($file);
+        return \%tag_hash	if $file !~ /\.$config::id3_ext_regex$/i;
 
-	$tag_hash{title}	= $audio_tags->title;
-	$tag_hash{artist} 	= $audio_tags->artist;
-	$tag_hash{album}	= $audio_tags->album;
-	$tag_hash{year}		= $audio_tags->year;
-	$tag_hash{comment}	= $audio_tags->comment;
-	$tag_hash{track}	= $audio_tags->track;
-	$tag_hash{genre}	= $audio_tags->genre;
+	my $audio_tags		= MP3::Tag->new($file);
+
+	$tag_hash{title}	= $audio_tags->title	if defined $audio_tags->title;
+	$tag_hash{artist} 	= $audio_tags->artist	if defined $audio_tags->artist;
+	$tag_hash{album}	= $audio_tags->album	if defined $audio_tags->album;
+	$tag_hash{year}		= $audio_tags->year	if defined $audio_tags->year;
+	$tag_hash{comment}	= $audio_tags->comment	if defined $audio_tags->comment;
+	$tag_hash{track}	= $audio_tags->track	if defined $audio_tags->track;
+	$tag_hash{genre}	= $audio_tags->genre	if defined $audio_tags->genre;
 
 	$audio_tags->close();
 
