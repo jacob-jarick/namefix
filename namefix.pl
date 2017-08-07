@@ -103,14 +103,12 @@ our $log_file = "$config::home/.namefix.pl/namefix.pl.$config::version.log";
 
 if($^O eq "MSWin32")
 {
-        $config::fs_fix_default		= 1;
         $config::dialog_font		= "ansi 8 bold";
         $config::dialog_title_font	= "ansi 12 bold";
         $config::edit_pat_font		= "ansi 16 bold";
 }
 else
 {
-        $config::fs_fix_default		= 0;
         $config::dialog_font		= "ansi 10";
         $config::dialog_title_font	= "ansi 16 bold";
         $config::edit_pat_font		= "ansi 18 bold";
@@ -361,7 +359,7 @@ $frm_bottom -> Label()
 my $recr_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Recursive",
-	-variable=>\$config::recr,
+	-variable=>\$config::RECURSIVE,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1209,7 +1207,7 @@ my $d_chk = $tab5 -> Checkbutton
 	{
 		if($config::digits == 1)
 		{
-			$config::rm_digits = 0;
+			$config::RM_DIGITS = 0;
 		}
 	}
 )
@@ -1228,11 +1226,11 @@ $balloon->attach
 my $N_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM all Digits",
-	-variable=>\$config::rm_digits,
+	-variable=>\$config::RM_DIGITS,
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($config::rm_digits == 1)
+		if($config::RM_DIGITS == 1)
 		{
 			$config::digits = 0;
 		}
@@ -1260,13 +1258,13 @@ my $tab5_label_scene = $tab5 -> Label
 my $unscene_chk = $tab5 -> Checkbutton
 (
 	-text=>"un-Scenify",
-	-variable=>\$config::unscene,
+	-variable=>\$config::UNSCENE,
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($config::unscene == 1)
+		if($config::UNSCENE == 1)
 		{
-			$config::scene = 0;
+			$config::SCENE = 0;
 		}
 	}
 )
@@ -1281,13 +1279,13 @@ $balloon->attach
 my $scene_chk = $tab5 -> Checkbutton
 (
 	-text=>"Scenify",
-	-variable=>\$config::scene,
+	-variable=>\$config::SCENE,
 	 -activeforeground => "blue",
 	 -command=> sub
 	 {
-	 	if($config::scene == 1)
+	 	if($config::SCENE == 1)
 	 	{
-	 		$config::unscene = 0;
+	 		$config::UNSCENE = 0;
 	 	}
 	 }
 )

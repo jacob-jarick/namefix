@@ -3,7 +3,7 @@ $faw
 git grep -l 'CLEANUP_GENERAL' | xargs sed -i 's/ig_type/IGNORE_FILE_TYPE/g'
 
 
-git grep -l 'CLEANUP_GENERAL' | xargs sed -i 's/\$CLEANUP_GENERAL/\$config::hash{CLEANUP_GENERAL}{value}/g'
-git grep -l 'CLEANUP_GENERAL' | xargs sed -i 's/\$main::FIRST_DIR_LISTED/\$config::hash{CLEANUP_GENERAL}{value}/g'
+git grep -l 'PREVIEW' | xargs sed -i 's/\$config::hash{PREVIEW}{value}/\$config::PREVIEW/g'
+git grep -l 'scene' | xargs sed -i 's/\$config::SCENE/\$config::SCENE/g'
 
 

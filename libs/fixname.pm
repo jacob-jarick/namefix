@@ -82,7 +82,7 @@ sub fix
 
 	if
 	(
-        	$config::recr &&
+        	$config::RECURSIVE &&
                 $config::last_recr_dir ne "$config::cwd" &&	# if pwd != last dir
                 $config::hash{PROC_DIRS}{value} == 0
         )
@@ -466,7 +466,7 @@ sub fn_unscene
 	&main::quit("fn_unscene \$fn eq ''\n")		if $fn eq '';
 
 
-	if($config::unscene)
+	if($config::UNSCENE)
 	{
 		$fn =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie;
 	}
@@ -480,7 +480,7 @@ sub fn_scene
 	&main::quit("fn_scene \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_scene \$fn eq ''\n")	if $fn eq '';
 
-	if($config::scene)
+	if($config::SCENE)
 	{
 		$fn =~ s/(^|\W)(\d+)(x)(\d+)/$1.qw(S).$2.qw(E).$4/ie;
 	}
@@ -916,7 +916,7 @@ sub fn_rm_digits
 	&main::quit("fn_rm_digits \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-        if($config::rm_digits)
+        if($config::RM_DIGITS)
         {
         	my $t_s = "";
                 $fn =~ s/\d+//g;

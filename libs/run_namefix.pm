@@ -76,7 +76,7 @@ sub run
 		nf_print::p('..');
 	}
 
-        if(!$config::recr)
+        if(!$config::RECURSIVE)
         {
 		my @dirlist = &dir::dir_filtered($config::dir);
 
@@ -93,7 +93,7 @@ sub run
 			&fixname::fix($f, cwd)	if -f $f || ($config::hash{PROC_DIRS}{value} && -d $f);
                 }
         }
-        if($config::recr)
+        if($config::RECURSIVE)
         {
 		&misc::plog(4, "sub run::namefix: recursive mode");
 		@config::find_arr = ();

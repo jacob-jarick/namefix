@@ -282,7 +282,7 @@ for my $arg(@ARGV)
 	}
 	elsif($arg eq "--recr")
 	{
-		$config::recr = 1;
+		$config::RECURSIVE = 1;
 	}
 	elsif($arg eq "--dir")
 	{
@@ -361,12 +361,12 @@ for my $arg(@ARGV)
 
 	elsif($arg eq "--scene" || $arg eq "--sc")
 	{
-		$config::scene = 1;
+		$config::SCENE = 1;
 	}
 
 	elsif($arg eq "--unscene" || $arg eq "--usc")
 	{
-		$config::unscene = 1;
+		$config::UNSCENE = 1;
 	}
 
 	elsif($arg eq "--uc-all" || $arg eq "--uc")
@@ -389,7 +389,7 @@ for my $arg(@ARGV)
 	}
 	elsif($arg eq "--rm-all-digits" || $arg eq "--rad")
 	{
-		$config::rm_digits = 1;
+		$config::RM_DIGITS = 1;
 	}
 	elsif($arg eq "--pad-hyphen" || $arg eq "--ph")
 	{
@@ -645,8 +645,8 @@ sub proc_short_opts
 		elsif($short_opt eq "g") { $config::hash{CLEANUP_GENERAL}{value}	= 1; }
 		elsif($short_opt eq "o") { $config::hash{dot2space}{value}		= 1; }
 		elsif($short_opt eq "p") { $config::hash{spaces}{value}			= 1; }
-		elsif($short_opt eq "s") { $config::scene = 1; }
-		elsif($short_opt eq "u") { $config::unscene = 1; }
+		elsif($short_opt eq "s") { $config::SCENE = 1; }
+		elsif($short_opt eq "u") { $config::UNSCENE = 1; }
 		elsif($short_opt eq "x") { $config::hash{FILTER_REGEX}{value}		= 0; }
 
 		elsif($short_opt eq "0") { $config::pad_digits_w_zero			= 1; }

@@ -11,15 +11,8 @@ use FindBin qw($Bin);
 our $version 		= "4.1.2";
 our $home		= &misc::get_home;
 
-our $BR_DONE		= 0;	# a block rename has occured
-our $MR_DONE		= 0;	# a manual rename has occured
-our $LOG_STDOUT		= 0;
-our $UNDO		= 0;
 our $case 		= 1;
 our $truncate_style 	= 0;
-our $scene 		= 0;
-our $unscene		= 0;
-our $rm_digits		= 0;
 our $digits     	= 0;
 our $pad_dash 		= 0;
 our $pad_digits 	= 0;
@@ -30,7 +23,6 @@ our $lc_all		= 0;
 our $replace		= 0;
 
 our $load_defaults	= 0;
-our $fs_fix_default	= 0;
 our $dir		= cwd;
 our $cwd		= cwd;
 our $hlist_cwd		= cwd;
@@ -41,11 +33,23 @@ our $PREVIEW		= 0;
 our $RUN		= 0;
 our $STOP		= 0;
 
-our $recr		= 0;
+our $BR_DONE		= 0;	# a block rename has occured
+our $MR_DONE		= 0;	# a manual rename has occured
+
+our $LOG_STDOUT		= 0;
+our $UNDO		= 0;
+our $SPLIT_DDDD		= 0;
+our $RM_DIGITS		= 0;
+
+our $RECURSIVE		= 0;
 our $OVERWRITE		= 0;
 our $WORD_SPECIAL_CASING= 0;
 our $IGNORE_FILE_TYPE	= 0;
 
+our $SCENE 		= 0;
+our $UNSCENE		= 0;
+
+# audio flags
 our $RM_AUDIO_TAGS	= 0;
 our $AUDIO_FORCE	= 0;
 our $AUDIO_SET_ALBUM	= 0;
@@ -53,6 +57,10 @@ our $AUDIO_SET_COMMENT	= 0;
 our $AUDIO_SET_ARTIST	= 0;
 our $AUDIO_SET_GENRE	= 0;
 our $AUDIO_SET_YEAR	= 0;
+
+# insert flags
+our $INS_START		= 0;
+our $INS_END		= 0;
 
 # id3 tag txt
 our $id3_alb_str	= '';
@@ -63,25 +71,21 @@ our $id3_gen_str	= '';
 our $id3_year_str	= '';
 our $id3_com_str	= '';
 
+
 # txt
-our $INS_START		= 0;
-our $INS_END		= 0;
 our $ins_front_str	= '';
 our $ins_end_str	= '';
 our $ins_str_old	= '';
 our $ins_str		= '';
-
 our $filter_string	= '';
 
 # binary options
 our $enum;
 our $enum_opt;
 our $intr_char;
-our $SPLIT_DDDD;
 our $sp_char;
 
 # truncate options
-our $trunc_char;
 
 # undo options
 our @undo_cur	= ();	# undo array - current filenames
