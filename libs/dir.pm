@@ -19,19 +19,16 @@ sub ls_dir
 {
 	&run_namefix::prep_globals;
 
-	if($config::LISTING)
-	{
-		&misc::plog(0, "sub ls_dir: Allready preforming a list, aborting new list attempt");
-		return 0;
-	}
-	$config::LISTING		= 1;
-	$config::STOP		= 0;
+	&main::quit("sub ls_dir: Allready preforming a list, aborting new list attempt") if($config::LISTING);
 
+	$config::LISTING	= 1;
+	$config::STOP		= 0;
 	$config::percent_done	= 0;
 	my @file_list		= ();
 	my @dirlist		= &dir_filtered($config::dir);
 
-	chdir $config::dir; $config::dir = cwd();
+	chdir $config::dir;
+	$config::dir = cwd();
 	&dir_hlist::draw_list;
 
         if($config::recr)
@@ -149,7 +146,7 @@ sub ls_dir_print
 # Dir Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub dir_dialog
+sub dialog
 {
 	my $old_dir = $config::dir;
 

@@ -54,14 +54,6 @@ sub p
 	{
 		$NEWFILE = 1;
 		$config::hlist_file_new = $file2;
-
- 		print "p: file1 = $file1, file2 = $file2, \$NEWFILE = $NEWFILE\n";
-# 		print Dumper($ref1);
-# 		print Dumper($ref2);
-	}
-	else
-	{
-		print "p: file1 = $file1\n";
 	}
 
 	# listing - file1 must be a file/dir
@@ -116,10 +108,7 @@ sub p
 	$config::hlist_file_row = $count;
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1);
 
-	if($file1 eq ".." || -d $file1)
-	{
-		return;
-	}
+	return if ($file1 eq ".." || -d $file1);
 
 	if($config::hash{id3_mode}{value})
 	{
@@ -133,11 +122,8 @@ sub p
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 	}
+	return if(!$NEWFILE);
 
-	if(!$NEWFILE)
-	{
-		return;
-	}
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$arrow");
 	$config::hlist_newfile_row = $count;
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$file2");

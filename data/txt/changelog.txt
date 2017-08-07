@@ -1,6 +1,25 @@
 
 4.1.2 - ie refresh in progress
 
+* cleanup progress
+  directory structure cleanup
+  global_variables.pm is gone (hurrah).
+  all shared globals are stored in config.pm - enables cli and gui to share nicely
+
+* bookmarks file renamed
+  fixed several issues
+  code cleanup
+  creating new bookmark correctly redraws the menu
+
+* ls_dir
+  now dies if you try to list twice - will turn off once Im sure there are no more double calls
+  found and fixed a ls_dir double call.
+
+* clear button works again and also clears log window
+
+
+
+
 * guess tags now correctly guesses tags AFTER all tag modifications
 
 * more cleanups. all die's replaced with &main::quit

@@ -117,7 +117,8 @@ our $links	= "$Bin/txt/links.txt";
 our $changelog	= "$Bin/txt/changelog.txt";;
 
 our $fonts_file		= "$home/.namefix.pl/fonts.ini";
-our $bookmark_file	= "$home/.namefix.pl/list_bookmarks.txt";
+our $bookmark_file	= "$home/.namefix.pl/bookmarks.txt";
+print "\$bookmark_file = $bookmark_file\n";
 our $undo_cur_file	= "$home/.namefix.pl/undo.current.filenames.txt";
 our $undo_pre_file	= "$home/.namefix.pl/undo.previous.filenames.txt";
 our $undo_dir_file	= "$home/.namefix.pl/undo.dir.txt";
@@ -135,6 +136,7 @@ $hash{'max_fn_length'}{'value'}		= 256;
 
 $hash{'fat32fix'}{'save'}		= 'norm';
 $hash{'fat32fix'}{'value'}		= 0;
+$hash{'fat32fix'}{'value'}		= 1 if lc $^O eq 'mswin32';
 
 $hash{'FILTER_REGEX'}{'save'}		= 'norm';
 $hash{'FILTER_REGEX'}{'value'}		= 0;

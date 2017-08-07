@@ -3,12 +3,10 @@ package misc;
 require Exporter;
 @ISA = qw(Exporter);
 
-
-
 use strict;
 use warnings;
 
-my @output = ();
+our @output = ();
 
 sub ci_sort
 {
@@ -94,12 +92,12 @@ sub clog
 
 sub get_home
 {
-	my $home;
-	$home = $ENV{USERPROFILE}	if $^O eq 'MSWin32';
-	$home = $ENV{HOME}		if defined $ENV{HOME};
+	my $home = undef;
+	$home = $ENV{HOME}		if defined $ENV{HOME} && lc $^O ne lc 'MSWin32';
+	$home = $ENV{USERPROFILE}	if lc $^O eq lc 'MSWin32';
 
-	$home = $ENV{TMP};	# surely the os has a tmp if nothing else
 
+	$home = $ENV{TMP}		if ! defined $home; # surely the os has a tmp if nothing else
 	$home =~ s/\\/\//g;
 
 	if(!-d "$home/.namefix.pl")

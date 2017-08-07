@@ -321,7 +321,7 @@ my $open_but = $frm_bottom -> Button
 (
 	-text=>"Browse",
 	-activebackground => "cyan",
-	-command =>\&dir_dialog
+	-command =>\&dir::dialog
 )
 -> grid
 (
@@ -520,7 +520,7 @@ $frm_bottom -> Label
 
 $frm_bottom -> Button
 (
-	-text=>"RUN",
+	-text=>'RUN',
 	-activebackground => "green",
 	-command =>\&run_namefix::run
 )
@@ -830,7 +830,13 @@ my $clr_but = $frm_left -> Button
 (
 	-text=>"Clear",
 	-activebackground => "cyan",
-	-command =>\&clr_no_save
+	-command => sub
+	{
+		&misc::clr_no_save;
+		@misc::output = ();
+		&misc::plog(1, 'clear');
+
+	}
 )
 -> grid
 (

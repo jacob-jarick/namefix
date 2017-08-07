@@ -26,7 +26,7 @@ sub bm_add
 	}
 	&misc::file_append($config::bookmark_file, "$name\t\t$dir\n");
 
-        &bm_redraw_menu;
+        &menu::draw;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ sub bm_redraw_menu
 	my $u = "";
 	my $count = 0;
 
-	# delete bookmarks menu (also have to delete help as it comes after bookmarks else menu ordering gets screwed up).
+	$menu::mbar->delete(2, 3);	# delete menus Bookmarks and help - then redraw
 
         $bookmarks = $menu::mbar -> cascade
         (
@@ -141,25 +141,20 @@ DEBUG LEVELS:
 
 sub bm_list_bookmarks
 {
-# 	&misc::plog(3, "sub bm_list_bookmarks:");
-
-	my $n = "";
-	my $u = "";
-        # add bookmarks, this is where code gets ugly
+	my $n = '';
+	my $u = '';
 
 	$bookmarks -> separator();
 
 	if(!-f $config::bookmark_file)
 	{
-		# no bookmarks, return
-		&misc::plog(0, "bookmarks.pm cant find file $config::bookmark_file");
+		&misc::plog(0, "bookmark::bm_list_bookmarks cant find file $config::bookmark_file");
 		return;
 	}
 
-	my @tmp_arr = &misc::readf($config::bookmark_file);
 	%bmhash = ();
 
-	for my $line(@tmp_arr)
+	for my $line(&misc::readf($config::bookmark_file))
 	{
 		if($line =~ /^\n/) { next; }
 		($n, $u) = split(/\t+/, $line);
@@ -174,10 +169,10 @@ sub bm_list_bookmarks
                 }
                 $bookmarks -> checkbutton
 		(
-			-label=>"$n",
-  			-onvalue=>$u,
-			-variable=>\$bookmark_dir,
-			-command=> sub
+			-label		=> $n,
+  			-onvalue	=> $u,
+			-variable	=> \$bookmark_dir,
+			-command	=> sub
 			{
 				$config::dir = $bookmark_dir;
 				print "bookmark.pm: \$config::dir = $config::dir\n";
@@ -254,7 +249,8 @@ sub edit_bookmark_list
                         &bm_redraw_menu;
         	}
         )
-        -> grid(
+        -> grid
+        (
         	-row=>4,
         	-column=>1,
         	-sticky=>"ne"

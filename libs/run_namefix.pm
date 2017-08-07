@@ -17,13 +17,13 @@ sub prep_globals
 	# reset misc vars
 	$config::STOP		= 0;
 	$config::id3_change	= 0;
-        $config::change 		= 0;
+        $config::change 	= 0;
         $config::suggestF 	= 0;
         $config::tmpfilefound 	= 0;
         $config::enum_count 	= 0;
-        $config::tags_rm		= 0;
-        $config::last_recr_dir 	= "";
+        $config::tags_rm	= 0;
         $config::percent_done	= 0;
+        $config::last_recr_dir 	= '';
 
         # escape replace word if regexp is disabled
         $config::ins_str_old_escaped = $config::ins_str_old;

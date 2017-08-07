@@ -245,7 +245,7 @@ sub draw_list
         $hlist->bind('<Any-ButtonPress-1>',[\&hide_rc_menu, $rc_menu]);
         $hlist->bind('<Any-ButtonPress-2>',[\&hide_rc_menu, $rc_menu]);
 
-	&dir::ls_dir;
+# 	&dir::ls_dir;
 }
 
 
