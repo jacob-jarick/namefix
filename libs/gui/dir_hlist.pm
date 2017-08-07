@@ -15,7 +15,7 @@ our $rc_menu;
 
 sub hlist_clear
 {
-	$main::hl_counter = 0;
+	$config::hl_counter = 0;
 	&draw_list if !defined $hlist;
 	$hlist->delete("all");
 
@@ -34,7 +34,7 @@ sub show_rc_menu
 	$hlist->selectionClear();
 	$hlist->selectionSet($s);
 
-	$main::hlist_selection = $s;
+	$config::hlist_selection = $s;
 	$rc_menu->post($x,$y);
 }
 
@@ -52,20 +52,20 @@ sub hlist_cd
 {
 	my $file = shift;
 	my $wd = shift;
-	my $old = $main::dir;
+	my $old = $config::dir;
 	my $path = $wd . "/" . "$file";
 
         if(-d $path)
 	{
-        	$main::dir = $path;
-                if(chdir $main::dir)
+        	$config::dir = $path;
+                if(chdir $config::dir)
 		{
-			$main::dir = cwd();
+			$config::dir = cwd();
 	        	&dir::ls_dir;
 	        	&misc::plog(3, "sub hlist_cd: \"$file\"");
 	        	return;
 		}
-		$main::dir = $old;
+		$config::dir = $old;
         }
         return;
 }
@@ -77,11 +77,11 @@ sub hlist_cd
 
 sub fn_update_delay
 {
-	$main::update_delay--;
-	if($main::update_delay == 0 || $main::LISTING == 0)
+	$config::update_delay--;
+	if($config::update_delay == 0 || $config::LISTING == 0)
 	{
 		$main::mw->update();
-		$main::update_delay = $main::delay;
+		$config::update_delay = $config::delay;
 	}
 }
 
@@ -103,12 +103,12 @@ sub draw_list
 	if($config::hash{id3_mode}{value})
 	{
 		$columns	= 9;			# listing
-		$columns	= 18 if  $main::RUN;	# preview / rename
+		$columns	= 18 if  $config::RUN;	# preview / rename
 	}
 	else
 	{
 		$columns	= 2;			# listing
-		$columns	= 4 if  $main::RUN;	# preview / rename
+		$columns	= 4 if  $config::RUN;	# preview / rename
 	}
 
 	$hlist = $main::frm_right2 -> Scrolled
@@ -121,13 +121,13 @@ sub draw_list
 		-browsecmd => sub
 		{
                 	# when user clicks on an entry update global variables
-               		$main::hlist_selection = shift;
-               		($main::hlist_file, $main::hlist_cwd, $main::hlist_file_new) = $hlist->info("data", $main::hlist_selection);
+               		$config::hlist_selection = shift;
+               		($config::hlist_file, $config::hlist_cwd, $config::hlist_file_new) = $hlist->info("data", $config::hlist_selection);
                	},
 		-command=> sub
 		{
                 	# user has double clicked
-			&hlist_cd($main::hlist_file, $main::hlist_cwd);
+			&hlist_cd($config::hlist_file, $config::hlist_cwd);
 		}
 	)
 	->pack
@@ -151,7 +151,7 @@ sub draw_list
 	}
 
 	# rename / preview - add 'New <VALUE>' column headers
-	if($main::RUN)
+	if($config::RUN)
 	{
 		$hlist->header('create', $count++, -text => '#');
 		$hlist->header('create', $count++, -text => 'New Filename');
@@ -178,11 +178,11 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			print "Stub Properties $main::hlist_file, $main::hlist_cwd \n";
+			print "Stub Properties $config::hlist_file, $config::hlist_cwd \n";
 
 			# update file current selected file
-			($main::hlist_file, $main::hlist_cwd) = $hlist->info("data", $main::hlist_selection);
-			my $ff = $main::hlist_cwd . "/" . $main::hlist_file;
+			($config::hlist_file, $config::hlist_cwd) = $hlist->info("data", $config::hlist_selection);
+			my $ff = $config::hlist_cwd . "/" . $config::hlist_file;
 
 			&show_file_prop($ff);
        		}
@@ -193,26 +193,26 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			print "Apply Preview: Dir: '$main::hlist_cwd'\n\tfilename:\t'$main::hlist_file'\n\tnew filename:\t'$main::hlist_file_new'\n";
-			if(!&fn_rename($main::hlist_file, $main::hlist_file_new) )
+			print "Apply Preview: Dir: '$config::hlist_cwd'\n\tfilename:\t'$config::hlist_file'\n\tnew filename:\t'$config::hlist_file_new'\n";
+			if(!&fn_rename($config::hlist_file, $config::hlist_file_new) )
 			{
-				&misc::plog(0, "ERROR Apply Preview: \"$main::hlist_file\" cannot preform rename, file allready exists\n");
+				&misc::plog(0, "ERROR Apply Preview: \"$config::hlist_file\" cannot preform rename, file allready exists\n");
 			}
 			else
 			{
 				# update hlist cells
 				$hlist->itemConfigure
 				(
-					$main::hlist_selection,
-					$main::hlist_file_row,
-					-text => $main::hlist_file_new
+					$config::hlist_selection,
+					$config::hlist_file_row,
+					-text => $config::hlist_file_new
 				);
 
 				# update hlist data
 				$hlist->entryconfigure
 				(
-					$main::hlist_selection,
-					-data=>[$main::hlist_file_new, $main::hlist_cwd, $main::hlist_file_new]
+					$config::hlist_selection,
+					-data=>[$config::hlist_file_new, $config::hlist_cwd, $config::hlist_file_new]
 				);
 
 			}
@@ -224,7 +224,7 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			&manual::edit($main::hlist_file, $main::hlist_cwd);
+			&manual::edit($config::hlist_file, $config::hlist_cwd);
        		}
 	);
         $rc_menu -> command
@@ -234,8 +234,8 @@ sub draw_list
 		-command=> sub
 		{
 			# update file current selected file
-			($main::hlist_file, $main::hlist_cwd) = $hlist->info("data", $main::hlist_selection);
-			my $ff = $main::hlist_cwd . "/" . $main::hlist_file;
+			($config::hlist_file, $config::hlist_cwd) = $hlist->info("data", $config::hlist_selection);
+			my $ff = $config::hlist_cwd . "/" . $config::hlist_file;
 			&dialog::show_del_dialog($ff);
        		}
 	);

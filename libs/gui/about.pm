@@ -11,7 +11,7 @@ use warnings;
 
 sub show_about
 {
-	my $help_text = join("", &misc::readf($main::about));
+	my $help_text = join("", &misc::readf($config::about));
 
 	my $row = 1;
         my $top = $main::mw -> Toplevel();

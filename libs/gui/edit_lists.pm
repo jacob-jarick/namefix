@@ -14,12 +14,12 @@ sub cas_list
 {
         my $dtext = "";
 
-        if(-f $main::casing_file)
+        if(-f $config::casing_file)
         {
-                $dtext = &misc::readjf("$main::casing_file");
+                $dtext = &misc::readjf("$config::casing_file");
         } else
         {
-                $dtext = join("\n", @main::word_casing_arr);
+                $dtext = join("\n", @config::word_casing_arr);
         }
 
         my $top = $main::mw -> Toplevel();
@@ -34,7 +34,7 @@ sub cas_list
                 -scrollbars=>"osoe",
                 -width=>60,
                 -height=>20,
-        	-font=>$main::dialog_font
+        	-font=>$config::dialog_font
         )
         -> grid
         (
@@ -54,14 +54,7 @@ sub cas_list
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub
-        	{
-        		\&misc::save_file
-        		(
-        			"$main::casing_file",
-        			$txt -> get('0.0', 'end')
-        		);
-        	}
+        	-command => sub {&misc::save_file("$config::casing_file", $txt -> get('0.0', 'end') );}
         )
         -> grid
         (
@@ -74,9 +67,7 @@ sub cas_list
         (
         	-text=>"Close",
         	-activebackground => 'white',
-        	-command => sub {
-        		destroy $top;
-        	}
+        	-command => sub { destroy $top; }
         )
         -> grid
         (
@@ -97,13 +88,13 @@ sub word_list
 {
         my $dtext = "";
 
-        if(-f $main::killwords_file)
+        if(-f $config::killwords_file)
         {
-                $dtext = &readsjf("$main::killwords_file");
+                $dtext = &readsjf("$config::killwords_file");
         }
 	else
         {
-                $dtext = join("\n", sort @main::kill_words_arr);
+                $dtext = join("\n", sort @config::kill_words_arr);
         }
 
         my $top = $main::mw -> Toplevel();
@@ -113,7 +104,7 @@ sub word_list
         (
         	'Text',
                 -scrollbars=>'osoe',
-        	-font=>$main::dialog_font,
+        	-font=>$config::dialog_font,
                 -width=>60,
                 -height=>20,
 
@@ -132,11 +123,7 @@ sub word_list
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub
-        	{
-        		\&misc::save_file("$main::killwords_file",
-        		$txt -> get('0.0', 'end'));
-        	}
+        	-command => sub { &misc::save_file("$config::killwords_file", $txt -> get('0.0', 'end')); }
         )
         -> grid
         (
@@ -149,10 +136,7 @@ sub word_list
         (
         	-text=>"Close",
         	-activebackground => 'white',
-        	-command => sub
-        	{
-        		destroy $top;
-        	}
+        	-command => sub { destroy $top; }
         )
         -> grid
         (
@@ -173,13 +157,13 @@ sub pat_list
 {
         my $dtext = "";
 
-        if(-f $main::killpat_file)
+        if(-f $config::killpat_file)
         {
-                $dtext = &readsjf("$main::killpat_file");
+                $dtext = &readsjf("$config::killpat_file");
         }
         else
         {
-                $dtext = join("\n", sort @main::kill_patterns_arr);
+                $dtext = join("\n", sort @config::kill_patterns_arr);
         }
 
         my $top = $main::mw -> Toplevel();
@@ -191,7 +175,7 @@ sub pat_list
                 -scrollbars=>'osoe',
         	-width=>45,
         	-height=>10,
-        	-font=>$main::edit_pat_font
+        	-font=>$config::edit_pat_font
         )
         -> grid
         (
@@ -207,13 +191,7 @@ sub pat_list
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub
-        	{
-        		\&misc::save_file(
-        			"$main::killpat_file",
-        			$txt -> get('0.0', 'end')
-        		);
-        	}
+        	-command => sub { &misc::save_file( "$config::killpat_file", $txt -> get('0.0', 'end') ); }
         )
         -> grid(
         	-row => 4,
@@ -225,9 +203,7 @@ sub pat_list
         (
         	-text=>"Close",
         	-activebackground => 'white',
-        	-command => sub {
-        		destroy $top;
-        	}
+        	-command => sub { destroy $top; }
         )
         -> grid(
         	-row => 4,

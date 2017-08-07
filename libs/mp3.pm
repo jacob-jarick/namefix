@@ -92,12 +92,12 @@ sub rm_tags
 	if(exists $audio_tags->{ID3v1})
 	{
         	$audio_tags->{ID3v1}->remove_tag();
-                $main::tags_rm++;
+                $config::tags_rm++;
         }
         if(exists $audio_tags->{ID3v2})
 	{
                	$audio_tags->{ID3v2}->remove_tag();
-                $main::tags_rm++;
+                $config::tags_rm++;
         }
         return;
 }

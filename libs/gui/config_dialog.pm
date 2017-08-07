@@ -11,7 +11,7 @@ use warnings;
 
 sub edit_prefs
 {
-	$main::load_defaults = 0;
+	$config::load_defaults = 0;
 	my $n = 0;
 
         my $top = $main::mw -> Toplevel
@@ -172,7 +172,7 @@ sub edit_prefs
 	my $save_defs_chk = $tab1 -> Checkbutton
 	(
 		-text=>"Save main window options",
-		-variable=>\$main::load_defaults,
+		-variable=>\$config::load_defaults,
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -312,7 +312,7 @@ sub edit_prefs
 	my $OVERWRITE_chk = $tab7 -> Checkbutton
 	(
 		-text=>"Overwrite",
-		-variable=>\$main::OVERWRITE,
+		-variable=>\$config::OVERWRITE,
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -421,35 +421,32 @@ sub edit_prefs
 	# ----------------------------------------------------------------------------------------------------------
 	# Save n Close Buttons
 
-        my $but_save = $top -> Button(
+        my $but_save = $top -> Button
+        (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub {
-        		\&config::save();
-        	}
+        	-command => sub { &config::save; }
         )
-        -> grid(
+        -> grid
+        (
         	-row =>5,
         	-column => 1,
         	-sticky=>"ne"
         );
-        my $but_close = $top -> Button(
+        my $but_close = $top -> Button
+        (
         	-text=>"Close",
         	-activebackground => 'white',
-        	-command => sub {
-        		destroy $top;
-        	}
+        	-command => sub { destroy $top; }
         )
-        -> grid(
+        -> grid
+        (
         	-row =>5,
         	-column => 2,
         	-sticky=>"nw"
         );
 
-	$main::balloon->attach(
-		$but_save,
-		-msg => "Save Preferences to config file."
-	);
+	$main::balloon->attach($but_save, -msg => "Save Preferences to config file");
 
 	$top->resizable(0,0);
 }
@@ -460,16 +457,16 @@ sub edit_prefs
 
 sub save_fonts
 {
-	open(FILE, ">$main::fonts_file") or &main::quit("ERROR: couldnt open $main::fonts_file to write to\n$!\n");
+	open(FILE, ">$config::fonts_file") or &main::quit("ERROR: couldnt open $config::fonts_file to write to\n$!\n");
 
 	print FILE
 
-	"# namefix.pl $main::version fonts configuration file\n",
+	"# namefix.pl $config::version fonts configuration file\n",
 	"# manually edit the fonts below if your sizes are screwed up in the dialog windows\n",
 	"\n",
-	"\$dialog_font 		= \"$main::dialog_font\"; 		\n",
-	"\$dialog_title_font 	= \"$main::dialog_title_font\"; 	\n",
-	"\$edit_pat_font	= \"$main::edit_pat_font\"; 		\n",
+	"\$dialog_font 		= \"$config::dialog_font\"; 		\n",
+	"\$dialog_title_font 	= \"$config::dialog_title_font\"; 	\n",
+	"\$edit_pat_font	= \"$config::edit_pat_font\"; 		\n",
 	"\n";
 
 	close(FILE);

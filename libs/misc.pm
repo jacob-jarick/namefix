@@ -23,10 +23,10 @@ sub ci_sort
 
 sub plog
 {
-	my $level = shift;
-	my $text = shift;
+	my $level	= shift;
+	my $text	= shift;
 
-	if($hash{CLI}{value} == 0) # gui mode
+	if($config::hash{CLI}{value} == 0) # gui mode
 	{
 		if($text !~ /\n/ && length $text > 2 && $text ne ' ' && $text ne '')
 		{
@@ -49,7 +49,7 @@ sub plog
 		$text = "ERROR>$text";
 
 		# CLI will (for now) always spit out & log errors
-		if($hash{CLI}{value})
+		if($config::hash{CLI}{value})
 		{
 			open(FILE, ">>$main::log_file");
 			print FILE "$text\n";
@@ -100,6 +100,8 @@ sub get_home
 
 	$home = $ENV{TMP};	# surely the os has a tmp if nothing else
 
+	$home =~ s/\\/\//g;
+
 	if(!-d "$home/.namefix.pl")
 	{
 		mkdir("$home/.namefix.pl", 0755) or &main::quit("Cannot mkdir :$home/.namefix.pl $!\n");
@@ -117,20 +119,24 @@ sub null_file
 
 sub save_file
 {
-        my $file = shift;
-        my $t = shift;
+        my $file	= shift;
+        my $string	= shift;
 
-        $t =~ s/^\n//g;		# no blank line @ start of file
-        $t =~ s/\n\n+/\n/g;	# no blank lines in file
+        &main::quit("save_file \$file is undef")	if ! defined $file;
+        &main::quit("save_file \$string is undef")	if ! defined $string;
+
+        $string =~ s/^\n//g;		# no blank line @ start of file
+        $string =~ s/\n\n+/\n/g;	# no blank lines in file
+        
         open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldnt open $file to write to. $!");
-        print FILE $t;
+        print FILE $string;
         close(FILE);
 }
 
 sub file_append
 {
-	my $file = shift;
-	my $string = shift;
+	my $file	= shift;
+	my $string	= shift;
 
 	open(FILE, ">>$file") or &main::quit("ERROR: Couldnt open $file to append to. $!");
         print FILE $string;
@@ -143,7 +149,13 @@ sub file_append
 
 sub readf
 {
-        my $file = $_[0];
+        my $file = shift;
+
+        if(!-f $file)
+        {
+		print "misc::readf WARNING: file '$file' not found\n";
+		return ();
+        }
 
         open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
@@ -162,7 +174,7 @@ sub readf
 
 sub readf_clean
 {
-        my $file = $_[0];
+        my $file = shift;
 
         open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
@@ -189,7 +201,7 @@ sub readf_clean
 
 sub readsf
 {
-        my $file = $_[0];
+        my $file = shift;
 
         open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
@@ -199,7 +211,7 @@ sub readsf
         $file = join('', sort @file);
         $file =~ s/^\n//g;
         $file =~ s/\n\n+/\n/g;
-        @file = split('\n+', $file);
+        @file = split(/\n+/, $file);
 
         return @file;
 }
@@ -210,7 +222,7 @@ sub readsf
 
 sub readsjf
 {
-        my $file = $_[0];
+	my $file = shift;
         open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
@@ -227,7 +239,7 @@ sub readsjf
 
 sub readjf
 {
-        my $file = $_[0];
+        my $file = shift;
 
         open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
@@ -247,27 +259,26 @@ sub clr_no_save
 {
 	# clear options that are never saved
 
-        $main::replace		= 0;
-	$main::ins_str_old         	= "";
-        $main::ins_str         	= "";
-        $main::INS_START		= 0;
-        $main::ins_front_str            	= "";
-        $main::end_a		= 0;
-        $main::ins_end_str            	= "";
+        $config::replace		= 0;
+        $config::INS_START		= 0;
+        $config::end_a			= 0;
+	$config::ins_str_old         	= '';
+        $config::ins_str         	= '';
+        $config::ins_front_str		= '';
+        $config::ins_end_str		= '';
 
-	$main::id3_art_str	= "";
-	$main::id3_alb_str	= "";
-	$main::id3_com_str	= "";
-	$main::id3_gen_str 	= "Metal";
-	$main::id3_year_str 	= "";
+	$config::id3_gen_str 		= 'Metal';
+	$config::id3_art_str		= '';
+	$config::id3_alb_str		= '';
+	$config::id3_com_str		= '';
+	$config::id3_year_str 		= '';
 
-	$main::AUDIO_SET_ARTIST	= 0;
-	$main::AUDIO_SET_ALBUM	= 0;
-	$main::AUDIO_SET_COMMENT	= 0;
-	$main::AUDIO_SET_GENRE 	= 0;
-        $main::AUDIO_SET_YEAR 	= 0;
-
-	$main::RM_AUDIO_TAGS		= 0;
+	$config::AUDIO_SET_ARTIST	= 0;
+	$config::AUDIO_SET_ALBUM	= 0;
+	$config::AUDIO_SET_COMMENT	= 0;
+	$config::AUDIO_SET_GENRE 	= 0;
+        $config::AUDIO_SET_YEAR 	= 0;
+	$config::RM_AUDIO_TAGS		= 0;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -283,8 +294,8 @@ sub escape_string
 
 sub is_in_array
 {
-	my $string = shift;
-	my $array_ref = shift;
+	my $string	= shift;
+	my $array_ref	= shift;
 
 	return 1 if grep { $_ eq $string} @$array_ref;
 

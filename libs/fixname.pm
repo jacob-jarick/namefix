@@ -15,7 +15,7 @@ use Carp;
 
 sub fix
 {
-	return 0 if $main::STOP == 1;
+	return 0 if $config::STOP == 1;
 
         # -----------------------------------------
 	# Vars
@@ -39,13 +39,11 @@ sub fix
         my $tl	       		= 0;	# used for truncating - TODO rename to something obvious
         my $file_ext_length	= 0;
         my $trunc_char_length	= 0;
-#         my $l			= 0;
         my $enum_n		= 0;
-        my $file_ext		= "";
-
         my $PRINT		= 0;
+        my $file_ext		= '';
 
-        $main::cwd 		= cwd;	# RM - legacy code ???
+        $config::cwd 		= cwd;	# RM - legacy code ???
 
 	my $IS_AUDIO_FILE = 0;
 	$IS_AUDIO_FILE = 1 if $file =~ /\.$config::id3_ext_regex$/i;
@@ -53,28 +51,28 @@ sub fix
 	if($config::hash{id3_mode}{value} && !-f $file)
 	{
 		&misc::plog(0, "sub fixname: \"$file\" does not exist");
-		&misc::plog(0, "sub fixname: current directory = \"$main::dir\"");
+		&misc::plog(0, "sub fixname: current directory = \"$config::dir\"");
 		return;
 	}
 
         # -----------------------------------------
 	# make sure file is allowed to be renamed
         # -----------------------------------------
-        &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $main::IGNORE_FILE_TYPE);
+        &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::IGNORE_FILE_TYPE);
 
         my $RENAME 		= 0;
 
         # file extionsion check
-        $RENAME = 1 if(-f $file && ($main::IGNORE_FILE_TYPE || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
+        $RENAME = 1 if(-f $file && ($config::IGNORE_FILE_TYPE || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
 
 #	dir check, is a directory, dir mode is enabled
-        $RENAME = 1 if($hash{PROC_DIRS}{value} && -d $file);
+        $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
 
 #	processing all file types & dirs
-        $RENAME = 1 if($hash{PROC_DIRS}{value} && $main::IGNORE_FILE_TYPE);
+        $RENAME = 1 if($config::hash{PROC_DIRS}{value} && $config::IGNORE_FILE_TYPE);
 
 #	didnt match filter
-        return if($main::FILTER && &filter::match($file) == 0);
+        return if($config::hash{FILTER}{value} && &filter::match($file) == 0);
 
 #	rules say file shouldnt be renamed
 	return if !$RENAME;
@@ -84,15 +82,15 @@ sub fix
 
 	if
 	(
-        	$main::recr &&
-                $main::last_recr_dir ne "$main::cwd" &&	# if pwd != last dir
-                $hash{PROC_DIRS}{value} == 0
+        	$config::recr &&
+                $config::last_recr_dir ne "$config::cwd" &&	# if pwd != last dir
+                $config::hash{PROC_DIRS}{value} == 0
         )
 	{
-		$main::last_recr_dir = $main::cwd;
+		$config::last_recr_dir = $config::cwd;
 
 		&nf_print::p(" ", "<MSG>");
-		&nf_print::p($main::cwd, $main::cwd);
+		&nf_print::p($config::cwd, $config::cwd);
 	}
 
 	#------------------------------------------------------------------------------
@@ -135,46 +133,46 @@ sub fix
 
 	# set user entered audio tags overrides if any
 
-	if($main::AUDIO_SET_ARTIST && $IS_AUDIO_FILE)
+	if($config::AUDIO_SET_ARTIST && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{artist} = $main::id3_art_str;
+		$tags_h_new{artist} = $config::id3_art_str;
 		$tag	= 1;
 	}
 
-	if($main::AUDIO_SET_ALBUM && $IS_AUDIO_FILE)
+	if($config::AUDIO_SET_ALBUM && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{album} = $main::id3_alb_str;
+		$tags_h_new{album} = $config::id3_alb_str;
 		$tag	= 1;
 	}
 
-	if($main::AUDIO_SET_GENRE && $IS_AUDIO_FILE)
+	if($config::AUDIO_SET_GENRE && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{genre} = $main::id3_gen_str;
+		$tags_h_new{genre} = $config::id3_gen_str;
 		$tag	= 1;
 	}
 
-	if($main::AUDIO_SET_YEAR && $IS_AUDIO_FILE)
+	if($config::AUDIO_SET_YEAR && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{year} = $main::id3_year_str;
+		$tags_h_new{year} = $config::id3_year_str;
 		$tag	= 1;
 	}
 
-	if($main::AUDIO_SET_COMMENT && $IS_AUDIO_FILE)
+	if($config::AUDIO_SET_COMMENT && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{comment} = $main::id3_com_str;
+		$tags_h_new{comment} = $config::id3_com_str;
 		$tag	= 1;
 	}
 
 	# rm mp3 id3v2 tags
-        if($IS_AUDIO_FILE && $main::RM_AUDIO_TAGS)
+        if($IS_AUDIO_FILE && $config::RM_AUDIO_TAGS)
 	{
-        	if(!$main::testmode)
+        	if(!$config::testmode)
 		{
         		&mp3::rm_tags($file);
                 }
                 else
 		{
-                	$main::tags_rm++;
+                	$config::tags_rm++;
                 }
                 $PRINT++;
         	$tag = 1;
@@ -222,16 +220,16 @@ sub fix
         		return;
         	}
 
-		if($TAGS_CHANGED && !$main::testmode)
+		if($TAGS_CHANGED && !$config::testmode)
 		{
 			&mp3::write_tags($file, \%tags_h_new);
-			$main::id3_change++;
+			$config::id3_change++;
 		}
 	}
 
 	if($file ne $newfile)
 	{
-		if(!$main::testmode)
+		if(!$config::testmode)
 		{
 			if(!&fn_rename($file, $newfile) )
 			{
@@ -241,7 +239,7 @@ sub fix
 		}
 		else
 		{
-			$main::change++; # increment change for preview count
+			$config::change++; # increment change for preview count
 		}
 	}
 
@@ -264,12 +262,12 @@ sub fix
 
 # returns 1 if succesfull rename, errors are printed to console
 
-# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$main::OVERWRITE) "
+# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::OVERWRITE) "
 # bloody fat32 returns positive when we dont want it, ie case correcting
 
 sub fn_rename
 {
-	if($main::STOP == 1)
+	if($config::STOP == 1)
 	{
 		return 0;
 	}
@@ -287,15 +285,15 @@ sub fn_rename
 	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
 	{
 
-		if( -e $tmpfile && !$main::OVERWRITE)
+		if( -e $tmpfile && !$config::OVERWRITE)
 		{
-			$main::tmpfilefound++;
-			$main::tmpfilelist .= "$tmpfile\n";
+			$config::tmpfilefound++;
+			$config::tmpfilelist .= "$tmpfile\n";
 			&misc::plog(0, "sub fn_rename: \"$tmpfile\" <- tmpfilefound");
 			return 0;
 		}
 		rename $file, $tmpfile;
-		if(-e $newfile && !$main::OVERWRITE)
+		if(-e $newfile && !$config::OVERWRITE)
 		{
 			rename $tmpfile, $file;
 			&misc::plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");
@@ -304,24 +302,24 @@ sub fn_rename
 		else
 		{
 			rename $tmpfile, $newfile;
-			&undo::add("$main::cwd/$file", "$main::cwd/$newfile");
+			&undo::add("$config::cwd/$file", "$config::cwd/$newfile");
 		}
 	}
 	else
 	{
-		if(-e $newfile && !$main::OVERWRITE)
+		if(-e $newfile && !$config::OVERWRITE)
 		{
-			$main::suggestF++;
+			$config::suggestF++;
 			&misc::plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");
 			return 0;
 		}
 		else
 		{
 			rename $file, $newfile;
-			&undo::add("$main::cwd/$file", "$main::cwd/$newfile");
+			&undo::add("$config::cwd/$file", "$config::cwd/$newfile");
 		}
 	}
-	$main::change++;
+	$config::change++;
 	return 1;
 }
 
@@ -413,14 +411,14 @@ sub fn_kill_cwords
         	if(-d $f)	# if directory process as normal
                 {
 
-	                for $a(@main::kill_words_arr_escaped)
+	                for $a(@config::kill_words_arr_escaped)
                         {
 	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1.$3/ig;
 	                }
 		}
                 else		# if its a file, be careful not to remove the extension, hence why we dont match on $
                 {
-	                for $a(@main::kill_words_arr_escaped)
+	                for $a(@config::kill_words_arr_escaped)
                         {
 	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1.$3/ig;
 	                }
@@ -437,9 +435,9 @@ sub fn_replace
 	&main::quit("fn_replace \$fn eq ''\n")		if $FILE && $fn eq '';
 
 
-	if($main::replace)
+	if($config::replace)
         {
-                $fn =~ s/($main::ins_str_old_escaped)/$main::ins_str/ig;
+                $fn =~ s/($config::ins_str_old_escaped)/$config::ins_str/ig;
         }
 	return $fn;
 }
@@ -452,7 +450,7 @@ sub fn_kill_sp_patterns
 
         if($config::hash{kill_sp_patterns}{value})
         {
-                for my $pattern (@main::kill_patterns_arr)
+                for my $pattern (@config::kill_patterns_arr)
                 {
                         $fn =~ s/$pattern//ig;
                 }
@@ -468,7 +466,7 @@ sub fn_unscene
 	&main::quit("fn_unscene \$fn eq ''\n")		if $fn eq '';
 
 
-	if($main::unscene)
+	if($config::unscene)
 	{
 		$fn =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie;
 	}
@@ -482,7 +480,7 @@ sub fn_scene
 	&main::quit("fn_scene \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_scene \$fn eq ''\n")	if $fn eq '';
 
-	if($main::scene)
+	if($config::scene)
 	{
 		$fn =~ s/(^|\W)(\d+)(x)(\d+)/$1.qw(S).$2.qw(E).$4/ie;
 	}
@@ -527,7 +525,7 @@ sub fn_split_dddd
 	&main::quit("fn_split_dddd \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_split_dddd \$fn eq ''\n")	if $fn eq '';
 
-        if($main::SPLIT_DDDD)
+        if($config::SPLIT_DDDD)
 	{
         	if($fn =~ /(.*?)(\d{3,4})(.*)/)
                 {
@@ -589,7 +587,7 @@ sub fn_sp_word
         if($config::hash{WORD_SPECIAL_CASING}{value})
         {
         	my $word = "";
-                foreach $word(@main::word_casing_arr)
+                foreach $word(@config::word_casing_arr)
                 {
                 	$word =~ s/(\s+|\n+|\r+)+$//;
                 	$word = quotemeta $word;
@@ -639,7 +637,7 @@ sub fn_pad_digits
 	&main::quit("fn_pad_digits \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-	if($main::pad_digits)
+	if($config::pad_digits)
 	{
 		# optimize me
 
@@ -658,7 +656,7 @@ sub fn_pad_digits_w_zero
 	&main::quit("fn_pad_digits_w_zero \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-	if($main::pad_digits_w_zero)
+	if($config::pad_digits_w_zero)
 	{
 		# rm extra 0's
 		$fn =~ s/(^|\s+|\.|_)(\d{1,2})(x0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."x".$4.$5/ieg;
@@ -686,7 +684,7 @@ sub fn_digits
 	&main::quit("fn_digits \$fn eq ''\n")		if $fn eq '';
 
 	my $f = $fn;
-	if($main::digits)
+	if($config::digits)
 	{
 		# remove leading digits (Track Nr)
 		$fn =~ s/^\d*\s*//;
@@ -701,9 +699,9 @@ sub fn_enum
 	&main::quit("fn_enum \$f eq ''\n")	if $f eq '';
 
 	my $fn = shift;
-	if($main::enum)
+	if($config::enum)
 	{
-        	my $enum_n = $main::enum_count;
+        	my $enum_n = $config::enum_count;
 
         	if($config::hash{enum_pad}{value} == 1)
         	{
@@ -732,7 +730,7 @@ sub fn_enum
 			# Insert N at end of filename but before file ext
 			$fn =~ s/(.*)(\..*$)/$1$enum_n$2/g;
 		}
-                $main::enum_count++;
+                $config::enum_count++;
 	}
 	return $fn;
 }
@@ -752,7 +750,7 @@ sub fn_truncate
 		&misc::plog(0, "sub fn_truncate: $fn exceeds maximum filename length.");
 		return;
 	}
-	if($l > $config::hash{'truncate_to'}{'value'} && $main::truncate == 1)
+	if($l > $config::hash{'truncate_to'}{'value'} && $config::truncate == 1)
 	{
 		my $file_ext = $fn;
 		$file_ext =~ s/^(.*)(\.)(.{3,4})$/$3/e;
@@ -762,13 +760,13 @@ sub fn_truncate
 		$tl = $config::hash{'truncate_to'}{'value'} - ($file_ext_length + 1);	# tl = truncate length
 
 		# adjust tl to allow for added enum digits if enum mode is enabled
-		if($main::enum && $config::hash{enum_pad}{value})
+		if($config::enum && $config::hash{enum_pad}{value})
 		{
 			$tl = $tl - $config::hash{enum_pad_zeros}{value};
 		}
-		elsif($main::enum)
+		elsif($config::enum)
 		{
-			$tl = $tl - length "$main::enum_count";
+			$tl = $tl - length "$config::enum_count";
 		}
 
 		# start truncating
@@ -804,7 +802,7 @@ sub fn_pre_clean
 	&main::quit("fn_pre_clean \$fn eq ''\n")	if $FILE && $fn eq '';
 
 	my $f = $fn;
-        if($main::CLEANUP_GENERAL == 1)
+        if($config::CLEANUP_GENERAL == 1)
         {
                 # "fix Artist - - track" type filenames that can pop up when stripping words
                 $fn =~ s/-(\s|_|\.)+-/-/g;
@@ -838,7 +836,7 @@ sub fn_post_clean
 		$fn = $f;
 	}
 
-        if($main::CLEANUP_GENERAL == 1)
+        if($config::CLEANUP_GENERAL == 1)
 	{
                 # remove childless brackets () [] {}
                 $fn =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;
@@ -873,9 +871,9 @@ sub fn_front_a
 	&main::quit("fn_front_a \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_front_a \$fn eq ''\n")		if $fn eq '';
 
-        if($main::INS_START)
+        if($config::INS_START)
         {
-                $fn = $main::ins_front_str.$fn;
+                $fn = $config::ins_front_str.$fn;
         }
 	return $fn;
 }
@@ -886,9 +884,9 @@ sub fn_end_a
 	&main::quit("fn_end_a \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_end_a \$fn eq ''\n")	if $fn eq '';
 
-        if($main::end_a)
+        if($config::end_a)
         {
-                $fn =~ s/(.*)(\..*?$)/$1$main::ins_end_str$2/g;
+                $fn =~ s/(.*)(\..*?$)/$1$config::ins_end_str$2/g;
         }
 	return $fn;
 }
@@ -900,7 +898,7 @@ sub fn_pad_dash
 	&main::quit("fn_pad_dash \$fn eq ''\n")		if $fn eq '';
 
 	my $f = $fn;
-	if($main::pad_dash == 1)
+	if($config::pad_dash == 1)
 	{
 		$fn =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$config::hash{space_character}{value}."-".$config::hash{space_character}{value}/eg;
 	}
@@ -914,7 +912,7 @@ sub fn_rm_digits
 	&main::quit("fn_rm_digits \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-        if($main::rm_digits)
+        if($config::rm_digits)
         {
         	my $t_s = "";
                 $fn =~ s/\d+//g;

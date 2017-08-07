@@ -7,8 +7,8 @@ sub show_undo_gui
 {
 	&misc::plog(3, "sub undo_gui:");
 	my $title = "Undo GUI";
-	my @a = @main::undo_cur;
-	my @b = @main::undo_pre;
+	my @a = @config::undo_cur;
+	my @b = @config::undo_pre;
 	my $row = 0;
 	my $col = 0;
 	my $c = 0;

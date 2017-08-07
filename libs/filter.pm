@@ -15,14 +15,14 @@ sub match
 	my $string = shift;
 	my $filt = "";
 
-	if($main::filter_string eq "")
+	if($config::filter_string eq '')
 	{
 		return 1;
 	}
 
 	&misc::plog(3, "sub match: \"$string\"");
 
-	if($string eq "")
+	if($string eq '')
 	{
 		&misc::plog(0, "sub match: ERROR: blank file passed");
 		return 1;
@@ -34,7 +34,7 @@ sub match
 		return 1;
 	}
 
-	$filt = $main::filter_string;
+	$filt = $config::filter_string;
 	if($config::hash{FILTER_REGEX}{value} == 0)
 	{
 		&misc::plog(4, "sub match: regexp disabled, using escaped string");
@@ -43,8 +43,8 @@ sub match
 
 	if
 	(
-		($main::FILTER_IGNORE_CASE == 1 && $string =~ /.*($filt).*/) ||
-		($main::FILTER_IGNORE_CASE == 0 && $string =~ /.*($filt).*/i)
+		( $config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /.*($filt).*/) ||
+		(!$config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /.*($filt).*/i)
 	)
 	{
 		&misc::plog(4, "sub match: string \"$string\" matched filter \"$filt\"");

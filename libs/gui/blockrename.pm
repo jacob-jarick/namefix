@@ -119,13 +119,13 @@ sub blockrename
 	my $filt = $frm -> Checkbutton
 	(
 		-text=>"Filter",
-		-variable=>\$main::FILTER,
+		-variable=>\$config::hash{FILTER}{value},
 		-command=> sub
 		{
-			if($main::FILTER && $main::filter_string eq '')	# dont enable filter on an empty string
+			if($config::hash{FILTER}{value} && $main::filter_string eq '')	# dont enable filter on an empty string
 			{
 				&misc::plog(1, "sub blockrename: tried to enable filtering with an empty filter");
-				$main::FILTER = 0;
+				$config::hash{FILTER}{value} = 0;
 			}
 			else
 			{
@@ -142,7 +142,7 @@ sub blockrename
 	my $preview = $frm -> Checkbutton
 	(
 		-text=>"Preview",
-		-variable=>\$main::testmode,
+		-variable=>\$config::testmode,
 		-activeforeground => "blue"
 	)
         -> pack(-side => 'left');
@@ -179,11 +179,11 @@ sub blockrename
         	-activebackground => 'green',
         	-command => sub
         	{
-			if($main::testmode == 0)
+			if($config::testmode == 0)
 			{
 				$main::BR_DONE = 1;
 				&br();
-				$main::testmode = 1;
+				$config::testmode = 1;
 			}
 			else
 			{
@@ -347,8 +347,8 @@ sub br
 
 		if(&fn_rename ($of, $nf))
 		{
-			push @main::undo_pre, $main::cwd."/".$of;
-			push @main::undo_cur, $main::cwd."/".$nf;
+			push @config::undo_pre, $main::cwd."/".$of;
+			push @config::undo_cur, $main::cwd."/".$nf;
 			push @a, $of;
 			push @b, $nf;
 			$result_text .= "\"$of\" -> \"$nf\"\n";
@@ -387,7 +387,7 @@ sub br_readdir
                 	next;
                 }
 
-                if(!$hash{PROC_DIRS}{value} && -d $_)
+                if(!$config::hash{PROC_DIRS}{value} && -d $_)
                 {
                 	next;
                 }
@@ -397,7 +397,7 @@ sub br_readdir
                 	next;
                 }
 
-		if($main::FILTER && !&filter::match($_))
+		if($config::hash{FILTER}{value} && !&filter::match($_))
 		{
 			next;
 		}

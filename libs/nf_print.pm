@@ -20,7 +20,7 @@ sub p
 	my $ref1	= shift;
 	my $ref2	= shift;
 
-	if($hash{CLI}{value})
+	if($config::hash{CLI}{value})
 	{
 		&cli_print::print($file1, $file2, $ref1, $ref2);
 		return;
@@ -35,9 +35,9 @@ sub p
 	}
 
 	my $NEWFILE	= 0;
-	my $hlpos	= $main::hl_counter;	# short hand ref
+	my $hlpos	= $config::hl_counter;	# short hand ref
 
-	$main::hl_counter++;			# now we have a ref, incr for next time
+	$config::hl_counter++;			# now we have a ref, incr for next time
 
 	# add blank line in hlist
 	if(defined $file2 && $file2 eq '<BLANK>')
@@ -49,11 +49,11 @@ sub p
 		return;
 	}
 
-	$main::hlist_file_new = $file1;
-	if(defined $file2 && $file2 ne '' && !$main::LISTING)
+	$config::hlist_file_new = $file1;
+	if(defined $file2 && $file2 ne '' && !$config::LISTING)
 	{
 		$NEWFILE = 1;
-		$main::hlist_file_new = $file2;
+		$config::hlist_file_new = $file2;
 
  		print "p: file1 = $file1, file2 = $file2, \$NEWFILE = $NEWFILE\n";
 # 		print Dumper($ref1);
@@ -77,13 +77,13 @@ sub p
 		return 1;
 	}
 
-	$main::hlist_file = $file1;
+	$config::hlist_file = $file1;
 	my $arrow = " -> ";
 
 	$dir_hlist::hlist->add
 	(
 		$hlpos,
-		-data=>[$main::hlist_file, $main::hlist_cwd, $main::hlist_file_new]
+		-data=>[$config::hlist_file, $config::hlist_cwd, $config::hlist_file_new]
 	);
 	my $count = 0;
 
@@ -99,7 +99,7 @@ sub p
 			$hlpos,
 			$count++,
 			-itemtype=>'imagetext',
-			-image=>$main::folderimage
+			-image=>$config::folderimage
 		);
 	}
 	else
@@ -109,11 +109,11 @@ sub p
 			$hlpos,
 			$count++,
 			-itemtype=>'imagetext',
-			-image=>$main::fileimage
+			-image=>$config::fileimage
 		);
 	}
 
-	$main::hlist_file_row = $count;
+	$config::hlist_file_row = $count;
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1);
 
 	if($file1 eq ".." || -d $file1)
@@ -130,7 +130,6 @@ sub p
 		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 		{
 			&main::quit("nf_print::p \$ref1 \$h{$k} is undef\n") if ! defined $h{$k};
-# 			print "add $k = '$h{$k}' at position $count\n";
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 	}
@@ -140,7 +139,7 @@ sub p
 		return;
 	}
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$arrow");
-	$main::hlist_newfile_row = $count;
+	$config::hlist_newfile_row = $count;
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$file2");
 
 	if($config::hash{id3_mode}{value})
@@ -150,7 +149,6 @@ sub p
 		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 		{
 			&main::quit("nf_print::p \$ref2 \$h{$k} is undef\n") if ! defined $h{$k};
-# 			print "add $k = '$h{$k}' at position $count\n";
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 		return;

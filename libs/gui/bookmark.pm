@@ -24,7 +24,7 @@ sub bm_add
 	{
 		$name =~ s/(.*)(\\|\/)(.*?$)/$3/;	# set name to directory
 	}
-	&misc::file_append($main::bookmark_file, "$name\t\t$dir\n");
+	&misc::file_append($config::bookmark_file, "$name\t\t$dir\n");
 
         &bm_redraw_menu;
 }
@@ -41,19 +41,6 @@ sub bm_redraw_menu
 
 	# delete bookmarks menu (also have to delete help as it comes after bookmarks else menu ordering gets screwed up).
 
-        if($bookmarks)
-        {
-        	my $index = $menu::mbar->index("Bookmarks");
-		$menu::mbar->delete($index);
-	}
-        if($main::help)
-        {
-        	my $index = $menu::mbar->index("Help");
-		$menu::mbar->delete($index);
-	}
-
-	# create empty bookmarks menu
-
         $bookmarks = $menu::mbar -> cascade
         (
         	-label=>"Bookmarks",
@@ -65,20 +52,14 @@ sub bm_redraw_menu
 	$bookmarks -> command
 	(
 	        -label=>"Bookmark current Directory",
-	        -command=> sub
-	        {
-	                &bm_add($main::dir, $main::dir);
-	        }
+	        -command=> sub { &bm_add($config::dir, $config::dir); }
 	);
 
 	# menu command - edit bookmarks
 	$bookmarks -> command
 	(
 	        -label=>"Edit Bookmarks",
-	        -command=> sub
-	        {
-	                &edit_bookmark_list;
-	        }
+	        -command=> sub { &edit_bookmark_list; }
 	);
 
         #create help menu
@@ -121,32 +102,19 @@ DEBUG LEVELS:
 	$main::help -> command
 	(
 	        -label=>"Changelog",
-	        -command=> sub
-	        {
-			my $text = join("", &misc::readf($main::changelog));
-			&dialog::show("Changelog", $text);
-	        }
+	        -command=> sub  {&dialog::show("Changelog",	join('', &misc::readf($config::changelog))); }
 	);
 
 	$main::help -> command
 	(
 	        -label=>"Todo List",
-	        -command=> sub
-	        {
-			my $todo_txt = join("", &misc::readf($main::todo));
-			&dialog::show("Todo", $todo_txt);
-	        }
+	        -command=> sub { &dialog::show("Todo",		join('', &misc::readf($config::todo))); }
 	);
 
 	$main::help -> command
 	(
 	        -label=>'Credits/ Thanks',
-	        -command=> sub
-	        {
-			my $text = join("", &misc::readf($main::thanks));
-			&dialog::show("Thanks", $text);
-
-	        }
+	        -command=> sub { &dialog::show("Thanks",	join('', &misc::readf($config::thanks))); }
 	);
 
         $main::help -> separator();
@@ -157,7 +125,7 @@ DEBUG LEVELS:
 	        -command=> sub
 	        {
 			print $_;
-			my $links_txt = join("", &misc::readf($main::links));
+			my $links_txt = join("", &misc::readf($config::links));
 			&dialog::show("Link", $links_txt);
 	        }
 	);
@@ -181,15 +149,14 @@ sub bm_list_bookmarks
 
 	$bookmarks -> separator();
 
-
-	if(!-f $main::bookmark_file)
+	if(!-f $config::bookmark_file)
 	{
 		# no bookmarks, return
-		&misc::plog(0, "bookmarks.pm cant find file $main::bookmark_file");
+		&misc::plog(0, "bookmarks.pm cant find file $config::bookmark_file");
 		return;
 	}
 
-	my @tmp_arr = &misc::readf($main::bookmark_file);
+	my @tmp_arr = &misc::readf($config::bookmark_file);
 	%bmhash = ();
 
 	for my $line(@tmp_arr)
@@ -212,8 +179,8 @@ sub bm_list_bookmarks
 			-variable=>\$bookmark_dir,
 			-command=> sub
 			{
-				$main::dir = $bookmark_dir;
-				print "bookmark.pm: \$main::dir = $main::dir\n";
+				$config::dir = $bookmark_dir;
+				print "bookmark.pm: \$config::dir = $config::dir\n";
 
 				&dir::ls_dir;
 			}
@@ -232,9 +199,9 @@ sub edit_bookmark_list
 # 	&misc::plog(3, "sub edit_bookmark_list:");
         my $dtext = "";
 
-        if(-f $main::bookmark_file)
+        if(-f $config::bookmark_file)
         {
-                $dtext = &misc::readjf($main::bookmark_file);
+                $dtext = &misc::readjf($config::bookmark_file);
         }
         else
         {
@@ -254,7 +221,7 @@ sub edit_bookmark_list
         (
         	'Text',
                 -scrollbars=>"osoe",
-        	-font=>$main::dialog_font,
+        	-font=>$config::dialog_font,
         	-wrap=>'none',
                 -width=>80,
                 -height=>15
@@ -277,7 +244,7 @@ sub edit_bookmark_list
         	{
         		&misc::save_file
         		(
-        			"$main::bookmark_file",
+        			"$config::bookmark_file",
         			$txt -> get
         			(
         				'0.0',

@@ -66,7 +66,7 @@
 
 * filter regex
   now users quotemeta
-  swapped to clear flag named $FILTER_REGEX
+  swapped to clear flag named $config::hash{FILTER}{value}_REGEX
 
 * fn_sp_word now uses quotemeta
 * $fn_sp flag renamed to $WORD_SPECIAL_CASING

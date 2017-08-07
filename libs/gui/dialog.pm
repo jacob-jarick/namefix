@@ -36,7 +36,7 @@ sub show
         	"ROText",
         	-scrollbars=>"osoe",
 		-wrap=>'none',
-        	-font=>$main::dialog_font
+        	-font=>$config::dialog_font
         )
         -> grid
 	(
@@ -83,7 +83,7 @@ sub show_file_prop
         		"ROText",
         		-scrollbars=>"osoe",
 		-wrap=>'none',
-		-font=>$main::dialog_font,
+		-font=>$config::dialog_font,
 		-height=>5,
 	)
 	-> grid
@@ -161,7 +161,7 @@ sub show_del_dialog
 		"ROText",
 		-scrollbars=>"osoe",
 		-wrap=>'none',
-		-font=>$main::dialog_font,
+		-font=>$config::dialog_font,
 		-height=>10,
 		-width=>$ffl
         )
@@ -179,7 +179,7 @@ sub show_del_dialog
 		find(\&run_namefix::find_fix, $ff);
 		$txt -> insert('end', "\nWarning Deleting Directory - ARE YOU SURE ?\nDirectory Tree:\n\n");
 
-		for my $f3(@main::find_arr)
+		for my $f3(@config::find_arr)
 		{
 			$txt -> insert('end', "$f3\n");
 		}
@@ -200,7 +200,7 @@ sub show_del_dialog
 
 
 				my @tmp = ();
-				for my $f3(@main::find_arr)
+				for my $f3(@config::find_arr)
 				{
 					if(-f $f3)
 					{

@@ -15,115 +15,115 @@ use Carp;
 sub prep_globals
 {
 	# reset misc vars
-	$main::STOP		= 0;
-	$main::id3_change	= 0;
-        $main::change 		= 0;
-        $main::suggestF 	= 0;
-        $main::tmpfilefound 	= 0;
-        $main::enum_count 	= 0;
-        $main::tags_rm		= 0;
-        $main::last_recr_dir 	= "";
-        $main::percent_done	= 0;
+	$config::STOP		= 0;
+	$config::id3_change	= 0;
+        $config::change 		= 0;
+        $config::suggestF 	= 0;
+        $config::tmpfilefound 	= 0;
+        $config::enum_count 	= 0;
+        $config::tags_rm		= 0;
+        $config::last_recr_dir 	= "";
+        $config::percent_done	= 0;
 
         # escape replace word if regexp is disabled
-        $main::ins_str_old_escaped = $main::ins_str_old;
-	$main::ins_str_old_escaped = quotemeta $main::ins_str_old			if($config::hash{FILTER_REGEX}{value} == 1);
+        $config::ins_str_old_escaped = $config::ins_str_old;
+	$config::ins_str_old_escaped = quotemeta $config::ins_str_old			if($config::hash{FILTER_REGEX}{value} == 1);
 
 	# update killword list if file exists
-        @main::kill_words_arr = misc::readsf("$main::killwords_file")	if(-f $main::killwords_file);
+        @config::kill_words_arr = misc::readsf("$config::killwords_file")	if(-f $config::killwords_file);
 
 	# update kill pattern array if file exists
-        @main::kill_patterns_arr = &misc::readf($main::killpat_file)	if(-f $main::killpat_file);
+        @config::kill_patterns_arr = &misc::readf($config::killpat_file)	if(-f $config::killpat_file);
 
 	# update casing list if file exists
-        @main::word_casing_arr = &misc::readf($main::casing_file)	if(-f $main::casing_file);
+        @config::word_casing_arr = &misc::readf($config::casing_file)	if(-f $config::casing_file);
 
         # update escaped list of kill_word_arr
-	@main::kill_words_arr_escaped = ();
-	for my $word(@main::kill_words_arr)
+	@config::kill_words_arr_escaped = ();
+	for my $word(@config::kill_words_arr)
 	{
-		push (@main::kill_words_arr_escaped, quotemeta $word);
+		push (@config::kill_words_arr_escaped, quotemeta $word);
 	}
 }
 
 sub run
 {
-	if($main::LISTING)
+	if($config::LISTING)
 	{
 		misc::plog(0, "sub run::namefix: error, a listing is currently being preformed - aborting rename");
 		return 0;
 	}
-	elsif($main::RUN)
+	elsif($config::RUN)
 	{
 		misc::plog(0, "sub run::namefix: error, a rename is currently being preformed - aborting rename");
 		return 0;
 	}
 
-	$main::RUN		= 1;
-	&dir_hlist::draw_list if !$hash{CLI}{value};
+	$config::RUN		= 1;
+	&dir_hlist::draw_list if !$config::hash{CLI}{value};
 
         my $t_s 		= "";	# tmp string
 
-        $main::orig_dir		= cwd;
-        chdir $main::dir;
-	$main::dir		= cwd();
+        $config::orig_dir		= cwd;
+        chdir $config::dir;
+	$config::dir		= cwd();
 	&undo::clear;
 	prep_globals;
 
-	if(!$hash{CLI}{value})
+	if(!$config::hash{CLI}{value})
 	{
 		&dir_hlist::hlist_clear;
 		nf_print::p("..");
 	}
 
-        if(!$main::recr)
+        if(!$config::recr)
         {
-		my @dirlist = &dir::dir_filtered($main::dir);
+		my @dirlist = &dir::dir_filtered($config::dir);
 
 		my $count = 1;
 		my $total = scalar @dirlist;
 
                 foreach my $f (@dirlist)
                 {
-			$main::percent_done = int(($count++ / $total) * 100);
+			$config::percent_done = int(($count++ / $total) * 100);
 			&main::quit("sub run: \$f is undef\n")			if ! defined $f;
 			&main::quit("sub run: \$f eq ''\n")			if ($f eq '');
 			&main::quit("sub run: \$f '$f' is not a dir or file\n")	if (!-f $f && !-d $f);
 
-			&fixname::fix($f, cwd)	if -f $f || ($hash{PROC_DIRS}{value} && -d $f);
+			&fixname::fix($f, cwd)	if -f $f || ($config::hash{PROC_DIRS}{value} && -d $f);
                 }
         }
-        if($main::recr)
+        if($config::recr)
         {
 		&misc::plog(4, "sub run::namefix: recursive mode");
-		@main::find_arr = ();
-		find(\&find_fix, "$main::dir");
+		@config::find_arr = ();
+		find(\&find_fix, "$config::dir");
 		&find_fix_process;
         }
 
 	# print info
 
         $t_s = "have";
-        $t_s = "would have" if ($main::testmode);
+        $t_s = "would have" if ($config::testmode);
 
-        &misc::plog(1, "$main::change files $t_s been modified");
-	&misc::plog(1, "$main::id3_change mp3s tags $t_s been updated.")			if($config::hash{id3_mode}{value});
-        &misc::plog(1, "$main::tags_rm mp3 tags $t_s been removed")				if($main::tags_rm);
-	&misc::plog(0, "unable to rename $main::suggestF files.\nTry enabling \"FS Fix\".")	if($main::suggestF != 0);
-	&misc::plog(0, "tmp file found. check the following files.\n$main::tmpfilelist\n")	if($main::tmpfilefound);
+        &misc::plog(1, "$config::change files $t_s been modified");
+	&misc::plog(1, "$config::id3_change mp3s tags $t_s been updated.")			if($config::hash{id3_mode}{value});
+        &misc::plog(1, "$config::tags_rm mp3 tags $t_s been removed")				if($config::tags_rm);
+	&misc::plog(0, "unable to rename $config::suggestF files.\nTry enabling \"FS Fix\".")	if($config::suggestF != 0);
+	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")	if($config::tmpfilefound);
 
 	# cleanup
 
-	$main::testmode = 1;	# return to test mode for safety :)
-	$main::RUN = 0;		# finished renaming - turn off run flag
-	chdir $main::dir;	# return to users working dir
+	$config::testmode = 1;	# return to test mode for safety :)
+	$config::RUN = 0;		# finished renaming - turn off run flag
+	chdir $config::dir;	# return to users working dir
 }
 
 sub find_fix
 {
 	my $file = $_;
 	my $d = cwd();
-	push @main::find_arr, "$d/$file";
+	push @config::find_arr, "$d/$file";
 	return 1;
 }
 
@@ -133,12 +133,12 @@ sub find_fix_process
 	my $dir = "";
 
 	my $count = 1;
-	my $total = scalar @main::find_arr;
-	$main::percent_done = 0;
+	my $total = scalar @config::find_arr;
+	$config::percent_done = 0;
 
-	for my $file(@main::find_arr)
+	for my $file(@config::find_arr)
 	{
-		$main::percent_done = int(($count++ / $total) * 100);
+		$config::percent_done = int(($count++ / $total) * 100);
 
 		$file =~ m/^(.*)\/(.*?)$/;
 		&fixname::fix($2, $1);

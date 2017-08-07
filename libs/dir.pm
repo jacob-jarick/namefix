@@ -19,28 +19,27 @@ sub ls_dir
 {
 	&run_namefix::prep_globals;
 
-	if($main::LISTING)
+	if($config::LISTING)
 	{
 		&misc::plog(0, "sub ls_dir: Allready preforming a list, aborting new list attempt");
 		return 0;
 	}
-	$main::LISTING		= 1;
-	$main::STOP		= 0;
+	$config::LISTING		= 1;
+	$config::STOP		= 0;
 
-	$main::percent_done	= 0;
+	$config::percent_done	= 0;
 	my @file_list		= ();
-	my @dirlist		= &dir_filtered($main::dir);
+	my @dirlist		= &dir_filtered($config::dir);
 
-	chdir $main::dir; $main::dir = cwd();
+	chdir $config::dir; $config::dir = cwd();
 	&dir_hlist::draw_list;
 
-        if($main::recr)
+        if($config::recr)
         {
-		@main::find_arr = ();
-	        find(\&find_fix, $main::dir);
+		@config::find_arr = ();
+	        find(\&find_fix, $config::dir);
 		&ls_dir_find_fix;
-                $main::LISTING = 0;
-                $main::FIRST_DIR_LISTED = 0;
+                $config::LISTING = 0;
 	        return;
         }
 
@@ -48,12 +47,12 @@ sub ls_dir
 
         my $count		= 1;
 	my $total		= scalar @dirlist + scalar @file_list;
-	$main::percent_done	= int(($count / $total) * 100);
+	$config::percent_done	= int(($count / $total) * 100);
 
 	for my $f (@dirlist)
 	{
 		$count++;
-		$main::percent_done = int(($count / $total) * 100);
+		$config::percent_done = int(($count / $total) * 100);
 
 		next if $f eq '..';
 		if(-d $f)
@@ -66,13 +65,12 @@ sub ls_dir
 	for my $f (@file_list)
 	{
 		$count++;
-		$main::percent_done = int(($count / $total) * 100);
+		$config::percent_done = int(($count / $total) * 100);
 
-		return 0 if $main::STOP;
+		return 0 if $config::STOP;
 		&ls_dir_print($f);		# then print the file array after all dirs have been printed
 	}
-	$main::LISTING = 0;
-	$main::FIRST_DIR_LISTED = 0;
+	$config::LISTING = 0;
 	return;
 }
 
@@ -84,18 +82,18 @@ sub ls_dir_find_fix
 {
 	# this sub should recieve an array of files from find_fix
 
-	my @list	= @main::find_arr;
+	my @list	= @config::find_arr;
 	my $d		= cwd();
 	my $file	= '';
 	my $dir		= '';
 
-	$main::percent_done = 0;
-	my $total = scalar @main::find_arr;
+	$config::percent_done = 0;
+	my $total = scalar @config::find_arr;
 	my $count = 1;
 
-	for $file(@main::find_arr)
+	for $file(@config::find_arr)
 	{
-		$main::percent_done = int(($count++/$total) * 100);
+		$config::percent_done = int(($count++/$total) * 100);
 
 		$file	=~ m/^(.*)\/(.*?)$/;
 		$dir	= $1;
@@ -112,10 +110,10 @@ sub ls_dir_find_fix
 
 sub ls_dir_print
 {
-	return 0 if $main::STOP == 1;
+	return 0 if $config::STOP == 1;
 
 	my $file	= shift;
-	my $d 		= $main::hlist_cwd	= cwd;
+	my $d 		= $config::hlist_cwd	= cwd;
 
         &main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
         &main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
@@ -129,7 +127,7 @@ sub ls_dir_print
 
 	# recursive padding
 
-	if(-d $file && $main::recr)
+	if(-d $file && $config::recr)
 	{
 		&nf_print::p(' ', '<BLANK>');
 		&nf_print::p("$d/$file", "$d/$file");
@@ -153,23 +151,23 @@ sub ls_dir_print
 
 sub dir_dialog
 {
-	my $old_dir = $main::dir;
+	my $old_dir = $config::dir;
 
 	my $dd_dir = $main::mw->chooseDirectory
 	(
-		-initialdir=>$main::dir,
+		-initialdir=>$config::dir,
 		-title=>"Choose a directory"
 	);
 
 	if($dd_dir)
 	{
-		$main::dir = $dd_dir;
-                chdir $main::dir;
+		$config::dir = $dd_dir;
+                chdir $config::dir;
 		&ls_dir;
 	}
 	else
 	{
-		$main::dir = $old_dir;
+		$config::dir = $old_dir;
 	}
 }
 
@@ -208,8 +206,8 @@ sub dir_filtered
 	for my $i(@dirlist)
 	{
 		# $i is dir, didnt pass
-		next if(!$hash{PROC_DIRS}{value} && -d $i && !$main::LISTING);	# ta tibbsy for help
-		if($main::FILTER)
+		next if(!$config::hash{PROC_DIRS}{value} && -d $i && !$config::LISTING);	# ta tibbsy for help
+		if($config::hash{FILTER}{value})
 		{
 			push @d, $i if(&filter::match($i) == 1);	# apply listing filter
 		}

@@ -5,18 +5,18 @@ require Exporter;
 
 use warnings;
 use strict;
+use Cwd;
 
 sub clear
 {
  	# clear undo arrays, atm we only have 1 level of undo
-# 	&misc::plog(3, "sub undo::clear: wiping undo history");
-	@main::undo_cur		= ();
-	@main::undo_pre		= ();
+	@config::undo_cur		= ();
+	@config::undo_pre		= ();
 
-	&misc::save_file($main::undo_cur_file, "");
-	&misc::save_file($main::undo_pre_file, "");
-	&misc::save_file($main::undo_dir_file, $main::dir);
-	$main::undo_dir = $main::dir;
+	&misc::null_file($config::undo_cur_file);
+	&misc::null_file($config::undo_pre_file);
+	&misc::save_file($config::undo_dir_file, cwd);
+	$config::undo_dir = $config::dir = cwd;
 }
 
 sub add
@@ -24,11 +24,11 @@ sub add
 	my $f1 = shift;
 	my $f2 = shift;
 
-	push @main::undo_pre, $f1;
-	push @main::undo_cur, $f2;
+	push @config::undo_pre, $f1;
+	push @config::undo_cur, $f2;
 
-	&misc::file_append($main::undo_pre_file, "$f1\n");
-	&misc::file_append($main::undo_cur_file, "$f2\n");
+	&misc::file_append($config::undo_pre_file, "$f1\n");
+	&misc::file_append($config::undo_cur_file, "$f2\n");
 }
 
 sub undo_rename
@@ -48,9 +48,9 @@ sub undo_rename
 	my $pre = "";
 	my $dir = "";
 
-	for my $cur(@main::undo_cur)
+	for my $cur(@config::undo_cur)
 	{
-		$pre = $main::undo_pre[$c];
+		$pre = $config::undo_pre[$c];
 		$cur =~ m/^(.*\/)(.*?)$/;
 		$dir = $1;
 		$cur = $2;
@@ -72,7 +72,7 @@ sub undo_rename
 		&nf_print::p($cur, $pre);
 		$c++;
 	}
-	chdir $main::dir;
+	chdir $config::dir;
 	return 1;
 }
 

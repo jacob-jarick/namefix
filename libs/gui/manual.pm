@@ -10,8 +10,8 @@ use warnings;
 
 sub manual::edit
 {
-	($main::hlist_file, $main::hlist_cwd) = $dir_hlist::hlist->info("data", $main::hlist_selection);
-	my $file 	= $main::hlist_file;
+	($config::hlist_file, $config::hlist_cwd) = $dir_hlist::hlist->info("data", $config::hlist_selection);
+	my $file 	= $config::hlist_file;
 	my $file_original = $file;
 	my $row 		= 1;
 	my $EXT		= 0;
@@ -69,8 +69,8 @@ sub manual::edit
         my $gen = "";
         my $year = '';
 
-	&misc::plog(4, "sub manual::edit: chdir to  \$main::hlist_cwd = \"$main::hlist_cwd\" ");
-	chdir $main::hlist_cwd;	# shift to correct dir (needed for recursive mode).
+	&misc::plog(4, "sub manual::edit: chdir to  \$config::hlist_cwd = \"$config::hlist_cwd\" ");
+	chdir $config::hlist_cwd;	# shift to correct dir (needed for recursive mode).
 
 	my $newfile = $file;
 
@@ -80,7 +80,7 @@ sub manual::edit
 	$w->Label
 	(
         	-text=>"Manual Rename",
-        	-font=>$main::dialog_title_font
+        	-font=>$config::dialog_title_font
         )
         -> grid
         (
@@ -309,7 +309,7 @@ sub manual::edit
  	                -mode=>'readonly',
 	                -relief=>'groove',
 	                -textvariable =>\$tag_hash{genre},
-	                -choices=>\@main::genres,
+	                -choices=>\@config::genres,
 	                -entrywidth=>16,
 		)
 	        -> grid
@@ -443,9 +443,9 @@ sub manual::edit
         	-command => sub
 		{
         		destroy $w;
-			if($main::MR_DONE)
+			if($config::MR_DONE)
 			{
-				$main::MR_DONE = 0;
+				$config::MR_DONE = 0;
                         	&dir::ls_dir;
 			}
         	}
@@ -467,7 +467,7 @@ sub me_rename
 {
 	my $file = shift;
 	my $newfile = shift;
-	$main::MR_DONE = 1;
+	$config::MR_DONE = 1;
 
         if($file eq $newfile)
         {

@@ -30,82 +30,31 @@ use FindBin qw($Bin);
 use lib		"$Bin/libs/";
 use lib		"$Bin/libs/gui";
 
-
 # redirect warnings for Tk::JComboBox
 $SIG{'__WARN__'} = sub { warn $_[0] unless (caller eq "Tk::JComboBox"); };
 use Tk::JComboBox;
 
+sub quit
+{
+	my $string = shift;
+
+	$string .= "\n" if $string !~ /\n$/;
+
+	cluck longmess("quit $string\n");
+	Tk::exit;
+	die "Trying to quit via die";
+	print "Trying to quit via CORE::exit";
+	CORE::exit;
+}
 # ----------------------------------------------------------------------------
 # Vars
 # ----------------------------------------------------------------------------
 
-our $version			= '4.1.2.1';
 our $mempic 		= "$Bin/data/mem.jpg";
-our $dir = $ARGV[0];
+$config::dir = $ARGV[0];
 
 my $row	= 1;
 my $col	= 1;
-our $SAVE_WINDOW_SIZE		= 0;
-our $RUN			= 0;
-our $STOP			= 0;
-our $LISTING			= 0;
-our $INS_START			= 0;
-our $WORD_SPECIAL_CASING	= 0;
-our $INS_END			= 0;
-our $IGNORE_FILE_TYPE		= 0;
-our $SPLIT_DDDD			= 0;
-our $FILTER_IGNORE_CASE		= 0;
-
-our $RM_AUDIO_TAGS		= 0;
-our $AUDIO_FORCE		= 0;
-our $AUDIO_SET_ALBUM		= 0;
-our $AUDIO_SET_COMMENT		= 0;
-our $AUDIO_SET_GENRE		= 0;
-our $AUDIO_SET_ARTIST		= 0;
-our $AUDIO_SET_YEAR		= 0;
-
-our $id3_year_str		= '';
-our $id3_com_str		= '';
-
-our $filter_string		= '';
-our $ins_end_str		= '';
-our $ins_str_old		= '';
-
-our $hl_counter		= 0;
-our $hlist_selection	= 0;	# current line selected
-
-our $window_g		= '';
-
-our $truncate;
-
-our $pad_digits_w_zero;
-our $ins_front_str;
-our $id3_art_str	= '';
-
-our $ins_str;
-our $case;
-our $intr_char;
-our $enum_pad_zeros;
-our $pad_digits;
-
-our $kill_cwords;
-our $pad_dash;
-our $recr;
-our $id3_gen_str;
-our $kill_sp_patterns;
-our $spaces;
-our $testmode;
-our $enum_pad;
-our $trunc_char;
-our $hash{PROC_DIRS}{value};
-our $id3_alb_str;
-our $replace;
-our $enum;
-our $sp_char;
-
-our $percent_done = 0;
-
-our @find_arr	= ();
 
 #--------------------------------------------------------------------------------------------------------------
 # mems libs
@@ -113,14 +62,12 @@ our @find_arr	= ();
 
 
 # mems libs
-use fixname;
-use run_namefix;
 use misc;
-require "$Bin/libs/global_variables.pm";
 use config;
 
+use fixname;
+use run_namefix;
 use nf_print;
-
 use dir;
 use mp3;
 use filter;
@@ -143,57 +90,28 @@ use undo_gui;
 # define any remaining vars - usually vars that require libs loaded
 #--------------------------------------------------------------------------------------------------------------
 
-our $tags_rm	= 0;	# counter for number of tags removed
-
-# undo options
-our @undo_cur	= ();	# undo array - current filenames
-our @undo_pre	= ();	# undo array - previous filenames
-our $undo_dir	= '';	# directory to preform undo in
-
-
-our $home		= &misc::get_home();
-our $log_file		= "$home/.namefix.pl/namefix.pl.$version.log";
-
-our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
-our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
-our @kill_words_arr	= &misc::readf_clean($killwords_defaults);
-@kill_words_arr		= &misc::readf_clean($killwords_file) if(!-f $killwords_file);
-
-our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
-our $casing_defaults   	= "$Bin/data/defaults/special_casing.txt";
-our @word_casing_arr	= misc::readf_clean($casing_defaults);
-@word_casing_arr	= misc::readf_clean($casing_file) if -f $casing_file;
-
-our $killpat_file   	= "$home/.namefix.pl/list_rm_patterns.txt";
-our $killpat_defaults  	= "$Bin/data/defaults/killpatterns.txt";
-our @kill_patterns_arr	= &misc::readf_clean($killpat_defaults);
-@kill_patterns_arr	= &misc::readf_clean($killpat_defaults) if -f $killpat_file;
-
-
-our $genres_file	= "$Bin/data/txt/genres.txt";
-our @genres		= misc::readf_clean($genres_file);
-
+our $log_file = "$config::home/.namefix.pl/namefix.pl.$config::version.log";
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
-&misc::plog(1, "**** namefix.pl $main::version start *************************************************");
+&misc::plog(1, "**** namefix.pl $config::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
 if($^O eq "MSWin32")
 {
-        $fs_fix_default		= 1;
-        $dialog_font		= "ansi 8 bold";
-        $dialog_title_font	= "ansi 12 bold";
-        $edit_pat_font		= "ansi 16 bold";
+        $config::fs_fix_default		= 1;
+        $config::dialog_font		= "ansi 8 bold";
+        $config::dialog_title_font	= "ansi 12 bold";
+        $config::edit_pat_font		= "ansi 16 bold";
 }
 else
 {
-        $fs_fix_default		= 0;
-        $dialog_font		= "ansi 10";
-        $dialog_title_font	= "ansi 16 bold";
-        $edit_pat_font		= "ansi 18 bold";
+        $config::fs_fix_default		= 0;
+        $config::dialog_font		= "ansi 10";
+        $config::dialog_title_font	= "ansi 16 bold";
+        $config::edit_pat_font		= "ansi 18 bold";
 }
 
 &undo::clear;
@@ -205,31 +123,32 @@ else
 #--------------------------------------------------------------------------------------------------------------
 
 our $mw = new MainWindow; # Main Window
-$mw -> title("namefix.pl $main::version by Jacob Jarick");
+$mw -> title("namefix.pl $config::version by Jacob Jarick");
+
+$config::folderimage 	= $main::mw->Getimage('folder');
+$config::fileimage   	= $main::mw->Getimage('file');
 
 $mw->bind('<KeyPress>' => sub
 {
-#     print 'Keysym=', $Tk::event->K, ', numeric=', $Tk::event->N, "\n";
-
     if($Tk::event->K eq 'F2')
     {
-	$testmode = 1;
-	if(defined $main::hlist_file && defined $main::hlist_cwd)
+	$config::testmode = 1;
+	if(defined $config::hlist_file && defined $config::hlist_cwd)
 	{
-		print "Manual Rename '$main::hlist_file' \n";
-		&manual::edit($main::hlist_file, $main::hlist_cwd);
+		print "Manual Rename '$config::hlist_file' \n";
+		&manual::edit($config::hlist_file, $config::hlist_cwd);
 	}
     }
     if($Tk::event->K eq 'F5')
     {
 	print "refresh\n";
-	$testmode = 1;
+	$config::testmode = 1;
 	&dir::ls_dir;
     }
     if($Tk::event->K eq 'F6')
     {
 	print "preview\n";
-	$testmode = 1;
+	$config::testmode = 1;
 	&run_namefix::run;
     }
     # Escape
@@ -240,10 +159,6 @@ $mw->bind('<KeyPress>' => sub
     }
 
 });
-
-our $folderimage 	= $mw->Getimage("folder");
-our $fileimage   	= $mw->Getimage("file");
-
 our $balloon = $mw->Balloon();
 
 our $frm_bottom3 = $mw -> Frame()
@@ -277,7 +192,7 @@ my $progress = $frm_bottom2->ProgressBar
         -to => 100,
         -blocks => 50,
         -colors => [0, 'green', 50, 'yellow' , 80, 'red'],
-        -variable => \$percent_done
+        -variable => \$config::percent_done
 )->pack
 (
  	-side => "bottom",
@@ -295,13 +210,11 @@ our $log_box = $frm_bottom3->Scrolled
 	-foreground => 'white',
 	-wrap => 'none',
 	-height => 8,
-# 	-insertmode => "insert",
 )->pack
 (
  	-side => "bottom",
 	-expand=> 1,
 	-fill => "x",
-#  	-anchor => 's'
 );
 $log_box->Contents();
 
@@ -316,7 +229,8 @@ my $dtfh = 460;
 my $frame4dtf = $mw->Frame(-width=>$dtfw, -height=>$dtfh)
 -> pack(-side => 'left', -fill => 'both', -anchor => 'nw', -fill=>'both');
 
-our $dtf = $frame4dtf->DynaTabFrame (
+our $dtf = $frame4dtf->DynaTabFrame
+(
 	-font => 'Arial 8',
         -raisecolor => 'white',
         -tabcolor => 'grey',
@@ -419,7 +333,7 @@ my $open_but = $frm_bottom -> Button
 
 my $cwd_ent = $frm_bottom->Entry
 (
-	-textvariable=>\$main::dir,
+	-textvariable=>\$config::dir,
 )
 -> grid
 (
@@ -431,7 +345,7 @@ my $cwd_ent = $frm_bottom->Entry
 $balloon->attach
 (
 	$cwd_ent,
-	-msg => \$main::dir
+	-msg => \$config::dir
 );
 
 $frm_bottom -> Label()
@@ -445,7 +359,7 @@ $frm_bottom -> Label()
 my $recr_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Recursive",
-	-variable=>\$main::recr,
+	-variable=>\$config::recr,
 	-activeforeground => "blue"
 )
 -> grid
@@ -458,7 +372,7 @@ my $recr_chk = $frm_bottom -> Checkbutton
 my $D_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Process Dirs",
-	-variable=>\$hash{PROC_DIRS}{value},
+	-variable=>\$config::hash{PROC_DIRS}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -484,7 +398,7 @@ $frm_bottom -> Label()
 my $I_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Process ALL Files",
-	-variable=>\$IGNORE_FILE_TYPE,
+	-variable=>\$config::IGNORE_FILE_TYPE,
 	-activeforeground => "blue"
 )
 -> grid
@@ -513,7 +427,7 @@ $frm_bottom -> Label
 my $tm_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Preview",
-	-variable=>\$main::testmode,
+	-variable=>\$config::testmode,
 	-activeforeground => "blue"
 )
 -> grid
@@ -545,14 +459,14 @@ $frm_bottom -> Button
 	-activebackground => "red",
 	-command => sub
 	{
-		if($main::STOP)	# stub
+		if($config::STOP)	# stub
 		{
 			&misc::plog(1, "namefix.pl: STOP flag allready enabled, turning off LISTING flag as well");
-			$main::LISTING = 0;
+			$config::LISTING = 0;
 		}
-		$main::STOP = 1;
-		$main::RUN = 0;
-		$main::testmode = 1;
+		$config::STOP = 1;
+		$config::RUN = 0;
+		$config::testmode = 1;
 		&misc::plog(0, "namefix.pl: Stop button pressed");
 	}
 )
@@ -648,7 +562,7 @@ $frm_left -> Label
 my $clean_chk = $frm_left -> Checkbutton
 (
 	-text=>"General Cleanup",
-	-variable=>\$main::CLEANUP_GENERAL,
+	-variable=>\$config::CLEANUP_GENERAL,
 	-activeforeground => "blue",
 	-command=> sub {}
 )
@@ -798,7 +712,7 @@ $frm_left -> Label
 my $R_chk = $frm_left -> Checkbutton
 (
 	-text=>"Remove:",
-	-variable=>\$main::replace,
+	-variable=>\$config::replace,
 	-activeforeground => "blue"
 )
 -> grid
@@ -816,7 +730,7 @@ $balloon->attach
 
 my $R_ent1 = $frm_left -> Entry
 (
-	-textvariable=>\$main::ins_str_old
+	-textvariable=>\$config::ins_str_old
 )
 -> grid
 (
@@ -842,7 +756,7 @@ $frm_left -> Label
 );
 my $R_ent2 = $frm_left -> Entry
 (
-	-textvariable=>\$main::ins_str
+	-textvariable=>\$config::ins_str
 )
 -> grid(
 	-row=>19,
@@ -858,7 +772,7 @@ $balloon->attach
 my $f_chk = $frm_left -> Checkbutton
 (
 	-text=>"Front Append:",
-	-variable=>\$main::INS_START,
+	-variable=>\$config::INS_START,
 	-activeforeground => "blue"
 )
 -> grid
@@ -875,7 +789,7 @@ $balloon->attach
 
 my $f_ent = $frm_left -> Entry
 (
-	-textvariable=>\$main::ins_front_str
+	-textvariable=>\$config::ins_front_str
 )
 -> grid
 (
@@ -887,7 +801,7 @@ my $f_ent = $frm_left -> Entry
 my $e_chk = $frm_left -> Checkbutton
 (
 	-text=>"End Append:",
-	-variable=>\$main::end_a,
+	-variable=>\$config::end_a,
 	-activeforeground => "blue"
 )
 -> grid
@@ -903,7 +817,7 @@ $balloon->attach
 );
 my $e_ent = $frm_left -> Entry
 (
-	-textvariable=>\$main::ins_end_str
+	-textvariable=>\$config::ins_end_str
 )
 -> grid
 (
@@ -997,7 +911,7 @@ $balloon->attach
 my $AUDIO_FORCE_chk = $tab2 -> Checkbutton
 (
 	-text=>"Overwrite",
-	-variable=>\$main::AUDIO_FORCE,
+	-variable=>\$config::AUDIO_FORCE,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1022,7 +936,7 @@ $tab2->Label(-text=>" ")
 my $rm_id3v2 = $tab2 -> Checkbutton
 (
 	-text=>"RM id3 tags",
-	-variable=>\$RM_AUDIO_TAGS,
+	-variable=>\$config::RM_AUDIO_TAGS,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1043,7 +957,7 @@ $tab2->Label(-text=>" ")
 my $id3_art_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Artist as:",
-	-variable=>\$AUDIO_SET_ARTIST,
+	-variable=>\$config::AUDIO_SET_ARTIST,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1060,7 +974,7 @@ $balloon->attach
 
 my $id3_art_ent = $tab2 -> Entry
 (
-	-textvariable=>\$main::id3_art_str
+	-textvariable=>\$config::id3_art_str
 )
 -> grid
 (
@@ -1072,7 +986,7 @@ my $id3_art_ent = $tab2 -> Entry
 my $id3_alb_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Album as:",
-	-variable=>\$main::AUDIO_SET_ALBUM,
+	-variable=>\$config::AUDIO_SET_ALBUM,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1086,10 +1000,9 @@ $balloon->attach(
 	-msg => "Set all mp3 album tags to user entered string."
 );
 
-my $id3_alb_ent = $tab2 -> Entry(
-	-textvariable=>\$main::id3_alb_str
-)
--> grid(
+my $id3_alb_ent = $tab2 -> Entry(-textvariable=>\$config::id3_alb_str)
+-> grid
+(
  	-row=>$row++,
  	-column=>1,
  	-sticky=>"nw"
@@ -1099,7 +1012,7 @@ my $id3_alb_ent = $tab2 -> Entry(
 my $id3_genre_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Genre as:",
-	-variable=>\$main::AUDIO_SET_GENRE,
+	-variable=>\$config::AUDIO_SET_GENRE,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1119,8 +1032,8 @@ my $genre_combo = $tab2 -> JComboBox
  	-mode=>'readonly',
 	-relief=>'groove',
         -background=>'white',
-	-textvariable =>\$main::id3_gen_str,
-	-choices=>\@main::genres,
+	-textvariable =>\$config::id3_gen_str,
+	-choices=>\@config::genres,
         -entrywidth=>16,
 )
 -> grid
@@ -1130,12 +1043,12 @@ my $genre_combo = $tab2 -> JComboBox
 	-sticky=>"nw"
 );
 
-# print Dumper(\@main::genres);
+# print Dumper(\@config::genres);
 
 my $id3_year_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Year as:",
-	-variable=>\$main::AUDIO_SET_YEAR,
+	-variable=>\$config::AUDIO_SET_YEAR,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1152,7 +1065,7 @@ $balloon->attach
 
 my $id3_year_ent = $tab2 -> Entry
 (
-	-textvariable=>\$main::id3_year_str
+	-textvariable=>\$config::id3_year_str
 )
 -> grid
 (
@@ -1164,7 +1077,7 @@ my $id3_year_ent = $tab2 -> Entry
 my $id3_com_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Comment as:",
-	-variable=>\$main::AUDIO_SET_COMMENT,
+	-variable=>\$config::AUDIO_SET_COMMENT,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1181,7 +1094,7 @@ $balloon->attach
 
 my $id3_com_ent = $tab2 -> Entry
 (
-	-textvariable=>\$main::id3_com_str
+	-textvariable=>\$config::id3_com_str
 )
 -> grid
 (
@@ -1284,13 +1197,13 @@ $balloon->attach
 my $d_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM ^Digits",
-	-variable=>\$main::digits,
+	-variable=>\$config::digits,
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($main::digits == 1)
+		if($config::digits == 1)
 		{
-			$main::rm_digits = 0;
+			$config::rm_digits = 0;
 		}
 	}
 )
@@ -1309,13 +1222,13 @@ $balloon->attach
 my $N_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM all Digits",
-	-variable=>\$main::rm_digits,
+	-variable=>\$config::rm_digits,
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($main::rm_digits == 1)
+		if($config::rm_digits == 1)
 		{
-			$main::digits = 0;
+			$config::digits = 0;
 		}
 	}
 )
@@ -1341,13 +1254,13 @@ my $tab5_label_scene = $tab5 -> Label
 my $unscene_chk = $tab5 -> Checkbutton
 (
 	-text=>"un-Scenify",
-	-variable=>\$main::unscene,
+	-variable=>\$config::unscene,
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($main::unscene == 1)
+		if($config::unscene == 1)
 		{
-			$main::scene = 0;
+			$config::scene = 0;
 		}
 	}
 )
@@ -1362,13 +1275,13 @@ $balloon->attach
 my $scene_chk = $tab5 -> Checkbutton
 (
 	-text=>"Scenify",
-	-variable=>\$main::scene,
+	-variable=>\$config::scene,
 	 -activeforeground => "blue",
 	 -command=> sub
 	 {
-	 	if($main::scene == 1)
+	 	if($config::scene == 1)
 	 	{
-	 		$main::unscene = 0;
+	 		$config::unscene = 0;
 	 	}
 	 }
 )
@@ -1399,7 +1312,7 @@ $tab5 -> Label
 my $pad_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad - w space",
-	-variable=>\$main::pad_dash,
+	-variable=>\$config::pad_dash,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1417,7 +1330,7 @@ $balloon->attach
 my $pad_d_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad NN w -",
-	-variable=>\$main::pad_digits,
+	-variable=>\$config::pad_digits,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1435,7 +1348,7 @@ $balloon->attach
 my $pad_d_w_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad NxNN w 0",
-	-variable=>\$main::pad_digits_w_zero,
+	-variable=>\$config::pad_digits_w_zero,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1453,7 +1366,7 @@ $balloon->attach
 my $chk_split_dddd = $tab5 -> Checkbutton
 (
 	-text=>"Pad NNNN with x",
-	-variable=>\$main::SPLIT_DDDD,
+	-variable=>\$config::SPLIT_DDDD,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1498,7 +1411,7 @@ $tab6 -> Label
 my $n_chk = $tab6 -> Checkbutton
 (
 	-text=>"Enumerate",
-	-variable=>\$main::enum,
+	-variable=>\$config::enum,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1659,7 +1572,7 @@ $tab7 -> Label
 my $trunc_chk = $tab7 -> Checkbutton
 (
 	-text=>"Truncate",
-	-variable=>\$main::truncate,
+	-variable=>\$config::truncate,
 	-activeforeground => "blue"
 )
 -> grid
@@ -1837,14 +1750,14 @@ our $f_frame = $main::frm_right2->Frame()
 $f_frame -> Checkbutton
 (
 	-text=>"Filter",
-	-variable=>\$main::FILTER,
+	-variable=>\$config::hash{FILTER}{value},
 	-activeforeground => "blue",
         -command=> sub
 	{
-		if($main::FILTER && $main::filter_string eq "")	# dont enable filter on an empty string
+		if($config::hash{FILTER}{value} && $main::filter_string eq "")	# dont enable filter on an empty string
 		{
 			&misc::plog(1, "namefix: tried to enable filtering with an empty filter");
-			$main::FILTER = 0;
+			$config::hash{FILTER}{value} = 0;
 		}
 		else
 		{
@@ -1858,35 +1771,22 @@ $f_frame -> Checkbutton
 );
 
 
-$f_frame->Label
-(
-	-text=>" "
-)
-->pack
-(
-	-side=>'left',
-);
+$f_frame->Label(-text=>" ")->pack(-side=>'left',);
 
 $f_frame->Entry
 (
         -textvariable=>\$main::filter_string,
         -width=>35
 )
-->pack
-(
-	-side=>'left',
-);
+->pack(-side=>'left',);
 
 $f_frame -> Checkbutton
 (
 	-text=>"Case Sensitive",
-	-variable=>\$main::FILTER_IGNORE_CASE,
+	-variable=>\$config::hash{FILTER_IGNORE_CASE}{value},
 	-activeforeground => "blue"
 )
-->pack
-(
-	-side=>'left',
-);
+->pack(	-side=>'left',);
 
 $f_frame -> Checkbutton
 (
@@ -1925,17 +1825,4 @@ sub callback
     print "\$Tk::event     = $Tk::event\n";
     print "\$Tk::widget    = $Tk::widget\n";
     print "\$Tk::event->W  = ", $Tk::event->W, "\n";
-}
-
-sub quit
-{
-	my $string = shift;
-
-	$string .= "\n" if $string !~ /\n$/;
-
-	cluck longmess("quit $string\n");
-	Tk::exit;
-	die "Trying to quit via die";
-	print "Trying to quit via CORE::exit";
-	CORE::exit;
 }
