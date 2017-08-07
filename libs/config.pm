@@ -38,6 +38,7 @@ our $hlist_cwd		= cwd;
 # system internal vars
 our $recr		= 0;
 our $RUN		= 0;
+our $PREVIEW		= 0;
 our $STOP		= 0;
 our $LISTING		= 0;
 our $OVERWRITE		= 0;
@@ -93,7 +94,6 @@ our $hlist_file		= '';
 our $hlist_file_new	= '';
 our $hlist_newfile_row	= 0;
 our $hlist_file_row	= 1;
-our $testmode 		= 1;
 our $change 		= 0;
 our $id3_writeme	= 0;	# used for missing id3v1/id3v2 that can be filled in from each other
 our $suggestF 		= 0;	# suggest using fsfix var
@@ -234,12 +234,6 @@ $hash{'window_g'}{'save'}		= 'mwg';
 $hash{'window_g'}{'value'}		= '';
 
 our $CLI = 0;
-
-$hash{RUN}{save}			= 'sys';
-$hash{RUN}{value}			= 0;
-
-$hash{LISTING}{save}			= 'sys';
-$hash{LISTING}{value}			= 0;
 
 $hash{PROC_DIRS}{save}			= 'sys';
 $hash{PROC_DIRS}{value}			= 0;

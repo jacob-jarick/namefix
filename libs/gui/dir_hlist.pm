@@ -199,7 +199,7 @@ sub draw_list
 		-command=> sub
 		{
 			print "Apply Preview: Dir: '$config::hlist_cwd'\n\tfilename:\t'$config::hlist_file'\n\tnew filename:\t'$config::hlist_file_new'\n";
-			if(!&fn_rename($config::hlist_file, $config::hlist_file_new) )
+			if(!&fixname::fn_rename($config::hlist_file, $config::hlist_file_new) )
 			{
 				&misc::plog(0, "ERROR Apply Preview: \"$config::hlist_file\" cannot preform rename, file allready exists\n");
 			}

@@ -166,7 +166,7 @@ sub fix
 	# rm mp3 id3v2 tags
         if($IS_AUDIO_FILE && $config::RM_AUDIO_TAGS)
 	{
-        	if(!$config::testmode)
+        	if(!$config::PREVIEW)
 		{
         		&mp3::rm_tags($file);
                 }
@@ -220,7 +220,7 @@ sub fix
         		return;
         	}
 
-		if($TAGS_CHANGED && !$config::testmode)
+		if($TAGS_CHANGED && !$config::PREVIEW)
 		{
 			&mp3::write_tags($file, \%tags_h_new);
 			$config::id3_change++;
@@ -229,7 +229,7 @@ sub fix
 
 	if($file ne $newfile)
 	{
-		if(!$config::testmode)
+		if(!$config::PREVIEW)
 		{
 			if(!&fn_rename($file, $newfile) )
 			{

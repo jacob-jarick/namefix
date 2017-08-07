@@ -142,7 +142,7 @@ sub blockrename
 	my $preview = $frm -> Checkbutton
 	(
 		-text=>"Preview",
-		-variable=>\$config::testmode,
+		-variable=>\$config::PREVIEW,
 		-activeforeground => "blue"
 	)
         -> pack(-side => 'left');
@@ -179,11 +179,11 @@ sub blockrename
         	-activebackground => 'green',
         	-command => sub
         	{
-			if($config::testmode == 0)
+			if($config::PREVIEW == 0)
 			{
 				$main::BR_DONE = 1;
 				&br();
-				$config::testmode = 1;
+				$config::PREVIEW = 1;
 			}
 			else
 			{

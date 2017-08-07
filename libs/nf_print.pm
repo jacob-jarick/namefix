@@ -62,10 +62,10 @@ sub p
 		&main::quit("nf_print: \$file1 $file1 not a file/dir - listing failure ?\n");
 	}
 
-	# renaming / previewing rename - file2 must be a file/dir
-	if($NEWFILE && !(-f $file2 || -d $file2) )
+	# renaming file2 must be a file/dir
+	if($config::RUN && !$config::PREVIEW && $file1 ne '..' && !-f $file2 && !-d $file2 )
 	{
-		&main::quit("nf_print: \$file2 $file2 not a file/dir - rename failed ?\n");
+		&main::quit("nf_print::p \$file1 '$file1' \$file2 '$file2' not a file/dir - rename failed ?\n");
 		return 1;
 	}
 
@@ -113,7 +113,6 @@ sub p
 	if($config::hash{id3_mode}{value})
 	{
 		&main::quit("nf_print id3_mode enabled but \$ref1 is undef\n") if !defined $ref1;
-# 		print "p: using \$ref1\n" . Dumper($ref1);
 		my %h = %$ref1;
 
 		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)

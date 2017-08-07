@@ -411,22 +411,19 @@ sub manual::edit
         	-activebackground=>'white',
         	-command => sub
         	{
-                	if($EXT)
-                        {
-        			&me_rename($file, "$new_fn.$new_ext");
-				$old_fn = $new_fn;
-				$old_ext = $new_ext;
-                        }
-                        else
-                        {
-                        	&me_rename($file, $newfile);
-                                $file = $newfile;
-                        }
-
                         if($TAGS)
 			{
 				&mp3::write_tags($file, \%tag_hash);
 			}
+
+                	if($EXT)
+                        {
+				$newfile = "$new_fn.$new_ext";
+				$old_fn = $new_fn;
+				$old_ext = $new_ext;
+                        }
+				&me_rename($file, $newfile);
+                                $file = $newfile;
 		}
         )
         -> grid

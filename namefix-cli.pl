@@ -212,7 +212,7 @@ for my $arg(@ARGV)
 	}
 	elsif($arg eq "--rename" || $arg eq "--ren")
 	{
-		$config::testmode = 0;
+		$config::PREVIEW = 0;
 	}
 	elsif($arg eq "--case")
 	{
@@ -585,7 +585,7 @@ for my $arg(@ARGV)
 # Main
 #--------------------------------------------------------------------------------------------------------------
 
-if(!$config::testmode && !$config::UNDO)
+if(!$config::PREVIEW && !$config::UNDO)
 {
 	&undo::clear;
 	$config::undo_dir = $config::dir;
@@ -639,7 +639,7 @@ sub proc_short_opts
 			&cli_help("short");
 		}
 		elsif($short_opt eq "-") { next; }
-		elsif($short_opt eq "!") { $config::testmode				= 0; }
+		elsif($short_opt eq "!") { $config::PREVIEW				= 0; }
 
 		elsif($short_opt eq "c") { $config::hash{case}{value}			= 1; }
 		elsif($short_opt eq "g") { $config::hash{CLEANUP_GENERAL}{value}	= 1; }

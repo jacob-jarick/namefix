@@ -107,14 +107,17 @@ sub write_tags
 	my $file = shift;
 
 	&main::quit("mp3::write_tags: \$file is undef") if ! defined $file;
-	&main::quit("mp3::write_tags: \$file eq ''") if ! $file eq '';
+	&main::quit("mp3::write_tags: \$file eq ''") if $file eq '';
+	&main::quit("mp3::write_tags: file '$config::dir/$file' not found") if !-f "$config::dir/$file";
 
-	&main::quit("mp3::write_tags: \$file  '$file' is not an audio file\n") if $file =~ /\.$config::id3_ext_regex$/i;
+	my $work_file = "$config::dir/$file";
+
+	&main::quit("mp3::write_tags: \$file  '$file' is not an audio file\n") if $file !~ /\.$config::id3_ext_regex$/i;
 
 	my $ref = shift;
-	&main::quit("mp3::write_tags: \$ref is undef") if ! defined $ref;
-
 	my %tag_hash = %$ref;
+
+	&main::quit("mp3::write_tags: tag_hash is undef") if ! defined $tag_hash{title};
 
         # ensure all fieldss have been sent
         for my $k(keys %id3h)
@@ -133,7 +136,7 @@ sub write_tags
 		}
         }
 
-	my $audio_tags = MP3::Tag->new($file);
+	my $audio_tags = MP3::Tag->new($work_file);
 
 	$audio_tags->title_set	($tag_hash{title});
 	$audio_tags->artist_set	($tag_hash{artist});

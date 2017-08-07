@@ -40,6 +40,8 @@ sub quit
 
 	$string .= "\n" if $string !~ /\n$/;
 
+	print "\n\n====================================================================================\n\n";
+
 	cluck longmess("quit $string\n");
 	Tk::exit;
 	die "Trying to quit via die";
@@ -132,7 +134,7 @@ $mw->bind('<KeyPress>' => sub
 {
     if($Tk::event->K eq 'F2')
     {
-	$config::testmode = 1;
+	$config::PREVIEW = 1;
 	if(defined $config::hlist_file && defined $config::hlist_cwd)
 	{
 		print "Manual Rename '$config::hlist_file' \n";
@@ -142,13 +144,13 @@ $mw->bind('<KeyPress>' => sub
     if($Tk::event->K eq 'F5')
     {
 	print "refresh\n";
-	$config::testmode = 1;
+	$config::PREVIEW = 1;
 	&dir::ls_dir;
     }
     if($Tk::event->K eq 'F6')
     {
 	print "preview\n";
-	$config::testmode = 1;
+	$config::PREVIEW = 1;
 	&run_namefix::run;
     }
     # Escape
@@ -427,7 +429,7 @@ $frm_bottom -> Label
 my $tm_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Preview",
-	-variable=>\$config::testmode,
+	-variable=>\$config::PREVIEW,
 	-activeforeground => "blue"
 )
 -> grid
@@ -466,7 +468,7 @@ $frm_bottom -> Button
 		}
 		$config::STOP = 1;
 		$config::RUN = 0;
-		$config::testmode = 1;
+		$config::PREVIEW = 1;
 		&misc::plog(0, "namefix.pl: Stop button pressed");
 	}
 )

@@ -62,18 +62,18 @@ sub run
 	$config::RUN		= 1;
 	&dir_hlist::draw_list if !$config::CLI;
 
-        my $t_s 		= "";	# tmp string
+        my $t_s 		= '';	# tmp string
 
-        $config::orig_dir		= cwd;
+        $config::orig_dir	= cwd;
         chdir $config::dir;
-	$config::dir		= cwd();
+	$config::dir		= cwd;
 	&undo::clear;
 	prep_globals;
 
 	if(!$config::CLI)
 	{
 		&dir_hlist::hlist_clear;
-		nf_print::p("..");
+		nf_print::p('..');
 	}
 
         if(!$config::recr)
@@ -104,7 +104,7 @@ sub run
 	# print info
 
         $t_s = "have";
-        $t_s = "would have" if ($config::testmode);
+        $t_s = "would have" if ($config::PREVIEW);
 
         &misc::plog(1, "$config::change files $t_s been modified");
 	&misc::plog(1, "$config::id3_change mp3s tags $t_s been updated.")			if($config::hash{id3_mode}{value});
@@ -114,8 +114,8 @@ sub run
 
 	# cleanup
 
-	$config::testmode = 1;	# return to test mode for safety :)
-	$config::RUN = 0;		# finished renaming - turn off run flag
+	$config::PREVIEW = 1;	# return to test mode for safety :)
+	$config::RUN = 0;	# finished renaming - turn off run flag
 	chdir $config::dir;	# return to users working dir
 }
 
@@ -130,10 +130,10 @@ sub find_fix
 sub find_fix_process
 {
 	# this sub should recieve an array of files from find_fix
-	my $dir = "";
+	my $dir		= '';
+	my $count	= 1;
+	my $total	= scalar @config::find_arr;
 
-	my $count = 1;
-	my $total = scalar @config::find_arr;
 	$config::percent_done = 0;
 
 	for my $file(@config::find_arr)
