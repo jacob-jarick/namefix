@@ -157,7 +157,7 @@ $mw->bind('<KeyPress>' => sub
     if($Tk::event->K eq 'Escape')
     {
 	print "Escape Key = stopping any actions\n";
-	$main::STOP = 1;
+	&config::halt;
     }
 
 });
@@ -466,9 +466,7 @@ $frm_bottom -> Button
 			&misc::plog(1, "namefix.pl: STOP flag allready enabled, turning off LISTING flag as well");
 			$config::LISTING = 0;
 		}
-		$config::STOP = 1;
-		$config::RUN = 0;
-		$config::PREVIEW = 1;
+		&config::halt;
 		&misc::plog(0, "namefix.pl: Stop button pressed");
 	}
 )

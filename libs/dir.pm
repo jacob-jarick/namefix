@@ -19,7 +19,7 @@ sub ls_dir
 {
 	&run_namefix::prep_globals;
 
-	&main::quit("sub ls_dir: Allready preforming a list, aborting new list attempt") if($config::LISTING);
+	&main::quit("sub ls_dir: BUSY, aborting new list attempt") if(&config::busy);
 
 	$config::LISTING	= 1;
 	$config::STOP		= 0;

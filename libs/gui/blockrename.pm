@@ -148,12 +148,11 @@ sub blockrename
         -> pack(-side => 'left');
 	$balloon->attach($preview, -msg => "Preview changes that will be made.\n\nNote: This option always re-enables after a run for safety.");
 
-	# STOP button
         $frm -> Button
         (
         	-text=>"STOP !",
         	-activebackground => 'red',
-        	-command => sub {$main::STOP = 1;}
+        	-command => sub {&config::halt;}
         )
         -> pack(-side => 'left');
 

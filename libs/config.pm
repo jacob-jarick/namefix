@@ -36,11 +36,12 @@ our $cwd		= cwd;
 our $hlist_cwd		= cwd;
 
 # system internal vars
-our $recr		= 0;
-our $RUN		= 0;
-our $PREVIEW		= 0;
-our $STOP		= 0;
 our $LISTING		= 0;
+our $PREVIEW		= 0;
+our $RUN		= 0;
+our $STOP		= 0;
+
+our $recr		= 0;
 our $OVERWRITE		= 0;
 our $WORD_SPECIAL_CASING= 0;
 our $IGNORE_FILE_TYPE	= 0;
@@ -331,5 +332,21 @@ sub save
 	&save_hash;
 }
 
+sub halt
+{
+	$LISTING	= 0;	# set LISTING
+	$PREVIEW	= 1;	# revert to preview mode
+	$RUN		= 0;	# turn RUN off
+	$STOP		= 1;	# set STOP
+}
+
+# return 1 if we are doing something
+sub busy
+{
+	return 1 if $LISTING;
+# 	return 1 if $PREVIEW;
+	return 1 if $RUN;
+	return 0 if $STOP;
+}
 
 1;
