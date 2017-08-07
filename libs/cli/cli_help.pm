@@ -12,7 +12,7 @@ sub show
 my $mode = shift;
 if(!$mode) { $mode = "long"; }
 
-my $txt_header="namefix.pl $main::version
+my $txt_header="namefix.pl $config::version
 
 I am negelecting cmd line no more.
 cli mode is strictly WIP, options likely to change.
@@ -71,13 +71,13 @@ x	--regexp		Enable regexp in remove option
 	--ae=STRING
 
 C	--case-sp		Use special Casing list:
-				$main::casing_file
+				$config::casing_file
 
 K	--rm-words		Remove Custom Words list
-				$main::killwords_file
+				$config::killwords_file
 
 P	--rm-pat		Remove Custom regexp patterns, ie urls
-				$main::killpat_file
+				$config::killpat_file
 
 F	--fs-fix		Work around case insensitive filesystems
 				eg microsofts fat32

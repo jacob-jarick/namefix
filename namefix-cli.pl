@@ -41,8 +41,8 @@ use config;
 #--------------------------------------------------------------------------------------------------------------
 
 # files
-our $log_file		= "$home/.namefix.pl/namefix-cli.pl.$version.log";
-our $html_file		= "$home/.namefix.pl/namefix_html_output_hack.html";
+our $log_file		= "$config::home/.namefix.pl/namefix-cli.pl.$config::version.log";
+our $html_file		= "$config::home/.namefix.pl/namefix_html_output_hack.html";
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
@@ -55,7 +55,7 @@ our $html_file		= "$home/.namefix.pl/namefix_html_output_hack.html";
 &misc::plog(1, "**** namefix.pl $config::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
-$hash{CLI}{value} = 1;	# set cli mode flag
+$config::CLI = 1;	# set cli mode flag
 
 #--------------------------------------------------------------------------------------------------------------
 # CLI Variables
@@ -70,26 +70,26 @@ my $text = "";
 
 if(!-f $config::hash_tsv)
 {
-	&cli_print("No config file found, Creating.", "<MSG>");
+	&cli_print::print("No config file found, Creating.", "<MSG>");
 	&config::save;
 }
 
 if(!-f $config::casing_file)
 {
-	&cli_print("No Special Word Casing file found, Creating.", "<MSG>");
-	&misc::save_file($main::casing_file, join("\n", @config::word_casing_arr));
+	&cli_print::print("No Special Word Casing file found, Creating.", "<MSG>");
+	&misc::save_file($config::casing_file, join("\n", @config::word_casing_arr));
 }
 
 if(!-f $config::killwords_file)
 {
-	&cli_print("No Kill Words file found, Creating.", "<MSG>");
-	&misc::save_file($main::killwords_file, join("\n", @config::kill_words_arr));
+	&cli_print::print("No Kill Words file found, Creating.", "<MSG>");
+	&misc::save_file($config::killwords_file, join("\n", @config::kill_words_arr));
 }
 
 if(!-f $config::killpat_file)
 {
-	&cli_print("No Kill Patterns file found, Creating.", "<MSG>");
-	&misc::save_file($main::killpat_file, join("\n", @config::kill_patterns_arr));
+	&cli_print::print("No Kill Patterns file found, Creating.", "<MSG>");
+	&misc::save_file($config::killpat_file, join("\n", @config::kill_patterns_arr));
 }
 
 #-------------------------------------------------------------------------------------------------------------
@@ -504,31 +504,31 @@ for my $arg(@ARGV)
 
 	elsif($arg eq "--changelog")
 	{
-		$text = join("", &misc::readf($main::changelog));
+		$text = join("", &misc::readf($config::changelog));
 		print "$text\n\n";
 		exit;
 	}
 	elsif($arg eq "--about")
 	{
-		$text = join("", &misc::readf($main::about));
+		$text = join("", &misc::readf($config::about));
 		print "$text\n\n";
 		exit;
 	}
 	elsif($arg eq "--todo")
 	{
-		$text = join("", &misc::readf($main::todo));
+		$text = join("", &misc::readf($config::todo));
 		print "$text\n\n";
 		exit;
 	}
 	elsif($arg eq "--thanks")
 	{
-		$text = join("", &misc::readf($main::thanks));
+		$text = join("", &misc::readf($config::thanks));
 		print "$text\n\n";
 		exit;
 	}
 	elsif($arg eq "--links")
 	{
-		$text = join("", &misc::readf($main::links));
+		$text = join("", &misc::readf($config::links));
 		print "$text\n\n";
 		exit;
 	}
@@ -571,7 +571,7 @@ for my $arg(@ARGV)
 	elsif($arg eq "--save-options" || $_ eq "--save-opt" || $_ eq "--save-config")
 	{
 		&config::save;
-		&cli_print("Options Saved, exiting", "<MSG>");
+		&cli_print::print("Options Saved, exiting", "<MSG>");
 		exit;
 	}
 	else
@@ -595,13 +595,13 @@ if(!$config::testmode && !$config::UNDO)
 # set main dir, run fixname.....
 print "*** Processing dir: $config::dir\n";
 
-&misc::save_file($config::html_file, " ");	# clear html file
+&misc::null_file($html_file);	# clear html file
 
 &htmlh::html("<table border=1>");
 &htmlh::html("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
 
 
-if($config:UNDO)
+if($config::UNDO)
 {
 	@config::undo_pre = &misc::readf($config::undo_pre_file);
 	@config::undo_cur = &misc::readf($config::undo_cur_file);
@@ -672,10 +672,9 @@ sub proc_short_opts
 sub quit
 {
 	my $string = shift;
-
+	$string = 'no quit message' if ! defined $string;
 	$string .= "\n" if $string !~ /\n$/;
 
 	cluck longmess("quit $string\n");
-	exit;
 	CORE::exit;
 }

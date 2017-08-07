@@ -60,7 +60,7 @@ sub run
 	}
 
 	$config::RUN		= 1;
-	&dir_hlist::draw_list if !$config::hash{CLI}{value};
+	&dir_hlist::draw_list if !$config::CLI;
 
         my $t_s 		= "";	# tmp string
 
@@ -70,7 +70,7 @@ sub run
 	&undo::clear;
 	prep_globals;
 
-	if(!$config::hash{CLI}{value})
+	if(!$config::CLI)
 	{
 		&dir_hlist::hlist_clear;
 		nf_print::p("..");

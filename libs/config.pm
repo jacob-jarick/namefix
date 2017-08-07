@@ -46,18 +46,20 @@ our $WORD_SPECIAL_CASING= 0;
 our $IGNORE_FILE_TYPE	= 0;
 
 our $RM_AUDIO_TAGS	= 0;
-our $AUDIO_SET_ALBUM	= 0;
 our $AUDIO_FORCE	= 0;
+our $AUDIO_SET_ALBUM	= 0;
 our $AUDIO_SET_COMMENT	= 0;
 our $AUDIO_SET_ARTIST	= 0;
 our $AUDIO_SET_GENRE	= 0;
+our $AUDIO_SET_YEAR	= 0;
 
 # id3 tag txt
-our $id3_art_str	= '';
-our $id3_gen_str	= '';
 our $id3_alb_str	= '';
+our $id3_art_str	= '';
+our $id3_tra_str	= '';
+our $id3_tit_str	= '';
+our $id3_gen_str	= '';
 our $id3_year_str	= '';
-our $AUDIO_SET_YEAR	= '';
 our $id3_com_str	= '';
 
 # txt
@@ -230,8 +232,7 @@ $hash{'save_window_size'}{'value'}	= 0;
 $hash{'window_g'}{'save'}		= 'mwg';
 $hash{'window_g'}{'value'}		= '';
 
-$hash{CLI}{save}			= 'sys';
-$hash{CLI}{value}			= 0;
+our $CLI = 0;
 
 $hash{RUN}{save}			= 'sys';
 $hash{RUN}{value}			= 0;
@@ -285,7 +286,7 @@ sub save_hash
 
 sub save_hash_helper
 {
-	$config::hash{window_g}{value} = $main::mw->geometry;
+	$config::hash{window_g}{value} = $main::mw->geometry if $CLI;
 
 	my $k = shift;
 	if(!defined $hash{$k}{'value'})

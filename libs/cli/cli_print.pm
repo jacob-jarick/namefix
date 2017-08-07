@@ -39,9 +39,9 @@ sub print
 
 	if($s2 eq "<MSG>")
 	{
-		for(split(/\n/, $s1))
+		for my $line(split(/\n/, $s1))
 		{
-			print "*** $_\n";
+			print "*** $line\n";
 		}
 		&htmlh::html("<TR><TD colspan=4>$s1</TD></TR>");
 		return 1;

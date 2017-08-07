@@ -26,7 +26,7 @@ sub plog
 	my $level	= shift;
 	my $text	= shift;
 
-	if($config::hash{CLI}{value} == 0) # gui mode
+	if(!$config::CLI) # gui mode
 	{
 		if($text !~ /\n/ && length $text > 2 && $text ne ' ' && $text ne '')
 		{
@@ -49,7 +49,7 @@ sub plog
 		$text = "ERROR>$text";
 
 		# CLI will (for now) always spit out & log errors
-		if($config::hash{CLI}{value})
+		if($config::CLI)
 		{
 			open(FILE, ">>$main::log_file");
 			print FILE "$text\n";
@@ -127,7 +127,7 @@ sub save_file
 
         $string =~ s/^\n//g;		# no blank line @ start of file
         $string =~ s/\n\n+/\n/g;	# no blank lines in file
-        
+
         open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldnt open $file to write to. $!");
         print FILE $string;
         close(FILE);
