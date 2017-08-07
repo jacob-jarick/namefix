@@ -105,28 +105,31 @@ sub rm_tags
 sub write_tags
 {
 	my $file = shift;
-	print "write_tags \"$file\"\n";
+
+	&main::quit("mp3::write_tags: \$file is undef") if ! defined $file;
+	&main::quit("mp3::write_tags: \$file eq ''") if ! $file eq '';
+
+	&main::quit("mp3::write_tags: \$file  '$file' is not an audio file\n") if $file =~ /\.$config::id3_ext_regex$/i;
+
 	my $ref = shift;
-        my %tag_hash = %$ref;
+	&main::quit("mp3::write_tags: \$ref is undef") if ! defined $ref;
+
+	my %tag_hash = %$ref;
 
         # ensure all fieldss have been sent
         for my $k(keys %id3h)
         {
 		if(!defined $tag_hash{$k})
 		{
-			print "ERROR: write_tags incomplete hash recieved. \$tag_hash{$k} is undefined\n";
-			print Dumper(\%tag_hash);
-			exit;
+			&main::quit("ERROR: write_tags incomplete hash recieved. \$tag_hash{$k} is undefined\n" . Dumper(\%tag_hash));
 		}
         }
-        # ensure all fieldss are valid
+        # ensure no extra keys in hash
         for my $k(keys %tag_hash)
         {
 		if(!defined $id3h{$k})
 		{
-			print "ERROR: write_tags uknown tag '$k' recieved.\n";
-			print Dumper(\%tag_hash);
-			exit;
+			&main::quit("ERROR: write_tags extra key '$k' in hash.\n" . Dumper(\%tag_hash));
 		}
         }
 

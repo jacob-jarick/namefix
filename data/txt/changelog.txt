@@ -1,6 +1,8 @@
 
 4.1.2 - ie refresh in progress
 
+* prevent starting new listing via double on hlist if a listing is already running.
+
 * cleanup progress
   directory structure cleanup
   global_variables.pm is gone (hurrah).

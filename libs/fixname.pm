@@ -243,8 +243,8 @@ sub fix
 		}
 	}
 
-	print "fix: sending this info to nf_print::p\n\$file = $file\n\$newfile = $newfile\n\%tags_h = \n".
-	Dumper(\%tags_h) . "\n" . "\%tags_h_new = \n" . Dumper(\%tags_h_new) . "\n";
+# 	print "fix: sending this info to nf_print::p\n\$file = $file\n\$newfile = $newfile\n\%tags_h = \n".
+# 	Dumper(\%tags_h) . "\n" . "\%tags_h_new = \n" . Dumper(\%tags_h_new) . "\n";
 
 	&nf_print::p
 	(
@@ -364,7 +364,7 @@ sub run_fixname_subs
 	$newfile = &fn_pad_digits	(	$newfile);			# Pad NN w - , Pad digits with " - "
         $newfile = &fn_sp_word		(1,	$file,		$newfile); 	# Specific word casing
 
-	$newfile = &fn_post_clean	(	$file,		$newfile);	# Post General cleanup
+	$newfile = &fn_post_clean	(1,	$file,		$newfile);	# Post General cleanup
 
 	# ---------------------------------------
 	# 2nd runs some routines need to be run before & after cleanup in order to work fully (allows for lazy matching)
@@ -825,42 +825,41 @@ sub fn_pre_clean
 
 sub fn_post_clean
 {
+	my $FILE = shift;
 	my $f = shift;
-	&main::quit("fn_post_clean: \$f is undef\n")	if ! defined $f;
-	&main::quit("fn_post_clean: \$f eq ''\n")	if $f eq '';
-
 	my $fn = shift;
 
-	if(!$fn)
+	$fn = $f if !$fn;
+
+	&main::quit("fn_post_clean: \$f is undef\n")		if ! defined $f;
+	&main::quit("fn_post_clean: \$f eq ''\n")		if $FILE && $f eq '';
+	&main::quit("fn_post_clean: \$f '$f' not found\n")	if $FILE && !-f $f;
+
+	return $fn if !$config::CLEANUP_GENERAL;
+
+	# remove childless brackets () [] {}
+	$fn =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;
+
+	# remove doubled up -'s
+	$fn =~ s/-(\s|_|\.)+-|--/-/g;
+
+	# rm trailing characters
+	$fn =~ s/(\s|\+|_|\.|-)+(\..{3,4})$/$2/;
+
+	# rm leading characters
+	$fn =~ s/^(\s|\+|_|\.|-)+//;
+
+	# rm extra whitespaces
+	$fn =~ s/\s+/ /g;
+	$fn =~ s/$config::hash{space_character}{value}+/$config::hash{space_character}{value}/g;
+
+	# change file extension to lower case and remove anyspaces before file ext
+	$fn =~ s/^(.*)(\..{3,4})$/$1.lc($2)/e if $FILE && -f $f;
+
+	# remove trailing junk on directorys or strings
+	if(-d $f || !$FILE)
 	{
-		$fn = $f;
-	}
-
-        if($config::CLEANUP_GENERAL == 1)
-	{
-                # remove childless brackets () [] {}
-                $fn =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;
-
-                # remove doubled up -'s
-                $fn =~ s/-(\s|_|\.)+-|--/-/g;
-
-                # rm trailing characters
-                $fn =~ s/(\s|\+|_|\.|-)+(\..{3,4})$/$2/;
-
-                # rm leading characters
-                $fn =~ s/^(\s|\+|_|\.|-)+//;
-
-                # rm extra whitespaces
-                $fn =~ s/\s+/ /g;
-                $fn =~ s/$config::hash{space_character}{value}+/$config::hash{space_character}{value}/g;
-
-		# change file extension to lower case and remove anyspaces before file ext
-                $fn =~ s/^(.*)(\..{3,4})$/$1.lc($2)/e;
-
-                if(-d $f)
-                {
-                	$fn =~ s/(\s|\+|_|\.|-)+$//;
-                }
+		$fn =~ s/(\s|\+|_|\.|-)+$//;
 	}
 	return $fn;
 }

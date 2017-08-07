@@ -50,6 +50,12 @@ sub hide_rc_menu
 
 sub hlist_cd
 {
+	if($config::LISTING)
+	{
+		&misc::plog(1, "dir::hlist_cd: cannot CD, already listing\n");
+		return;
+	}
+
 	my $file = shift;
 	my $wd = shift;
 	my $old = $config::dir;
@@ -57,8 +63,7 @@ sub hlist_cd
 
         if(-d $path)
 	{
-        	$config::dir = $path;
-                if(chdir $config::dir)
+                if(chdir $path)
 		{
 			$config::dir = cwd();
 	        	&dir::ls_dir;

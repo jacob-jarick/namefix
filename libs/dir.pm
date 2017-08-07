@@ -48,6 +48,12 @@ sub ls_dir
 
 	for my $f (@dirlist)
 	{
+		if($config::STOP)
+		{
+			$config::LISTING = 0;
+			return;
+		}
+
 		$count++;
 		$config::percent_done = int(($count / $total) * 100);
 
@@ -64,7 +70,11 @@ sub ls_dir
 		$count++;
 		$config::percent_done = int(($count / $total) * 100);
 
-		return 0 if $config::STOP;
+		if($config::STOP)
+		{
+			$config::LISTING = 0;
+			return;
+		}
 		&ls_dir_print($f);		# then print the file array after all dirs have been printed
 	}
 	$config::LISTING = 0;

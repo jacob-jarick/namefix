@@ -288,7 +288,7 @@ sub save_hash
 
 sub save_hash_helper
 {
-	$config::hash{window_g}{value} = $main::mw->geometry if $CLI;
+	$config::hash{window_g}{value} = $main::mw->geometry if !$CLI;
 
 	my $k = shift;
 	if(!defined $hash{$k}{'value'})
