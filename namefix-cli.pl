@@ -208,7 +208,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq "--cleanup" || $arg eq "--clean" )
 	{
-		$config::CLEANUP_GENERAL = 1;
+		$config::hash{CLEANUP_GENERAL}{value} = 1;
 	}
 	elsif($arg eq "--rename" || $arg eq "--ren")
 	{
@@ -642,7 +642,7 @@ sub proc_short_opts
 		elsif($short_opt eq "!") { $config::testmode				= 0; }
 
 		elsif($short_opt eq "c") { $config::hash{case}{value}			= 1; }
-		elsif($short_opt eq "g") { $config::CLEANUP_GENERAL			= 1; }
+		elsif($short_opt eq "g") { $config::hash{CLEANUP_GENERAL}{value}	= 1; }
 		elsif($short_opt eq "o") { $config::hash{dot2space}{value}		= 1; }
 		elsif($short_opt eq "p") { $config::hash{spaces}{value}			= 1; }
 		elsif($short_opt eq "s") { $config::scene = 1; }

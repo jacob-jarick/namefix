@@ -40,7 +40,6 @@ our $recr		= 0;
 our $RUN		= 0;
 our $STOP		= 0;
 our $LISTING		= 0;
-our $CLEANUP_GENERAL	= 1;
 our $OVERWRITE		= 0;
 our $WORD_SPECIAL_CASING= 0;
 our $IGNORE_FILE_TYPE	= 0;
@@ -110,23 +109,20 @@ our @id3v2_exts = ("mp3", "mp2", "ogg", "mpg", "mpeg", "mp4", "aiff", "flac", "a
 our $id3_ext_regex = join('|', @config::id3v2_exts);
 
 # File locations
-our $thanks	= "$Bin/txt/thanks.txt";
-our $todo	= "$Bin/txt/todo.txt";
-our $about	= "$Bin/txt/about.txt";
-our $links	= "$Bin/txt/links.txt";
-our $changelog	= "$Bin/txt/changelog.txt";;
+our $thanks		= "$Bin/txt/thanks.txt";
+our $todo		= "$Bin/txt/todo.txt";
+our $about		= "$Bin/txt/about.txt";
+our $links		= "$Bin/txt/links.txt";
+our $changelog		= "$Bin/txt/changelog.txt";;
 
 our $fonts_file		= "$home/.namefix.pl/fonts.ini";
 our $bookmark_file	= "$home/.namefix.pl/bookmarks.txt";
-print "\$bookmark_file = $bookmark_file\n";
 our $undo_cur_file	= "$home/.namefix.pl/undo.current.filenames.txt";
 our $undo_pre_file	= "$home/.namefix.pl/undo.previous.filenames.txt";
 our $undo_dir_file	= "$home/.namefix.pl/undo.dir.txt";
 
-our %hash = ();
-
-our $hash_tsv = &misc::get_home."/.namefix.pl/config_hash.tsv";
-$hash_tsv =~ s/\\/\//g;
+our %hash	= ();
+our $hash_tsv	= &misc::get_home."/.namefix.pl/config_hash.tsv";
 
 $hash{'space_character'}{'save'}	= 'norm';
 $hash{'space_character'}{'value'}	= ' ';
@@ -167,6 +163,9 @@ $hash{'browser'}{'value'}		= 'elinks';
 
 $hash{'editor'}{'save'}			= 'norm';
 $hash{'editor'}{'value'}		= 'vim';
+
+$hash{CLEANUP_GENERAL}{save}		= 'mw';
+$hash{CLEANUP_GENERAL}{value}		= 0;
 
 $hash{'case'}{'save'}			= 'mw';
 $hash{'case'}{'value'}			= 0;

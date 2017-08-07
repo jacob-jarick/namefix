@@ -1,9 +1,9 @@
 $faw
 
-git grep -l 'ig_type' | xargs sed -i 's/ig_type/IGNORE_FILE_TYPE/g'
+git grep -l 'CLEANUP_GENERAL' | xargs sed -i 's/ig_type/IGNORE_FILE_TYPE/g'
 
 
-git grep -l 'FILTER' | xargs sed -i 's/\$FILTER/\$config::hash{FILTER}{value}/g'
-git grep -l '$main::FIRST_DIR_LISTED' | xargs sed -i 's/\$main::FIRST_DIR_LISTED/\$config::FIRST_DIR_LISTED/g'
+git grep -l 'CLEANUP_GENERAL' | xargs sed -i 's/\$CLEANUP_GENERAL/\$config::hash{CLEANUP_GENERAL}{value}/g'
+git grep -l 'CLEANUP_GENERAL' | xargs sed -i 's/\$main::FIRST_DIR_LISTED/\$config::hash{CLEANUP_GENERAL}{value}/g'
 
 

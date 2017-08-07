@@ -796,31 +796,36 @@ sub fn_truncate
 
 sub fn_pre_clean
 {
-	my $FILE = shift;
-	my $fn = shift;
-	&main::quit("fn_pre_clean \$fn is undef\n")	if ! defined $fn;
-	&main::quit("fn_pre_clean \$fn eq ''\n")	if $FILE && $fn eq '';
+	my $FILE = shift;	# flag
+	my $file = shift;	# file / string
 
-	my $f = $fn;
-        if($config::CLEANUP_GENERAL == 1)
-        {
-                # "fix Artist - - track" type filenames that can pop up when stripping words
-                $fn =~ s/-(\s|_|\.)+-/-/g;
+	&main::quit("fn_pre_clean \$file is undef\n")	if ! defined $file;
+	&main::quit("fn_pre_clean \$file eq ''\n")	if $FILE && $file eq '';
+	&main::quit("fn_pre_clean \$FILE = 1 but '$file' is not a file and not a directory\n")	if $FILE && (!-f $file && !-d $file);
 
-                # rm trailing characters
-                $fn =~ s/(\s|_|\.|-)+(\..{3,4})$/$2/e;
+	return $file if(!$config::hash{CLEANUP_GENERAL}{value});
 
-                # remove leading chars
-                $fn =~ s/^(\s|_|\.|-)+//;
+	my $file_new = $file;
 
-		if($FILE)
-		{
-			# I hate mpeg or jpeg as extensions personally :P
-			$fn =~ s/\.mpeg$/\.mpg/i;
-			$fn =~ s/\.jpeg$/\.jpg/i;
-		}
-        }
-	return $fn;
+	# "fix Artist - - track" type filenames that can pop up when stripping words
+	$file_new =~ s/-(\s|_|\.)+-/-/g;
+
+	# remove leading chars
+	$file_new =~ s/^(\s|_|\.|-)+//;
+
+	# string rm trailing characters
+	$file_new =~ s/(\s|_|\.|-)+$/$2/e if !$FILE;
+
+	if($FILE && -f $file)
+	{
+		# rm trailing characters
+		$file_new =~ s/(\s|_|\.|-)+(\..{3,4})$/$2/e;
+
+		# I hate mpeg or jpeg as extensions personally :P
+		$file_new =~ s/\.mpeg$/\.mpg/i;
+		$file_new =~ s/\.jpeg$/\.jpg/i;
+	}
+	return $file_new;
 }
 
 sub fn_post_clean
@@ -835,7 +840,7 @@ sub fn_post_clean
 	&main::quit("fn_post_clean: \$f eq ''\n")		if $FILE && $f eq '';
 	&main::quit("fn_post_clean: \$f '$f' not found\n")	if $FILE && !-f $f;
 
-	return $fn if !$config::CLEANUP_GENERAL;
+	return $fn if !$config::hash{CLEANUP_GENERAL}{value};
 
 	# remove childless brackets () [] {}
 	$fn =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;

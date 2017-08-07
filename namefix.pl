@@ -562,7 +562,7 @@ $frm_left -> Label
 my $clean_chk = $frm_left -> Checkbutton
 (
 	-text=>"General Cleanup",
-	-variable=>\$config::CLEANUP_GENERAL,
+	-variable=>\$config::hash{CLEANUP_GENERAL}{value},
 	-activeforeground => "blue",
 	-command=> sub {}
 )
