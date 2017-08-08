@@ -1330,15 +1330,33 @@ $tab5 -> Label
 	-sticky=>"nw"
 );
 
-my $pad_chk = $tab5 -> Checkbutton
+my $pad_N_to_NN = $tab5 -> Checkbutton
 (
-	-text=>"Pad - w space",
-	-variable=>\$config::hash{pad_dash}{save},
+	-text=>"Pad N to NN",
+	-variable=>\$config::hash{pad_N_to_NN}{value},
 	-activeforeground => "blue"
 )
 -> grid
 (
 	-row=>26,
+	-column=>1,
+	-sticky=>"nw"
+);
+$balloon->attach
+(
+	$pad_N_to_NN,
+	-msg => "Artist - 1 - track.ogg\nto\nArtist - 01 - track.ogg"
+);
+
+my $pad_chk = $tab5 -> Checkbutton
+(
+	-text=>"Pad - w space",
+	-variable=>\$config::hash{pad_dash}{value},
+	-activeforeground => "blue"
+)
+-> grid
+(
+	-row=>27,
 	-column=>1,
 	-sticky=>"nw"
 );

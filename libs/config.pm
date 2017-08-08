@@ -172,6 +172,9 @@ $hash{unscene}			{value}	= 0;
 $hash{scene}			{save}	= 'mw';
 $hash{scene}			{value}	= 0;
 
+$hash{pad_N_to_NN}		{save}	= 'mw';
+$hash{pad_N_to_NN}		{value}	= 0;
+
 $hash{pad_dash}			{save}	= 'mw';
 $hash{pad_dash}			{value}	= 0;
 

@@ -348,6 +348,8 @@ sub run_fixname_subs
 	$newfile = &fn_replace		(1,	$newfile);			# remove user entered word (also replace if anything is specified)
 	$newfile = &fn_spaces		(1,	$newfile);			# convert underscores to spaces
 	$newfile = &fn_pad_dash		(	$newfile);			# pad -
+	$newfile = &fn_pad_N_to_NN	(	$newfile);			# pad -
+
 	$newfile = &fn_dot2space	(1,	$file,		$newfile);	# Dots to spaces
 	$newfile = &fn_sp_char		(	$newfile);			# remove nasty characters
 	$newfile = &fn_rm_digits	(	$newfile);			# remove all digits
@@ -887,6 +889,19 @@ sub fn_end_a
         {
                 $fn =~ s/(.*)(\..*?$)/$1$config::ins_end_str$2/g;
         }
+	return $fn;
+}
+
+sub fn_pad_N_to_NN
+{
+	my $fn = shift;
+	&main::quit("fn_pad_N_to_NN \$fn is undef\n")	if ! defined $fn;
+	&main::quit("fn_pad_N_to_NN \$fn eq ''\n")	if $fn eq '';
+
+	if($config::hash{pad_N_to_NN}{value})
+	{
+		$fn =~ s/(\s+|_|\.)(\d{1,1})(\s+|_|\.)/$1."0".$2.$3/e;
+	}
 	return $fn;
 }
 

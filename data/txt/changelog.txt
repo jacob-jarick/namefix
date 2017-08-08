@@ -1,77 +1,30 @@
 
 4.1.2 - ie refresh in progress
 
-* prevent starting new listing via double on hlist if a listing is already running.
-
-* cleanup progress
-  directory structure cleanup
-  global_variables.pm is gone (hurrah).
-  all shared globals are stored in config.pm - enables cli and gui to share nicely
-
-* bookmarks file renamed
-  fixed several issues
-  code cleanup
-  creating new bookmark correctly redraws the menu
-
-* ls_dir
-  now dies if you try to list twice - will turn off once Im sure there are no more double calls
-  found and fixed a ls_dir double call.
+* new option in misc "pad N to NN" eg:
+  Artist - 1 - track.ogg
+  to
+  Artist - 01 - track.ogg
 
 * clear button works again and also clears log window
 
-
-
-
 * guess tags now correctly guesses tags AFTER all tag modifications
 
-* more cleanups. all die's replaced with &main::quit
-
-* fixed columns issue in dir_hlist
-  only show needed amont of columns (correctly this time).
+*  only show needed amont of columns (correctly this time).
 
 * fixname::fix - added quit errors to catch undef filenames and '' as filenames
 
-* alot of #'ed print debug messages
-
 * ls_dir now only shows neccesary headers + massive cleanup
-
-* fixname::fix - most subs can be sent a flag to enable STRING mode (dont do file detection)
-  large overhaul - likely breaks namefix-cli.pl atm
-  if fixname is passed an undefined file - quit out
-  if fixname is file eq '' and mode eq FILE - quit out
-
-* main::quit
-  todo: add to namefix-cli as it quits differently depending on mode.
-  clucks backtrace and prints quit message - so useful for debugging
-
-* mp3.pm
-  quit out if a tag is undefined
-
-
-
-
-
-* get_tags should no longer return undef tags
 
 * massive overhaul of nf_print::p
   only shows files & dirs
-  code is much much cleaner
-  likely broke several things buuut listing and previews work correctly again
-
-* print command tidyup. nf_print::p is being overhauled for files and directories only
-* all other printing will be done to the new console on gui. cli does not change
 
 * drastic overhaul of mp3 library.
   updated to use new methods of writing tags, as my old method is now depreciated
   new methods enabled writing to ogg files and other audio formats.
   information for mp3 (audio files) tags are stored in a hash whenever possible
 
-* id3v1 tags no longer supported (what is this the 90's ?)
-  id3v1 tags are read only, removed and upgraded to id3v2 at every chance
-  large update for get_tags
-  rm_tags now removed both id3v1 and id3v2
-
-* removed $tmp var from fixname. now using local flag $PRINT
+*  rm_tags now removed both id3v1 and id3v2
 
 * id3 tags supported on the following file types: mp3, mp2, ogg, mpg, mpeg, mp4, aiff, flac, ape, ram, mpc
   WIP - currently ogg's dont get their id3 tags written
@@ -82,26 +35,16 @@
   delete can now delete a directory - shows dir contents in dialog
 
 * config
-  slowly moving all config to a hash which is stored as a tsv
   all configurable options shifted to TSV $HOME/.namefix.pl/config_hash.tsv
 
 * filter regex
   now users quotemeta
-  swapped to clear flag named $config::hash{FILTER}{value}_REGEX
 
 * fn_sp_word now uses quotemeta
-* $fn_sp flag renamed to $WORD_SPECIAL_CASING
-* more tidy ups
-* fn_sp_word works again
-
-* fixed up namefix-cli.pl - works with updated libs. bugs may still occur
 
 * all libraries updated to proper library format
-  need to untangle global_variables.pm still.
-  namefix-cli.pl is likely broken currently. been focusing on gui tidyup mainly.
 
 * bookmarks.pm no longer uses self generating code.
-  hacked some checkbutton to make it work
 
 * mass libraries updated to proper libs
 
@@ -119,11 +62,8 @@
   F5  = Refresh current dir listing
   F6  = Preview current changes (if any)
 
-* progress bar updates on recurisve listings
-
 * make_test_dir.pl updated - creates fake music files in fake album directories
 * added cool progress bar.
-* code cleanups
 
 * updating NSIS - probally quite broken on stuff like:
   ENV path,
@@ -132,8 +72,4 @@
 * adding right click Apply Preview to hlist
 * update about dialog to refer to github: https://github.com/jacob-jarick/namefix
 * created make_test_dir.pl for generating files I can test with.
-* removed all references to $prog_dir, now using Findbin
 * turned on strict and warnings for namefix.pl - redirected warnings for Jcombox
-  created all missing main vars with our (not my), should have turned on strict ages ago.
-  turning on strict has likely broken things, but gui fires up.
-

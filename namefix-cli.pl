@@ -393,6 +393,10 @@ for my $arg(@ARGV)
 	{
 		$config::hash{RM_DIGITS}{value} = 1;
 	}
+	elsif($arg eq "--pad-ntonn" || $arg eq "--pn2nn")
+	{
+		$config::hash{pad_N_to_NN}{value} = 1;
+	}
 	elsif($arg eq "--pad-hyphen" || $arg eq "--ph")
 	{
 		$config::hash{pad_dash}{value} = 1;
