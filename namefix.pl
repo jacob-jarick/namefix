@@ -169,11 +169,7 @@ $mw->bind('<KeyPress>' => sub
         # Escape
     if($Tk::event->K eq 'F1')
     {
-	print
-"
-\$config::hash{save_window_size}{value} = $config::hash{save_window_size}{value}
-
-";
+	print "Hello\n";
 	&config::halt;
     }
 
@@ -1810,7 +1806,7 @@ $f_frame -> Checkbutton
 
 $f_frame -> Checkbutton
 (
-	-text=>"Use RE",
+	-text=>"regex",
 	-variable=>\$config::hash{FILTER_REGEX}{value},
 	-activeforeground => "blue"
 )

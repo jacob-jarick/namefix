@@ -353,7 +353,7 @@ sub run_fixname_subs
 	$newfile = &fn_rm_digits	(	$newfile);			# remove all digits
 	$newfile = &fn_digits		(	$newfile);			# remove digits from front of filename
 	$newfile = &fn_split_dddd	(	$newfile);			# split season episode numbers
-	$newfile = &fn_pre_clean	(1,	$newfile);			# Preliminary cleanup (just cleans up after 1st run)
+	$newfile = &fn_pre_clean	(1,	$file,		$newfile);	# Preliminary cleanup (just cleans up after 1st run)
 
 	# ---------------------------------------
 	# Main Clean - these routines expect a fairly clean string
@@ -791,16 +791,16 @@ sub fn_truncate
 
 sub fn_pre_clean
 {
-	my $FILE = shift;	# flag
-	my $file = shift;	# file / string
+	my $FILE	= shift;	# flag
+	my $file	= shift;	# file / string
+	my $file_new	= shift;
+	$file_new	= $file if ! defined $file_new;
 
 	&main::quit("fn_pre_clean \$file is undef\n")	if ! defined $file;
 	&main::quit("fn_pre_clean \$file eq ''\n")	if $FILE && $file eq '';
-	&main::quit("fn_pre_clean \$FILE = 1 but '$file' is not a file and not a directory\n")	if $FILE && (!-f $file && !-d $file);
+	&main::quit("fn_pre_clean \$FILE = 1 but '$file' is not a file and not a directory\n")	if $FILE && !-f $file && !-d $file;
 
-	return $file if(!$config::hash{CLEANUP_GENERAL}{value});
-
-	my $file_new = $file;
+	return $file_new if !$config::hash{CLEANUP_GENERAL}{value};
 
 	# "fix Artist - - track" type filenames that can pop up when stripping words
 	$file_new =~ s/-(\s|_|\.)+-/-/g;
