@@ -1134,6 +1134,43 @@ $tab2 -> Label
 	-column=>1
 );
 
+my $clr_id3_button = $tab2 -> Button
+(
+	-text=>"Clear",
+	-activebackground => "cyan",
+	-command => sub
+	{
+		$config::hash{id3_guess_tag}		{value} = 0;
+
+		$config::hash{RM_AUDIO_TAGS}		{value} = 0;
+		$config::hash{AUDIO_FORCE}		{value} = 0;
+		$config::hash{AUDIO_SET_ARTIST}		{value} = 0;
+		$config::hash{AUDIO_SET_ALBUM}		{value} = 0;
+		$config::hash{AUDIO_SET_GENRE}		{value} = 0;
+		$config::hash{AUDIO_SET_YEAR}		{value} = 0;
+		$config::hash{AUDIO_SET_COMMENT}	{value} = 0;
+
+		$config::id3_art_str		 = '';
+		$config::id3_alb_str		 = '';
+		$config::id3_gen_str		 = '';
+		$config::id3_year_str		 = '';
+		$config::id3_com_str		 = '';
+
+		&misc::plog(1, 'cleared id3 options');
+	}
+)
+-> grid
+(
+	-row=>$row++,
+	-column=>1,
+	-sticky=>"sw"
+);
+$balloon->attach
+(
+	$clr_id3_button,
+	-msg => "Reset id3 options"
+);
+
 #--------------------------------------------------------------------------------------------------------------
 # misc tab options
 #--------------------------------------------------------------------------------------------------------------

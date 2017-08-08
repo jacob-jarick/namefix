@@ -144,7 +144,7 @@ sub ls_dir_print
 	# check for audio tags
 	if($config::hash{id3_mode}{value})
 	{
-		print "ls_dir_print getting audio tags for $file\n";
+# 		print "ls_dir_print getting audio tags for $file\n";
 		my $ref = &mp3::get_tags($file);
 		&nf_print::p($file, undef, $ref);
 		return;

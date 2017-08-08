@@ -2,18 +2,17 @@
 - Bugs -
 ========
 
-....
 * apply preview fails on recursive
 
-* currently ogg's dont get their id3 tags written - fixed i think...
+* guessing tags rename works
+  but does not show new info on list when doing applying
+  but does show on preview (weird huh)
+
 
 
 ===============
 =- Base Todo -=
 ===============
-
-* swap to proper libraries
-* move to using ini files as config
 
 ==============
 =- CLI Todo -=
@@ -21,9 +20,6 @@
 
 * Single file processing
 * test --id3-tra option
-
-* propagate files if they do not exist on start (rmwords, rmpat etc)
-* check short options in same fashion as long, refuse to start with unrecognized options.
 
 ==============
 =- GUI Todo -=
@@ -36,20 +32,10 @@ High:
 
 Medium:
 
-* add shortcuts:
-  F2, manual rename selected - done
-  F5, refresh - done
-  ESC, stop - done
-
-* right click menu options:
-|- file properties
-|- delete - done
-\- Apply Preview - done
 
 Low:
 
 * multi level undo
-* media tag support for ogg.
 * revisting fucking utf8 issues :| ? - is this an issue with latest perl ?
 * rename all flags nicely and uppercase.
 * jpeg and other picture tag support.
