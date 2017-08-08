@@ -92,42 +92,49 @@ our $undo_dir_file	= "$home/.namefix.pl/undo.dir.txt";
 our %hash	= ();
 our $hash_tsv	= &misc::get_home."/.namefix.pl/config_hash.tsv";
 
+#############################################################################################
+# MAIN TAB
+
+$hash{CLEANUP_GENERAL}		{save}	= 'mw';
+$hash{CLEANUP_GENERAL}		{value}	= 0;
+
+$hash{case}			{save}	= 'mw';
+$hash{case}			{value}	= 0;
+
+$hash{WORD_SPECIAL_CASING}	{save}	= 'mw';
+$hash{WORD_SPECIAL_CASING}	{value}	= 0;
+
+$hash{spaces}			{save}	= 'mw';
+$hash{spaces}			{value}	= 0;
+
+$hash{dot2space}		{save}	= 'mw';
+$hash{dot2space}		{value}	= 0;
+
+$hash{kill_cwords}		{save}	= 'mw';
+$hash{kill_cwords}		{value}	= 0;
+
+$hash{kill_sp_patterns}		{save}	= 'mw';
+$hash{kill_sp_patterns}		{value}	= 0;
 
 $hash{replace}{save}		= 'mw';
 $hash{replace}{value}		= 0;
-
 
 $hash{INS_END}{save}		= 'mw';
 $hash{INS_END}{value}		= 0;
 $hash{INS_START}{save}		= 'mw';
 $hash{INS_START}{value}		= 0;
 
-$hash{OVERWRITE}{save}		= 'norm';
-$hash{OVERWRITE}{value}		= 0;
-$hash{RECURSIVE}{save}		= 'norm';
-$hash{RECURSIVE}{value}		= 0;
+#############################################################################################
+# MP3 TAB
 
-$hash{RM_DIGITS}{save}		= 'mw';
-$hash{RM_DIGITS}{value}		= 0;
+$hash{id3_mode}			{save}	= 'mw';
+$hash{id3_mode}			{value}	= 0;
 
-$hash{IGNORE_FILE_TYPE}{save}	= 'mw';
-$hash{IGNORE_FILE_TYPE}{value}	= 0;
+$hash{id3_guess_tag}		{save}	= 'mw';
+$hash{id3_guess_tag}		{value}	= 0;
 
-$hash{uc_all}{save}	= 'mw';
-$hash{uc_all}{value}	= 0;
 
-$hash{lc_all}{save}	= 'mw';
-$hash{lc_all}{value}	= 0;
 
-# TODO put the below flags in the hash
-
-$hash{digits}{save}     	= 'mw';
-$hash{digits}{value}     	= 0;
-
-$hash{enum}		{save}	= 'mw';
-$hash{enum}		{value}	= 0;
-
-# audio flags
 $hash{RM_AUDIO_TAGS}		{save}	= 'mw';
 $hash{RM_AUDIO_TAGS}		{value}	= 0;
 $hash{AUDIO_FORCE}		{save}	= 'mw';
@@ -143,18 +150,132 @@ $hash{AUDIO_SET_GENRE}		{value}	= 0;
 $hash{AUDIO_SET_YEAR}		{save}	= 'mw';
 $hash{AUDIO_SET_YEAR}		{value}	= 0;
 
-$hash{space_character}		{save}	= 'norm';
-$hash{space_character}		{value}	= ' ';
+#############################################################################################
+# MISC TAB
+
+$hash{uc_all}{save}	= 'mw';
+$hash{uc_all}{value}	= 0;
+
+$hash{lc_all}{save}	= 'mw';
+$hash{lc_all}{value}	= 0;
+
+$hash{RM_DIGITS}{save}		= 'mw';
+$hash{RM_DIGITS}{value}		= 0;
+
+$hash{scene}			{save}	= 'mw';
+$hash{scene}			{value}	= 0;
+
+$hash{unscene}			{save}	= 'mw';
+$hash{unscene}			{value}	= 0;
+
+$hash{digits}{save}     	= 'mw';
+$hash{digits}{value}     	= 0;
+
+$hash{pad_dash}			{save}	= 'mw';
+$hash{pad_dash}			{value}	= 0;
+
+$hash{pad_digits}		{save}	= 'mw';
+$hash{pad_digits}		{value}	= 0;
+
+$hash{pad_digits_w_zero}	{save}	= 'mw';
+$hash{pad_digits_w_zero}	{value}	= 0;
+
+$hash{sp_char}			{save}	= 'mw';
+$hash{sp_char}			{value}	= 0;
+
+$hash{intr_char}		{save}	= 'mw';
+$hash{intr_char}		{value}	= 0;
+
+$hash{lc_all}			{save}	= 'mw';
+$hash{lc_all}			{value}	= 0;
+
+$hash{uc_all}			{save}	= 'mw';
+$hash{uc_all}			{value}	= 0;
+
+$hash{SPLIT_DDDD}		{save}	= 'mw';
+$hash{SPLIT_DDDD}		{value}	= 0;
+
+#############################################################################################
+# ENUMURATE TAB
+
+$hash{enum}		{save}	= 'mw';
+$hash{enum}		{value}	= 0;
+$hash{enum_opt}			{save}	= 'mw';
+$hash{enum_opt}			{value}	= 0;
+
+$hash{enum_pad}			{save}	= 'mw';
+$hash{enum_pad}			{value}	= 0;
+
+$hash{enum_pad_zeros}		{save}	= 'mw';
+$hash{enum_pad_zeros}		{value}	= 4;
+
+#############################################################################################
+# TRUNCATE TAB
 
 $hash{max_fn_length}		{save}	= 'norm';
 $hash{max_fn_length}		{value}	= 256;
+$hash{truncate}			{save}	= 'mw';
+$hash{truncate}			{value}	= 0;
+
+$hash{truncate_style}		{save}	= 'mw';
+$hash{truncate_style}		{value}	= 0;
+
+$hash{trunc_char}		{save}	= 'mw';
+$hash{trunc_char}		{value}	= 0;
+
+$hash{truncate_to}		{save}	= 'mw';
+$hash{truncate_to}		{value}	= 256;
+
+#############################################################################################
+# FILTER BAR
+
+$hash{FILTER}			{save}	= 'mw';
+$hash{FILTER}			{value}	= 0;
+
+$hash{FILTER_REGEX}		{save}	= 'norm';
+$hash{FILTER_REGEX}		{value}	= 0;
+
+#############################################################################################
+# bottom menu bar
+
+$hash{OVERWRITE}{save}		= 'norm';
+$hash{OVERWRITE}{value}		= 0;
+$hash{RECURSIVE}{save}		= 'norm';
+$hash{RECURSIVE}{value}		= 0;
+
+$hash{IGNORE_FILE_TYPE}{save}	= 'mw';
+$hash{IGNORE_FILE_TYPE}{value}	= 0;
+
+$hash{PROC_DIRS}{save}		= 'mw';
+$hash{PROC_DIRS}{value}		= 0;
+
+#############################################################################################
+# CLI ONLY OPTIONS
+
+$hash{HTML_HACK}		{save}	= 'norm';
+$hash{HTML_HACK}		{value}	= 0;
+
+$hash{browser}			{save}	= 'norm';
+$hash{browser}			{value}	= 'elinks';
+
+$hash{editor}			{save}	= 'norm';
+$hash{editor}			{value}	= 'vim';
+
+$hash{save_window_size}		{save}	= 'mwg';
+$hash{save_window_size}		{value}	= 0;
+
+$hash{window_g}			{save}	= 'mwg';
+$hash{window_g}			{value}	= '';
+
+#############################################################################################
+# CONFIG DIALOG
+
+$hash{space_character}		{save}	= 'norm';
+$hash{space_character}		{value}	= ' ';
 
 $hash{fat32fix}			{save}	= 'norm';
 $hash{fat32fix}			{value}	= 0;
 $hash{fat32fix}			{value}	= 1 if lc $^O eq 'mswin32';
-
-$hash{FILTER_REGEX}		{save}	= 'norm';
-$hash{FILTER_REGEX}		{value}	= 0;
 
 $hash{file_ext_2_proc}		{save}	= 'norm';
 $hash{file_ext_2_proc}		{value}	= "jpeg|jpg|mp3|mpc|mpg|mpeg|avi|asf|wmf|wmv|ogg|ogm|rm|rmvb|mkv";
@@ -174,109 +295,9 @@ $hash{ERROR_NOTIFY}		{value}	= 0;
 $hash{ZERO_LOG}			{save}	= 'norm';
 $hash{ZERO_LOG}			{value}	= 1;
 
-$hash{HTML_HACK}		{save}	= 'norm';
-$hash{HTML_HACK}		{value}	= 0;
-
-$hash{browser}			{save}	= 'norm';
-$hash{browser}			{value}	= 'elinks';
-
-$hash{editor}			{save}	= 'norm';
-$hash{editor}			{value}	= 'vim';
-
-$hash{scene}			{save}	= 'mw';
-$hash{scene}			{value}	= 0;
-
-$hash{unscene}			{save}	= 'mw';
-$hash{unscene}			{value}	= 0;
-
-$hash{CLEANUP_GENERAL}		{save}	= 'mw';
-$hash{CLEANUP_GENERAL}		{value}	= 0;
-
-$hash{CLEANUP_GENERAL}		{save}	= 'mw';
-$hash{CLEANUP_GENERAL}		{value}	= 0;
-
-$hash{SPLIT_DDDD}		{save}	= 'mw';
-$hash{SPLIT_DDDD}		{value}	= 0;
-
-$hash{case}			{save}	= 'mw';
-$hash{case}			{value}	= 0;
-
-$hash{WORD_SPECIAL_CASING}	{save}	= 'mw';
-$hash{WORD_SPECIAL_CASING}	{value}	= 0;
-
-$hash{spaces}			{save}	= 'mw';
-$hash{spaces}			{value}	= 0;
-
-$hash{pad_dash}			{save}	= 'mw';
-$hash{pad_dash}			{value}	= 0;
-
-$hash{dot2space}		{save}	= 'mw';
-$hash{dot2space}		{value}	= 0;
-
-$hash{kill_cwords}		{save}	= 'mw';
-$hash{kill_cwords}		{value}	= 0;
-
-$hash{pad_digits}		{save}	= 'mw';
-$hash{pad_digits}		{value}	= 0;
-
-$hash{pad_digits_w_zero}	{save}	= 'mw';
-$hash{pad_digits_w_zero}	{value}	= 0;
-
-$hash{kill_sp_patterns}		{save}	= 'mw';
-$hash{kill_sp_patterns}		{value}	= 0;
-
-$hash{sp_char}			{save}	= 'mw';
-$hash{sp_char}			{value}	= 0;
-
-$hash{intr_char}		{save}	= 'mw';
-$hash{intr_char}		{value}	= 0;
-
-$hash{lc_all}			{save}	= 'mw';
-$hash{lc_all}			{value}	= 0;
-
-$hash{uc_all}			{save}	= 'mw';
-$hash{uc_all}			{value}	= 0;
-
-$hash{id3_mode}			{save}	= 'mw';
-$hash{id3_mode}			{value}	= 0;
-
-$hash{id3_guess_tag}		{save}	= 'mw';
-$hash{id3_guess_tag}		{value}	= 0;
-
-$hash{enum_opt}			{save}	= 'mw';
-$hash{enum_opt}			{value}	= 0;
-
-$hash{enum_pad}			{save}	= 'mw';
-$hash{enum_pad}			{value}	= 0;
-
-$hash{enum_pad_zeros}		{save}	= 'mw';
-$hash{enum_pad_zeros}		{value}	= 4;
-
-$hash{truncate}			{save}	= 'mw';
-$hash{truncate}			{value}	= 0;
-
-$hash{truncate_style}		{save}	= 'mw';
-$hash{truncate_style}		{value}	= 0;
-
-$hash{trunc_char}		{save}	= 'mw';
-$hash{trunc_char}		{value}	= 0;
-
-$hash{truncate_to}		{save}	= 'mw';
-$hash{truncate_to}		{value}	= 256;
-
-$hash{FILTER}			{save}	= 'mw';
-$hash{FILTER}			{value}	= 0;
-
-$hash{save_window_size}		{save}	= 'mwg';
-$hash{save_window_size}		{value}	= 0;
-
-$hash{window_g}			{save}	= 'mwg';
-$hash{window_g}			{value}	= '';
-
 our $CLI = 0;
 
-$hash{PROC_DIRS}{save}		= 'mw';
-$hash{PROC_DIRS}{value}		= 0;
+
 
 # ==============================================================================
 # files and arrays
