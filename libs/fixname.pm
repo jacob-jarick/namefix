@@ -694,19 +694,20 @@ sub fn_digits
 sub fn_enum
 {
 	my $f = shift;
+	my $fn = shift;
+
 	&main::quit("fn_enum \$f is undef\n")	if ! defined $f;
 	&main::quit("fn_enum \$f eq ''\n")	if $f eq '';
 
-	my $fn = shift;
-	return $fn if(! $config::hash{enum}{value});
+	return $fn if ! $config::hash{enum}{value};
 
-
-	if($config::hash{enum_pad}{value} == 1)
+	if($config::hash{enum_pad}{value})
 	{
 		$a = "%.$config::hash{enum_pad_zeros}{value}"."d";
 		$enum_count = sprintf($a, $enum_count);
 	}
 
+	# enum number only - remove the rest of the filename
 	if($config::hash{enum_opt}{value} == 0)
 	{
 		if(-d $f)
@@ -719,14 +720,24 @@ sub fn_enum
 			$fn =~ s/^.*\././;
 			$fn = "$enum_count$fn";
 		}
-	} elsif($config::hash{enum_opt}{value} == 1)
+	}
+	# Insert N at begining of filename
+	elsif($config::hash{enum_opt}{value} == 1)
 	{
-		# Insert N at begining of filename
 		$fn = "$enum_count$fn";
-	} elsif($config::hash{enum_opt}{value} == 2)
+	}
+	# Insert N at end of filename
+	elsif($config::hash{enum_opt}{value} == 2)
 	{
-		# Insert N at end of filename but before file ext
-		$fn =~ s/(.*)(\..*$)/$1$enum_count$2/g;
+		if(-d $f)
+		{
+			$fn = "$fn$enum_count";
+		}
+		else
+		{
+			# Insert N at end of filename but before file ext
+			$fn =~ s/(.*)(\..*$)/$1$enum_count$2/g;
+		}
 	}
 	$enum_count++;
 	return $fn;

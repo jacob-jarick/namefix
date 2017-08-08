@@ -2,8 +2,6 @@
 - Bugs -
 ========
 
-* enumerate options broken in GUI
-
 * truncate from middle is buggy
 
 * apply preview fails on recursive
@@ -12,25 +10,13 @@
   but does not show new info on list when doing applying
   but does show on preview (weird huh)
 
-
-
-===============
-=- Base Todo -=
-===============
-
-==============
-=- CLI Todo -=
-==============
-
-* Single file processing
-* test --id3-tra option
-
 ==============
 =- GUI Todo -=
 ==============
 
 High:
 
+* enum - add option for padding character/string
 * generate filename from id3 tags
 * make filter and directory text box resize with the main window.
 
@@ -43,6 +29,14 @@ Low:
 * revisting fucking utf8 issues :| ? - is this an issue with latest perl ?
 * rename all flags nicely and uppercase.
 * jpeg and other picture tag support.
+
+==============
+=- CLI Todo -=
+==============
+
+* Single file processing
+* test --id3-tra option
+
 
 ==================
 =- Known Issues -=

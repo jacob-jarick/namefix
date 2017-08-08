@@ -1519,7 +1519,7 @@ $tab6 -> Label
 my $rdb_a = $tab6 -> Radiobutton
 (
 	-text=>"Numbers only",
-	-value=>"0",
+	-value=>0,
 	-variable=>\$config::hash{enum_opt}{value},
 	-activeforeground => "blue"
 )
@@ -1533,9 +1533,9 @@ my $rdb_a = $tab6 -> Radiobutton
 my $rdb_b = $tab6 -> Radiobutton
 (
 	-text=>"Insert at Start",
-	-value=>"1",
+	-value=>1,
 	-variable=>\$config::hash{enum_opt}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -1547,7 +1547,7 @@ my $rdb_b = $tab6 -> Radiobutton
 my $rdb_c = $tab6 -> Radiobutton
 (
 	-text=>"Insert at End",
-	-value=>"2",
+	-value=>2,
 	-variable=>\$config::hash{enum_opt}{value},
 	-activeforeground => "blue"
 )
