@@ -2,6 +2,10 @@
 - Bugs -
 ========
 
+* enumerate options broken in GUI
+
+* truncate from middle is buggy
+
 * apply preview fails on recursive
 
 * guessing tags rename works

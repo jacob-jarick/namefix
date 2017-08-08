@@ -1648,7 +1648,7 @@ $tab7 -> Label
 my $trunc_chk = $tab7 -> Checkbutton
 (
 	-text=>"Truncate",
-	-variable=>\$config::hash{truncate},
+	-variable=>\$config::hash{truncate}{value},
 	-activeforeground => "blue"
 )
 -> grid

@@ -742,19 +742,19 @@ sub fn_truncate
 	my $tl = "";
 
 	my $l = length $fn;
-	if($l > $config::hash{'max_fn_length'}{'value'} && $config::hash{'truncate_to'}{'value'} == 0)
+	if($l > $config::hash{'max_fn_length'}{value} && $config::hash{'truncate_to'}{value} == 0)
 	{
 		&misc::plog(0, "sub fn_truncate: $fn exceeds maximum filename length.");
 		return;
 	}
-	if($l > $config::hash{'truncate_to'}{'value'} && $config::truncate == 1)
+	if($l > $config::hash{'truncate_to'}{value} && $config::hash{truncate}{value} == 1)
 	{
 		my $file_ext = $fn;
 		$file_ext =~ s/^(.*)(\.)(.{3,4})$/$3/e;
 		my $file_ext_length = length $file_ext;	# doesnt include . in length
 
 		# var for adjusted truncate to, gotta take into account file ext length
-		$tl = $config::hash{'truncate_to'}{'value'} - ($file_ext_length + 1);	# tl = truncate length
+		$tl = $config::hash{'truncate_to'}{value} - ($file_ext_length + 1);	# tl = truncate length
 
 		# adjust tl to allow for added enum digits if enum mode is enabled
 		if($config::hash{enum}{value} && $config::hash{enum_pad}{value})
