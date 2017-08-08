@@ -425,7 +425,7 @@ sub edit_prefs
         (
         	-text=>"Save",
         	-activebackground => 'white',
-        	-command => sub { &config::save; }
+        	-command => sub { &config::save_hash; }
         )
         -> grid
         (

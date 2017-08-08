@@ -116,8 +116,16 @@ else
 
 &undo::clear;
 &misc::clog		if $config::hash{ZERO_LOG}{value};
-&config::load_hash	if -f $config::hash_tsv;
-# print Dumper(\%config::hash);
+
+if (-f $config::hash_tsv)
+{
+	&config::load_hash;
+}
+else
+{
+	print "didnt find config file: $config::hash_tsv\n";
+}
+
 #--------------------------------------------------------------------------------------------------------------
 # Begin Gui
 #--------------------------------------------------------------------------------------------------------------
@@ -155,6 +163,17 @@ $mw->bind('<KeyPress>' => sub
     if($Tk::event->K eq 'Escape')
     {
 	print "Escape Key = stopping any actions\n";
+	&config::halt;
+    }
+
+        # Escape
+    if($Tk::event->K eq 'F1')
+    {
+	print
+"
+\$config::hash{save_window_size}{value} = $config::hash{save_window_size}{value}
+
+";
 	&config::halt;
     }
 

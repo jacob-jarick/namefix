@@ -222,7 +222,7 @@ $hash{FILTER}			{save}	= 'mw';
 $hash{FILTER}			{value}	= 0;
 
 $hash{FILTER_IGNORE_CASE}	{save}	= 'mw';
-$hash{FILTER}			{value}	= 0;
+$hash{FILTER_IGNORE_CASE}	{value}	= 0;
 
 our $filter_string	= '';
 
@@ -259,7 +259,7 @@ $hash{space_character}		{value}	= ' ';
 $hash{max_fn_length}		{save}	= 'norm';
 $hash{max_fn_length}		{value}	= 256;
 
-$hash{save_window_size}		{save}	= 'mwg';
+$hash{save_window_size}		{save}	= 'norm';
 $hash{save_window_size}		{value}	= 0;
 
 $hash{window_g}			{save}	= 'mwg';
@@ -333,12 +333,14 @@ sub save_hash
 	&misc::plog(1, "config::save_hash $hash_tsv");
 	&misc::null_file($hash_tsv);
 
+	$hash{window_g}{value} = $main::mw->geometry if !$CLI;
+
 	my @types = ('norm', 'mw', 'mwg');
 
 	for my $t (@types)
 	{
 		&misc::file_append($hash_tsv, "\n######## $t ########\n\n");
-		for my $k(sort { $a cmp $b } keys %hash)
+		for my $k(sort { lc $a cmp lc $b } keys %hash)
 		{
 			if(! defined $hash{$k})
 			{
@@ -358,15 +360,9 @@ sub save_hash
 
 sub save_hash_helper
 {
-	$hash{window_g}{value} = $main::mw->geometry if !$CLI;
-
 	my $k = shift;
-	if(!defined $hash{$k}{value})
-	{
-		my $w = "config::save_hash key $k has no value";
-		&misc::plog(1, $w);
-		print "$w\n$k = \n" . Dumper($hash{$k});
-	}
+	&main::quit("config::save_hash key '$k' not found in hash". Dumper($hash{$k})) if(!defined $hash{$k});
+	&main::quit("config::save_hash \$hash{$k}{value} is undef". Dumper($hash{$k})) if(!defined $hash{$k}{value});
 	&misc::file_append($hash_tsv, "$k\t\t".$hash{$k}{value}."\n");
 }
 
@@ -378,27 +374,20 @@ sub load_hash
 	my %h = ();
 	for my $line(@tmp)
 	{
-		next if $line !~ /.*\t.*/;
 		$line =~ s/\n$//;
 		$line =~ s/\r$//;
 
-		next if($line !~ /(\S+)\t+(.*?)$/);
+		next if $line !~ /.*\t.*/;
+		next if($line !~ /(\S+)\t+(.+?)$/);
 		my ($k, $v) = ($1, $2);
 
-		if(!defined $hash{$k})
-		{
-			&main::quit("load_hash: unknown value '$k' in config hash.tsv");
-		}
+		&main::quit("load_hash: unknown value '$k' in config hash.tsv") if !defined $hash{$k};
 
-		$h{$1}{value} = $2;
+		$h{$k} = $v;
 	}
-	for my $k(keys %hash)
+	for my $k(keys %h)
 	{
-		if(!defined $h{$k}{value} || $h{$k}{value} ne '')
-		{
-			next;
-		}
-		$hash{$k}{value} = $h{$k}{value};
+		$hash{$k}{value} = $h{$k};
 	}
 }
 
@@ -407,10 +396,6 @@ sub load_hash
 #--------------------------------------------------------------------------------------------------------------
 
 # MEMO: to self, config file is for stuff under prefs dialog only and defaults is for mainwindow vars
-sub save
-{
-	&save_hash;
-}
 
 sub halt
 {
