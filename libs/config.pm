@@ -8,73 +8,14 @@ use Cwd;
 use Data::Dumper::Concise;
 use FindBin qw($Bin);
 
-our $version 		= "4.1.2";
-our $home		= &misc::get_home;
-
-our $load_defaults	= 0;
 our $dir		= cwd;
 our $cwd		= cwd;
 our $hlist_cwd		= cwd;
 
-# system internal vars
-our $LISTING		= 0;
-our $PREVIEW		= 0;
-our $RUN		= 0;
-our $STOP		= 0;
-
-our $BR_DONE		= 0;	# a block rename has occured
-our $MR_DONE		= 0;	# a manual rename has occured
-
-our $LOG_STDOUT		= 0;
-our $UNDO		= 0;
-
-our $WORD_SPECIAL_CASING= 0;
-our $SUGGEST_FSFIX 	= 0;	# suggest using fsfix var
-
-# insert flags
-
-# id3 tag txt
-our $id3_alb_str	= '';
-our $id3_art_str	= '';
-our $id3_tra_str	= '';
-our $id3_tit_str	= '';
-our $id3_gen_str	= '';
-our $id3_year_str	= '';
-our $id3_com_str	= '';
-
-# txt
-our $ins_front_str	= '';
-our $ins_end_str	= '';
-our $ins_str_old	= '';
-our $ins_str		= '';
-our $filter_string	= '';
-
-# truncate options
-
-# undo options
-our @undo_cur	= ();	# undo array - current filenames
-our @undo_pre	= ();	# undo array - previous filenames
-our $undo_dir	= '';	# directory to preform undo in
-
-our $tags_rm		= 0;	# counter for number of tags removed
-our @find_arr		= ();
-
-our $hlist_newfile_row	= 0;
-our $hlist_file_row	= 1;
-our $change 		= 0;
-our $id3_writeme	= 0;	# used for missing id3v1/id3v2 that can be filled in from each other
-our $tmpfilefound 	= 0;
-our $delay		= 3;		# delay
-our $update_delay	= $delay;	# initial value
-
-our $hlist_file		= '';
-our $hlist_file_new	= '';
-our $tmpfilelist 	= '';
-our $last_recr_dir 	= '';
-
-# writable_extensions - stolen from mp3::tag and tidied
-our @id3v2_exts = ('mp3', 'mp2', 'ogg', 'mpg', 'mpeg', 'mp4', 'aiff', 'flac', 'ape', 'ram', 'mpc');
-our $id3_ext_regex = join('|', @id3v2_exts);
+our $version 		= '4.1.2';
+our $folderimage 	= '';
+our $fileimage   	= '';
+our $home		= &misc::get_home;
 
 # File locations
 our $thanks		= "$Bin/txt/thanks.txt";
@@ -82,12 +23,47 @@ our $todo		= "$Bin/txt/todo.txt";
 our $about		= "$Bin/txt/about.txt";
 our $links		= "$Bin/txt/links.txt";
 our $changelog		= "$Bin/txt/changelog.txt";;
-
 our $fonts_file		= "$home/.namefix.pl/fonts.ini";
 our $bookmark_file	= "$home/.namefix.pl/bookmarks.txt";
 our $undo_cur_file	= "$home/.namefix.pl/undo.current.filenames.txt";
 our $undo_pre_file	= "$home/.namefix.pl/undo.previous.filenames.txt";
 our $undo_dir_file	= "$home/.namefix.pl/undo.dir.txt";
+
+# system internal FLAGS
+our $CLI		= 0;
+our $FOUND_TMP	 	= 0;
+our $LISTING		= 0;
+our $PREVIEW		= 0;
+our $RUN		= 0;
+our $STOP		= 0;
+our $BR_DONE		= 0;	# a block rename has occured
+our $MR_DONE		= 0;	# a manual rename has occured
+our $UNDO		= 0;
+our $SUGGEST_FSFIX 	= 0;	# suggest using fsfix var
+
+# undo VARS
+our @undo_cur		= ();	# undo array - current filenames
+our @undo_pre		= ();	# undo array - previous filenames
+our $undo_dir		= '';	# directory to preform undo in
+
+# hlist vars
+our $hlist_newfile_row	= 0;
+our $hlist_file_row	= 1;
+our $change 		= 0;
+our $delay		= 3;		# delay
+our $update_delay	= $delay;	# initial value
+our $hlist_file		= '';
+our $hlist_file_new	= '';
+
+# misc vars
+our $tags_rm		= 0;	# counter for number of tags removed
+our @find_arr		= ();
+our $tmpfilelist 	= '';
+our $last_recr_dir 	= '';
+
+# writable_extensions - stolen from mp3::tag and tidied
+our @id3v2_exts = ('mp3', 'mp2', 'ogg', 'mpg', 'mpeg', 'mp4', 'aiff', 'flac', 'ape', 'ram', 'mpc');
+our $id3_ext_regex = join('|', @id3v2_exts);
 
 our %hash	= ();
 our $hash_tsv	= &misc::get_home."/.namefix.pl/config_hash.tsv";
@@ -124,6 +100,11 @@ $hash{INS_END}{value}		= 0;
 $hash{INS_START}{save}		= 'mw';
 $hash{INS_START}{value}		= 0;
 
+our $ins_front_str	= '';
+our $ins_end_str	= '';
+our $ins_str_old	= '';
+our $ins_str		= '';
+
 #############################################################################################
 # MP3 TAB
 
@@ -133,43 +114,63 @@ $hash{id3_mode}			{value}	= 0;
 $hash{id3_guess_tag}		{save}	= 'mw';
 $hash{id3_guess_tag}		{value}	= 0;
 
-
+$hash{AUDIO_FORCE}		{save}	= 'mw';
+$hash{AUDIO_FORCE}		{value}	= 0;
 
 $hash{RM_AUDIO_TAGS}		{save}	= 'mw';
 $hash{RM_AUDIO_TAGS}		{value}	= 0;
-$hash{AUDIO_FORCE}		{save}	= 'mw';
-$hash{AUDIO_FORCE}		{value}	= 0;
-$hash{AUDIO_SET_ALBUM}		{save}	= 'mw';
-$hash{AUDIO_SET_ALBUM}		{value}	= 0;
-$hash{AUDIO_SET_COMMENT}	{save}	= 'mw';
-$hash{AUDIO_SET_COMMENT}	{value}	= 0;
+
 $hash{AUDIO_SET_ARTIST}		{save}	= 'mw';
 $hash{AUDIO_SET_ARTIST}		{value}	= 0;
+
+$hash{AUDIO_SET_ALBUM}		{save}	= 'mw';
+$hash{AUDIO_SET_ALBUM}		{value}	= 0;
+
 $hash{AUDIO_SET_GENRE}		{save}	= 'mw';
 $hash{AUDIO_SET_GENRE}		{value}	= 0;
+
 $hash{AUDIO_SET_YEAR}		{save}	= 'mw';
 $hash{AUDIO_SET_YEAR}		{value}	= 0;
+
+$hash{AUDIO_SET_COMMENT}	{save}	= 'mw';
+$hash{AUDIO_SET_COMMENT}	{value}	= 0;
+
+# id3 tag txt
+our $id3_alb_str	= '';
+our $id3_art_str	= '';
+our $id3_tra_str	= '';
+our $id3_tit_str	= '';
+our $id3_gen_str	= '';
+our $id3_year_str	= '';
+our $id3_com_str	= '';
+
 
 #############################################################################################
 # MISC TAB
 
-$hash{uc_all}{save}	= 'mw';
-$hash{uc_all}{value}	= 0;
+$hash{uc_all}		{save}	= 'mw';
+$hash{uc_all}		{value}	= 0;
 
-$hash{lc_all}{save}	= 'mw';
-$hash{lc_all}{value}	= 0;
+$hash{lc_all}		{save}	= 'mw';
+$hash{lc_all}		value}	= 0;
 
-$hash{RM_DIGITS}{save}		= 'mw';
+$hash{intr_char}		{save}	= 'mw';
+$hash{intr_char}		{value}	= 0;
+
+$hash{sp_char}			{save}	= 'mw';
+$hash{sp_char}			{value}	= 0;
+
+$hash{RM_DIGITS}{save}		= 'mw'; #	RM ^Digits
 $hash{RM_DIGITS}{value}		= 0;
 
-$hash{scene}			{save}	= 'mw';
-$hash{scene}			{value}	= 0;
+$hash{digits}{save}     	= 'mw';
+$hash{digits}{value}     	= 0;
 
 $hash{unscene}			{save}	= 'mw';
 $hash{unscene}			{value}	= 0;
 
-$hash{digits}{save}     	= 'mw';
-$hash{digits}{value}     	= 0;
+$hash{scene}			{save}	= 'mw';
+$hash{scene}			{value}	= 0;
 
 $hash{pad_dash}			{save}	= 'mw';
 $hash{pad_dash}			{value}	= 0;
@@ -180,26 +181,15 @@ $hash{pad_digits}		{value}	= 0;
 $hash{pad_digits_w_zero}	{save}	= 'mw';
 $hash{pad_digits_w_zero}	{value}	= 0;
 
-$hash{sp_char}			{save}	= 'mw';
-$hash{sp_char}			{value}	= 0;
-
-$hash{intr_char}		{save}	= 'mw';
-$hash{intr_char}		{value}	= 0;
-
-$hash{lc_all}			{save}	= 'mw';
-$hash{lc_all}			{value}	= 0;
-
-$hash{uc_all}			{save}	= 'mw';
-$hash{uc_all}			{value}	= 0;
-
 $hash{SPLIT_DDDD}		{save}	= 'mw';
 $hash{SPLIT_DDDD}		{value}	= 0;
 
 #############################################################################################
 # ENUMURATE TAB
 
-$hash{enum}		{save}	= 'mw';
-$hash{enum}		{value}	= 0;
+$hash{enum}			{save}	= 'mw';
+$hash{enum}			{value}	= 0;
+
 $hash{enum_opt}			{save}	= 'mw';
 $hash{enum_opt}			{value}	= 0;
 
@@ -212,19 +202,18 @@ $hash{enum_pad_zeros}		{value}	= 4;
 #############################################################################################
 # TRUNCATE TAB
 
-$hash{max_fn_length}		{save}	= 'norm';
-$hash{max_fn_length}		{value}	= 256;
 $hash{truncate}			{save}	= 'mw';
 $hash{truncate}			{value}	= 0;
+
+$hash{truncate_to}		{save}	= 'mw';
+$hash{truncate_to}		{value}	= 256;
 
 $hash{truncate_style}		{save}	= 'mw';
 $hash{truncate_style}		{value}	= 0;
 
 $hash{trunc_char}		{save}	= 'mw';
-$hash{trunc_char}		{value}	= 0;
+$hash{trunc_char}		{value}	= '';
 
-$hash{truncate_to}		{save}	= 'mw';
-$hash{truncate_to}		{value}	= 256;
 
 #############################################################################################
 # FILTER BAR
@@ -232,14 +221,11 @@ $hash{truncate_to}		{value}	= 256;
 $hash{FILTER}			{save}	= 'mw';
 $hash{FILTER}			{value}	= 0;
 
-$hash{FILTER_REGEX}		{save}	= 'norm';
-$hash{FILTER_REGEX}		{value}	= 0;
+our $filter_string	= '';
 
 #############################################################################################
 # bottom menu bar
 
-$hash{OVERWRITE}{save}		= 'norm';
-$hash{OVERWRITE}{value}		= 0;
 $hash{RECURSIVE}{save}		= 'norm';
 $hash{RECURSIVE}{value}		= 0;
 
@@ -261,24 +247,41 @@ $hash{browser}			{value}	= 'elinks';
 $hash{editor}			{save}	= 'norm';
 $hash{editor}			{value}	= 'vim';
 
+#############################################################################################
+# CONFIG DIALOG - MAIN TAB
+
+$hash{space_character}		{save}	= 'norm';
+$hash{space_character}		{value}	= ' ';
+
+$hash{max_fn_length}		{save}	= 'norm';
+$hash{max_fn_length}		{value}	= 256;
+
 $hash{save_window_size}		{save}	= 'mwg';
 $hash{save_window_size}		{value}	= 0;
 
 $hash{window_g}			{save}	= 'mwg';
 $hash{window_g}			{value}	= '';
 
-#############################################################################################
-# CONFIG DIALOG
+our $load_defaults		= 0;	# save main window options
 
-$hash{space_character}		{save}	= 'norm';
-$hash{space_character}		{value}	= ' ';
+#############################################################################################
+# CONFIG DIALOG - ADVANCED TAB
 
 $hash{fat32fix}			{save}	= 'norm';
 $hash{fat32fix}			{value}	= 0;
 $hash{fat32fix}			{value}	= 1 if lc $^O eq 'mswin32';
 
+$hash{FILTER_REGEX}		{save}	= 'norm';
+$hash{FILTER_REGEX}		{value}	= 0;
+
 $hash{file_ext_2_proc}		{save}	= 'norm';
 $hash{file_ext_2_proc}		{value}	= "jpeg|jpg|mp3|mpc|mpg|mpeg|avi|asf|wmf|wmv|ogg|ogm|rm|rmvb|mkv";
+
+$hash{OVERWRITE}{save}		= 'norm';
+$hash{OVERWRITE}{value}		= 0;
+
+#############################################################################################
+# CONFIG DIALOG - DEBUG TAB
 
 $hash{debug}			{save}	= 'norm';
 $hash{debug}			{value}	= 0;
@@ -295,9 +298,9 @@ $hash{ERROR_NOTIFY}		{value}	= 0;
 $hash{ZERO_LOG}			{save}	= 'norm';
 $hash{ZERO_LOG}			{value}	= 1;
 
-our $CLI = 0;
-
-
+#############################################################################################
+# DONE - MENU CLI and DIALOG options - DONE
+#############################################################################################
 
 # ==============================================================================
 # files and arrays
@@ -378,9 +381,6 @@ sub load_hash
 		$hash{$k}{value} = $h{$k}{value};
 	}
 }
-
-our $folderimage 	= '';
-our $fileimage   	= '';
 
 #--------------------------------------------------------------------------------------------------------------
 # Save Config File

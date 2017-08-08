@@ -288,9 +288,9 @@ sub fn_rename
 
 		if( -e $tmpfile && !$config::hash{OVERWRITE}{value})
 		{
-			$config::tmpfilefound++;
+			$config::FOUND_TMP++;
 			$config::tmpfilelist .= "$tmpfile\n";
-			&misc::plog(0, "sub fn_rename: \"$tmpfile\" <- tmpfilefound");
+			&misc::plog(0, "sub fn_rename: \"$tmpfile\" <- FOUND_TMP");
 			return 0;
 		}
 		rename $file, $tmpfile;

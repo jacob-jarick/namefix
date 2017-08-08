@@ -19,7 +19,7 @@ sub prep_globals
 	$config::id3_change	= 0;
         $config::change 	= 0;
         $config::SUGGEST_FSFIX 	= 0;
-        $config::tmpfilefound 	= 0;
+        $config::FOUND_TMP 	= 0;
         $config::tags_rm	= 0;
         $config::percent_done	= 0;
         $config::last_recr_dir 	= '';
@@ -110,7 +110,7 @@ sub run
 	&misc::plog(1, "$config::id3_change mp3s tags $t_s been updated.")			if($config::hash{id3_mode}{value});
         &misc::plog(1, "$config::tags_rm mp3 tags $t_s been removed")				if($config::tags_rm);
 	&misc::plog(0, "unable to rename $config::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($config::SUGGEST_FSFIX != 0);
-	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")	if($config::tmpfilefound);
+	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")	if($config::FOUND_TMP);
 
 	# cleanup
 

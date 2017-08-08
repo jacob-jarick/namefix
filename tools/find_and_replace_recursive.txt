@@ -1,9 +1,9 @@
 $faw
 
-git grep -l 'suggestF' | xargs sed -i 's/suggestF/SUGGEST_FSFIX/g'
+git grep -l 'FOUND_TMP' | xargs sed -i 's/FOUND_TMP/FOUND_TMP/g'
 
 
-git grep -l 'replace' | xargs sed -i 's/\$config::replace/\$config::hash{'replace'}{'value'}/g'
-git grep -l 'replace' | xargs sed -i 's/\$replace/\$config::hash{'replace'}{'value'}/g'
+git grep -l 'INS_END' | xargs sed -i 's/\$config::INS_END/\$config::hash{'INS_END'}{'value'}/g'
+git grep -l 'INS_END' | xargs sed -i 's/\$INS_END/\$config::hash{'INS_END'}{'value'}/g'
 
 
