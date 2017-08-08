@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use Data::Dumper::Concise;
+
 use English;
 use Cwd;
 use Carp qw(cluck longmess shortmess);
@@ -366,7 +368,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq "--unscene" || $arg eq "--usc")
 	{
-		$hash{unscene}{value} = 1;
+		$config::hash{unscene}{value} = 1;
 	}
 
 	elsif($arg eq "--uc-all" || $arg eq "--uc")
@@ -393,15 +395,15 @@ for my $arg(@ARGV)
 	}
 	elsif($arg eq "--pad-hyphen" || $arg eq "--ph")
 	{
-		$hash{pad_dash}{value} = 1;
+		$config::hash{pad_dash}{value} = 1;
 	}
 	elsif($arg eq "--pad-num" || $arg eq "--pn")
 	{
-		$hash{pad_digits}{value} = 1;
+		$config::hash{pad_digits}{value} = 1;
 	}
 	elsif($arg eq "--pad-num-w0" || $arg eq "--p0")
 	{
-		$hash{pad_digits_w_zero}{value} = 1;
+		$config::hash{pad_digits_w_zero}{value} = 1;
 	}
 	elsif($arg eq "--pad-nnnn-wx" || $arg eq "--px")
 	{
@@ -621,6 +623,8 @@ if($config::hash{HTML_HACK}{value})
 	system("$config::hash{browser}{value} $main::html_file");
 }
 
+print Dumper(\%config::hash);
+
 exit;
 
 #--------------------------------------------------------------------------------------------------------------
@@ -646,18 +650,18 @@ sub proc_short_opts
 		elsif($short_opt eq "o") { $config::hash{dot2space}{value}		= 1; }
 		elsif($short_opt eq "p") { $config::hash{spaces}{value}			= 1; }
 		elsif($short_opt eq "s") { $config::hash{scene}{value}				= 1; }
-		elsif($short_opt eq "u") { $hash{unscene}{value}			= 1; }
+		elsif($short_opt eq "u") { $config::hash{unscene}{value}			= 1; }
 		elsif($short_opt eq "x") { $config::hash{FILTER_REGEX}{value}		= 0; }
 
-		elsif($short_opt eq "0") { $hash{pad_digits_w_zero}{value}			= 1; }
+		elsif($short_opt eq "0") { $config::hash{pad_digits_w_zero}{value}			= 1; }
 		elsif($short_opt eq "A") { $config::hash{IGNORE_FILE_TYPE}{value}			= 1; }
 		elsif($short_opt eq "C") { $config::hash{WORD_SPECIAL_CASING}{value}	= 1; }
 		elsif($short_opt eq "D") { $config::hash{PROC_DIRS}{value}		= 1; }
 		elsif($short_opt eq "F") { $config::hash{fat32fix}{value}		= 1; }
-		elsif($short_opt eq "H") { $hash{pad_dash}{value}			= 1; }
+		elsif($short_opt eq "H") { $config::hash{pad_dash}{value}			= 1; }
 		elsif($short_opt eq "K") { $config::hash{kill_cwords}{value}		= 1; }
 		elsif($short_opt eq "L") { $config::hash{lc_all}{value}			= 1; }
-		elsif($short_opt eq "N") { $hash{pad_digits}{value}				= 1; }
+		elsif($short_opt eq "N") { $config::hash{pad_digits}{value}				= 1; }
 		elsif($short_opt eq "P") { $config::hash{kill_sp_patterns}{value}	= 1; }
 		elsif($short_opt eq "U") { $config::hash{uc_all}{value}			= 1; }
 

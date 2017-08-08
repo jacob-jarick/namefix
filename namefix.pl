@@ -117,7 +117,7 @@ else
 &undo::clear;
 &misc::clog		if $config::hash{ZERO_LOG}{value};
 &config::load_hash	if -f $config::hash_tsv;
-
+# print Dumper(\%config::hash);
 #--------------------------------------------------------------------------------------------------------------
 # Begin Gui
 #--------------------------------------------------------------------------------------------------------------
@@ -912,6 +912,7 @@ $balloon->attach
 	-msg => "Guess tag from filename\n\nNote: Only works when mp3s are named in 1 of the formats.\n\nTrack Number - Title\nTrack Number - Artist - Title\nArtist - Album - Track Number - Title\nArtist - Track Number - Title\nArtist - Title"
 );
 
+
 my $AUDIO_FORCE_chk = $tab2 -> Checkbutton
 (
 	-text=>"Overwrite",
@@ -961,7 +962,7 @@ $tab2->Label(-text=>" ")
 my $id3_art_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Artist as:",
-	-variable=>\$config::hash{$config::hash{AUDIO_SET_ARTIST}{value}}{value},
+	-variable=>\$config::hash{AUDIO_SET_ARTIST}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -975,7 +976,7 @@ $balloon->attach
 	$id3_art_chk,
 	-msg => "Set all mp3 artist tags to user entered string."
 );
-
+&main::quit("END found the 0\n") if(defined $config::hash{0});
 my $id3_art_ent = $tab2 -> Entry
 (
 	-textvariable=>\$config::id3_art_str
@@ -1047,6 +1048,7 @@ my $genre_combo = $tab2 -> JComboBox
 	-sticky=>"nw"
 );
 
+
 # print Dumper(\@config::genres);
 
 my $id3_year_chk = $tab2 -> Checkbutton
@@ -1081,7 +1083,7 @@ my $id3_year_ent = $tab2 -> Entry
 my $id3_com_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Comment as:",
-	-variable=>\$config::hash{$config::hash{AUDIO_SET_COMMENT}{value}}{value},
+	-variable=>\$config::hash{AUDIO_SET_COMMENT}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1744,12 +1746,7 @@ $tab7 -> Label
 # draw filter
 #--------------------------------------------------------------------------------------------------------------
 
-our $f_frame = $main::frm_right2->Frame()
--> pack
-(
-        -side=>"top",
-
-);
+our $f_frame = $main::frm_right2->Frame() -> pack(-side=>"top",);
 
 $f_frame -> Checkbutton
 (
@@ -1786,7 +1783,7 @@ $f_frame->Entry
 
 $f_frame -> Checkbutton
 (
-	-text=>"Case Sensitive",
+	-text=>"Case In-Sensitive",
 	-variable=>\$config::hash{FILTER_IGNORE_CASE}{value},
 	-activeforeground => "blue"
 )
@@ -1811,10 +1808,9 @@ if($config::hash{window_g}{value} ne "")
 {
 	$mw ->geometry($config::hash{window_g}{value});
 }
-
 &menu::draw;
-# &dir_hlist::draw_list;
 &dir::ls_dir;
+
 MainLoop;
 
 

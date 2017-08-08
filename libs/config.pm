@@ -148,11 +148,11 @@ our $id3_com_str	= '';
 #############################################################################################
 # MISC TAB
 
-$hash{uc_all}		{save}	= 'mw';
-$hash{uc_all}		{value}	= 0;
+$hash{uc_all}			{save}	= 'mw';
+$hash{uc_all}			{value}	= 0;
 
-$hash{lc_all}		{save}	= 'mw';
-$hash{lc_all}		value}	= 0;
+$hash{lc_all}			{save}	= 'mw';
+$hash{lc_all}			{value}	= 0;
 
 $hash{intr_char}		{save}	= 'mw';
 $hash{intr_char}		{value}	= 0;
@@ -219,6 +219,9 @@ $hash{trunc_char}		{value}	= '';
 # FILTER BAR
 
 $hash{FILTER}			{save}	= 'mw';
+$hash{FILTER}			{value}	= 0;
+
+$hash{FILTER_IGNORE_CASE}	{save}	= 'mw';
 $hash{FILTER}			{value}	= 0;
 
 our $filter_string	= '';
@@ -337,6 +340,16 @@ sub save_hash
 		&misc::file_append($hash_tsv, "\n######## $t ########\n\n");
 		for my $k(sort { $a cmp $b } keys %hash)
 		{
+			if(! defined $hash{$k})
+			{
+				print Dumper(\%hash);
+				&main::quit("save_hash \$hash{$k} is undef\n");
+			}
+			if(! defined $hash{$k}{save})
+			{
+				print Dumper(\%hash);
+				&main::quit("save_hash \$hash{$k}{save} is undef\n");
+			}
 			next if $hash{$k}{save} ne $t;
 			save_hash_helper($k);
 		}
@@ -345,7 +358,7 @@ sub save_hash
 
 sub save_hash_helper
 {
-	$config::hash{window_g}{value} = $main::mw->geometry if !$CLI;
+	$hash{window_g}{value} = $main::mw->geometry if !$CLI;
 
 	my $k = shift;
 	if(!defined $hash{$k}{value})
@@ -353,7 +366,6 @@ sub save_hash_helper
 		my $w = "config::save_hash key $k has no value";
 		&misc::plog(1, $w);
 		print "$w\n$k = \n" . Dumper($hash{$k});
-		next;
 	}
 	&misc::file_append($hash_tsv, "$k\t\t".$hash{$k}{value}."\n");
 }
@@ -369,8 +381,16 @@ sub load_hash
 		next if $line !~ /.*\t.*/;
 		$line =~ s/\n$//;
 		$line =~ s/\r$//;
-		my ($k, $v) = split(/\t+/, $line);
-		$h{$k}{value} = $v;
+
+		next if($line !~ /(\S+)\t+(.*?)$/);
+		my ($k, $v) = ($1, $2);
+
+		if(!defined $hash{$k})
+		{
+			&main::quit("load_hash: unknown value '$k' in config hash.tsv");
+		}
+
+		$h{$1}{value} = $2;
 	}
 	for my $k(keys %hash)
 	{

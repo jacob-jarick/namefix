@@ -89,7 +89,7 @@ sub edit_prefs
 	$main::balloon->attach
 	(
 		$e_ent,
-		-msg => "Enter your \ prefered space delimiter.\n\nPopular choices are: \"_\" \".\" \" \" "
+		-msg => "Enter your \ prefered space delimiter.\n\nPopular choices are: ".'_ or " " or . '
 	);
 
 	$tab1 -> Label

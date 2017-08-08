@@ -17,6 +17,8 @@ sub draw
 	$mbar = $main::mw -> Menu();
 	$main::mw->configure(-menu=>$mbar);
 
+	$menu::mbar->delete(0, 4);
+
 	my $file = $mbar -> cascade
 	(
 	        -label=>'File',
@@ -77,8 +79,7 @@ sub draw
 	        -command=>\&edit_lists::pat_list
 	);
 
-	&bookmark::bm_redraw_menu;     # creates bookmark menu, still wip
-
+ 	&bookmark::draw_menu;     # creates bookmark menu, still wip
 }
 
 

@@ -134,7 +134,7 @@ sub fix
 
 	# set user entered audio tags overrides if any
 
-	if($config::hash{$config::hash{AUDIO_SET_ARTIST}{value}}{value} && $IS_AUDIO_FILE)
+	if($config::hash{AUDIO_SET_ARTIST}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{artist} = $config::id3_art_str;
 		$tag	= 1;
@@ -158,7 +158,7 @@ sub fix
 		$tag	= 1;
 	}
 
-	if($config::hash{$config::hash{AUDIO_SET_COMMENT}{value}}{value} && $IS_AUDIO_FILE)
+	if($config::hash{AUDIO_SET_COMMENT}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{comment} = $config::id3_com_str;
 		$tag	= 1;

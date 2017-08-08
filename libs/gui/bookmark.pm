@@ -18,8 +18,6 @@ sub bm_add
 	my $name = shift;
 	my $dir = shift;
 
-# 	print "\$name = $name\n";
-
 	if($name !~ /\:(\\|\/)$/)
 	{
 		$name =~ s/(.*)(\\|\/)(.*?$)/$3/;	# set name to directory
@@ -33,13 +31,11 @@ sub bm_add
 # bookmark redraw menu
 #--------------------------------------------------------------------------------------------------------------
 
-sub bm_redraw_menu
+sub draw_menu
 {
 	my $n = "";
 	my $u = "";
 	my $count = 0;
-
-	$menu::mbar->delete(2, 3);	# delete menus Bookmarks and help - then redraw
 
         $bookmarks = $menu::mbar -> cascade
         (
@@ -246,7 +242,7 @@ sub edit_bookmark_list
         				'end'
         			)
         		);
-                        &bm_redraw_menu;
+                        &menu::draw;
         	}
         )
         -> grid

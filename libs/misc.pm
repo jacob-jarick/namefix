@@ -271,9 +271,9 @@ sub clr_no_save
 	$config::id3_com_str		= '';
 	$config::id3_year_str 		= '';
 
-	$config::hash{$config::hash{AUDIO_SET_ARTIST}{value}}{value}	= 0;
+	$config::hash{AUDIO_SET_ARTIST}{value}	= 0;
 	$config::hash{AUDIO_SET_ALBUM}{value}	= 0;
-	$config::hash{$config::hash{AUDIO_SET_COMMENT}{value}}{value}	= 0;
+	$config::hash{AUDIO_SET_COMMENT}{value}	= 0;
 	$config::hash{AUDIO_SET_GENRE}{value} 	= 0;
         $config::hash{AUDIO_SET_YEAR}{value} 	= 0;
 	$config::hash{RM_AUDIO_TAGS}{value}		= 0;
