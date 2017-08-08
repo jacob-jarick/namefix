@@ -18,12 +18,12 @@ sub prep_globals
 	$config::STOP		= 0;
 	$config::id3_change	= 0;
         $config::change 	= 0;
-        $config::suggestF 	= 0;
+        $config::SUGGEST_FSFIX 	= 0;
         $config::tmpfilefound 	= 0;
-        $config::enum_count 	= 0;
         $config::tags_rm	= 0;
         $config::percent_done	= 0;
         $config::last_recr_dir 	= '';
+        $fixname::enum_count	= 0;
 
         # escape replace word if regexp is disabled
         $config::ins_str_old_escaped = $config::ins_str_old;
@@ -76,7 +76,7 @@ sub run
 		nf_print::p('..');
 	}
 
-        if(!$config::RECURSIVE)
+        if(!$config::hash{RECURSIVE}{value})
         {
 		my @dirlist = &dir::dir_filtered($config::dir);
 
@@ -93,7 +93,7 @@ sub run
 			&fixname::fix($f, cwd)	if -f $f || ($config::hash{PROC_DIRS}{value} && -d $f);
                 }
         }
-        if($config::RECURSIVE)
+        if($config::hash{RECURSIVE}{value})
         {
 		&misc::plog(4, "sub run::namefix: recursive mode");
 		@config::find_arr = ();
@@ -109,7 +109,7 @@ sub run
         &misc::plog(1, "$config::change files $t_s been modified");
 	&misc::plog(1, "$config::id3_change mp3s tags $t_s been updated.")			if($config::hash{id3_mode}{value});
         &misc::plog(1, "$config::tags_rm mp3 tags $t_s been removed")				if($config::tags_rm);
-	&misc::plog(0, "unable to rename $config::suggestF files.\nTry enabling \"FS Fix\".")	if($config::suggestF != 0);
+	&misc::plog(0, "unable to rename $config::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($config::SUGGEST_FSFIX != 0);
 	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")	if($config::tmpfilefound);
 
 	# cleanup

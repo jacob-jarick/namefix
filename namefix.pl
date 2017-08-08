@@ -359,7 +359,7 @@ $frm_bottom -> Label()
 my $recr_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Recursive",
-	-variable=>\$config::RECURSIVE,
+	-variable=>\$config::hash{RECURSIVE}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -398,7 +398,7 @@ $frm_bottom -> Label()
 my $I_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Process ALL Files",
-	-variable=>\$config::IGNORE_FILE_TYPE,
+	-variable=>\$config::hash{IGNORE_FILE_TYPE}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -710,7 +710,7 @@ $frm_left -> Label
 my $R_chk = $frm_left -> Checkbutton
 (
 	-text=>"Remove:",
-	-variable=>\$config::replace,
+	-variable=>\$config::hash{replace}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -770,7 +770,7 @@ $balloon->attach
 my $f_chk = $frm_left -> Checkbutton
 (
 	-text=>"Front Append:",
-	-variable=>\$config::INS_START,
+	-variable=>\$config::hash{INS_START}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -915,7 +915,7 @@ $balloon->attach
 my $AUDIO_FORCE_chk = $tab2 -> Checkbutton
 (
 	-text=>"Overwrite",
-	-variable=>\$config::AUDIO_FORCE,
+	-variable=>\$config::hash{AUDIO_FORCE}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -940,7 +940,7 @@ $tab2->Label(-text=>" ")
 my $rm_id3v2 = $tab2 -> Checkbutton
 (
 	-text=>"RM id3 tags",
-	-variable=>\$config::RM_AUDIO_TAGS,
+	-variable=>\$config::hash{RM_AUDIO_TAGS}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -961,7 +961,7 @@ $tab2->Label(-text=>" ")
 my $id3_art_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Artist as:",
-	-variable=>\$config::AUDIO_SET_ARTIST,
+	-variable=>\$config::hash{$config::hash{AUDIO_SET_ARTIST}{value}}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -990,7 +990,7 @@ my $id3_art_ent = $tab2 -> Entry
 my $id3_alb_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Album as:",
-	-variable=>\$config::AUDIO_SET_ALBUM,
+	-variable=>\$config::hash{AUDIO_SET_ALBUM}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1016,7 +1016,7 @@ my $id3_alb_ent = $tab2 -> Entry(-textvariable=>\$config::id3_alb_str)
 my $id3_genre_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Genre as:",
-	-variable=>\$config::AUDIO_SET_GENRE,
+	-variable=>\$config::hash{AUDIO_SET_GENRE}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1052,7 +1052,7 @@ my $genre_combo = $tab2 -> JComboBox
 my $id3_year_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Year as:",
-	-variable=>\$config::AUDIO_SET_YEAR,
+	-variable=>\$config::hash{AUDIO_SET_YEAR}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1081,7 +1081,7 @@ my $id3_year_ent = $tab2 -> Entry
 my $id3_com_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Comment as:",
-	-variable=>\$config::AUDIO_SET_COMMENT,
+	-variable=>\$config::hash{$config::hash{AUDIO_SET_COMMENT}{value}}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1201,13 +1201,13 @@ $balloon->attach
 my $d_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM ^Digits",
-	-variable=>\$config::digits,
+	-variable=>\$config::hash{digits}{value},
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($config::digits == 1)
+		if($config::hash{digits}{value} == 1)
 		{
-			$config::RM_DIGITS = 0;
+			$config::hash{RM_DIGITS}{value} = 0;
 		}
 	}
 )
@@ -1226,13 +1226,13 @@ $balloon->attach
 my $N_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM all Digits",
-	-variable=>\$config::RM_DIGITS,
+	-variable=>\$config::hash{RM_DIGITS}{value},
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($config::RM_DIGITS == 1)
+		if($config::hash{RM_DIGITS}{value} == 1)
 		{
-			$config::digits = 0;
+			$config::hash{digits}{value} = 0;
 		}
 	}
 )
@@ -1258,13 +1258,13 @@ my $tab5_label_scene = $tab5 -> Label
 my $unscene_chk = $tab5 -> Checkbutton
 (
 	-text=>"un-Scenify",
-	-variable=>\$config::UNSCENE,
+	-variable=>\$config::hash{unscene}{value},
 	-activeforeground => "blue",
 	-command=> sub
 	{
-		if($config::UNSCENE == 1)
+		if($config::hash{unscene}{value} == 1)
 		{
-			$config::SCENE = 0;
+			$config::hash{scene}{value} = 0;
 		}
 	}
 )
@@ -1279,13 +1279,13 @@ $balloon->attach
 my $scene_chk = $tab5 -> Checkbutton
 (
 	-text=>"Scenify",
-	-variable=>\$config::SCENE,
+	-variable=>\$config::hash{scene}{value},
 	 -activeforeground => "blue",
 	 -command=> sub
 	 {
-	 	if($config::SCENE == 1)
+	 	if($config::hash{scene}{value} == 1)
 	 	{
-	 		$config::UNSCENE = 0;
+	 		$config::hash{unscene}{value} = 0;
 	 	}
 	 }
 )
@@ -1316,7 +1316,7 @@ $tab5 -> Label
 my $pad_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad - w space",
-	-variable=>\$config::pad_dash,
+	-variable=>\$config::hash{pad_dash}{save},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1334,7 +1334,7 @@ $balloon->attach
 my $pad_d_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad NN w -",
-	-variable=>\$config::pad_digits,
+	-variable=>\$config::hash{pad_digits}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1352,7 +1352,7 @@ $balloon->attach
 my $pad_d_w_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad NxNN w 0",
-	-variable=>\$config::pad_digits_w_zero,
+	-variable=>\$config::hash{pad_digits_w_zero}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1370,7 +1370,7 @@ $balloon->attach
 my $chk_split_dddd = $tab5 -> Checkbutton
 (
 	-text=>"Pad NNNN with x",
-	-variable=>\$config::SPLIT_DDDD,
+	-variable=>\$config::hash{SPLIT_DDDD}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1415,7 +1415,7 @@ $tab6 -> Label
 my $n_chk = $tab6 -> Checkbutton
 (
 	-text=>"Enumerate",
-	-variable=>\$config::enum,
+	-variable=>\$config::hash{enum}{value},
 	-activeforeground => "blue"
 )
 -> grid
@@ -1576,7 +1576,7 @@ $tab7 -> Label
 my $trunc_chk = $tab7 -> Checkbutton
 (
 	-text=>"Truncate",
-	-variable=>\$config::truncate,
+	-variable=>\$config::hash{truncate},
 	-activeforeground => "blue"
 )
 -> grid

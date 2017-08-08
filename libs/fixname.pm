@@ -10,8 +10,10 @@ use Cwd;
 use Carp;
 
 #--------------------------------------------------------------------------------------------------------------
-#
+# vars
 #--------------------------------------------------------------------------------------------------------------
+
+our $enum_count = 0;
 
 sub fix
 {
@@ -39,7 +41,6 @@ sub fix
         my $tl	       		= 0;	# used for truncating - TODO rename to something obvious
         my $file_ext_length	= 0;
         my $trunc_char_length	= 0;
-        my $enum_n		= 0;
         my $PRINT		= 0;
         my $file_ext		= '';
 
@@ -58,18 +59,18 @@ sub fix
         # -----------------------------------------
 	# make sure file is allowed to be renamed
         # -----------------------------------------
-        &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::IGNORE_FILE_TYPE);
+        &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::hash{IGNORE_FILE_TYPE}{value});
 
         my $RENAME 		= 0;
 
         # file extionsion check
-        $RENAME = 1 if(-f $file && ($config::IGNORE_FILE_TYPE || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
+        $RENAME = 1 if(-f $file && ($config::hash{IGNORE_FILE_TYPE}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
 
 #	dir check, is a directory, dir mode is enabled
         $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
 
 #	processing all file types & dirs
-        $RENAME = 1 if($config::hash{PROC_DIRS}{value} && $config::IGNORE_FILE_TYPE);
+        $RENAME = 1 if($config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value});
 
 #	didnt match filter
         return if($config::hash{FILTER}{value} && &filter::match($file) == 0);
@@ -82,7 +83,7 @@ sub fix
 
 	if
 	(
-        	$config::RECURSIVE &&
+        	$config::hash{RECURSIVE}{value} &&
                 $config::last_recr_dir ne "$config::cwd" &&	# if pwd != last dir
                 $config::hash{PROC_DIRS}{value} == 0
         )
@@ -133,38 +134,38 @@ sub fix
 
 	# set user entered audio tags overrides if any
 
-	if($config::AUDIO_SET_ARTIST && $IS_AUDIO_FILE)
+	if($config::hash{$config::hash{AUDIO_SET_ARTIST}{value}}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{artist} = $config::id3_art_str;
 		$tag	= 1;
 	}
 
-	if($config::AUDIO_SET_ALBUM && $IS_AUDIO_FILE)
+	if($config::hash{AUDIO_SET_ALBUM}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{album} = $config::id3_alb_str;
 		$tag	= 1;
 	}
 
-	if($config::AUDIO_SET_GENRE && $IS_AUDIO_FILE)
+	if($config::hash{AUDIO_SET_GENRE}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{genre} = $config::id3_gen_str;
 		$tag	= 1;
 	}
 
-	if($config::AUDIO_SET_YEAR && $IS_AUDIO_FILE)
+	if($config::hash{AUDIO_SET_YEAR}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{year} = $config::id3_year_str;
 		$tag	= 1;
 	}
 
-	if($config::AUDIO_SET_COMMENT && $IS_AUDIO_FILE)
+	if($config::hash{$config::hash{AUDIO_SET_COMMENT}{value}}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{comment} = $config::id3_com_str;
 		$tag	= 1;
 	}
 
 	# rm mp3 id3v2 tags
-        if($IS_AUDIO_FILE && $config::RM_AUDIO_TAGS)
+        if($IS_AUDIO_FILE && $config::hash{RM_AUDIO_TAGS}{value})
 	{
         	if(!$config::PREVIEW)
 		{
@@ -262,7 +263,7 @@ sub fix
 
 # returns 1 if succesfull rename, errors are printed to console
 
-# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::OVERWRITE) "
+# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::hash{OVERWRITE}{value}) "
 # bloody fat32 returns positive when we dont want it, ie case correcting
 
 sub fn_rename
@@ -285,7 +286,7 @@ sub fn_rename
 	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
 	{
 
-		if( -e $tmpfile && !$config::OVERWRITE)
+		if( -e $tmpfile && !$config::hash{OVERWRITE}{value})
 		{
 			$config::tmpfilefound++;
 			$config::tmpfilelist .= "$tmpfile\n";
@@ -293,7 +294,7 @@ sub fn_rename
 			return 0;
 		}
 		rename $file, $tmpfile;
-		if(-e $newfile && !$config::OVERWRITE)
+		if(-e $newfile && !$config::hash{OVERWRITE}{value})
 		{
 			rename $tmpfile, $file;
 			&misc::plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");
@@ -307,9 +308,9 @@ sub fn_rename
 	}
 	else
 	{
-		if(-e $newfile && !$config::OVERWRITE)
+		if(-e $newfile && !$config::hash{OVERWRITE}{value})
 		{
-			$config::suggestF++;
+			$config::SUGGEST_FSFIX++;
 			&misc::plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");
 			return 0;
 		}
@@ -435,7 +436,7 @@ sub fn_replace
 	&main::quit("fn_replace \$fn eq ''\n")		if $FILE && $fn eq '';
 
 
-	if($config::replace)
+	if($config::hash{replace}{value})
         {
                 $fn =~ s/($config::ins_str_old_escaped)/$config::ins_str/ig;
         }
@@ -465,11 +466,7 @@ sub fn_unscene
 	&main::quit("fn_unscene \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_unscene \$fn eq ''\n")		if $fn eq '';
 
-
-	if($config::UNSCENE)
-	{
-		$fn =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie;
-	}
+	$fn =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie if($config::hash{unscene}{value});
 
 	return $fn;
 }
@@ -480,7 +477,7 @@ sub fn_scene
 	&main::quit("fn_scene \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_scene \$fn eq ''\n")	if $fn eq '';
 
-	if($config::SCENE)
+	if($config::hash{scene}{value})
 	{
 		$fn =~ s/(^|\W)(\d+)(x)(\d+)/$1.qw(S).$2.qw(E).$4/ie;
 	}
@@ -525,7 +522,7 @@ sub fn_split_dddd
 	&main::quit("fn_split_dddd \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_split_dddd \$fn eq ''\n")	if $fn eq '';
 
-        if($config::SPLIT_DDDD)
+        if($config::hash{SPLIT_DDDD}{value})
 	{
         	if($fn =~ /(.*?)(\d{3,4})(.*)/)
                 {
@@ -637,7 +634,7 @@ sub fn_pad_digits
 	&main::quit("fn_pad_digits \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-	if($config::pad_digits)
+	if($config::hash{pad_digits}{value})
 	{
 		# optimize me
 
@@ -656,7 +653,7 @@ sub fn_pad_digits_w_zero
 	&main::quit("fn_pad_digits_w_zero \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-	if($config::pad_digits_w_zero)
+	if($config::hash{pad_digits_w_zero}{value})
 	{
 		# rm extra 0's
 		$fn =~ s/(^|\s+|\.|_)(\d{1,2})(x0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."x".$4.$5/ieg;
@@ -684,7 +681,7 @@ sub fn_digits
 	&main::quit("fn_digits \$fn eq ''\n")		if $fn eq '';
 
 	my $f = $fn;
-	if($config::digits)
+	if($config::hash{digits}{value})
 	{
 		# remove leading digits (Track Nr)
 		$fn =~ s/^\d*\s*//;
@@ -699,39 +696,37 @@ sub fn_enum
 	&main::quit("fn_enum \$f eq ''\n")	if $f eq '';
 
 	my $fn = shift;
-	if($config::enum)
+	return $fn if(! $config::hash{enum}{value});
+
+
+	if($config::hash{enum_pad}{value} == 1)
 	{
-        	my $enum_n = $config::enum_count;
-
-        	if($config::hash{enum_pad}{value} == 1)
-        	{
-        		$a = "%.$config::hash{enum_pad_zeros}{value}"."d";
-        		$enum_n = sprintf($a, $enum_n);
- 		}
-
-        	if($config::hash{enum_opt}{value} == 0)
-        	{
-        		if(-d $f)
-        		{
-        			$fn = $enum_n;
-        		}
-        		else
-        		{
-        			# numbers and file ext only
-        			$fn =~ s/^.*\././;
-        			$fn = "$enum_n"."$fn";
-        		}
-        	} elsif($config::hash{enum_opt}{value} == 1)
-        	{
-			# Insert N at begining of filename
-        	        $fn = "$enum_n"."$fn";
-		} elsif($config::hash{enum_opt}{value} == 2)
-		{
-			# Insert N at end of filename but before file ext
-			$fn =~ s/(.*)(\..*$)/$1$enum_n$2/g;
-		}
-                $config::enum_count++;
+		$a = "%.$config::hash{enum_pad_zeros}{value}"."d";
+		$enum_count = sprintf($a, $enum_count);
 	}
+
+	if($config::hash{enum_opt}{value} == 0)
+	{
+		if(-d $f)
+		{
+			$fn = $enum_count;
+		}
+		else
+		{
+			# numbers and file ext only
+			$fn =~ s/^.*\././;
+			$fn = "$enum_count$fn";
+		}
+	} elsif($config::hash{enum_opt}{value} == 1)
+	{
+		# Insert N at begining of filename
+		$fn = "$enum_count$fn";
+	} elsif($config::hash{enum_opt}{value} == 2)
+	{
+		# Insert N at end of filename but before file ext
+		$fn =~ s/(.*)(\..*$)/$1$enum_count$2/g;
+	}
+	$enum_count++;
 	return $fn;
 }
 
@@ -760,13 +755,13 @@ sub fn_truncate
 		$tl = $config::hash{'truncate_to'}{'value'} - ($file_ext_length + 1);	# tl = truncate length
 
 		# adjust tl to allow for added enum digits if enum mode is enabled
-		if($config::enum && $config::hash{enum_pad}{value})
+		if($config::hash{enum}{value} && $config::hash{enum_pad}{value})
 		{
 			$tl = $tl - $config::hash{enum_pad_zeros}{value};
 		}
-		elsif($config::enum)
+		elsif($config::hash{enum}{value})
 		{
-			$tl = $tl - length "$config::enum_count";
+			$tl = $tl - length "$config::hash{enum}{value}_count";
 		}
 
 		# start truncating
@@ -875,7 +870,7 @@ sub fn_front_a
 	&main::quit("fn_front_a \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_front_a \$fn eq ''\n")		if $fn eq '';
 
-        if($config::INS_START)
+        if($config::hash{INS_START}{value})
         {
                 $fn = $config::ins_front_str.$fn;
         }
@@ -902,7 +897,7 @@ sub fn_pad_dash
 	&main::quit("fn_pad_dash \$fn eq ''\n")		if $fn eq '';
 
 	my $f = $fn;
-	if($config::pad_dash == 1)
+	if($config::hash{pad_dash}{value})
 	{
 		$fn =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$config::hash{space_character}{value}."-".$config::hash{space_character}{value}/eg;
 	}
@@ -916,7 +911,7 @@ sub fn_rm_digits
 	&main::quit("fn_rm_digits \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-        if($config::RM_DIGITS)
+        if($config::hash{RM_DIGITS}{value})
         {
         	my $t_s = "";
                 $fn =~ s/\d+//g;

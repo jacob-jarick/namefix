@@ -31,7 +31,7 @@ sub ls_dir
 	$config::dir = cwd();
 	&dir_hlist::draw_list;
 
-        if($config::RECURSIVE)
+        if($config::hash{RECURSIVE}{value})
         {
 		@config::find_arr = ();
 	        find(\&find_fix, $config::dir);
@@ -134,7 +134,7 @@ sub ls_dir_print
 
 	# recursive padding
 
-	if(-d $file && $config::RECURSIVE)
+	if(-d $file && $config::hash{RECURSIVE}{value})
 	{
 		&nf_print::p(' ', '<BLANK>');
 		&nf_print::p("$d/$file", "$d/$file");

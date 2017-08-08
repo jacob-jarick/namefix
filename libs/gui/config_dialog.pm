@@ -309,10 +309,10 @@ sub edit_prefs
 		-sticky=>"nw"
 	);
 
-	my $OVERWRITE_chk = $tab7 -> Checkbutton
+	my $overwrite_chk = $tab7 -> Checkbutton
 	(
 		-text=>"Overwrite",
-		-variable=>\$config::OVERWRITE,
+		-variable=>\$config::hash{OVERWRITE}{value},
 		-activeforeground => "blue"
 	)
 	-> grid
@@ -324,7 +324,7 @@ sub edit_prefs
 
 	$main::balloon->attach
 	(
-		$OVERWRITE_chk,
+		$overwrite_chk,
 		-msg => "Overwrite: Preform rename without checking if new filename exists.\n\nThis Option is not saved, Please be carefull witht this option"
 	);
 

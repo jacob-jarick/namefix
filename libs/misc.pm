@@ -257,8 +257,8 @@ sub clr_no_save
 {
 	# clear options that are never saved
 
-        $config::replace		= 0;
-        $config::INS_START		= 0;
+        $config::hash{replace}{value}		= 0;
+        $config::hash{INS_START}{value}		= 0;
         $config::end_a			= 0;
 	$config::ins_str_old         	= '';
         $config::ins_str         	= '';
@@ -271,12 +271,12 @@ sub clr_no_save
 	$config::id3_com_str		= '';
 	$config::id3_year_str 		= '';
 
-	$config::AUDIO_SET_ARTIST	= 0;
-	$config::AUDIO_SET_ALBUM	= 0;
-	$config::AUDIO_SET_COMMENT	= 0;
-	$config::AUDIO_SET_GENRE 	= 0;
-        $config::AUDIO_SET_YEAR 	= 0;
-	$config::RM_AUDIO_TAGS		= 0;
+	$config::hash{$config::hash{AUDIO_SET_ARTIST}{value}}{value}	= 0;
+	$config::hash{AUDIO_SET_ALBUM}{value}	= 0;
+	$config::hash{$config::hash{AUDIO_SET_COMMENT}{value}}{value}	= 0;
+	$config::hash{AUDIO_SET_GENRE}{value} 	= 0;
+        $config::hash{AUDIO_SET_YEAR}{value} 	= 0;
+	$config::hash{RM_AUDIO_TAGS}{value}		= 0;
 }
 
 #--------------------------------------------------------------------------------------------------------------
