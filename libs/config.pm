@@ -196,6 +196,12 @@ $hash{enum}			{value}	= 0;
 $hash{enum_opt}			{save}	= 'mw';
 $hash{enum_opt}			{value}	= 0;
 
+$hash{enum_add}			{save}	= 'mw';
+$hash{enum_add}			{value}	= 0;
+
+our $enum_start_str		= '';
+our $enum_end_str		= '';
+
 $hash{enum_pad}			{save}	= 'mw';
 $hash{enum_pad}			{value}	= 0;
 

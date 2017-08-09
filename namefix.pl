@@ -373,9 +373,9 @@ $frm_bottom -> Label()
 
 my $recr_chk = $frm_bottom -> Checkbutton
 (
-	-text=>"Recursive",
+	-text=>'Recursive',
 	-variable=>\$config::hash{RECURSIVE}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -386,9 +386,9 @@ my $recr_chk = $frm_bottom -> Checkbutton
 
 my $D_chk = $frm_bottom -> Checkbutton
 (
-	-text=>"Process Dirs",
+	-text=>'Process Dirs',
 	-variable=>\$config::hash{PROC_DIRS}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -412,9 +412,9 @@ $frm_bottom -> Label()
 
 my $I_chk = $frm_bottom -> Checkbutton
 (
-	-text=>"Process ALL Files",
+	-text=>'Process ALL Files',
 	-variable=>\$config::hash{IGNORE_FILE_TYPE}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -425,25 +425,25 @@ my $I_chk = $frm_bottom -> Checkbutton
 $balloon->attach
 (
 	$I_chk,
-	-msg => "Process and rename all files, not just media files."
+	-msg => 'Process and rename all files, not just media files'
 );
 
 $frm_bottom -> Label
 (
-	-text=>" "
+	-text=>' '
 )
 -> grid
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nwe"
+	-sticky=>'nwe'
 );
 
 my $tm_chk = $frm_bottom -> Checkbutton
 (
 	-text=>"Preview",
 	-variable=>\$config::PREVIEW,
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -459,7 +459,7 @@ $balloon->attach
 
 $frm_bottom -> Label
 (
-	-text=>" "
+	-text=>' '
 )
 -> grid
 (
@@ -470,8 +470,8 @@ $frm_bottom -> Label
 
 $frm_bottom -> Button
 (
-	-text=>"STOP!",
-	-activebackground => "red",
+	-text=>'STOP!',
+	-activebackground => 'red',
 	-command => sub
 	{
 		if($config::STOP)	# stub
@@ -487,7 +487,7 @@ $frm_bottom -> Button
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 $frm_bottom -> Label
@@ -498,7 +498,7 @@ $frm_bottom -> Label
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nwse"
+	-sticky=>'nwse'
 );
 
 my $ls_but = $frm_bottom -> Button
@@ -511,24 +511,24 @@ my $ls_but = $frm_bottom -> Button
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 $balloon->attach
 (
 	$ls_but,
-	-msg => "List Directory Contents."
+	-msg => "List Directory Contents"
 );
 
 $frm_bottom -> Label
 (
-	-text=>" "
+	-text=>' '
 )
 -> grid
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 $frm_bottom -> Button
@@ -541,23 +541,25 @@ $frm_bottom -> Button
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 $frm_bottom -> Label
 (
-	-text=>" "
+	-text=>' '
 )
 -> grid
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 #--------------------------------------------------------------------------------------------------------------
 # main options / tab1 / frame left
 #--------------------------------------------------------------------------------------------------------------
+
+$row = 1;
 
 $frm_left -> Label
 (
@@ -566,7 +568,7 @@ $frm_left -> Label
 )
 -> grid
 (
-	-row=>1,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>1,
 	-sticky=>'nw'
@@ -574,14 +576,14 @@ $frm_left -> Label
 
 my $clean_chk = $frm_left -> Checkbutton
 (
-	-text=>"General Cleanup",
+	-text=>'General Cleanup',
 	-variable=>\$config::hash{CLEANUP_GENERAL}{value},
-	-activeforeground => "blue",
+	-activeforeground => 'blue',
 	-command=> sub {}
 )
 -> grid
 (
-	-row=>2,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -593,13 +595,13 @@ $balloon->attach
 
 my $case_chk = $frm_left -> Checkbutton
 (
-	-text=>"Normal Casing",
+	-text=>'Normal Casing',
 	-variable=>\$config::hash{case}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>3,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw',
 	-columnspan=>2
@@ -612,13 +614,13 @@ $balloon->attach
 
 my $w_chk = $frm_left -> Checkbutton
 (
-	-text=>"Specific Casing",
+	-text=>'Specific Casing',
 	-variable=>\$config::hash{WORD_SPECIAL_CASING}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>4,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -630,13 +632,13 @@ $balloon->attach
 
 my $p_chk = $frm_left -> Checkbutton
 (
-	-text=>"Spaces",
+	-text=>'Spaces',
 	-variable=>\$config::hash{spaces}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>5,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -650,11 +652,11 @@ my $o_chk = $frm_left -> Checkbutton
 (
 	-text=>". to Space",
 	-variable=>\$config::hash{dot2space}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>6,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -670,20 +672,20 @@ $frm_left -> Label
 )
 -> grid
 (
-	-row=>8,
+	-row=>$row++,
 	-column=>1,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 my $K_chk = $frm_left -> Checkbutton
 (
 	-text=>"RM Word List",
 	-variable=>\$config::hash{kill_cwords}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>10,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -695,13 +697,13 @@ $balloon->attach
 
 my $P_chk = $frm_left -> Checkbutton
 (
-	-text=>"RM Pattern List",
+	-text=>'RM Pattern List',
 	-variable=>\$config::hash{kill_sp_patterns}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>11,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -713,24 +715,24 @@ $balloon->attach
 
 $frm_left -> Label
 (
-	-text=>" "
+	-text=>' '
 )
 -> grid
 (
-	-row=>12,
+	-row=>$row++,
 	-column=>1,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 my $R_chk = $frm_left -> Checkbutton
 (
 	-text=>"Remove:",
 	-variable=>\$config::hash{replace}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>16,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -747,7 +749,7 @@ my $R_ent1 = $frm_left -> Entry
 )
 -> grid
 (
-	-row=>17,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -763,7 +765,7 @@ $frm_left -> Label
 )
 -> grid
 (
-	-row=>18,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -772,7 +774,7 @@ my $R_ent2 = $frm_left -> Entry
 	-textvariable=>\$config::ins_str
 )
 -> grid(
-	-row=>19,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -786,11 +788,11 @@ my $f_chk = $frm_left -> Checkbutton
 (
 	-text=>"Front Append:",
 	-variable=>\$config::hash{INS_START}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>20,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -806,7 +808,7 @@ my $f_ent = $frm_left -> Entry
 )
 -> grid
 (
-	-row=>21,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -815,11 +817,11 @@ my $e_chk = $frm_left -> Checkbutton
 (
 	-text=>"End Append:",
 	-variable=>\$config::end_a,
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>22,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -834,7 +836,7 @@ my $e_ent = $frm_left -> Entry
 )
 -> grid
 (
-	-row=>23,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -853,7 +855,7 @@ my $clr_but = $frm_left -> Button
 )
 -> grid
 (
-	-row=>24,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>"sw"
 );
@@ -886,7 +888,7 @@ my $id3_mode_chk = $tab2 -> Checkbutton
 	-text=>"Process Tags",
 	-variable=>\$config::hash{id3_mode}{value},
 	-command=>\&dir_hlist::draw_list,
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -912,7 +914,7 @@ my $id3_guess_tag_chk = $tab2 -> Checkbutton
 (
 	-text=>"Guess tags",
 	-variable=>\$config::hash{id3_guess_tag}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -932,7 +934,7 @@ my $AUDIO_FORCE_chk = $tab2 -> Checkbutton
 (
 	-text=>"Overwrite",
 	-variable=>\$config::hash{AUDIO_FORCE}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -957,7 +959,7 @@ my $rm_id3v2 = $tab2 -> Checkbutton
 (
 	-text=>"RM id3 tags",
 	-variable=>\$config::hash{RM_AUDIO_TAGS}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -978,7 +980,7 @@ my $id3_art_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Artist as:",
 	-variable=>\$config::hash{AUDIO_SET_ARTIST}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -1007,7 +1009,7 @@ my $id3_alb_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Album as:",
 	-variable=>\$config::hash{AUDIO_SET_ALBUM}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -1033,7 +1035,7 @@ my $id3_genre_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Genre as:",
 	-variable=>\$config::hash{AUDIO_SET_GENRE}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -1070,7 +1072,7 @@ my $id3_year_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Year as:",
 	-variable=>\$config::hash{AUDIO_SET_YEAR}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -1099,7 +1101,7 @@ my $id3_com_chk = $tab2 -> Checkbutton
 (
 	-text=>"Set Comment as:",
 	-variable=>\$config::hash{AUDIO_SET_COMMENT}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
@@ -1175,6 +1177,8 @@ $balloon->attach
 # misc tab options
 #--------------------------------------------------------------------------------------------------------------
 
+$row = 1;
+
 $tab5 -> Label
 (
 	-justify=>"left",
@@ -1183,7 +1187,7 @@ $tab5 -> Label
 )
 -> grid
 (
-	-row=>1,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1192,12 +1196,12 @@ my $U_chk = $tab5 -> Checkbutton
 (
 	-text=>"Uppercase All",
 	-variable=>\$config::hash{uc_all}{value},
-	-activeforeground => "blue",
+	-activeforeground => 'blue',
 	-command=> sub { $config::hash{lc_all}{value} = 0 if $config::hash{uc_all}{value}; }
 )
 -> grid
 (
-	-row=>2,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1206,12 +1210,12 @@ my $L_chk = $tab5 -> Checkbutton
 (
 	-text=>"Lowercase All",
 	-variable=>\$config::hash{lc_all}{value},
-	-activeforeground => "blue",
+	-activeforeground => 'blue',
 	-command=> sub { $config::hash{uc_all}{value} = 0 if $config::hash{lc_all}{value}; }
 )
 -> grid
 (
-	-row=>4,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1220,11 +1224,11 @@ my $i_chk = $tab5 -> Checkbutton
 (
 	-text=>"International",
 	-variable=>\$config::hash{intr_char}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>8,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1238,11 +1242,11 @@ my $b_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM Chars",
 	-variable=>\$config::hash{sp_char}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>10,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1256,7 +1260,7 @@ my $d_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM ^Digits",
 	-variable=>\$config::hash{digits}{value},
-	-activeforeground => "blue",
+	-activeforeground => 'blue',
 	-command=> sub
 	{
 		if($config::hash{digits}{value} == 1)
@@ -1267,7 +1271,7 @@ my $d_chk = $tab5 -> Checkbutton
 )
 -> grid
 (
-	-row=>14,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1281,7 +1285,7 @@ my $N_chk = $tab5 -> Checkbutton
 (
 	-text=>"RM all Digits",
 	-variable=>\$config::hash{RM_DIGITS}{value},
-	-activeforeground => "blue",
+	-activeforeground => 'blue',
 	-command=> sub
 	{
 		if($config::hash{RM_DIGITS}{value} == 1)
@@ -1292,7 +1296,7 @@ my $N_chk = $tab5 -> Checkbutton
 )
 -> grid
 (
-	-row=>16,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1304,7 +1308,7 @@ my $tab5_label_scene = $tab5 -> Label
 )
 -> grid
 (
-	-row=>18,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1313,7 +1317,7 @@ my $unscene_chk = $tab5 -> Checkbutton
 (
 	-text=>"un-Scenify",
 	-variable=>\$config::hash{unscene}{value},
-	-activeforeground => "blue",
+	-activeforeground => 'blue',
 	-command=> sub
 	{
 		if($config::hash{unscene}{value} == 1)
@@ -1322,7 +1326,7 @@ my $unscene_chk = $tab5 -> Checkbutton
 		}
 	}
 )
--> grid(-row=>20, -column=>1, -sticky=>'nw');
+-> grid(-row=>$row++, -column=>1, -sticky=>'nw');
 
 $balloon->attach
 (
@@ -1334,7 +1338,7 @@ my $scene_chk = $tab5 -> Checkbutton
 (
 	-text=>"Scenify",
 	-variable=>\$config::hash{scene}{value},
-	 -activeforeground => "blue",
+	 -activeforeground => 'blue',
 	 -command=> sub
 	 {
 	 	if($config::hash{scene}{value} == 1)
@@ -1345,7 +1349,7 @@ my $scene_chk = $tab5 -> Checkbutton
 )
 -> grid
 (
-	-row=>22,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1362,7 +1366,7 @@ $tab5 -> Label
 )
 -> grid
 (
-	-row=>24,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1371,11 +1375,11 @@ my $pad_N_to_NN = $tab5 -> Checkbutton
 (
 	-text=>"Pad N to NN",
 	-variable=>\$config::hash{pad_N_to_NN}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>26,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1389,11 +1393,11 @@ my $pad_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad - w space",
 	-variable=>\$config::hash{pad_dash}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>27,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1407,11 +1411,11 @@ my $pad_d_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad NN w -",
 	-variable=>\$config::hash{pad_digits}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>28,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1425,11 +1429,11 @@ my $pad_d_w_chk = $tab5 -> Checkbutton
 (
 	-text=>"Pad NxNN w 0",
 	-variable=>\$config::hash{pad_digits_w_zero}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>30,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1443,11 +1447,11 @@ my $chk_split_dddd = $tab5 -> Checkbutton
 (
 	-text=>"Pad NNNN with x",
 	-variable=>\$config::hash{SPLIT_DDDD}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>31,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1463,13 +1467,15 @@ $tab5 -> Label
 )
 ->grid
 (
-	-row=>32,
+	-row=>$row++,
 	-column=>1
 );
 
 #--------------------------------------------------------------------------------------------------------------
 # Enumerate Tab
 #--------------------------------------------------------------------------------------------------------------
+
+$row = 1;
 
 $tab6 -> Label
 (
@@ -1478,7 +1484,7 @@ $tab6 -> Label
 )
 -> grid
 (
-	-row=>1,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1488,11 +1494,11 @@ my $n_chk = $tab6 -> Checkbutton
 (
 	-text=>"Enumerate",
 	-variable=>\$config::hash{enum}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>2,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1510,7 +1516,7 @@ $tab6 -> Label
 )
 -> grid
 (
-	-row=>3,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1521,11 +1527,11 @@ my $rdb_a = $tab6 -> Radiobutton
 	-text=>"Numbers only",
 	-value=>0,
 	-variable=>\$config::hash{enum_opt}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>4,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1539,7 +1545,7 @@ my $rdb_b = $tab6 -> Radiobutton
 )
 -> grid
 (
-	-row=>5,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1549,11 +1555,11 @@ my $rdb_c = $tab6 -> Radiobutton
 	-text=>"Insert at End",
 	-value=>2,
 	-variable=>\$config::hash{enum_opt}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>6,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1561,12 +1567,92 @@ my $rdb_c = $tab6 -> Radiobutton
 
 $tab6 -> Label
 (
-	-justify=>"left",
-	-text=>"\nPadding:\n"
+	-text=>" "
+)
+->grid
+(
+	-row=>$row++,
+	-column=>1
+);
+
+my $enum_add_checkbox = $tab6 -> Checkbutton
+(
+	-text=>"Add Strings",
+	-variable=>\$config::hash{enum_add}{value},
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>7,
+	-row=>$row++,
+	-column=>1,
+	-columnspan=>2,
+	-sticky=>'nw'
+);
+$balloon->attach
+(
+	$enum_add_checkbox,
+	-msg => "Pad enumerated digits with string.\neg:\nhello.jpg\nto\n01-holidays-hello.jpg"
+);
+
+
+$tab6 -> Label
+(
+	-text=>"Start String:"
+)
+-> grid
+(
+	-row=>$row++,
+	-column=>1,
+	-columnspan=>2,
+	-sticky=>'nw'
+);
+my $entry_enum_start_str = $tab6 -> Entry
+(
+	-textvariable=>\$config::enum_start_str
+)
+-> grid(
+	-row=>$row++,
+	-column=>1,
+	-columnspan=>2,
+	-sticky=>'nw'
+);
+
+$tab6 -> Label(-text=>'End String:')
+-> grid
+(
+	-row=>$row++,
+	-column=>1,
+	-columnspan=>2,
+	-sticky=>'nw'
+);
+my $entry_enum_end_str = $tab6 -> Entry
+(
+	-textvariable=>\$config::enum_end_str
+)
+-> grid(
+	-row=>$row++,
+	-column=>1,
+	-columnspan=>2,
+	-sticky=>'nw'
+);
+$tab6 -> Label
+(
+	-text=>" "
+)
+->grid
+(
+	-row=>$row++,
+	-column=>1
+);
+
+$tab6 -> Label
+(
+	-justify=>"left",
+	-text=>"Padding:"
+)
+-> grid
+(
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1576,11 +1662,11 @@ my $enum_pad_chk = $tab6 -> Checkbutton
 (
 	-text=>"Pad with zeros",
 	-variable=>\$config::hash{enum_pad}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>8,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>2,
 	-sticky=>'nw'
@@ -1601,9 +1687,9 @@ my $spin_pad_enum = $tab6 -> Spinbox
 )
 -> grid
 (
-	-row=>10,
+	-row=>$row,
 	-column=>1,
-	-sticky=>"ne"
+	-sticky=>'ne'
 );
 
 $tab6 -> Label
@@ -1613,7 +1699,7 @@ $tab6 -> Label
 )
 -> grid
 (
-	-row=>10,
+	-row=>$row++,
 	-column=>2,
 	-sticky=>'nw'
 );
@@ -1624,13 +1710,15 @@ $tab6 -> Label
 )
 ->grid
 (
-	-row=>22,
+	-row=>$row++,
 	-column=>1
 );
 
 #--------------------------------------------------------------------------------------------------------------
 # Truncate
 #--------------------------------------------------------------------------------------------------------------
+
+$row = 1;
 
 $tab7 -> Label
 (
@@ -1639,7 +1727,7 @@ $tab7 -> Label
 )
 -> grid
 (
-	-row=>1,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>1,
 	-sticky=>'nw'
@@ -1649,11 +1737,11 @@ my $trunc_chk = $tab7 -> Checkbutton
 (
 	-text=>"Truncate",
 	-variable=>\$config::hash{truncate}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>2,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>1,
 	-sticky=>'nw'
@@ -1671,7 +1759,7 @@ $tab7 -> Label
 )
 -> grid
 (
-	-row=>3,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1682,7 +1770,7 @@ my $tfl_ent = $tab7 -> Entry
 )
 -> grid
 (
-	-row=>4,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1699,7 +1787,7 @@ $tab7 -> Label
 )
 -> grid
 (
-	-row=>8,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1709,11 +1797,11 @@ my $rdb_ts_a = $tab7 -> Radiobutton
 	-text=>"From Start",
 	-value=>"0",
 	-variable=>\$config::hash{truncate_style}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>10,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1728,11 +1816,11 @@ my $rdb_ts_b = $tab7 -> Radiobutton
 	-text=>"From Middle",
 	-value=>"2",
 	-variable=>\$config::hash{truncate_style}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>11,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1746,11 +1834,11 @@ my $rdb_ts_c = $tab7 -> Radiobutton
 	-text=>"From End",
 	-value=>"1",
 	-variable=>\$config::hash{truncate_style}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 -> grid
 (
-	-row=>12,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1766,7 +1854,7 @@ my $tab7_spacer1 = $tab7 -> Label
 )
 -> grid
 (
-	-row=>13,
+	-row=>$row++,
 	-column=>1,
 	-sticky=>'nw'
 );
@@ -1778,7 +1866,7 @@ $tab7 -> Label
 )
 -> grid
 (
-	-row=>14,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>1,
 	-sticky=>'nw'
@@ -1790,7 +1878,7 @@ my $tab7_trunc_ent = $tab7 -> Entry
 )
 -> grid
 (
-	-row=>15,
+	-row=>$row++,
 	-column=>1,
 	-columnspan=>1,
 	-sticky=>'nw'
@@ -1807,13 +1895,13 @@ $tab7 -> Label
 )
 ->grid
 (
-	-row=>22,
+	-row=>$row++,
 	-column=>1
 );
 
 
 #--------------------------------------------------------------------------------------------------------------
-# draw filter
+# draw filter main screen menu
 #--------------------------------------------------------------------------------------------------------------
 
 our $f_frame = $main::frm_right2->Frame() -> pack(-side=>"top",);
@@ -1822,7 +1910,7 @@ $f_frame -> Checkbutton
 (
 	-text=>"Filter",
 	-variable=>\$config::hash{FILTER}{value},
-	-activeforeground => "blue",
+	-activeforeground => 'blue',
         -command=> sub
 	{
 		if($config::hash{FILTER}{value} && $main::filter_string eq "")	# dont enable filter on an empty string
@@ -1855,7 +1943,7 @@ $f_frame -> Checkbutton
 (
 	-text=>"Case In-Sensitive",
 	-variable=>\$config::hash{FILTER_IGNORE_CASE}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 ->pack(	-side=>'left',);
 
@@ -1863,7 +1951,7 @@ $f_frame -> Checkbutton
 (
 	-text=>"regex",
 	-variable=>\$config::hash{FILTER_REGEX}{value},
-	-activeforeground => "blue"
+	-activeforeground => 'blue'
 )
 ->pack
 (

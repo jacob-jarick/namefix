@@ -696,8 +696,9 @@ sub fn_enum
 	my $f = shift;
 	my $fn = shift;
 
-	&main::quit("fn_enum \$f is undef\n")	if ! defined $f;
-	&main::quit("fn_enum \$f eq ''\n")	if $f eq '';
+	&main::quit("fn_enum \$f is undef\n")				if ! defined $f;
+	&main::quit("fn_enum \$f eq ''\n")				if $f eq '';
+	&main::quit("fn_enum \$f '$f' is not a file or directory")	if !-f $f && !-d $f;
 
 	return $fn if ! $config::hash{enum}{value};
 
@@ -706,38 +707,56 @@ sub fn_enum
 		$a = "%.$config::hash{enum_pad_zeros}{value}"."d";
 		$enum_count = sprintf($a, $enum_count);
 	}
+	my $enum_str = $enum_count;
+	if($config::hash{enum_add}{value})
+	{
+		$enum_str = $config::enum_start_str.$enum_count.$config::enum_end_str;
+	}
 
+	my $ext = '';
+	$ext = lc $1 if $fn =~ m/\.(.+?)$/; # get file extension
+
+	# ---------------------------------------------------------
 	# enum number only - remove the rest of the filename
 	if($config::hash{enum_opt}{value} == 0)
 	{
 		if(-d $f)
 		{
-			$fn = $enum_count;
+			$fn = $enum_str;
 		}
 		else
 		{
-			# numbers and file ext only
-			$fn =~ s/^.*\././;
-			$fn = "$enum_count$fn";
+			$fn = $enum_str.'.'.$ext;
+
 		}
 	}
+
+	# ---------------------------------------------------------
 	# Insert N at begining of filename
+
 	elsif($config::hash{enum_opt}{value} == 1)
 	{
-		$fn = "$enum_count$fn";
+		$fn = "$enum_str$fn";
 	}
+
+	# ---------------------------------------------------------
 	# Insert N at end of filename
+
 	elsif($config::hash{enum_opt}{value} == 2)
 	{
 		if(-d $f)
 		{
-			$fn = "$fn$enum_count";
+			$fn = "$fn$enum_str";
 		}
 		else
 		{
 			# Insert N at end of filename but before file ext
-			$fn =~ s/(.*)(\..*$)/$1$enum_count$2/g;
+			$fn =~ s/(.*)(\..*$)/$1$enum_str$2/g;
 		}
+	}
+	else
+	{
+		&main::quit("fn_enum unknown value set for \$config::hash{enum_opt}{value}\n" . Dumper($config::hash{enum_opt}));
 	}
 	$enum_count++;
 	return $fn;

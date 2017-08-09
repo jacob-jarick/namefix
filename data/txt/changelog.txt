@@ -1,5 +1,11 @@
-
 4.1.2 - ie refresh in progress
+
+* enumerate fixed and added a new option: string
+  string allows you to wrap the enumerated digit in a start and end string of your choosing.
+  3 new cli options added
+  --enum-add-strings			enables padding enum digit like so: <front><digit><end>
+  --enum-string-(front|start)=<front>	sets enum-add-strings, sets front to <front>
+  --enum-string-(end|stop)=<end>	sets enum-add-strings, sets end to <end>
 
 * added clear button to MP3 tab to clear that tabs settings
 

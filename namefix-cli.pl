@@ -346,6 +346,20 @@ for my $arg(@ARGV)
 	{
 		$config::hash{enum_opt}{value} = $1;
 	}
+ 	elsif($arg eq "--enum-add-strings")
+ 	{
+ 		$config::hash{enum_add}{value} = 1;
+ 	}
+	elsif($arg =~ /--enum-string-(front|start)=(.*)/)
+	{
+ 		$config::hash{enum_add}{value} = 1;
+		$config::enum_start_str = $2;
+	}
+	elsif($arg =~ /--enum-string-(end|stop)=(.*)/)
+	{
+ 		$config::hash{enum_add}{value} = 1;
+		$config::enum_end_str = $2;
+	}
 	elsif($arg =~ /--enum-zero-pad=(.*)/)
 	{
 		$config::hash{enum_pad}{value} = 1;
