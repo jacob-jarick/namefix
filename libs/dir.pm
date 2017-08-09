@@ -10,6 +10,7 @@ use strict;
 use warnings;
 
 use Cwd;
+use File::Find;
 
 #--------------------------------------------------------------------------------------------------------------
 # List Directory
@@ -34,7 +35,7 @@ sub ls_dir
         if($config::hash{RECURSIVE}{value})
         {
 		@config::find_arr = ();
-	        find(\&find_fix, $config::dir);
+	        find(\&run_namefix::find_fix, $config::dir);
 		&ls_dir_find_fix;
                 $config::LISTING = 0;
 	        return;
