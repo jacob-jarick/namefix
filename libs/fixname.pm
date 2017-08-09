@@ -70,10 +70,10 @@ sub fix
         $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
 
 #	processing all file types & dirs
-        $RENAME = 1 if($config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value});
+        $RENAME = 1 if $config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value};
 
 #	didnt match filter
-        return if($config::hash{FILTER}{value} && &filter::match($file) == 0);
+        return if $config::hash{FILTER}{value} && !&filter::match($file);
 
 #	rules say file shouldnt be renamed
 	return if !$RENAME;

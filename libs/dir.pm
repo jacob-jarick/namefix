@@ -210,17 +210,17 @@ sub dir_filtered
 	my @d		= ();
 	my @dirlist	= &fn_readdir($dir);
 
-	for my $i(@dirlist)
+	for my $file (@dirlist)
 	{
-		# $i is dir, didnt pass
-		next if(!$config::hash{PROC_DIRS}{value} && -d $i && !$config::LISTING);	# ta tibbsy for help
+		# $file is dir automatically fail filter
+		next if !$config::LISTING && (!$config::hash{PROC_DIRS}{value} && -d $file);
 		if($config::hash{FILTER}{value})
 		{
-			push @d, $i if(&filter::match($i) == 1);	# apply listing filter
+			push @d, $file if &filter::match($file);	# apply listing filter
 		}
 		else
 		{
-			push @d, $i;
+			push @d, $file;
 		}
 	}
 	return @d;

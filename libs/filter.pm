@@ -12,13 +12,10 @@ use warnings;
 
 sub match
 {
-	my $string = shift;
-	my $filt = "";
+	return 1 if $config::filter_string eq '';
 
-	if($config::filter_string eq '')
-	{
-		return 1;
-	}
+	my $string	= shift;
+	my $filt	= $config::filter_string;
 
 	&misc::plog(3, "sub match: \"$string\"");
 
@@ -28,23 +25,16 @@ sub match
 		return 1;
 	}
 
-	if($string eq "..")
-	{
-		&misc::plog(4, "sub match: got .. passed");
-		return 1;
-	}
-
-	$filt = $config::filter_string;
-	if($config::hash{FILTER_REGEX}{value} == 0)
+	if(!$config::hash{FILTER_REGEX}{value})
 	{
 		&misc::plog(4, "sub match: regexp disabled, using escaped string");
-		$filt = quotemeta $filt;
+		$filt = quotemeta $config::filter_string;
 	}
 
 	if
 	(
-		( $config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /.*($filt).*/) ||
-		(!$config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /.*($filt).*/i)
+		( $config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /$filt/) ||
+		(!$config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /$filt/i)
 	)
 	{
 		&misc::plog(4, "sub match: string \"$string\" matched filter \"$filt\"");

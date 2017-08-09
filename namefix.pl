@@ -1908,12 +1908,12 @@ our $f_frame = $main::frm_right2->Frame() -> pack(-side=>"top",);
 
 $f_frame -> Checkbutton
 (
-	-text=>"Filter",
+	-text=>'Filter',
 	-variable=>\$config::hash{FILTER}{value},
 	-activeforeground => 'blue',
         -command=> sub
 	{
-		if($config::hash{FILTER}{value} && $main::filter_string eq "")	# dont enable filter on an empty string
+		if($config::hash{FILTER}{value} && $config::filter_string eq '')	# dont enable filter on an empty string
 		{
 			&misc::plog(1, "namefix: tried to enable filtering with an empty filter");
 			$config::hash{FILTER}{value} = 0;
@@ -1934,7 +1934,7 @@ $f_frame->Label(-text=>" ")->pack(-side=>'left',);
 
 $f_frame->Entry
 (
-        -textvariable=>\$main::filter_string,
+        -textvariable=>\$config::filter_string,
         -width=>35
 )
 ->pack(-side=>'left',);
