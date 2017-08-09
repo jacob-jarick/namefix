@@ -11,6 +11,7 @@ use warnings;
 
 use Cwd;
 use File::Find;
+use File::Spec;
 
 #--------------------------------------------------------------------------------------------------------------
 # List Directory
@@ -91,25 +92,21 @@ sub ls_dir_find_fix
 	# this sub should recieve an array of files from find_fix
 
 	my @list	= @config::find_arr;
-	my $d		= cwd();
 	my $file	= '';
-	my $dir		= '';
 
 	$config::percent_done = 0;
 	my $total = scalar @config::find_arr;
 	my $count = 1;
 
-	for $file(@config::find_arr)
+	for my $file(@config::find_arr)
 	{
 		$config::percent_done = int(($count++/$total) * 100);
 
-		$file	=~ m/^(.*)\/(.*?)$/;
-		$dir	= $1;
-		$file	= $2;
+		$file		=~ m/^(.*)\/(.*?)$/;
+		my $f		= $2;
+		my $fdir	= File::Spec->abs2rel($file);
 
-		chdir $dir;	# change to dir containing file
 		&ls_dir_print($file);
-		chdir $d;	# change back to dir sub started in
 	}
 	return 1;
 }
@@ -118,16 +115,15 @@ sub ls_dir_find_fix
 
 sub ls_dir_print
 {
-	return 0 if $config::STOP == 1;
+	return 0 if $config::STOP;
 
 	my $file	= shift;
-	my $d 		= $config::hlist_cwd	= cwd;
 
         &main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
         &main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
-        return if $file eq '.';
 
-	if($file eq "..")
+        return if $file eq '.';
+	if($file eq '..')
 	{
 		&nf_print::p('..');
 		return;
@@ -138,14 +134,13 @@ sub ls_dir_print
 	if(-d $file && $config::hash{RECURSIVE}{value})
 	{
 		&nf_print::p(' ', '<BLANK>');
-		&nf_print::p("$d/$file", "$d/$file");
+		&nf_print::p($file);
 		return;
 	}
 
 	# check for audio tags
 	if($config::hash{id3_mode}{value})
 	{
-# 		print "ls_dir_print getting audio tags for $file\n";
 		my $ref = &mp3::get_tags($file);
 		&nf_print::p($file, undef, $ref);
 		return;

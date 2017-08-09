@@ -187,7 +187,7 @@ sub draw_list
 
 			# update file current selected file
 			($config::hlist_file, $config::hlist_cwd) = $hlist->info("data", $config::hlist_selection);
-			my $ff = $config::hlist_cwd . "/" . $config::hlist_file;
+			my $ff = $config::hlist_file;
 
 			&dialog::show_file_prop($ff);
        		}

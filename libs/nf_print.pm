@@ -79,9 +79,9 @@ sub p
 	);
 	my $count = 0;
 
-	if	# if file is a directory, attach dir icon
+	if	# if a directory attach dir icon
 	(
-		$file1 eq ".."		||	# .. doesnt get detected as a dir when renaming, identify by value instead
+		$file1 eq '..'		||	# .. doesnt get detected as a dir when renaming, identify by value instead
 		(!$NEWFILE && -d $file1)||	# listing check if s1 is file
 		( $NEWFILE && -d $file2)	# file renamed, check if s2 is file :)
 	)
@@ -106,9 +106,13 @@ sub p
 	}
 
 	$config::hlist_file_row = $count;
-	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1);
 
-	return if ($file1 eq ".." || -d $file1);
+	my $file1_clean = $file1;
+	$file1_clean =~ s/^.*\///;
+
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1_clean);
+
+	return if ($file1 eq '..' || -d $file1);
 
 	if($config::hash{id3_mode}{value})
 	{
@@ -125,15 +129,19 @@ sub p
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$arrow");
 	$config::hlist_newfile_row = $count;
-	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$file2");
+
+	my $file2_clean = $file2;
+	$file2_clean =~ s/^.*\///;
+
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file2_clean);
 
 	if($config::hash{id3_mode}{value})
 	{
-		&main::quit("nf_print id3_mode enabled but \$ref2 is undef\n") if !defined $ref2;
+		&main::quit("nf_print id3_mode enabled but \$ref2 is undef") if !defined $ref2;
 		my %h = %$ref2;
 		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 		{
-			&main::quit("nf_print::p \$ref2 \$h{$k} is undef\n") if ! defined $h{$k};
+			&main::quit("nf_print::p \$ref2 \$h{$k} is undef") if ! defined $h{$k};
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 		return;
