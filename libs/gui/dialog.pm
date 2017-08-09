@@ -34,7 +34,7 @@ sub show
         my $txt = $top -> Scrolled
 	(
         	"ROText",
-        	-scrollbars=>"osoe",
+        	-scrollbars=>'osoe',
 		-wrap=>'none',
         	-font=>$config::dialog_font
         )
@@ -81,7 +81,7 @@ sub show_file_prop
 	my $txt = $top -> Scrolled
 	(
         		"ROText",
-        		-scrollbars=>"osoe",
+        		-scrollbars=>'osoe',
 		-wrap=>'none',
 		-font=>$config::dialog_font,
 		-height=>5,
@@ -159,7 +159,7 @@ sub show_del_dialog
 	my $txt = $frm_top -> Scrolled
 	(
 		"ROText",
-		-scrollbars=>"osoe",
+		-scrollbars=>'osoe',
 		-wrap=>'none',
 		-font=>$config::dialog_font,
 		-height=>10,

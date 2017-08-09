@@ -31,7 +31,7 @@ sub cas_list
         my $txt = $top -> Scrolled
         (
         	'Text',
-                -scrollbars=>"osoe",
+                -scrollbars=>'osoe',
                 -width=>60,
                 -height=>20,
         	-font=>$config::dialog_font

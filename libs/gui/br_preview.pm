@@ -82,7 +82,7 @@ sub br_show_lists
         my $hlist = $top -> Scrolled
         (
 		"HList",
-		-scrollbars=>"osoe",
+		-scrollbars=>'osoe',
 		-header => 1,
 		-columns=>3,
 		-selectbackground => 'Cyan',

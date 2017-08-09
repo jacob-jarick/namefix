@@ -211,7 +211,7 @@ sub edit_bookmark_list
         my $txt = $top -> Scrolled
         (
         	'Text',
-                -scrollbars=>"osoe",
+                -scrollbars=>'osoe',
         	-font=>$config::dialog_font,
         	-wrap=>'none',
                 -width=>80,

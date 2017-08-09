@@ -45,7 +45,7 @@ sub blockrename
         our $txt = $txt_frame -> Scrolled
         (
         	'Text',
-                -scrollbars=>"osoe",
+                -scrollbars=>'osoe',
         	-font=>$main::dialog_font,
 		-wrap=>'none',
         )
@@ -66,7 +66,7 @@ sub blockrename
         our $txt_r = $txt_frame -> Scrolled
         (
         	'Text',
-                -scrollbars=>"osoe",
+                -scrollbars=>'osoe',
         	-font=>$main::dialog_font,
 		-wrap=>'none',
         )

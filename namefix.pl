@@ -101,17 +101,17 @@ our $log_file = "$config::home/.namefix.pl/namefix.pl.$config::version.log";
 &misc::plog(1, "**** namefix.pl $config::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
-if($^O eq "MSWin32")
+if(lc $^O eq 'mswin32')
 {
-        $config::dialog_font		= "ansi 8 bold";
-        $config::dialog_title_font	= "ansi 12 bold";
-        $config::edit_pat_font		= "ansi 16 bold";
+        $config::dialog_font		= 'ansi 8 bold';
+        $config::dialog_title_font	= 'ansi 12 bold';
+        $config::edit_pat_font		= 'ansi 16 bold';
 }
 else
 {
-        $config::dialog_font		= "ansi 10";
-        $config::dialog_title_font	= "ansi 16 bold";
-        $config::edit_pat_font		= "ansi 18 bold";
+        $config::dialog_font		= 'ansi 10';
+        $config::dialog_title_font	= 'ansi 16 bold';
+        $config::edit_pat_font		= 'ansi 18 bold';
 }
 
 &undo::clear;
@@ -210,7 +210,7 @@ my $progress = $frm_bottom2->ProgressBar
         -variable => \$config::percent_done
 )->pack
 (
- 	-side => "bottom",
+ 	-side => 'bottom',
 	-expand=> 1,
 	-fill => "x",
 #  	-anchor => 's'
@@ -227,7 +227,7 @@ our $log_box = $frm_bottom3->Scrolled
 	-height => 8,
 )->pack
 (
- 	-side => "bottom",
+ 	-side => 'bottom',
 	-expand=> 1,
 	-fill => "x",
 );
@@ -342,7 +342,7 @@ my $open_but = $frm_bottom -> Button
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw",
+	-sticky=>'nw',
 	-padx =>2
 );
 
@@ -354,7 +354,7 @@ my $cwd_ent = $frm_bottom->Entry
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw",
+	-sticky=>'nw',
 	-padx =>2
 );
 $balloon->attach
@@ -368,7 +368,7 @@ $frm_bottom -> Label()
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $recr_chk = $frm_bottom -> Checkbutton
@@ -381,7 +381,7 @@ my $recr_chk = $frm_bottom -> Checkbutton
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $D_chk = $frm_bottom -> Checkbutton
@@ -394,7 +394,7 @@ my $D_chk = $frm_bottom -> Checkbutton
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -407,7 +407,7 @@ $frm_bottom -> Label()
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $I_chk = $frm_bottom -> Checkbutton
@@ -420,7 +420,7 @@ my $I_chk = $frm_bottom -> Checkbutton
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -449,7 +449,7 @@ my $tm_chk = $frm_bottom -> Checkbutton
 (
 	-row=>1,
 	-column=>$col++,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -569,7 +569,7 @@ $frm_left -> Label
 	-row=>1,
 	-column=>1,
 	-columnspan=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $clean_chk = $frm_left -> Checkbutton
@@ -583,7 +583,7 @@ my $clean_chk = $frm_left -> Checkbutton
 (
 	-row=>2,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -601,7 +601,7 @@ my $case_chk = $frm_left -> Checkbutton
 (
 	-row=>3,
 	-column=>1,
-	-sticky=>"nw",
+	-sticky=>'nw',
 	-columnspan=>2
 );
 $balloon->attach
@@ -620,7 +620,7 @@ my $w_chk = $frm_left -> Checkbutton
 (
 	-row=>4,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -638,7 +638,7 @@ my $p_chk = $frm_left -> Checkbutton
 (
 	-row=>5,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -656,7 +656,7 @@ my $o_chk = $frm_left -> Checkbutton
 (
 	-row=>6,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -685,7 +685,7 @@ my $K_chk = $frm_left -> Checkbutton
 (
 	-row=>10,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -703,7 +703,7 @@ my $P_chk = $frm_left -> Checkbutton
 (
 	-row=>11,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -732,7 +732,7 @@ my $R_chk = $frm_left -> Checkbutton
 (
 	-row=>16,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -749,7 +749,7 @@ my $R_ent1 = $frm_left -> Entry
 (
 	-row=>17,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -765,7 +765,7 @@ $frm_left -> Label
 (
 	-row=>18,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 my $R_ent2 = $frm_left -> Entry
 (
@@ -774,7 +774,7 @@ my $R_ent2 = $frm_left -> Entry
 -> grid(
 	-row=>19,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -792,7 +792,7 @@ my $f_chk = $frm_left -> Checkbutton
 (
 	-row=>20,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -808,7 +808,7 @@ my $f_ent = $frm_left -> Entry
 (
 	-row=>21,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $e_chk = $frm_left -> Checkbutton
@@ -821,7 +821,7 @@ my $e_chk = $frm_left -> Checkbutton
 (
 	-row=>22,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -836,7 +836,7 @@ my $e_ent = $frm_left -> Entry
 (
 	-row=>23,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $clr_but = $frm_left -> Button
@@ -878,7 +878,7 @@ $tab2->Label
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $id3_mode_chk = $tab2 -> Checkbutton
@@ -892,7 +892,7 @@ my $id3_mode_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw",
+	-sticky=>'nw',
 	-columnspan=>2
 );
 $balloon->attach
@@ -918,7 +918,7 @@ my $id3_guess_tag_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw",
+	-sticky=>'nw',
 	-columnspan=>2
 );
 $balloon->attach
@@ -938,7 +938,7 @@ my $AUDIO_FORCE_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw",
+	-sticky=>'nw',
 	-columnspan=>2
 );
 $balloon->attach
@@ -963,7 +963,7 @@ my $rm_id3v2 = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw",
+	-sticky=>'nw',
 	-columnspan=>2
 );
 
@@ -984,7 +984,7 @@ my $id3_art_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1000,7 +1000,7 @@ my $id3_art_ent = $tab2 -> Entry
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $id3_alb_chk = $tab2 -> Checkbutton
@@ -1013,7 +1013,7 @@ my $id3_alb_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach(
 	$id3_alb_chk,
@@ -1025,7 +1025,7 @@ my $id3_alb_ent = $tab2 -> Entry(-textvariable=>\$config::id3_alb_str)
 (
  	-row=>$row++,
  	-column=>1,
- 	-sticky=>"nw"
+ 	-sticky=>'nw'
 );
 
 
@@ -1039,7 +1039,7 @@ my $id3_genre_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1060,7 +1060,7 @@ my $genre_combo = $tab2 -> JComboBox
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 
@@ -1076,7 +1076,7 @@ my $id3_year_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1092,7 +1092,7 @@ my $id3_year_ent = $tab2 -> Entry
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $id3_com_chk = $tab2 -> Checkbutton
@@ -1105,7 +1105,7 @@ my $id3_com_chk = $tab2 -> Checkbutton
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1121,7 +1121,7 @@ my $id3_com_ent = $tab2 -> Entry
 (
 	-row=>$row++,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 $tab2 -> Label
@@ -1185,7 +1185,7 @@ $tab5 -> Label
 (
 	-row=>1,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $U_chk = $tab5 -> Checkbutton
@@ -1199,7 +1199,7 @@ my $U_chk = $tab5 -> Checkbutton
 (
 	-row=>2,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $L_chk = $tab5 -> Checkbutton
@@ -1213,7 +1213,7 @@ my $L_chk = $tab5 -> Checkbutton
 (
 	-row=>4,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $i_chk = $tab5 -> Checkbutton
@@ -1226,7 +1226,7 @@ my $i_chk = $tab5 -> Checkbutton
 (
 	-row=>8,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1244,7 +1244,7 @@ my $b_chk = $tab5 -> Checkbutton
 (
 	-row=>10,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1269,7 +1269,7 @@ my $d_chk = $tab5 -> Checkbutton
 (
 	-row=>14,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1294,7 +1294,7 @@ my $N_chk = $tab5 -> Checkbutton
 (
 	-row=>16,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $tab5_label_scene = $tab5 -> Label
@@ -1306,7 +1306,7 @@ my $tab5_label_scene = $tab5 -> Label
 (
 	-row=>18,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $unscene_chk = $tab5 -> Checkbutton
@@ -1322,7 +1322,7 @@ my $unscene_chk = $tab5 -> Checkbutton
 		}
 	}
 )
--> grid(-row=>20, -column=>1, -sticky=>"nw");
+-> grid(-row=>20, -column=>1, -sticky=>'nw');
 
 $balloon->attach
 (
@@ -1347,7 +1347,7 @@ my $scene_chk = $tab5 -> Checkbutton
 (
 	-row=>22,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1364,7 +1364,7 @@ $tab5 -> Label
 (
 	-row=>24,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $pad_N_to_NN = $tab5 -> Checkbutton
@@ -1377,7 +1377,7 @@ my $pad_N_to_NN = $tab5 -> Checkbutton
 (
 	-row=>26,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1395,7 +1395,7 @@ my $pad_chk = $tab5 -> Checkbutton
 (
 	-row=>27,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1413,7 +1413,7 @@ my $pad_d_chk = $tab5 -> Checkbutton
 (
 	-row=>28,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1431,7 +1431,7 @@ my $pad_d_w_chk = $tab5 -> Checkbutton
 (
 	-row=>30,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1449,7 +1449,7 @@ my $chk_split_dddd = $tab5 -> Checkbutton
 (
 	-row=>31,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1481,7 +1481,7 @@ $tab6 -> Label
 	-row=>1,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $n_chk = $tab6 -> Checkbutton
@@ -1495,7 +1495,7 @@ my $n_chk = $tab6 -> Checkbutton
 	-row=>2,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1513,7 +1513,7 @@ $tab6 -> Label
 	-row=>3,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $rdb_a = $tab6 -> Radiobutton
@@ -1528,7 +1528,7 @@ my $rdb_a = $tab6 -> Radiobutton
 	-row=>4,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 my $rdb_b = $tab6 -> Radiobutton
 (
@@ -1542,7 +1542,7 @@ my $rdb_b = $tab6 -> Radiobutton
 	-row=>5,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 my $rdb_c = $tab6 -> Radiobutton
 (
@@ -1556,7 +1556,7 @@ my $rdb_c = $tab6 -> Radiobutton
 	-row=>6,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 $tab6 -> Label
@@ -1569,7 +1569,7 @@ $tab6 -> Label
 	-row=>7,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $enum_pad_chk = $tab6 -> Checkbutton
@@ -1583,7 +1583,7 @@ my $enum_pad_chk = $tab6 -> Checkbutton
 	-row=>8,
 	-column=>1,
 	-columnspan=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1615,7 +1615,7 @@ $tab6 -> Label
 (
 	-row=>10,
 	-column=>2,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 $tab6 -> Label
@@ -1642,7 +1642,7 @@ $tab7 -> Label
 	-row=>1,
 	-column=>1,
 	-columnspan=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $trunc_chk = $tab7 -> Checkbutton
@@ -1656,7 +1656,7 @@ my $trunc_chk = $tab7 -> Checkbutton
 	-row=>2,
 	-column=>1,
 	-columnspan=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1673,7 +1673,7 @@ $tab7 -> Label
 (
 	-row=>3,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $tfl_ent = $tab7 -> Entry
@@ -1684,7 +1684,7 @@ my $tfl_ent = $tab7 -> Entry
 (
 	-row=>4,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1701,7 +1701,7 @@ $tab7 -> Label
 (
 	-row=>8,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $rdb_ts_a = $tab7 -> Radiobutton
@@ -1715,7 +1715,7 @@ my $rdb_ts_a = $tab7 -> Radiobutton
 (
 	-row=>10,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1734,7 +1734,7 @@ my $rdb_ts_b = $tab7 -> Radiobutton
 (
 	-row=>11,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1752,7 +1752,7 @@ my $rdb_ts_c = $tab7 -> Radiobutton
 (
 	-row=>12,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
@@ -1768,7 +1768,7 @@ my $tab7_spacer1 = $tab7 -> Label
 (
 	-row=>13,
 	-column=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 $tab7 -> Label
@@ -1781,7 +1781,7 @@ $tab7 -> Label
 	-row=>14,
 	-column=>1,
 	-columnspan=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 
 my $tab7_trunc_ent = $tab7 -> Entry
@@ -1793,7 +1793,7 @@ my $tab7_trunc_ent = $tab7 -> Entry
 	-row=>15,
 	-column=>1,
 	-columnspan=>1,
-	-sticky=>"nw"
+	-sticky=>'nw'
 );
 $balloon->attach
 (
