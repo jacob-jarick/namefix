@@ -69,19 +69,21 @@ sub show
 
 sub show_file_prop
 {
-	my $title = "File Properties";
-	my $text = "";
-	my $ff = shift;
+	my $ff	= shift;
+
+	&main::quit("show_file_prop: \$ff is undef") if ! defined $ff;
+	&main::quit("show_file_prop: \$ff eq ''") if $ff eq '';
+	&main::quit("show_file_prop: '$ff' is not a dir or file") if ! -f $ff && ! -d $ff;
 
 	my $row	= 1;
 
         my $top = $main::mw -> Toplevel();
-        $top -> title("$title");
+        $top -> title('File Properties');
 
 	my $txt = $top -> Scrolled
 	(
-        		"ROText",
-        		-scrollbars=>'osoe',
+        	'ROText',
+        	-scrollbars=>'osoe',
 		-wrap=>'none',
 		-font=>$config::dialog_font,
 		-height=>5,
@@ -95,12 +97,9 @@ sub show_file_prop
 
         $top -> Button
 	(
-		-text=>"Close",
-		-activebackground => "white",
-		-command => sub
-		{
-			destroy $top;
-		}
+		-text=>'Close',
+		-activebackground => 'white',
+		-command => sub { destroy $top; }
 	)
 	-> grid
 	(
@@ -109,24 +108,38 @@ sub show_file_prop
 		-columnspan => 2
 	);
 
-	my $size = stat($ff)->size;
-	my $ff_date = ctime(stat($ff)->mtime);
+	my @txt = ();
+	my $txt_str = '';
+	if(-f $ff)
+	{
+		my $size = stat($ff)->size;
+		my $ff_date = ctime(stat($ff)->mtime);
 
-	my @txt =
-	(
-		"File:		$ff",
-		"Size:		$size",
-		"Date Created:	$ff_date",
-		"",
-	);
+		@txt =
+		(
+			"File:		$ff",
+			"Size:		$size",
+			"Date Created:	$ff_date",
+			"",
+		);
+		$txt_str = join("\n", @txt);
+	}
+	else
+	{
+		my $ff_date = ctime(stat($ff)->mtime);
 
-	my $txt_str = join("\n", @txt);
+		@txt =
+		(
+			"Dir:		$ff",
+			"Date Created:	$ff_date",
+			"",
+		);
+		$txt_str = join("\n", @txt);
+	}
 
 	# display text last
 	$txt->menu(undef);
-	$txt -> insert('end', "$txt_str");
-
-
+	$txt -> insert('end', $txt_str);
 }
 
 

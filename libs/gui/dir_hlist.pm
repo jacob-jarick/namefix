@@ -189,7 +189,7 @@ sub draw_list
 			($config::hlist_file, $config::hlist_cwd) = $hlist->info("data", $config::hlist_selection);
 			my $ff = $config::hlist_cwd . "/" . $config::hlist_file;
 
-			&show_file_prop($ff);
+			&dialog::show_file_prop($ff);
        		}
 	);
         $rc_menu -> command
