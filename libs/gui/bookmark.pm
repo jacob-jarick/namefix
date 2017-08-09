@@ -152,21 +152,20 @@ sub bm_list_bookmarks
 
 	for my $line(&misc::readf($config::bookmark_file))
 	{
-		if($line =~ /^\n/) { next; }
-		($n, $u) = split(/\t+/, $line);
-		chomp $n;
-		chomp $u;
+		$line =~ s/\t+/\t/g;
 
-                # if win32 and dir = network path swap \ with /
-                # (makes it easier for namefix.pl to work with and perl doesnt mind)
-                if($^O eq "MSWin32" && $u =~ /^\\/)
-                {
-                	$u =~ s/\\/\//g;
-                }
+		if($line =~ /^\s*\n/) { next; }
+		next if $line !~ /^(.+?)\t+(.+?)$/;
+		($n, $u) = ($1, $2);
+
+                # path swap \ with /
+                $u =~ s/\\/\//g if $u =~ /\\/;
+
                 $bookmarks -> checkbutton
 		(
 			-label		=> $n,
   			-onvalue	=> $u,
+  			-offvalue	=> $u,
 			-variable	=> \$bookmark_dir,
 			-command	=> sub
 			{

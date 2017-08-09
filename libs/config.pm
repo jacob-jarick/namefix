@@ -386,9 +386,10 @@ sub load_hash
 		$line =~ s/\n$//;
 		$line =~ s/\r$//;
 
-		next if $line !~ /.*\t.*/;
-		next if($line !~ /(\S+)\t+(.+?)$/);
+		next if $line !~ /.+\t.*/;
+		next if($line !~ /(\S+)\t+(.*?)$/);	# warning this can sometimes match a tab. fixed below
 		my ($k, $v) = ($1, $2);
+		next if $v eq "\t";
 
 		&main::quit("load_hash: unknown value '$k' in config hash.tsv") if !defined $hash{$k};
 
