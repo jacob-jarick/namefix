@@ -15,11 +15,12 @@ sub edit
 	&main::quit("edit: \$path isnt defined.") if ! defined $path;
 	&main::quit("edit: \$path '$path' isnt a dir or file.") if !-f $path && !-d $path;
 
+	my %tag_hash		= ();
 	my $file_name		= &misc::get_file_name($path);
 	my $wd			= &misc::get_file_parent_dir($path);
 	my ($old_fn, $old_ext)	= &misc::get_file_ext($path);
-	my $new_fn		= '';
-	my $new_ext		= '';
+	my $new_fn		= $old_fn;
+	my $new_ext		= $old_ext;
 
 	my $row 	= 1;
 	my $EXT		= 0;
@@ -29,9 +30,7 @@ sub edit
 	my $ent_min_l 	= 2;
 	my $ent_l	= 0;
 
-	my %tag_hash	= ();
-
-	&misc::plog(3, "sub manual::edit: \"$file_name\"");
+	&misc::plog(1, "sub manual::edit: \"$file_name\"");
 
 	my $l = length $file_name;
 	if($ent_min_l <= $l && $l <= $ent_max_l)
@@ -258,7 +257,7 @@ sub edit
 			-columnspan=>3
 		);
 
-                $frame1->Label( -text=>'Album: ')
+		$frame1->Label( -text=>'Album: ')
 		->grid
 		(
 			-row=>6,
@@ -301,15 +300,15 @@ sub edit
 			-columnspan=>3
 		);
 
-                $frame1->Label(-text=>'Year: ')
+		$frame1->Label(-text=>'Year: ')
 		->grid
 		(
 			-row=>8,
 			-column=>1
 		);
 
-	        $frame1->Entry
-                (
+		$frame1->Entry
+		(
 			-textvariable=>\$tag_hash{year},
 			-width=>30
 		)
@@ -319,16 +318,16 @@ sub edit
 			-column=>2,
 			-sticky=>'nw',
 			-columnspan=>3
-        	);
+		);
 
-                $frame1->Label(-text=>'comment: ')
+		$frame1->Label(-text=>'comment: ')
 		->grid
 		(
 			-row=>9,
 			-column=>1
 		);
 
-	        $frame1->Entry
+		$frame1->Entry
 		(
 			-textvariable=>\$tag_hash{comment},
 			-width=>30
@@ -343,9 +342,9 @@ sub edit
 	}
 	my $but_reset = $button_frame -> Button
 	(
-        	-text=>'Reset',
-        	-activebackground=>'white',
-        	-command => sub
+		-text=>'Reset',
+		-activebackground=>'white',
+		-command => sub
         	{
 			$newfile	= $file_name;
 			$new_fn		= $old_fn;
@@ -356,19 +355,19 @@ sub edit
 				my $ref = &mp3::get_tags($path);
 				%tag_hash = %$ref;
 			}
-        	}
+		}
         )
-        -> grid
-        (
-        	-row => 4,
-        	-column => 1,
-        	-columnspan => 1
-        );
+	-> grid
+	(
+		-row => 4,
+		-column => 1,
+		-columnspan => 1
+	);
 
 	if ($TAGS)
         {
-	        $button_frame -> Button
-	        (
+		$button_frame -> Button
+		(
 			-text=>'Guess Tag',
 			-activebackground=>'white',
 			-command => sub
@@ -391,27 +390,27 @@ sub edit
         	-activebackground=>'white',
         	-command => sub
         	{
-                        if($TAGS)
+			if($TAGS)
 			{
 				&mp3::write_tags($path, \%tag_hash);
 			}
 
-                	if($EXT)
+			if($EXT)
                         {
 				$newfile = "$new_fn.$new_ext";
 				$old_fn = $new_fn;
 				$old_ext = $new_ext;
-                        }
+			}
 			&me_rename($wd, $file_name, $newfile);
 			$file_name = $newfile;
 		}
         )
-        -> grid
+	-> grid
 	(
-        	-row => 4,
-        	-column => 3,
-        	-columnspan => 1
-        );
+		-row => 4,
+		-column => 3,
+		-columnspan => 1
+	);
 
 	my $but_close = $button_frame -> Button
 	(
@@ -419,19 +418,19 @@ sub edit
         	-activebackground=>'white',
         	-command => sub
 		{
-        		destroy $w;
-                       	&dir::ls_dir;
-        	}
+			destroy $w;
+			&dir::ls_dir;
+		}
         )
         -> grid
         (
         	-row=>4,
         	-column=>4,
         	-columnspan=>1
-        );
+	);
 
-        $w->update();
-        $w->resizable(0,0);
+	$w->update();
+	$w->resizable(0,0);
 
 	return;
 }
