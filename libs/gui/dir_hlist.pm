@@ -124,8 +124,8 @@ sub draw_list
 			$config::hlist_selection = shift;
 			($config::hlist_file, $target_dir, $config::hlist_file_new) = $hlist->info('data', $config::hlist_selection);
 
-			$target_dir = "$target_dir/$config::hlist_file" if -d "$target_dir/$config::hlist_file";
-			print "BROWSE: ($config::hlist_file, $target_dir, $config::hlist_file_new)\n";
+			$target_dir = "$target_dir/$config::hlist_file" if -d "$target_dir/$config::hlist_file" && $config::hlist_file ne '..';
+			print "BROWSE: hlist_file = '$config::hlist_file', target_dir = '$target_dir', hlist_file_new = '$config::hlist_file_new'\n";
                	},
 		-command=> sub
 		{

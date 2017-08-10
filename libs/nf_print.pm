@@ -44,18 +44,17 @@ sub p
 
 	if($file1 eq '..')
 	{
-		my $count = 0;
-		my ($dir, $file_name, $path) =  &misc::get_file_info(cwd."/..");
-		$dir_hlist::hlist->add($hlpos, -data=>[$file_name, $path, '']);
+		my $parent_dir =  &misc::get_file_parent_dir(cwd);
+		$dir_hlist::hlist->add($hlpos, -data=>['..', $parent_dir, '']);
 		$dir_hlist::hlist->itemCreate
 		(
 			$hlpos,
-			$count++,
+			0,
 			-itemtype=>'imagetext',
 			-image=>$config::folderimage
 		);
 
-		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => '..');
+		$dir_hlist::hlist->itemCreate($hlpos, 1, -text => '..');
 
 		return;
 	}
@@ -85,7 +84,7 @@ sub p
 	}
 
 	# renaming file2 must be a file/dir
-	if($mode eq 'rename' && $file1 ne '..' && !-f $file2 && !-d $file2 )
+	if($mode eq 'rename' && !-f $file2 && !-d $file2 )
 	{
 		&main::quit("nf_print::p \$file1 '$file1' \$file2 '$file2' not a file/dir - rename failed ?\n");
 		return 1;
@@ -104,7 +103,7 @@ sub p
 	my $count = 0;
 
 	# if a directory attach dir icon
-	if($target_file eq '..' || -d $target_file)
+	if(-d $target_file)
 	{
 		$dir_hlist::hlist->itemCreate
 		(
@@ -136,7 +135,7 @@ sub p
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1_clean);
 
-	return if ($file1 eq '..' || -d $file1);
+	return if (-d $file1);
 
 	if($config::hash{id3_mode}{value})
 	{

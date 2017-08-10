@@ -337,9 +337,7 @@ sub get_file_path
 sub get_file_parent_dir
 {
 	my $file_path	= shift;
-
-	&main::quit("get_file_parent_dir: \$file_path is undef") if ! defined $file_path;
-	&main::quit("get_file_parent_dir: \$file_path '$file_path' is not a dir or file") if !-f $file_path && !-d $file_path;
+	$file_path	= &get_file_path($file_path);
 
 	my @tmp		= split(/\//, $file_path);
 	my $file_name	= splice @tmp , $#tmp, 1;
@@ -351,9 +349,7 @@ sub get_file_parent_dir
 sub get_file_name
 {
 	my $file_path	= shift;
-
-	&main::quit("get_file_name: \$file_path is undef") if ! defined $file_path;
-	&main::quit("get_file_name: \$file_path '$file_path' is not a dir or file") if !-f $file_path && !-d $file_path;
+	$file_path	= &get_file_path($file_path);
 
 	my @tmp = split(/\//, $file_path);
 	return $tmp[$#tmp];

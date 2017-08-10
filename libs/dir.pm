@@ -189,14 +189,14 @@ sub fn_readdir
 	@dirlist = CORE::readdir(DIR);
 	closedir DIR;
 
-	# -- make sure we dont have . and .. in array --
+	# -- make sure we dont have . and .. in array
 	for my $item(@dirlist)
 	{
-		next if $item eq "." || $item eq "..";
+		next if $item eq '.' || $item eq '..';
 		push @dirlist_clean, $item;
 	}
 
-	@dirlist = &misc::ci_sort(@dirlist);  # sort array
+	@dirlist = &misc::ci_sort(@dirlist_clean);  # sort array
 	return @dirlist;
 }
 
