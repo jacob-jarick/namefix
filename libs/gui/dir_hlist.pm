@@ -5,6 +5,7 @@ require Exporter;
 use strict;
 use warnings;
 use Cwd;
+use Data::Dumper::Concise;
 
 our $hlist;
 our $rc_menu;
@@ -148,15 +149,14 @@ sub draw_list
 		{
 			# when user clicks on an entry update global variables
 			$config::hlist_selection	= shift;
-			$target_dir			= $info{$config::hlist_selection}{parent};
-			$config::hlist_file		= $info{$config::hlist_selection}{filename};
-
-			$target_dir = $info{$config::hlist_selection}{path} if -d $info{$config::hlist_selection}{path} && $config::hlist_file ne '..';
-			print "BROWSE: target_dir = '$target_dir'\n";
+			print "BROWSE: \n" . Dumper($info{$config::hlist_selection}) . "\n";
                	},
 		-command=> sub
 		{
                 	# user has double clicked
+ 			$target_dir	= $info{$config::hlist_selection}{parent};
+			$target_dir	= $info{$config::hlist_selection}{path} if -d $info{$config::hlist_selection}{path} && $config::hlist_file ne '..';
+
 			&hlist_cd($target_dir);
 		}
 	)
