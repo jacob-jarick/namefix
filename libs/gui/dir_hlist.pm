@@ -21,9 +21,9 @@ our $counter = 0;
 sub info_add
 {
 	my $index	= shift;
-	my $path	= shift;
-	my $file	= shift;
-	my $newfile	= shift;	# can be undef
+	my $path	= shift;	# full path to actual file
+	my $file	= shift;	# old / current filename
+	my $newfile	= shift;	# new / undef filename
 
 	&main::quit("info_add: \$index is undef")			if ! defined $index;
 	&main::quit("info_add: \$index '$index' is not an int")		if $index !~ /^\d+$/;
@@ -139,7 +139,7 @@ sub draw_list
 
 	$hlist = $main::frm_right2 -> Scrolled
         (
-		"HList",
+		'HList',
 		-scrollbars		=> 'osoe',
 		-header			=> 1,
 		-columns		=> $columns,
@@ -202,7 +202,7 @@ sub draw_list
         $rc_menu = $hlist->Menu(-tearoff=>0);
         $rc_menu -> command
         (
-		-label=>"Properties",
+		-label=>'Properties',
 		-underline=> 1,
 		-command=> sub
 		{
@@ -214,14 +214,19 @@ sub draw_list
 	);
         $rc_menu -> command
         (
-		-label=>"Apply Preview",
+		-label=>'Apply Preview',
 		-underline=> 1,
 		-command=> sub
 		{
 			print "Apply Preview: Dir: '$config::hlist_cwd'\n\tfilename:\t'$config::hlist_file'\n\tnew filename:\t'$config::hlist_file_new'\n";
-			if(!&fixname::fn_rename($config::hlist_file, $config::hlist_file_new) )
+
+			my $file_old = $info{$config::hlist_selection}{path};
+			my $file_new = $file_old;
+			$file_new = $info{$config::hlist_selection}{new_filename} if defined $info{$config::hlist_selection}{new_filename};
+
+			if(!&fixname::fn_rename( $file_old, $file_new) )
 			{
-				&misc::plog(0, "ERROR Apply Preview: \"$config::hlist_file\" cannot preform rename, file allready exists\n");
+				&misc::plog(0, "ERROR Apply Preview: '$file_old' cannot preform rename, new file '$file_new' allready exists\n");
 			}
 			else
 			{
@@ -230,16 +235,9 @@ sub draw_list
 				(
 					$config::hlist_selection,
 					$config::hlist_file_row,
-					-text => $config::hlist_file_new
+					-text => $file_new
 				);
-
-				# update hlist data
-				$hlist->entryconfigure
-				(
-					$config::hlist_selection,
-					-data=>[$config::hlist_file_new, $config::hlist_cwd, $config::hlist_file_new]
-				);
-
+				# TODO update info hash
 			}
        		}
 	);

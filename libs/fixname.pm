@@ -91,7 +91,7 @@ sub fix
 	{
 		$config::last_recr_dir = $config::cwd;
 
-		&nf_print::p(" ", "<MSG>");
+		&nf_print::p(" ", "<BLANK>");
 		&nf_print::p($dir);
 	}
 
@@ -271,6 +271,7 @@ sub fn_rename
 
 	&main::quit("fn_rename \$file is undef\n")		if ! defined $file;
 	&main::quit("fn_rename \$file eq ''\n")			if $file eq '';
+
 	&main::quit("fn_rename \$newfile is undef\n")		if ! defined $newfile;
 	&main::quit("fn_rename \$newfile eq ''\n")		if $newfile eq '';
 
