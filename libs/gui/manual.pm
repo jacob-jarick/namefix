@@ -2,7 +2,6 @@ package manual;
 require Exporter;
 @ISA = qw(Exporter);
 
-
 use strict;
 use warnings;
 
@@ -15,14 +14,16 @@ sub edit
 	&main::quit("edit: \$path isnt defined.") if ! defined $path;
 	&main::quit("edit: \$path '$path' isnt a dir or file.") if !-f $path && !-d $path;
 
+	&misc::plog(1, "sub manual::edit: \"$path\"");
+
 	my %tag_hash		= ();
 	my $file_name		= &misc::get_file_name($path);
+	my $l			= length $file_name;
 	my $wd			= &misc::get_file_parent_dir($path);
 	my ($old_fn, $old_ext)	= &misc::get_file_ext($path);
 	my $new_fn		= $old_fn;
 	my $new_ext		= $old_ext;
 
-	my $row 	= 1;
 	my $EXT		= 0;
 	my $TAGS	= 0;
 
@@ -30,9 +31,7 @@ sub edit
 	my $ent_min_l 	= 2;
 	my $ent_l	= 0;
 
-	&misc::plog(1, "sub manual::edit: \"$file_name\"");
 
-	my $l = length $file_name;
 	if($ent_min_l <= $l && $l <= $ent_max_l)
         {
         	$ent_l = $l;
@@ -53,16 +52,16 @@ sub edit
                 $EXT		= 1;
         }
 
-        $TAGS = &misc::is_in_array(lc $old_ext, \@config::id3v2_exts);
+        $TAGS = &misc::is_in_array(lc $old_ext, \@config::id3v2_exts) if $config::hash{id3_mode}{value};
 
 	my $newfile = $file_name;
 
 	my $w = $main::mw->Toplevel();
-	$w->title("Manual Rename");
+	$w->title('Manual Rename');
 
 	$w->Label
 	(
-        	-text=>"Manual Rename",
+        	-text=>'Manual Rename',
         	-font=>$config::dialog_title_font
         )
         -> grid
@@ -88,7 +87,7 @@ sub edit
 		-columnspan=>1
 	);
 
-	$frame1->Label(-text=>"Old Filename: ")
+	$frame1->Label(-text=>'Old Filename: ')
 	->grid
 	(
 		-row=>1,
@@ -397,9 +396,9 @@ sub edit
 
 			if($EXT)
                         {
-				$newfile = "$new_fn.$new_ext";
-				$old_fn = $new_fn;
-				$old_ext = $new_ext;
+				$newfile	= "$new_fn.$new_ext";
+				$old_fn		= $new_fn;
+				$old_ext	= $new_ext;
 			}
 			&me_rename($wd, $file_name, $newfile);
 			$file_name = $newfile;
@@ -441,29 +440,26 @@ sub me_rename
 	my $file	= shift;
 	my $newfile	= shift;
 
+	my $path	= $dir.'/'.$file;
+	my $path_tmp	= $dir.'/'.$file.'tmp';
+	my $path_new	= $dir.'/'.$newfile;
+
 	return if $file eq $newfile;
 
 	if($config::hash{fat32fix}{value})
 	{
-		my $tmpfile = $dir.'/'.$file.'tmp';
+		&main::quit("me_rename: tmpfile '$path_tmp' exists.") if -f $path_tmp;
 
-		if(-f $tmpfile)
-		{
-			&misc::plog(0, "sub me_rename: tmpfile: $tmpfile exists.");
-			return 0;
-		}
-		rename $dir.'/'.$file, $tmpfile;
-		rename $tmpfile, $dir.'/'.$newfile;
+		rename $path, $path_tmp;
+		rename $path_tmp, $path_new;
+		return;
 	}
-	else
+	if(-f $path_new)
 	{
-		if(-f $dir.'/'.$newfile)
-		{
-			&misc::plog(0, "sub me_rename: newfile: $newfile exists");
-			return 0;
-		}
-		rename $dir.'/'.$file, $dir.'/'.$newfile;
+		&misc::plog(0, "sub me_rename: newfile: $path_new exists");
+		return 0;
 	}
+	rename $path, $path_new;
 }
 
 1;
