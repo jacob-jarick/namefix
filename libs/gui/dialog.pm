@@ -71,9 +71,9 @@ sub show_file_prop
 {
 	my $ff	= shift;
 
-	&main::quit("show_file_prop: \$ff is undef") if ! defined $ff;
-	&main::quit("show_file_prop: \$ff eq ''") if $ff eq '';
-	&main::quit("show_file_prop: '$ff' is not a dir or file") if ! -f $ff && ! -d $ff;
+	&main::quit("show_file_prop: \$ff is undef")			if ! defined $ff;
+	&main::quit("show_file_prop: \$ff eq ''")			if $ff eq '';
+	&main::quit("show_file_prop: '$ff' is not a dir or file")	if ! -f $ff && ! -d $ff;
 
 	my $row	= 1;
 
@@ -103,9 +103,9 @@ sub show_file_prop
 	)
 	-> grid
 	(
-		-row => $row++,
-		-column => 1,
-		-columnspan => 2
+		-row=>$row++,
+		-column=>1,
+		-columnspan=>2
 	);
 
 	my @txt = ();
@@ -122,7 +122,6 @@ sub show_file_prop
 			"Date Created:	$ff_date",
 			"",
 		);
-		$txt_str = join("\n", @txt);
 	}
 	else
 	{
@@ -134,9 +133,8 @@ sub show_file_prop
 			"Date Created:	$ff_date",
 			"",
 		);
-		$txt_str = join("\n", @txt);
 	}
-
+	$txt_str = join("\n", @txt);
 	# display text last
 	$txt->menu(undef);
 	$txt -> insert('end', $txt_str);

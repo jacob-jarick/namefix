@@ -5,6 +5,9 @@ require Exporter;
 
 use strict;
 use warnings;
+use File::Spec::Functions;
+use Cwd qw(realpath);
+use File::stat;
 
 our @output = ();
 
@@ -300,6 +303,23 @@ sub is_in_array
 	return 0;
 }
 
+# my ($d, $f, $p) = get_file_info($file);
+sub get_file_info
+{
+	my $file	= shift;
 
+	&main::quit("get_file_info: \$file is undef") if ! defined $file;
+	&main::quit("get_file_info: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+
+	my $file_path	= File::Spec->rel2abs($file);
+	$file_path	=~ s/\\/\//g;
+	my @tmp		= split(/\//, $file_path);
+	my $file_name	= splice @tmp , $#tmp, 1;
+	my $file_dir	= join('/', @tmp);
+
+ 	print "\$file = $file\n\$file_dir = $file_dir\n\$file_name = $file_name\n\$file_path = $file_path)\n\n";
+
+	return ($file_dir, $file_name, $file_path);
+}
 
 1;

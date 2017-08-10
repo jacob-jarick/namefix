@@ -130,6 +130,12 @@ else
 # Begin Gui
 #--------------------------------------------------------------------------------------------------------------
 
+# &misc::get_file_info('d:/test/music/acdc - 1956 - biter partial/acdc - 4 - computational masturbates differing.ogg');
+# &misc::get_file_info('d:/test/music');
+
+# exit;
+
+
 our $mw = new MainWindow; # Main Window
 $mw -> title("namefix.pl $config::version by Jacob Jarick");
 

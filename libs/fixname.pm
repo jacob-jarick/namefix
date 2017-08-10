@@ -9,6 +9,9 @@ use Data::Dumper::Concise;
 use Cwd;
 use Carp;
 
+our $last_dir = '';
+our $dir = '';
+
 #--------------------------------------------------------------------------------------------------------------
 # vars
 #--------------------------------------------------------------------------------------------------------------
@@ -24,34 +27,32 @@ sub fix
         # -----------------------------------------
 
 	my $file 	= shift;
-	my $dir		= shift;
+	my $path	= '';
 
-	quit ("fixname::fix : ERROR file is undef")		if ! defined $file;
-	quit ("fixname::fix : ERROR file eq ''")		if $file eq '';
-	quit ("fixname::fix : ERROR file isnt dir/file")	if !-d $file && !-f $file;
-	quit ("fixname::fix : ERROR dir is undef")		if ! defined $dir;
+	quit ("fixname::fix : ERROR file is undef")			if ! defined $file;
+	quit ("fixname::fix : ERROR file eq ''")			if $file eq '';
+	quit ("fixname::fix : ERROR file '$file' isnt dir/file")	if !-d $file && !-f $file;
 
-        my $newfile		= $file;
-        my $tmpfile		= '';
+	($dir, $file, $path) =  &misc::get_file_info($file);
+	chdir $dir;
 
-        my @tmp_arr;
-
+        my $IS_AUDIO_FILE	= 0;
         my $tag 		= 0;
-
         my $tl	       		= 0;	# used for truncating - TODO rename to something obvious
         my $file_ext_length	= 0;
         my $trunc_char_length	= 0;
-        my $PRINT		= 0;
+
+        my @tmp_arr		= ();
+        my $newfile		= $file;
         my $file_ext		= '';
+        my $tmpfile		= '';
 
-        $config::cwd 		= cwd;	# RM - legacy code ???
 
-	my $IS_AUDIO_FILE = 0;
 	$IS_AUDIO_FILE = 1 if $file =~ /\.$config::id3_ext_regex$/i;
 
 	if($config::hash{id3_mode}{value} && !-f $file)
 	{
-		&misc::plog(0, "sub fixname: \"$file\" does not exist");
+		&misc::plog(0, "sub fixname: \"$dir/$file\" does not exist");
 		&misc::plog(0, "sub fixname: current directory = \"$config::dir\"");
 		return;
 	}
@@ -61,21 +62,21 @@ sub fix
         # -----------------------------------------
         &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::hash{IGNORE_FILE_TYPE}{value});
 
-        my $RENAME 		= 0;
+        my $RENAME = 0;
 
         # file extionsion check
-        $RENAME = 1 if(-f $file && ($config::hash{IGNORE_FILE_TYPE}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i));
+        $RENAME = 1 if -f $file && ($config::hash{IGNORE_FILE_TYPE}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
 
-#	dir check, is a directory, dir mode is enabled
+	# dir check, is a directory, dir mode is enabled
         $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
 
-#	processing all file types & dirs
+	# processing all file types & dirs
         $RENAME = 1 if $config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value};
 
-#	didnt match filter
+	# didnt match filter
         return if $config::hash{FILTER}{value} && !&filter::match($file);
 
-#	rules say file shouldnt be renamed
+	# rules say file shouldnt be renamed
 	return if !$RENAME;
 
 	# recursive, print stuff
@@ -84,22 +85,22 @@ sub fix
 	if
 	(
         	$config::hash{RECURSIVE}{value} &&
-                $config::last_recr_dir ne "$config::cwd" &&	# if pwd != last dir
-                $config::hash{PROC_DIRS}{value} == 0
+                $last_dir ne $dir &&
+                !$config::hash{PROC_DIRS}{value}
         )
 	{
 		$config::last_recr_dir = $config::cwd;
 
 		&nf_print::p(" ", "<MSG>");
-		&nf_print::p($config::cwd, $config::cwd);
+		&nf_print::p($dir);
 	}
 
 	#------------------------------------------------------------------------------
 	# Fetch & process audio tags
 	# $tag = 1 only if tags are found & id3 mode is enabled
 
-	my %tags_h = ();
-	my %tags_h_new = ();
+	my %tags_h	= ();
+	my %tags_h_new	= ();
 
 	if($config::hash{id3_mode}{value} && $IS_AUDIO_FILE)
 	{
@@ -175,7 +176,6 @@ sub fix
 		{
                 	$config::tags_rm++;
                 }
-                $PRINT++;
         	$tag = 1;
         }
 
@@ -214,10 +214,6 @@ sub fix
 
 		if($file eq $newfile && !$TAGS_CHANGED)	# nothing happened to file or tags
 		{
-			if($PRINT)
-			{
-				&nf_print::p($file, $newfile);
-			}
         		return;
         	}
 
@@ -243,9 +239,6 @@ sub fix
 			$config::change++; # increment change for preview count
 		}
 	}
-
-# 	print "fix: sending this info to nf_print::p\n\$file = $file\n\$newfile = $newfile\n\%tags_h = \n".
-# 	Dumper(\%tags_h) . "\n" . "\%tags_h_new = \n" . Dumper(\%tags_h_new) . "\n";
 
 	&nf_print::p
 	(
@@ -399,31 +392,30 @@ sub run_fixname_subs
 sub fn_kill_cwords
 {
 	my $f = shift;
+	my $fn = shift;
+
 	&main::quit("fn_kill_cwords \$f is undef\n")	if ! defined $f;
 	&main::quit("fn_kill_cwords \$f eq ''\n")	if $f eq '';
 
-	my $fn = shift;
-	my $a = "";
 
-	if(!$fn)
-	{
-		$fn = $f;
-	}
-        if($config::hash{kill_cwords}{value})
+	$fn = $f if !defined $fn || $fn eq '';
+
+	if($config::hash{kill_cwords}{value})
         {
         	if(-d $f)	# if directory process as normal
                 {
-
-	                for $a(@config::kill_words_arr_escaped)
+	                for my $a(@config::kill_words_arr)
                         {
-	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1.$3/ig;
+				$a = quotemeta $a;
+	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1$3/ig;
 	                }
 		}
                 else		# if its a file, be careful not to remove the extension, hence why we dont match on $
                 {
-	                for $a(@config::kill_words_arr_escaped)
+	                for my $a(@config::kill_words_arr)
                         {
-	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1.$3/ig;
+				$a = quotemeta $a;
+	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1$3/ig;
 	                }
                 }
         }

@@ -1,6 +1,6 @@
 $faw
 
-git grep -l 'FOUND_TMP' | xargs sed -i 's/FOUND_TMP/FOUND_TMP/g'
+git grep -l '-scrollbars=>osoe,' | xargs sed -i 's/-scrollbars=>osoe,/-scrollbars=>\'osoe\',/g'
 
 
 git grep -l 'INS_END' | xargs sed -i 's/\$config::INS_END/\$config::hash{'INS_END'}{'value'}/g'

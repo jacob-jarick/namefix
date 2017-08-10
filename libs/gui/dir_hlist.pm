@@ -9,6 +9,8 @@ use Cwd;
 our $hlist;
 our $rc_menu;
 
+our $target_dir = '';
+
 #--------------------------------------------------------------------------------------------------------------
 # clear list
 #--------------------------------------------------------------------------------------------------------------
@@ -50,28 +52,21 @@ sub hide_rc_menu
 
 sub hlist_cd
 {
-	if($config::LISTING)
+	if(&config::busy)
 	{
-		&misc::plog(1, "dir::hlist_cd: cannot CD, already listing\n");
+		&misc::plog(1, "dir::hlist_cd: cannot CD, busy\n");
 		return;
 	}
 
-	my $file = shift;
 	my $wd = shift;
-	my $old = $config::dir;
-	my $path = $wd . "/" . "$file";
 
-        if(-d $path)
+	if(-d $wd && chdir $wd)
 	{
-                if(chdir $path)
-		{
-			$config::dir = cwd();
-	        	&dir::ls_dir;
-	        	&misc::plog(3, "sub hlist_cd: \"$file\"");
-	        	return;
-		}
-		$config::dir = $old;
-        }
+		$config::dir = cwd();
+		&dir::ls_dir;
+		&misc::plog(3, "sub hlist_cd: \"$wd\"");
+		return;
+	}
         return;
 }
 
@@ -125,14 +120,16 @@ sub draw_list
 		-selectbackground	=> 'Cyan',
 		-browsecmd => sub
 		{
-                	# when user clicks on an entry update global variables
-               		$config::hlist_selection = shift;
-               		($config::hlist_file, $config::hlist_cwd, $config::hlist_file_new) = $hlist->info("data", $config::hlist_selection);
+			# when user clicks on an entry update global variables
+			$config::hlist_selection = shift;
+			($config::hlist_file, $target_dir, $config::hlist_file_new) = $hlist->info("data", $config::hlist_selection);
+
+			print "BROWSE: ($config::hlist_file, $target_dir, $config::hlist_file_new)\n";
                	},
 		-command=> sub
 		{
                 	# user has double clicked
-			&hlist_cd($config::hlist_file, $config::hlist_cwd);
+			&hlist_cd($target_dir);
 		}
 	)
 	->pack
@@ -183,13 +180,12 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			print "Stub Properties $config::hlist_file, $config::hlist_cwd \n";
+			print "Properties hlist_file='$config::hlist_file'\n";
 
 			# update file current selected file
-			($config::hlist_file, $config::hlist_cwd) = $hlist->info("data", $config::hlist_selection);
-			my $ff = $config::hlist_file;
+			($config::hlist_file, my $tmp_dir) = $hlist->info("data", $config::hlist_selection);
 
-			&dialog::show_file_prop($ff);
+			&dialog::show_file_prop($config::hlist_file);
        		}
 	);
         $rc_menu -> command

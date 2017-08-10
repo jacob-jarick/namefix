@@ -424,4 +424,13 @@ sub busy
 	return 0 if $STOP;
 }
 
+# return 1 if we are doing something
+sub mode
+{
+	return 'stop'		if $STOP;
+	return 'list' 		if $LISTING;
+ 	return 'preview'	if $PREVIEW;
+	return 'rename'		if $RUN;
+}
+
 1;

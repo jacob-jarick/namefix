@@ -20,6 +20,8 @@ sub p
 	my $ref1	= shift;
 	my $ref2	= shift;
 
+	my $mode	= &config::mode;
+
 	if($config::CLI)
 	{
 		&cli_print::print($file1, $file2, $ref1, $ref2);
@@ -34,57 +36,75 @@ sub p
 		return 1;
 	}
 
-	my $NEWFILE	= 0;
 	my $hlpos	= $config::hl_counter;	# short hand ref
 
 	$config::hl_counter++;			# now we have a ref, incr for next time
 
 	# add blank line in hlist
-	if(defined $file2 && $file2 eq '<BLANK>')
+
+	if($file1 eq '..')
 	{
-		$dir_hlist::hlist->add
-		(	$hlpos,
-			-data=>['', '', '']
+		my $count = 0;
+		my ($dir, $file_name, $path) =  &misc::get_file_info(cwd."/..");
+		$dir_hlist::hlist->add($hlpos, -data=>[$file_name, $path, '']);
+		$dir_hlist::hlist->itemCreate
+		(
+			$hlpos,
+			$count++,
+			-itemtype=>'imagetext',
+			-image=>$config::folderimage
 		);
+
+		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => '..');
+
 		return;
 	}
 
-	$config::hlist_file_new = $file1;
-	if(defined $file2 && $file2 ne '' && !$config::LISTING)
+	if(defined $file2 && $file2 eq '<BLANK>')
 	{
-		$NEWFILE = 1;
-		$config::hlist_file_new = $file2;
+		$dir_hlist::hlist->add($hlpos, -data=>['', '', '']);
+		return;
 	}
 
+	my $target_file = $file1;
+	if(defined $file2 && $file2 ne '' && !$config::LISTING)
+	{
+		$target_file = $file2;
+	}
+
+	$file2 = $file1 if !defined $file2;
+
+	my ($dir, $file_name, $path);
 	# listing - file1 must be a file/dir
-	if(!$NEWFILE && !(-f $file1 || -d $file1) )
+	($dir, $file_name, $path) =  &misc::get_file_info($file1) if -f $file1 || -d $file1;
+	($dir, $file_name, $path) =  &misc::get_file_info($file2) if -f $file2 || -d $file2;
+
+	if(($mode eq 'list' || $mode eq 'preview') && !(-f $file1 || -d $file1) )
 	{
 		&main::quit("nf_print: \$file1 $file1 not a file/dir - listing failure ?\n");
 	}
 
 	# renaming file2 must be a file/dir
-	if($config::RUN && !$config::PREVIEW && $file1 ne '..' && !-f $file2 && !-d $file2 )
+	if($mode eq 'rename' && $file1 ne '..' && !-f $file2 && !-d $file2 )
 	{
 		&main::quit("nf_print::p \$file1 '$file1' \$file2 '$file2' not a file/dir - rename failed ?\n");
 		return 1;
 	}
 
-	$config::hlist_file = $file1;
-	my $arrow = " -> ";
+	my $arrow = ' -> ';
+
+	my $ch_dir = $dir;
+	$ch_dir = $path if -d $path;
 
 	$dir_hlist::hlist->add
 	(
 		$hlpos,
-		-data=>[$config::hlist_file, $config::hlist_cwd, $config::hlist_file_new]
+		-data=>[$file_name, $dir, $target_file]
 	);
 	my $count = 0;
 
-	if	# if a directory attach dir icon
-	(
-		$file1 eq '..'		||	# .. doesnt get detected as a dir when renaming, identify by value instead
-		(!$NEWFILE && -d $file1)||	# listing check if s1 is file
-		( $NEWFILE && -d $file2)	# file renamed, check if s2 is file :)
-	)
+	# if a directory attach dir icon
+	if($target_file eq '..' || -d $target_file)
 	{
 		$dir_hlist::hlist->itemCreate
 		(
@@ -107,8 +127,12 @@ sub p
 
 	$config::hlist_file_row = $count;
 
-	my $file1_clean = $file1;
-	$file1_clean =~ s/^.*\///;
+	my $file1_clean = $file_name;
+
+	if($config::hash{RECURSIVE}{value} && -d $path)
+	{
+		$file1_clean = $path;
+	}
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1_clean);
 
@@ -125,7 +149,7 @@ sub p
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 	}
-	return if(!$NEWFILE);
+	return if $mode ne 'rename';
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => "$arrow");
 	$config::hlist_newfile_row = $count;

@@ -22,12 +22,12 @@ sub prep_globals
         $config::FOUND_TMP 	= 0;
         $config::tags_rm	= 0;
         $config::percent_done	= 0;
-        $config::last_recr_dir 	= '';
         $fixname::enum_count	= 0;
+        $config::last_recr_dir 	= '';
 
         # escape replace word if regexp is disabled
         $config::ins_str_old_escaped = $config::ins_str_old;
-	$config::ins_str_old_escaped = quotemeta $config::ins_str_old			if($config::hash{FILTER_REGEX}{value} == 1);
+	$config::ins_str_old_escaped = quotemeta $config::ins_str_old		if($config::hash{FILTER_REGEX}{value} == 1);
 
 	# update killword list if file exists
         @config::kill_words_arr = misc::readsf("$config::killwords_file")	if(-f $config::killwords_file);
@@ -36,14 +36,7 @@ sub prep_globals
         @config::kill_patterns_arr = &misc::readf($config::killpat_file)	if(-f $config::killpat_file);
 
 	# update casing list if file exists
-        @config::word_casing_arr = &misc::readf($config::casing_file)	if(-f $config::casing_file);
-
-        # update escaped list of kill_word_arr
-	@config::kill_words_arr_escaped = ();
-	for my $word(@config::kill_words_arr)
-	{
-		push (@config::kill_words_arr_escaped, quotemeta $word);
-	}
+        @config::word_casing_arr = &misc::readf($config::casing_file)		if(-f $config::casing_file);
 }
 
 sub run
@@ -90,7 +83,8 @@ sub run
 			&main::quit("sub run: \$f eq ''\n")			if ($f eq '');
 			&main::quit("sub run: \$f '$f' is not a dir or file\n")	if (!-f $f && !-d $f);
 
-			&fixname::fix($f, cwd)	if -f $f || ($config::hash{PROC_DIRS}{value} && -d $f);
+			 my ($d, $fn, $p) =  &misc::get_file_info($f);
+			&fixname::fix($fn)	if -f $f || ($config::hash{PROC_DIRS}{value} && -d $f);
                 }
         }
         if($config::hash{RECURSIVE}{value})
@@ -107,10 +101,10 @@ sub run
         $t_s = "would have" if ($config::PREVIEW);
 
         &misc::plog(1, "$config::change files $t_s been modified");
-	&misc::plog(1, "$config::id3_change mp3s tags $t_s been updated.")			if($config::hash{id3_mode}{value});
-        &misc::plog(1, "$config::tags_rm mp3 tags $t_s been removed")				if($config::tags_rm);
+	&misc::plog(1, "$config::id3_change mp3s tags $t_s been updated.")				if($config::hash{id3_mode}{value});
+        &misc::plog(1, "$config::tags_rm mp3 tags $t_s been removed")					if($config::tags_rm);
 	&misc::plog(0, "unable to rename $config::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($config::SUGGEST_FSFIX != 0);
-	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")	if($config::FOUND_TMP);
+	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")		if($config::FOUND_TMP);
 
 	# cleanup
 
@@ -140,8 +134,8 @@ sub find_fix_process
 	{
 		$config::percent_done = int(($count++ / $total) * 100);
 
-		$file =~ m/^(.*)\/(.*?)$/;
-		&fixname::fix($2, $1);
+		my ($d, $fn, $p) =  &misc::get_file_info($file);
+		&fixname::fix($fn);
 	}
 	return 1;
 }

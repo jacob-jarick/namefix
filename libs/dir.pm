@@ -33,6 +33,8 @@ sub ls_dir
 	$config::dir = cwd();
 	&dir_hlist::draw_list;
 
+	&ls_dir_print('..');
+
         if($config::hash{RECURSIVE}{value})
         {
 		@config::find_arr = ();
@@ -41,8 +43,6 @@ sub ls_dir
                 $config::LISTING = 0;
 	        return;
         }
-
-	&ls_dir_print('..');
 
         my $count		= 1;
 	my $total		= scalar @dirlist + scalar @file_list;
@@ -117,7 +117,7 @@ sub ls_dir_print
 {
 	return 0 if $config::STOP;
 
-	my $file	= shift;
+	my $file = shift;
 
         &main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
         &main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
