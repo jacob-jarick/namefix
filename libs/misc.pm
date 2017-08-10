@@ -311,15 +311,54 @@ sub get_file_info
 	&main::quit("get_file_info: \$file is undef") if ! defined $file;
 	&main::quit("get_file_info: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
 
-	my $file_path	= File::Spec->rel2abs($file);
-	$file_path	=~ s/\\/\//g;
-	my @tmp		= split(/\//, $file_path);
-	my $file_name	= splice @tmp , $#tmp, 1;
-	my $file_dir	= join('/', @tmp);
+	my $file_path	= &get_file_path($file);
+	my $file_name	= &get_file_name($file_path);
+	my $file_dir	= &get_file_parent_dir($file_path);
 
  	print "\$file = $file\n\$file_dir = $file_dir\n\$file_name = $file_name\n\$file_path = $file_path)\n\n";
 
 	return ($file_dir, $file_name, $file_path);
 }
+
+# my ($d, $f, $p) = get_file_info($file);
+sub get_file_path
+{
+	my $file	= shift;
+
+	&main::quit("get_file_path: \$file is undef") if ! defined $file;
+	&main::quit("get_file_path: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+
+	my $file_path	= File::Spec->rel2abs($file);
+	$file_path	=~ s/\\/\//g;
+
+	return $file_path;
+}
+
+sub get_file_parent_dir
+{
+	my $file_path	= shift;
+
+	&main::quit("get_file_parent_dir: \$file_path is undef") if ! defined $file_path;
+	&main::quit("get_file_parent_dir: \$file_path '$file_path' is not a dir or file") if !-f $file_path && !-d $file_path;
+
+	my @tmp		= split(/\//, $file_path);
+	my $file_name	= splice @tmp , $#tmp, 1;
+	my $file_dir	= join('/', @tmp);
+
+	return $file_dir;
+}
+
+sub get_file_name
+{
+	my $file_path	= shift;
+
+	&main::quit("get_file_name: \$file_path is undef") if ! defined $file_path;
+	&main::quit("get_file_name: \$file_path '$file_path' is not a dir or file") if !-f $file_path && !-d $file_path;
+
+	my @tmp = split(/\//, $file_path);
+	return $tmp[$#tmp];
+}
+
+
 
 1;

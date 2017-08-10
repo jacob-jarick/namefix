@@ -122,8 +122,9 @@ sub draw_list
 		{
 			# when user clicks on an entry update global variables
 			$config::hlist_selection = shift;
-			($config::hlist_file, $target_dir, $config::hlist_file_new) = $hlist->info("data", $config::hlist_selection);
+			($config::hlist_file, $target_dir, $config::hlist_file_new) = $hlist->info('data', $config::hlist_selection);
 
+			$target_dir = "$target_dir/$config::hlist_file" if -d "$target_dir/$config::hlist_file";
 			print "BROWSE: ($config::hlist_file, $target_dir, $config::hlist_file_new)\n";
                	},
 		-command=> sub
