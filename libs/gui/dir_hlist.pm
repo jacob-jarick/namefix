@@ -10,6 +10,31 @@ our $hlist;
 our $rc_menu;
 
 our $target_dir = '';
+our %info = ();
+
+our $counter = 0;
+
+#--------------------------------------------------------------------------------------------------------------
+# info hash manager
+#--------------------------------------------------------------------------------------------------------------
+
+sub info_add
+{
+	my $index	= shift;
+	my $path	= shift;
+	my $file	= shift;
+	my $newfile	= shift;	# can be undef
+
+	&main::quit("info_add: \$index is undef")			if ! defined $index;
+	&main::quit("info_add: \$index '$index' is not an int")		if $index !~ /^\d+$/;
+	&main::quit("info_add: \$path is undef")			if ! defined $path;
+	&main::quit("info_add: \$path '$path' is not a file or dir")	if !-f $path && !-d $path;
+
+	$info{$index}{path}		= &misc::get_file_path($path);
+	$info{$index}{filename}		= $file;
+	$info{$index}{parent}		= &misc::get_file_parent_dir($path);
+	$info{$index}{new_filename}	= $newfile if defined $newfile;
+}
 
 #--------------------------------------------------------------------------------------------------------------
 # clear list
@@ -17,9 +42,10 @@ our $target_dir = '';
 
 sub hlist_clear
 {
-	$config::hl_counter = 0;
+	$counter = 0;
 	&draw_list if !defined $hlist;
 	$hlist->delete("all");
+	%info = ();
 
 	return 1;
 }
@@ -78,7 +104,7 @@ sub hlist_cd
 sub fn_update_delay
 {
 	$config::update_delay--;
-	if($config::update_delay == 0 || $config::LISTING == 0)
+	if(!$config::update_delay || !$config::LISTING)
 	{
 		$main::mw->update();
 		$config::update_delay = $config::delay;
@@ -121,11 +147,12 @@ sub draw_list
 		-browsecmd => sub
 		{
 			# when user clicks on an entry update global variables
-			$config::hlist_selection = shift;
-			($config::hlist_file, $target_dir, $config::hlist_file_new) = $hlist->info('data', $config::hlist_selection);
+			$config::hlist_selection	= shift;
+			$target_dir			= $info{$config::hlist_selection}{parent};
+			$config::hlist_file		= $info{$config::hlist_selection}{filename};
 
-			$target_dir = "$target_dir/$config::hlist_file" if -d "$target_dir/$config::hlist_file" && $config::hlist_file ne '..';
-			print "BROWSE: hlist_file = '$config::hlist_file', target_dir = '$target_dir', hlist_file_new = '$config::hlist_file_new'\n";
+			$target_dir = $info{$config::hlist_selection}{path} if -d $info{$config::hlist_selection}{path} && $config::hlist_file ne '..';
+			print "BROWSE: target_dir = '$target_dir'\n";
                	},
 		-command=> sub
 		{
@@ -143,7 +170,6 @@ sub draw_list
 	# listing/ rename / preview - add '<VALUE>' column headers
 	$hlist->header('create', $count++, -text =>'Icon');
 	$hlist->header('create', $count++, -text =>'Filename');      # for norm & id3 mode
-
 
 	if($config::hash{id3_mode}{value})
 	{
@@ -169,7 +195,6 @@ sub draw_list
 		}
 	}
 	&main::quit("draw_list \$count $count > \$columns $columns\n") if($count > $columns);
-# 	print "draw_list = \$count = $count, \$columns = $columns\n";
 
 	# ----------------------------------------------------------------------------
 	# Right Click Menu
@@ -181,12 +206,10 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			print "Properties hlist_file='$config::hlist_file'\n";
+			my $path = $info{$config::hlist_selection}{path};
+			print "Properties path='$path'\n";
 
-			# update file current selected file
-			($config::hlist_file, my $tmp_dir) = $hlist->info("data", $config::hlist_selection);
-
-			&dialog::show_file_prop($config::hlist_file);
+			&dialog::show_file_prop($path);
        		}
 	);
         $rc_menu -> command
@@ -222,32 +245,22 @@ sub draw_list
 	);
         $rc_menu -> command
         (
-		-label=>"Manual Rename",
+		-label=>'Manual Rename',
 		-underline=> 1,
-		-command=> sub
-		{
-			&manual::edit($config::hlist_file, $config::hlist_cwd);
-       		}
+		-command=> sub { &manual::edit( $info{$config::hlist_selection}{path} ); }
 	);
         $rc_menu -> command
         (
-		-label=>"Delete",
+		-label=>'Delete',
 		-underline=> 1,
 		-command=> sub
-		{
-			# update file current selected file
-			($config::hlist_file, $config::hlist_cwd) = $hlist->info("data", $config::hlist_selection);
-			my $ff = $config::hlist_cwd . "/" . $config::hlist_file;
-			&dialog::show_del_dialog($ff);
-       		}
+		{ &dialog::show_del_dialog( $info{$config::hlist_selection}{path} ); }
 	);
 
 
         $hlist->bind('<Any-ButtonPress-3>', \&show_rc_menu);
         $hlist->bind('<Any-ButtonPress-1>',[\&hide_rc_menu, $rc_menu]);
         $hlist->bind('<Any-ButtonPress-2>',[\&hide_rc_menu, $rc_menu]);
-
-# 	&dir::ls_dir;
 }
 
 

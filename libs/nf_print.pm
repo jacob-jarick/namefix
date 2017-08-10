@@ -36,16 +36,17 @@ sub p
 		return 1;
 	}
 
-	my $hlpos	= $config::hl_counter;	# short hand ref
+	my $hlpos = $dir_hlist::counter;	# short hand ref
 
-	$config::hl_counter++;			# now we have a ref, incr for next time
+	$dir_hlist::counter++;			# now we have a ref, incr for next time
 
 	# add blank line in hlist
 
 	if($file1 eq '..')
 	{
 		my $parent_dir =  &misc::get_file_parent_dir(cwd);
-		$dir_hlist::hlist->add($hlpos, -data=>['..', $parent_dir, '']);
+		&dir_hlist::info_add($hlpos, '..', $parent_dir);
+		$dir_hlist::hlist->add($hlpos);
 		$dir_hlist::hlist->itemCreate
 		(
 			$hlpos,
@@ -61,7 +62,7 @@ sub p
 
 	if(defined $file2 && $file2 eq '<BLANK>')
 	{
-		$dir_hlist::hlist->add($hlpos, -data=>['', '', '']);
+		$dir_hlist::hlist->add($hlpos);
 		return;
 	}
 
@@ -95,11 +96,8 @@ sub p
 	my $ch_dir = $dir;
 	$ch_dir = $path if -d $path;
 
-	$dir_hlist::hlist->add
-	(
-		$hlpos,
-		-data=>[$file_name, $dir, $target_file]
-	);
+	$dir_hlist::hlist->add( $hlpos );
+	&dir_hlist::info_add($hlpos, $file_name, $dir, $target_file);
 	my $count = 0;
 
 	# if a directory attach dir icon

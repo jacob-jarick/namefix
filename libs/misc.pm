@@ -315,12 +315,9 @@ sub get_file_info
 	my $file_name	= &get_file_name($file_path);
 	my $file_dir	= &get_file_parent_dir($file_path);
 
- 	print "\$file = $file\n\$file_dir = $file_dir\n\$file_name = $file_name\n\$file_path = $file_path)\n\n";
-
 	return ($file_dir, $file_name, $file_path);
 }
 
-# my ($d, $f, $p) = get_file_info($file);
 sub get_file_path
 {
 	my $file	= shift;
@@ -338,7 +335,6 @@ sub get_file_parent_dir
 {
 	my $file_path	= shift;
 	$file_path	= &get_file_path($file_path);
-
 	my @tmp		= split(/\//, $file_path);
 	my $file_name	= splice @tmp , $#tmp, 1;
 	my $file_dir	= join('/', @tmp);
@@ -350,11 +346,27 @@ sub get_file_name
 {
 	my $file_path	= shift;
 	$file_path	= &get_file_path($file_path);
+	my @tmp		= split(/\//, $file_path);
 
-	my @tmp = split(/\//, $file_path);
 	return $tmp[$#tmp];
 }
 
+sub get_file_ext
+{
+	my $file_path	= shift;
+
+	return undef if !-f $file_path;
+
+	$file_path	= &get_file_path($file_path);
+	my @tmp		= split(/\//, $file_path);
+	my $file_name	= splice @tmp , $#tmp, 1;
+
+	if ( $file_name =~ /^(.+)\.(.+?)$/)
+	{
+		return ($1, $2);
+	}
+	return undef;
+}
 
 
 1;
