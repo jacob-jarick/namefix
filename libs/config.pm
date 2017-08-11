@@ -8,6 +8,8 @@ use Cwd;
 use Data::Dumper::Concise;
 use FindBin qw($Bin);
 
+use misc;
+
 our $dir		= cwd;
 our $cwd		= cwd;
 our $hlist_cwd		= cwd;
@@ -320,21 +322,25 @@ $hash{ZERO_LOG}			{value}	= 1;
 
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
-our @kill_words_arr	= &misc::readf_clean($killwords_defaults);
-@kill_words_arr		= &misc::readf_clean($killwords_file) if -f $killwords_file;
+our @kill_words_arr	= ();
+@kill_words_arr		= &misc::readf_clean($killwords_defaults)	if -f $killwords_defaults;
+@kill_words_arr		= &misc::readf_clean($killwords_file)		if -f $killwords_file;
 
 our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
 our $casing_defaults   	= "$Bin/data/defaults/special_casing.txt";
-our @word_casing_arr	= misc::readf_clean($casing_defaults);
-@word_casing_arr	= misc::readf_clean($casing_file) if -f $casing_file;
+our @word_casing_arr	= ();
+@word_casing_arr	= misc::readf_clean($casing_defaults)		if -f $casing_defaults;
+@word_casing_arr	= misc::readf_clean($casing_file)		if -f $casing_file;
 
-our $killpat_file   	= "$home/.namefix.pl/list_rm_patterns.txt";
+our $killpat_file   	= "$home/.namefix.pl/killpatterns.txt";
 our $killpat_defaults  	= "$Bin/data/defaults/killpatterns.txt";
-our @kill_patterns_arr	= &misc::readf_clean($killpat_defaults);
-@kill_patterns_arr	= &misc::readf_clean($killpat_defaults) if -f $killpat_file;
+our @kill_patterns_arr	= ();
+@kill_patterns_arr	= &misc::readf_clean($killpat_defaults)		if -f $killpat_defaults;
+@kill_patterns_arr	= &misc::readf_clean($killpat_file)		if -f $killpat_file;
 
 our $genres_file	= "$Bin/data/txt/genres.txt";
-our @genres		= misc::readf_clean($genres_file);
+our @genres		= ();
+@genres			= misc::readf_clean($genres_file)		if -f $genres_file;
 
 
 sub save_hash

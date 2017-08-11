@@ -14,7 +14,6 @@ use File::Basename qw(&basename &dirname);
 
 use File::Copy;
 use FindBin qw($Bin);
-use FindBin qw($Bin);
 
 use lib		"$Bin/libs/";
 use lib		"$Bin/libs/cli";
