@@ -40,13 +40,12 @@ InitPluginsDir
   SetOutPath $INSTDIR
 
   ; Put file there
+  File /r "..\data"
   File /r "..\extra"
   File /r "..\libs"
   File /r "..\tools"
-  File /r "..\txt"
   File  "..\namefix*.*"
   File  "..\*.pl"
-  File  "..\*.jpg"
   File  "..\LICENSE"
   File  "..\README.md"
 
