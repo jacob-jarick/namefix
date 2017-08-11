@@ -18,7 +18,6 @@ use FindBin qw($Bin);
 
 use lib		"$Bin/libs/";
 use lib		"$Bin/libs/cli";
-# $0 = location of scipt either full or relative, usefull to determine scripts location
 
 # mems libs
 use fixname;
@@ -64,7 +63,7 @@ $config::CLI = 1;	# set cli mode flag
 #--------------------------------------------------------------------------------------------------------------
 
 my @tmp = ();
-my $text = "";
+my $text = '';
 
 #-------------------------------------------------------------------------------------------------------------
 # 1st run check
@@ -133,6 +132,12 @@ else
 
 $config::hash{ERROR_STDOUT}{value} = 1;
 
+if(scalar @ARGV == 0)
+{
+	&cli_help::show('help');
+	exit;
+}
+
 for my $arg(@ARGV)
 {
 	# found a short option, process it
@@ -142,65 +147,65 @@ for my $arg(@ARGV)
 		next;
 	}
 
-	if($arg eq "--help")
+	if($arg eq '--help')
 	{
-		&cli_help::show("help");
+		&cli_help::show('help');
 		exit 0;
 	}
-	if($arg eq "--help-short")
+	if($arg eq '--help-short')
 	{
-		&cli_help::show("short");
+		&cli_help::show('short');
 		exit 0;
 	}
-	if($arg eq "--help-long")
+	if($arg eq '--help-long')
 	{
-		&cli_help::show("log");
+		&cli_help::show('log');
 		exit 0;
 	}
-	if($arg eq "--help-misc")
+	if($arg eq '--help-misc')
 	{
-		&cli_help::show("misc");
+		&cli_help::show('misc');
 		exit 0;
 	}
-	if($arg eq "--help-adv")
+	if($arg eq '--help-adv')
 	{
-		&cli_help::show("adv");
+		&cli_help::show('adv');
 		exit 0;
 	}
-	elsif($arg eq "--help-mp3")
+	elsif($arg eq '--help-mp3')
 	{
-		&cli_help::show("mp3");
+		&cli_help::show('mp3');
 		exit 0;
 	}
-	elsif($arg eq "--help-trunc")
+	elsif($arg eq '--help-trunc')
 	{
-		&cli_help::show("trunc");
+		&cli_help::show('trunc');
 		exit 0;
 	}
-	elsif($arg eq "--help-enum")
+	elsif($arg eq '--help-enum')
 	{
-		&cli_help::show("enum");
+		&cli_help::show('enum');
 		exit 0;
 	}
-	elsif($arg eq "--help-doc")
+	elsif($arg eq '--help-doc')
 	{
-		&cli_help::show("doc");
+		&cli_help::show('doc');
 		exit 0;
 	}
-	elsif($arg eq "--help-debug")
+	elsif($arg eq '--help-debug')
 	{
-		&cli_help::show("debug");
+		&cli_help::show('debug');
 		exit 0;
 	}
-	elsif($arg eq "--help-hacks")
+	elsif($arg eq '--help-hacks')
 	{
-		&cli_help::show("hacks");
+		&cli_help::show('hacks');
 		exit 0;
 	}
 
-	elsif($arg eq "--help-all")
+	elsif($arg eq '--help-all')
 	{
-		&cli_help::show("all");
+		&cli_help::show('all');
 		exit 0;
 	}
 
@@ -208,27 +213,27 @@ for my $arg(@ARGV)
 	# Main Options
 	#####################
 
-	elsif($arg eq "--cleanup" || $arg eq "--clean" )
+	elsif($arg eq '--cleanup' || $arg eq '--clean' )
 	{
 		$config::hash{CLEANUP_GENERAL}{value} = 1;
 	}
-	elsif($arg eq "--rename" || $arg eq "--ren")
+	elsif($arg eq '--rename' || $arg eq '--ren')
 	{
 		$config::PREVIEW = 0;
 	}
-	elsif($arg eq "--case")
+	elsif($arg eq '--case')
 	{
 		$config::hash{case}{value} = 1;
 	}
-	elsif($arg eq "--spaces")
+	elsif($arg eq '--spaces')
 	{
 		$config::hash{spaces}{value} = 1;
 	}
-	elsif($arg eq "--dots")
+	elsif($arg eq '--dots')
 	{
 		$config::hash{dot2space}{value} = 1;
 	}
-	elsif($arg eq "--regexp")
+	elsif($arg eq '--regexp')
 	{
 		 $config::hash{FILTER_REGEX}{value} = 0;
 	}
@@ -256,20 +261,20 @@ for my $arg(@ARGV)
 		$config::end_a = 1;
 		$config::ins_end_str = $1;
 	}
-	elsif($arg eq "--rm-words")
+	elsif($arg eq '--rm-words')
 	{
 		$config::hash{kill_cwords}{value} = 1;
 	}
 
-	elsif($arg eq "--rm-pat")
+	elsif($arg eq '--rm-pat')
 	{
 		$config::hash{kill_sp_patterns}{value} = 1;
 	}
-	elsif($arg eq "--case-sp")
+	elsif($arg eq '--case-sp')
 	{
 		$config::hash{WORD_SPECIAL_CASING}{value} = 1;
 	}
-	elsif($arg eq "--fs-fix")
+	elsif($arg eq '--fs-fix')
 	{
 		$config::hash{fat32fix}{value} = 1;
 	}
@@ -278,23 +283,23 @@ for my $arg(@ARGV)
 	# Advanced Options
 	#####################
 
-	elsif($arg eq "--undo")
+	elsif($arg eq '--undo')
 	{
 		$config::UNDO = 1;
 	}
-	elsif($arg eq "--recr")
+	elsif($arg eq '--recr')
 	{
 		$config::hash{RECURSIVE}{value} = 1;
 	}
-	elsif($arg eq "--dir")
+	elsif($arg eq '--dir')
 	{
 		$config::hash{PROC_DIRS}{value} = 1;
 	}
-	elsif($arg eq "--overwrite")
+	elsif($arg eq '--overwrite')
 	{
 		$config::hash{OVERWRITE}{value} = 1;
 	}
- 	elsif($arg eq "--all-files")
+ 	elsif($arg eq '--all-files')
  	{
  		$config::hash{IGNORE_FILE_TYPE}{value} = 1;
  	}
@@ -302,7 +307,7 @@ for my $arg(@ARGV)
 	{
 		$config::filter_string = $1;
 	}
-	elsif($arg eq "--filt-regexp")
+	elsif($arg eq '--filt-regexp')
 	{
 		$config::hash{FILTER_REGEX}{value} = 1;
 	}
@@ -321,8 +326,8 @@ for my $arg(@ARGV)
 
 	elsif($arg =~ /-trunc=(.*)/)
 	{
-		$config::truncate = 1;
-		$config::hash{'truncate_to'}{'value'} = $1;
+		$config::hash{truncate}{truncate}{value} = 1;
+		$config::hash{truncate_to}{value} = $1;
 
 	}
 	elsif($arg =~ /--trunc-pat=(.*)/)
@@ -338,7 +343,7 @@ for my $arg(@ARGV)
 	# Enumerate Options
 	########################
 
- 	elsif($arg eq "--enum")
+ 	elsif($arg eq '--enum')
  	{
  		$config::hash{enum}{value} = 1;
  	}
@@ -346,7 +351,7 @@ for my $arg(@ARGV)
 	{
 		$config::hash{enum_opt}{value} = $1;
 	}
- 	elsif($arg eq "--enum-add-strings")
+ 	elsif($arg eq '--enum-add-strings')
  	{
  		$config::hash{enum_add}{value} = 1;
  	}
@@ -370,60 +375,60 @@ for my $arg(@ARGV)
 	# Misc Options
 	#####################
 
-	elsif($arg eq "--int")
+	elsif($arg eq '--int')
 	{
 		$config::hash{intr_char}{value} = 1;
 	}
 
-	elsif($arg eq "--scene" || $arg eq "--sc")
+	elsif($arg eq '--scene' || $arg eq '--sc')
 	{
 		$config::hash{scene}{value} = 1;
 	}
 
-	elsif($arg eq "--unscene" || $arg eq "--usc")
+	elsif($arg eq '--unscene' || $arg eq '--usc')
 	{
 		$config::hash{unscene}{value} = 1;
 	}
 
-	elsif($arg eq "--uc-all" || $arg eq "--uc")
+	elsif($arg eq '--uc-all' || $arg eq '--uc')
 	{
 		$config::hash{uc_all}{value} = 1;
 	}
 
-	elsif($arg eq "--lc-all" || $arg eq "--lc")
+	elsif($arg eq '--lc-all' || $arg eq '--lc')
 	{
 		$config::hash{lc_all}{value} = 1;
 	}
 
-	elsif($arg eq "--rm-nc" || $arg eq "--rmc")
+	elsif($arg eq '--rm-nc' || $arg eq '--rmc')
 	{
 		$config::hash{sp_char}{value} = 1;
 	}
-	elsif($arg eq "--rm-starting-digits" || $arg eq "--rsd")
+	elsif($arg eq '--rm-starting-digits' || $arg eq '--rsd')
 	{
 		$config::hash{digits}{value} = 1;
 	}
-	elsif($arg eq "--rm-all-digits" || $arg eq "--rad")
+	elsif($arg eq '--rm-all-digits' || $arg eq '--rad')
 	{
 		$config::hash{RM_DIGITS}{value} = 1;
 	}
-	elsif($arg eq "--pad-ntonn" || $arg eq "--pn2nn")
+	elsif($arg eq '--pad-ntonn' || $arg eq '--pn2nn')
 	{
 		$config::hash{pad_N_to_NN}{value} = 1;
 	}
-	elsif($arg eq "--pad-hyphen" || $arg eq "--ph")
+	elsif($arg eq '--pad-hyphen' || $arg eq '--ph')
 	{
 		$config::hash{pad_dash}{value} = 1;
 	}
-	elsif($arg eq "--pad-num" || $arg eq "--pn")
+	elsif($arg eq '--pad-num' || $arg eq '--pn')
 	{
 		$config::hash{pad_digits}{value} = 1;
 	}
-	elsif($arg eq "--pad-num-w0" || $arg eq "--p0")
+	elsif($arg eq '--pad-num-w0' || $arg eq '--p0')
 	{
 		$config::hash{pad_digits_w_zero}{value} = 1;
 	}
-	elsif($arg eq "--pad-nnnn-wx" || $arg eq "--px")
+	elsif($arg eq '--pad-nnnn-wx' || $arg eq '--px')
 	{
 		$config::hash{SPLIT_DDDD}{value} = 1;
 	}
@@ -432,7 +437,7 @@ for my $arg(@ARGV)
 	# Hacks Options
 	#####################
 
-	elsif($arg eq "--html")
+	elsif($arg eq '--html')
 	{
 		$config::hash{HTML_HACK}{value} = 1;
 	}
@@ -445,22 +450,22 @@ for my $arg(@ARGV)
 	# MP3 Options
 	#####################
 
-	elsif($arg eq "--id3-guess")
+	elsif($arg eq '--id3-guess')
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{id3_guess_tag}{value} = 1;
 	}
-	elsif($arg eq "--id3-overwrite")
+	elsif($arg eq '--id3-overwrite')
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{AUDIO_FORCE}{value} = 1;
 	}
-	elsif($arg eq "--id3-rm-v1")
+	elsif($arg eq '--id3-rm-v1')
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{RM_AUDIO_TAGS}{value} = 1;
 	}
-	elsif($arg eq "--id3-rm-v2")
+	elsif($arg eq '--id3-rm-v2')
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{RM_AUDIO_TAGS}{value} = 1;
@@ -512,7 +517,7 @@ for my $arg(@ARGV)
 	{
 		$config::hash{'debug'}{'value'} = $1;
 	}
-	elsif($arg eq "--debug-stdout")
+	elsif($arg eq '--debug-stdout')
 	{
 		$config::hash{LOG_STDOUT}{value} = 1;
 	}
@@ -522,31 +527,31 @@ for my $arg(@ARGV)
 	#############################
 
 
-	elsif($arg eq "--changelog")
+	elsif($arg eq '--changelog')
 	{
 		$text = join("", &misc::readf($config::changelog));
 		print "$text\n\n";
 		exit;
 	}
-	elsif($arg eq "--about")
+	elsif($arg eq '--about')
 	{
 		$text = join("", &misc::readf($config::about));
 		print "$text\n\n";
 		exit;
 	}
-	elsif($arg eq "--todo")
+	elsif($arg eq '--todo')
 	{
 		$text = join("", &misc::readf($config::todo));
 		print "$text\n\n";
 		exit;
 	}
-	elsif($arg eq "--thanks")
+	elsif($arg eq '--thanks')
 	{
 		$text = join("", &misc::readf($config::thanks));
 		print "$text\n\n";
 		exit;
 	}
-	elsif($arg eq "--links")
+	elsif($arg eq '--links')
 	{
 		$text = join("", &misc::readf($config::links));
 		print "$text\n\n";
@@ -556,28 +561,28 @@ for my $arg(@ARGV)
 	{
 		$config::hash{editor}{value} = $1;
 	}
-	elsif($arg eq "--ed-config")
+	elsif($arg eq '--ed-config')
 	{
 		system("$config::hash{editor}{value} $config::hash_tsv");
 		exit;
 	}
 
-	elsif($arg eq "--ed-spcase")
+	elsif($arg eq '--ed-spcase')
 	{
 		system("$config::hash{editor}{value} $config::casing_file");
 		exit;
 	}
-	elsif($arg eq "--ed-rmwords")
+	elsif($arg eq '--ed-rmwords')
 	{
 		system("$config::hash{editor}{value} $config::killwords_file");
 		exit;
 	}
-	elsif($arg eq "--ed-rmpat")
+	elsif($arg eq '--ed-rmpat')
 	{
 		system("$config::hash{editor}{value} $config::killpat_file");
 		exit;
 	}
-	elsif($arg eq "--show-log")
+	elsif($arg eq '--show-log')
 	{
 		$text = join("", &misc::readf($main::log_file));
 		print "$text\n\n";
@@ -588,7 +593,7 @@ for my $arg(@ARGV)
 	# Save config options
 	#############################
 
-	elsif($arg eq "--save-options" || $_ eq "--save-opt" || $_ eq "--save-config")
+	elsif($arg eq '--save-options' || $_ eq '--save-opt' || $_ eq '--save-config')
 	{
 		&config::save;
 		&cli_print::print("Options Saved, exiting", "<MSG>");
@@ -620,7 +625,6 @@ print "*** Processing dir: $config::dir\n";
 &htmlh::html("<table border=1>");
 &htmlh::html("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
 
-
 if($config::UNDO)
 {
 	@config::undo_pre = &misc::readf($config::undo_pre_file);
@@ -641,7 +645,6 @@ if($config::hash{HTML_HACK}{value})
 	system("$config::hash{browser}{value} $main::html_file");
 }
 
-print Dumper(\%config::hash);
 
 exit;
 
