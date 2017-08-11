@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 4;
 use File::Copy;
 use FindBin qw($Bin);
 
@@ -25,8 +25,20 @@ is( &fixname::fn_unscene($file), 'Hello - 03x11 - Today Tonight.avi',  'fn_unsce
 
 # scene
 $config::hash{scene}{value} = 1;
-my $file = "Hello - 03x11 - Today Tonight.avi";
+$file = "Hello - 03x11 - Today Tonight.avi";
 is( &fixname::fn_scene($file), 'Hello - S03E11 - Today Tonight.avi',  'fn_scene test');
+
+
+# fn_spaces
+$config::hash{spaces}{value} = 1;
+$config::hash{space_character}{value} = ' ';
+$file = "Hello_-_03x11_-_Today_Tonight.avi";
+is( &fixname::fn_spaces(0, $file), 'Hello - 03x11 - Today Tonight.avi',  'fn_spaces test');
+
+# fn_sp_char
+$config::hash{sp_char}{value} = 1;
+$file = 'Hello - 03x11 - (Today Tonight).avi';
+is( &fixname::fn_sp_char($file), 'Hello - 03x11 - Today Tonight.avi',  'fn_sp_char test');
 
 
 exit;
