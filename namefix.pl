@@ -66,6 +66,7 @@ my $col	= 1;
 # mems libs
 use misc;
 use config;
+use log;
 
 use fixname;
 use run_namefix;
@@ -854,7 +855,6 @@ my $clr_but = $frm_left -> Button
 	-command => sub
 	{
 		&misc::clr_no_save;
-		@misc::output = ();
 		&misc::plog(1, 'clear');
 
 	}

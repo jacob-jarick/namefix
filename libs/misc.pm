@@ -9,8 +9,6 @@ use File::Spec::Functions;
 use Cwd qw(realpath);
 use File::stat;
 
-our @output = ();
-
 sub ci_sort
 {
 	my @sortme2 = sort { lc($a) cmp lc($b) } @_;
@@ -20,7 +18,7 @@ sub ci_sort
 # plog - print log
 
 # Notes:
-# Since i will be logging all subs (excluding plog itself, plug cannot call any namefix subs (recursion errors which locked linux on my system)
+# plug cannot call any namefix subs avoids recursion errors
 
 sub plog
 {
@@ -29,20 +27,7 @@ sub plog
 
 	if(!$config::CLI) # gui mode
 	{
-		if($text !~ /\n/ && length $text > 2 && $text ne ' ' && $text ne '')
-		{
-			$text .= "\n";
-		}
-		push @output, "$text";
-		if(scalar @output > 200)
-		{
-			@output = @output[scalar @output - 50 .. scalar @output];
-		}
-		if(defined $main::log_box) # plog can occur before gui is ready
-		{
-		$main::log_box->Contents(@output);
-			$main::log_box->GotoLineNumber(scalar @output);
-		}
+		&log::add($level, $text);
 	}
 
 	if($level == 0)
