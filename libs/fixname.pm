@@ -392,8 +392,8 @@ sub run_fixname_subs
 
 sub fn_kill_cwords
 {
-	my $f = shift;
-	my $fn = shift;
+	my $f	= shift;
+	my $fn	= shift;
 
 	&main::quit("fn_kill_cwords \$f is undef\n")	if ! defined $f;
 	&main::quit("fn_kill_cwords \$f eq ''\n")	if $f eq '';
@@ -576,22 +576,19 @@ sub fn_sp_word
 	&main::quit("fn_sp_word \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_sp_word \$fn eq ''\n")		if $FILE && $fn eq '';
 
-        if($config::hash{WORD_SPECIAL_CASING}{value})
-        {
-        	my $word = "";
-                foreach $word(@config::word_casing_arr)
-                {
-                	$word =~ s/(\s+|\n+|\r+)+$//;
-                	$word = quotemeta $word;
-			if(-f $f)	# is file and not a directory
-			{
-				$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\)|\]|\..{3,4}$)/$1.$word.$3/egi;
-				next;
-			}
-			# not a file treat as a string
-			$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\(|\]|$)/$1.$word.$3/egi
-                }
-        }
+	return $fn if !$config::hash{WORD_SPECIAL_CASING}{value};
+	foreach my $word(@config::word_casing_arr)
+	{
+		$word =~ s/(\s+|\n+|\r+)+$//;
+		$word = quotemeta $word;
+		if(-f $f)	# is file and not a directory
+		{
+			$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\)|\]|\..{3,4}$)/$1.$word.$3/egi;
+			next;
+		}
+		# not a file treat as a string
+		$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\(|\]|$)/$1.$word.$3/egi
+	}
 	return $fn;
 }
 
@@ -603,22 +600,20 @@ sub fn_dot2space
 	&main::quit("fn_dot2space \$f eq ''\n")		if $FILE && $f eq '';
 
 	my $fn = shift;
-        if($config::hash{dot2space}{value})
-        {
-        	if(-f $f && $fn =~ /(.*)\.(.*?)/g)	# is file and not a directory
-        	{
-			my $name = $1;
-			my $ext = $2;
-                	$name =~ s/\./$config::hash{space_character}{value}/g;
-                	$fn = "$name.$ext";
-                }
-                else
-                {
-			# not a file treat as a string
-			$fn =~ s/\./$config::hash{space_character}{value}/g;
-		}
-        }
-	return $fn;
+	return $fn if !$config::hash{dot2space}{value};
+	if(-f $f && $fn =~ /(.*)\.(.*?)/g)	# is file and not a directory
+	{
+		my $name = $1;
+		my $ext = $2;
+		$name =~ s/\./$config::hash{space_character}{value}/g;
+		$fn = "$name.$ext";
+	}
+	else
+	{
+		# not a file treat as a string
+		$fn =~ s/\./$config::hash{space_character}{value}/g;
+	}
+        return $fn;
 }
 
 # Pad digits with " - " (must come after pad digits with 0 to catch any new
@@ -629,15 +624,14 @@ sub fn_pad_digits
 	&main::quit("fn_pad_digits \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-	if($config::hash{pad_digits}{value})
-	{
-		# optimize me
+	return $fn if !$config::hash{pad_digits}{value};
 
-		my $tmp = $config::hash{space_character}{value}."-".$config::hash{space_character}{value};
-		$fn =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$tmp.$2.$tmp/ie;
-		$fn =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
-		$fn =~ s/^(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$1.$tmp/ie;
-	}
+	# optimize me
+
+	my $tmp = $config::hash{space_character}{value}."-".$config::hash{space_character}{value};
+	$fn =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$tmp.$2.$tmp/ie;
+	$fn =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
+	$fn =~ s/^(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$1.$tmp/ie;
 	return $fn;
 }
 
@@ -648,39 +642,37 @@ sub fn_pad_digits_w_zero
 	&main::quit("fn_pad_digits_w_zero \$fn eq ''\n")	if $fn eq '';
 
 	my $f = $fn;
-	if($config::hash{pad_digits_w_zero}{value})
-	{
-		# rm extra 0's
-		$fn =~ s/(^|\s+|\.|_)(\d{1,2})(x0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."x".$4.$5/ieg;
+	return $fn if !$config::hash{pad_digits_w_zero}{value};
 
-		# pad NxN
-		$fn =~ s/(^|\s+|\.|_)(\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4/ie;	# NxN to 0Nx0N
-		$fn =~ s/(^|\s+|\.|_)(\d\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2."0".$3.$4/ie;	# NNxN to NNx0N
-		$fn =~ s/(^|\s+|\.|_)(\dx)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4/ie;	# NxNN to 0NxNN
+	# rm extra 0's
+	$fn =~ s/(^|\s+|\.|_)(\d{1,2})(x0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."x".$4.$5/ieg;
 
-		# clean scene style
-		# rm extra 0's
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d{1,2})(e0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."e".$4.$5/ieg;
+	# pad NxN
+	$fn =~ s/(^|\s+|\.|_)(\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4/ie;	# NxN to 0Nx0N
+	$fn =~ s/(^|\s+|\.|_)(\d\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2."0".$3.$4/ie;	# NNxN to NNx0N
+	$fn =~ s/(^|\s+|\.|_)(\dx)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4/ie;	# NxNN to 0NxNN
 
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4.$5/ie;	# sNeN to S0Ne0N
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2.$3."0".$4.$5/ie;		# sNNeN to sNNe0N
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4.$5/ie;		# SNeNN to S0NeNN
-	}
+	# clean scene style
+	# rm extra 0's
+	$fn =~ s/(^s|\s+s|\.s|_s)(\d{1,2})(e0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."e".$4.$5/ieg;
+
+	$fn =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4.$5/ie;	# sNeN to S0Ne0N
+	$fn =~ s/(^s|\s+s|\.s|_s)(\d\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2.$3."0".$4.$5/ie;		# sNNeN to sNNe0N
+	$fn =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4.$5/ie;		# SNeNN to S0NeNN
+
 	return $fn;
 }
 
 sub fn_digits
 {
+	# remove leading digits (Track Nr)
+
 	my $fn = shift;
 	&main::quit("fn_digits \$fn is undef\n")	if ! defined $fn;
 	&main::quit("fn_digits \$fn eq ''\n")		if $fn eq '';
 
-	my $f = $fn;
-	if($config::hash{digits}{value})
-	{
-		# remove leading digits (Track Nr)
-		$fn =~ s/^\d*\s*//;
-	}
+	$fn =~ s/^\d*\s*// if $config::hash{digits}{value};
+
 	return $fn;
 }
 
