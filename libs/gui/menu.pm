@@ -30,9 +30,14 @@ sub draw
 	(
 	        -label =>'Preferences',
 	        -underline => 1,
-	        -command => sub { config_dialog::edit_prefs; }
+	        -command => sub { &config_dialog::edit_prefs; }
 	);
-
+	$file -> command
+	(
+	        -label =>'Styles',
+	        -underline => 1,
+	        -command => sub { &style::display; }
+	);
 	$file -> command
 	(
 	        -label =>'Block Rename',

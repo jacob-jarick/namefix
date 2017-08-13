@@ -15,6 +15,10 @@ cmd /c cpanm -v Tk::DynaTabFrame
 cmd /c cpanm -v Tk::Menu
 cmd /c cpanm -v Tk::ProgressBar
 cmd /c cpanm -v Tk::JComboBox
+cmd /c cpanm -v Tk::ColourChooser
+cmd /c cpanm -v Tk::ColourChooser;
+
+cmd /c cpanm -v --force use Config::IniHash
 
 rem  file tag modules
 cmd /c cpanm -v MP3::Tag

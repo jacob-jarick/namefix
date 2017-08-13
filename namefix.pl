@@ -67,6 +67,7 @@ my $col	= 1;
 use misc;
 use config;
 use log;
+use style;
 
 use fixname;
 use run_namefix;
@@ -855,6 +856,7 @@ my $clr_but = $frm_left -> Button
 	-command => sub
 	{
 		&misc::clr_no_save;
+		&log::clear;
 		&misc::plog(1, 'clear');
 
 	}
@@ -1974,6 +1976,8 @@ if($config::hash{window_g}{value} ne "")
 }
 &menu::draw;
 &dir::ls_dir;
+
+# &style::display;
 
 MainLoop;
 

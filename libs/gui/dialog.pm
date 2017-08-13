@@ -140,7 +140,6 @@ sub show_file_prop
 	$txt -> insert('end', $txt_str);
 }
 
-
 sub show_del_dialog
 {
 	my $ff = shift;

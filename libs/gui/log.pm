@@ -48,10 +48,10 @@ sub draw
 
 	if(defined $main::log_box) # plog can occur before gui is ready
 	{
-		$main::log_box->tag('configure', 'message',	-foreground=>'blue', -background=>'yellow');
-		$main::log_box->tag('configure', 'error',	-background=>'lightblue');
-		$main::log_box->tag('configure', 'warning',	-foreground=>'black',	-background=>'yellow');
-		$main::log_box->tag('configure', 'info',	-foreground=>'black',	-background=>'light blue');
+		$main::log_box->tag('configure', 'message',	-font=>$style::hash{message}{font},	-foreground=>$style::hash{message}{fgcol}, 	-background=>$style::hash{error}{bgcol});
+		$main::log_box->tag('configure', 'error',	-font=>$style::hash{error}{font},	-foreground=>$style::hash{error}{fgcol},	-background=>$style::hash{error}{bgcol});
+		$main::log_box->tag('configure', 'warning',	-font=>$style::hash{warning}{font},	-foreground=>$style::hash{warning}{fgcol},	-background=>$style::hash{warning}{bgcol});
+		$main::log_box->tag('configure', 'info',	-font=>$style::hash{info}{font},	-foreground=>$style::hash{info}{fgcol},		-background=>$style::hash{info}{bgcol});
 		$main::log_box->tag('configure', 'normal');
 
 		my $mode = $tags{$hash{$k}{level}};
@@ -59,6 +59,12 @@ sub draw
 		$main::log_box->insert ('end', $hash{$k}{text}, $mode);
 		$main::log_box->GotoLineNumber(-1);
 	}
+}
+
+sub clear
+{
+	%hash = ();
+	$main::log_box->Contents([]);
 }
 
 sub prune
