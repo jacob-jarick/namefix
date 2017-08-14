@@ -201,14 +201,13 @@ sub show_del_dialog
 
 	$frm_bottom -> Button
 	(
-        		-text=>"Yes",
-        		-activebackground => "white",
-        		-command => sub
+		-text=>"Yes",
+		-activebackground => "white",
+		-command => sub
 		{
+			&misc::plog(2, "Deleting $ff");
 			if(-d $ff)
 			{
-
-
 				my @tmp = ();
 				for my $f3(@config::find_arr)
 				{
@@ -220,14 +219,11 @@ sub show_del_dialog
 					{
 						push @tmp, $f3;
 					}
-
-
 				}
 				for my $d(reverse @tmp)
 				{
 					rmdir($d);
 				}
-
 			}
 			else
 			{
@@ -235,7 +231,6 @@ sub show_del_dialog
 			}
 			&dir::ls_dir;
 			destroy $top;
-
 		}
 	)
 	->pack

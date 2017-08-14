@@ -151,7 +151,7 @@ sub draw_list
 		{
 			# when user clicks on an entry update global variables
 			$hlist_selection	= shift;
-			print "BROWSE: \n" . Dumper($info{$hlist_selection}) . "\n";
+# 			print "BROWSE: \n" . Dumper($info{$hlist_selection}) . "\n";
                	},
 		-command=> sub
 		{
