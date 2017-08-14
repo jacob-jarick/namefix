@@ -15,6 +15,8 @@ our %info = ();
 
 our $counter = 0;
 
+our $hlist_selection = 0;
+
 #--------------------------------------------------------------------------------------------------------------
 # info hash manager
 #--------------------------------------------------------------------------------------------------------------
@@ -63,7 +65,7 @@ sub show_rc_menu
 	$hlist->selectionClear();
 	$hlist->selectionSet($s);
 
-	$config::hlist_selection = $s;
+	$hlist_selection = $s;
 	$rc_menu->post($x,$y);
 }
 
@@ -148,14 +150,14 @@ sub draw_list
 		-browsecmd => sub
 		{
 			# when user clicks on an entry update global variables
-			$config::hlist_selection	= shift;
-			print "BROWSE: \n" . Dumper($info{$config::hlist_selection}) . "\n";
+			$hlist_selection	= shift;
+			print "BROWSE: \n" . Dumper($info{$hlist_selection}) . "\n";
                	},
 		-command=> sub
 		{
                 	# user has double clicked
- 			$target_dir	= $info{$config::hlist_selection}{parent};
-			$target_dir	= $info{$config::hlist_selection}{path} if -d $info{$config::hlist_selection}{path} && $config::hlist_file ne '..';
+ 			$target_dir	= $info{$hlist_selection}{parent};
+			$target_dir	= $info{$hlist_selection}{path} if -d $info{$hlist_selection}{path} && $config::hlist_file ne '..';
 
 			&hlist_cd($target_dir);
 		}
@@ -206,7 +208,7 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			my $path = $info{$config::hlist_selection}{path};
+			my $path = $info{$hlist_selection}{path};
 			print "Properties path='$path'\n";
 
 			&dialog::show_file_prop($path);
@@ -218,11 +220,11 @@ sub draw_list
 		-underline=> 1,
 		-command=> sub
 		{
-			print "Apply Preview: Dir: '$config::hlist_cwd'\n\tfilename:\t'$config::hlist_file'\n\tnew filename:\t'$config::hlist_file_new'\n";
+			&misc::plog (2, "Apply Preview: filename:\t'$info{$hlist_selection}{filename}', new filename:\t'$info{$hlist_selection}{new_filename}'");
 
-			my $file_old = $info{$config::hlist_selection}{path};
+			my $file_old = $info{$hlist_selection}{path};
 			my $file_new = $file_old;
-			$file_new = $info{$config::hlist_selection}{new_filename} if defined $info{$config::hlist_selection}{new_filename};
+			$file_new = $info{$hlist_selection}{new_filename} if defined $info{$hlist_selection}{new_filename};
 
 			if(!&fixname::fn_rename( $file_old, $file_new) )
 			{
@@ -233,11 +235,12 @@ sub draw_list
 				# update hlist cells
 				$hlist->itemConfigure
 				(
-					$config::hlist_selection,
+					$hlist_selection,
 					$config::hlist_file_row,
 					-text => $file_new
 				);
 				# TODO update info hash
+				$info{$hlist_selection}{filename} = $info{$hlist_selection}{new_filename};
 			}
        		}
 	);
@@ -245,14 +248,14 @@ sub draw_list
         (
 		-label=>'Manual Rename',
 		-underline=> 1,
-		-command=> sub { &manual::edit( $info{$config::hlist_selection}{path} ); }
+		-command=> sub { &manual::edit( $info{$hlist_selection}{path} ); }
 	);
         $rc_menu -> command
         (
 		-label=>'Delete',
 		-underline=> 1,
 		-command=> sub
-		{ &dialog::show_del_dialog( $info{$config::hlist_selection}{path} ); }
+		{ &dialog::show_del_dialog( $info{$hlist_selection}{path} ); }
 	);
 
 

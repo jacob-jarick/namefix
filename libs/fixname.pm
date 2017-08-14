@@ -262,10 +262,7 @@ sub fix
 
 sub fn_rename
 {
-	if($config::STOP == 1)
-	{
-		return 0;
-	}
+	return 0 if $config::STOP;
 
 	my $file = shift;
 	my $newfile = shift;
@@ -275,6 +272,12 @@ sub fn_rename
 
 	&main::quit("fn_rename \$newfile is undef\n")		if ! defined $newfile;
 	&main::quit("fn_rename \$newfile eq ''\n")		if $newfile eq '';
+
+	my $file_name = &misc::get_file_name($file);
+	&misc::plog(3, "rename '$file_name' to '$newfile'");
+
+	my $dir = &misc::get_file_parent_dir($file);
+	$newfile = "$dir/$newfile";
 
 	my $tmpfile = $newfile."-FSFIX";
 
@@ -298,7 +301,7 @@ sub fn_rename
 		else
 		{
 			rename $tmpfile, $newfile;
-			&undo::add("$config::cwd/$file", "$config::cwd/$newfile");
+			&undo::add("$file", "$dir/$newfile");
 		}
 	}
 	else
@@ -312,7 +315,7 @@ sub fn_rename
 		else
 		{
 			rename $file, $newfile;
-			&undo::add("$config::cwd/$file", "$config::cwd/$newfile");
+			&undo::add($file, "$dir/$newfile");
 		}
 	}
 	$config::change++;
@@ -580,15 +583,14 @@ sub fn_sp_word
 	return $fn if !$config::hash{WORD_SPECIAL_CASING}{value};
 	foreach my $word(@config::word_casing_arr)
 	{
-		$word =~ s/(\s+|\n+|\r+)+$//;
-		$word = quotemeta $word;
+		my $w = quotemeta $word;
 		if(-f $f)	# is file and not a directory
 		{
-			$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\)|\]|\..{3,4}$)/$1.$word.$3/egi;
+			$fn =~ s/(^|\s+|_|\.|\(|\[)($w)(\s+|_|\.|\)|\]|\..{3,4}$)/$1.$w.$3/egi;
 			next;
 		}
 		# not a file treat as a string
-		$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\(|\]|$)/$1.$word.$3/egi
+		$fn =~ s/(^|\s+|_|\.|\(|\[)($w)(\s+|_|\.|\(|\]|$)/$1.$w.$3/egi
 	}
 	return $fn;
 }

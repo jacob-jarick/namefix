@@ -2,11 +2,11 @@
 - Bugs -
 ========
 
-* applying preview in recursive mode then selecting manual rename on same file crashes out.
+* FIXED - applying preview in recursive mode then selecting manual rename on same file crashes out.
 
-* apply preview fails on recursive - FIXED
+* FIXED - apply preview fails on recursive
 
-* FIXED: guessing tags rename works
+* FIXED - guessing tags rename works
   but does not show new info on list when doing applying
   but does show on preview (weird huh)
 
