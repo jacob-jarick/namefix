@@ -24,6 +24,7 @@ use Tk::ROText;
 use Tk::DynaTabFrame;
 use Tk::Menu;
 use Tk::ProgressBar;
+use Tk::Text::SuperText;
 
 use FindBin qw($Bin);
 
@@ -227,7 +228,7 @@ my $progress = $frm_bottom2->ProgressBar
 # log box
 our $log_box = $frm_bottom3->Scrolled
 (
-	'Text',
+	'SuperText',
 	-scrollbars => 'se',
 	-background => 'black',
 	-foreground => 'white',
@@ -857,7 +858,7 @@ my $clr_but = $frm_left -> Button
 	{
 		&misc::clr_no_save;
 		&log::clear;
-		&misc::plog(1, 'clear');
+		&misc::plog(2, 'clear');
 
 	}
 )
@@ -1166,7 +1167,7 @@ my $clr_id3_button = $tab2 -> Button
 		$config::id3_year_str		 = '';
 		$config::id3_com_str		 = '';
 
-		&misc::plog(1, 'cleared id3 options');
+		&misc::plog(2, 'cleared id3 options');
 	}
 )
 -> grid

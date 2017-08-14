@@ -91,7 +91,7 @@ sub hlist_cd
 	{
 		$config::dir = cwd();
 		&dir::ls_dir;
-		&misc::plog(3, "sub hlist_cd: \"$wd\"");
+		&misc::plog(3, "cd: '$wd'");
 		return;
 	}
         return;

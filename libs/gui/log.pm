@@ -11,14 +11,12 @@ our %hash	= ();
 our $size	= 100;
 
 our %tags = ();
-$tags {-1}	= 'message';
-$tags {0}	= 'error';
-$tags {1}	= 'warning';
-$tags {2}	= 'info';
-$tags {3}	= 'info';
-$tags {4}	= 'info';
-$tags {5}	= 'info';
-$tags {6}	= 'info';
+$tags{0}	= 'error';
+$tags{1}	= 'warning';
+$tags{2}	= 'message';
+$tags{3}	= 'info';
+$tags{4}	= 'info';
+$tags{5}	= 'info';
 
 
 sub add
@@ -48,16 +46,15 @@ sub draw
 
 	if(defined $main::log_box) # plog can occur before gui is ready
 	{
-		$main::log_box->tag('configure', 'message',	-font=>$style::hash{message}{font},	-foreground=>$style::hash{message}{fgcol}, 	-background=>$style::hash{error}{bgcol});
+		$main::log_box->tag('configure', 'message',	-font=>$style::hash{message}{font},	-foreground=>$style::hash{message}{fgcol}, 	-background=>$style::hash{message}{bgcol});
 		$main::log_box->tag('configure', 'error',	-font=>$style::hash{error}{font},	-foreground=>$style::hash{error}{fgcol},	-background=>$style::hash{error}{bgcol});
 		$main::log_box->tag('configure', 'warning',	-font=>$style::hash{warning}{font},	-foreground=>$style::hash{warning}{fgcol},	-background=>$style::hash{warning}{bgcol});
 		$main::log_box->tag('configure', 'info',	-font=>$style::hash{info}{font},	-foreground=>$style::hash{info}{fgcol},		-background=>$style::hash{info}{bgcol});
 		$main::log_box->tag('configure', 'normal');
 
 		my $mode = $tags{$hash{$k}{level}};
-		print "\$mode = $mode\n";
-		$main::log_box->insert ('end', $hash{$k}{text}, $mode);
-		$main::log_box->GotoLineNumber(-1);
+		$main::log_box->insert('end', $hash{$k}{text}, $mode);
+ 		$main::log_box->moveTextEnd;
 	}
 }
 

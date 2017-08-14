@@ -30,28 +30,19 @@ sub plog
 		&log::add($level, $text);
 	}
 
-	if($level == 0)
+	# CLI will (for now) always spit out & log errors
+	if(!$level && $config::CLI)
 	{
-		$text = "ERROR>$text";
+		open(FILE, ">>$main::log_file");
+		print FILE "$text\n";
+		close(FILE);
 
-		# CLI will (for now) always spit out & log errors
-		if($config::CLI)
-		{
-			open(FILE, ">>$main::log_file");
-			print FILE "$text\n";
-			close(FILE);
+		print "$text\n";
 
-			print "$text\n";
-
-			return 1;
-		}
-	}
-	else
-	{
-		$text = "DBG".$level."> ".$text;
+		return 1;
 	}
 
-	if($level <= $config::hash{'debug'}{'value'})
+	if($level <= $config::hash{debug}{value})
 	{
 		open(FILE, ">>$main::log_file");
 		print FILE "$text\n";
@@ -61,7 +52,7 @@ sub plog
 			print "$text\n";
 		}
 	}
-	if($level == 0 && $config::hash{ERROR_NOTIFY}{value})
+	if(!$level && $config::hash{ERROR_NOTIFY}{value})
 	{
 		&show_dialog("namefix.pl ERROR", "$text");
 	}

@@ -170,7 +170,7 @@ sub bm_list_bookmarks
 			-command	=> sub
 			{
 				$config::dir = $bookmark_dir;
-				print "bookmark.pm: \$config::dir = $config::dir\n";
+				&misc::plog(3, "change to bookmark dir '$config::dir'\n");
 
 				&dir::ls_dir;
 			}

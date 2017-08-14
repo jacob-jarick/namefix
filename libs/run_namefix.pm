@@ -100,9 +100,9 @@ sub run
         $t_s = "have";
         $t_s = "would have" if ($config::PREVIEW);
 
-        &misc::plog(1, "$config::change files $t_s been modified");
-	&misc::plog(1, "$config::id3_change mp3s tags $t_s been updated.")				if($config::hash{id3_mode}{value});
-        &misc::plog(1, "$config::tags_rm mp3 tags $t_s been removed")					if($config::tags_rm);
+        &misc::plog(2, "$config::change files $t_s been modified");
+	&misc::plog(2, "$config::id3_change mp3s tags $t_s been updated.")				if($config::hash{id3_mode}{value});
+        &misc::plog(2, "$config::tags_rm mp3 tags $t_s been removed")					if($config::tags_rm);
 	&misc::plog(0, "unable to rename $config::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($config::SUGGEST_FSFIX != 0);
 	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")		if($config::FOUND_TMP);
 

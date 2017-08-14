@@ -345,7 +345,7 @@ our @genres		= ();
 
 sub save_hash
 {
-	&misc::plog(1, "config::save_hash $hash_tsv");
+	&misc::plog(3, "config::save_hash $hash_tsv");
 	&misc::null_file($hash_tsv);
 
 	$hash{window_g}{value} = $main::mw->geometry if !$CLI;
@@ -384,7 +384,7 @@ sub save_hash_helper
 
 sub load_hash
 {
-	&misc::plog(1, "config::save_hash $hash_tsv");
+	&misc::plog(3, "config::save_hash $hash_tsv");
 	my @tmp = &misc::readf($hash_tsv);
 	my %h = ();
 	for my $line(@tmp)
