@@ -29,9 +29,9 @@ sub fix
 	my $file 	= shift;
 	my $path	= '';
 
-	quit ("fixname::fix : ERROR file is undef")			if ! defined $file;
-	quit ("fixname::fix : ERROR file eq ''")			if $file eq '';
-	quit ("fixname::fix : ERROR file '$file' isnt dir/file")	if !-d $file && !-f $file;
+	&main::quit ("fixname::fix : ERROR file is undef")			if ! defined $file;
+	&main::quit ("fixname::fix : ERROR file eq ''")				if $file eq '';
+	&main::quit ("fixname::fix : ERROR file '$file' isnt dir/file")		if !-d $file && !-f $file;
 
 	($dir, $file, $path) =  &misc::get_file_info($file);
 	chdir $dir;
@@ -89,7 +89,7 @@ sub fix
                 !$config::hash{PROC_DIRS}{value}
         )
 	{
-		$config::last_recr_dir = $config::cwd;
+		$last_dir = $dir;
 
 		&nf_print::p(" ", "<BLANK>");
 		&nf_print::p($dir);
@@ -217,10 +217,11 @@ sub fix
         		return;
         	}
 
+		$config::id3_change++ if $TAGS_CHANGED;
+
 		if($TAGS_CHANGED && !$config::PREVIEW)
 		{
 			&mp3::write_tags($file, \%tags_h_new);
-			$config::id3_change++;
 		}
 	}
 

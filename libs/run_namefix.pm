@@ -5,6 +5,8 @@ require Exporter;
 use strict;
 use warnings;
 
+use File::Find;
+
 use Cwd;
 use Carp;
 
@@ -61,6 +63,7 @@ sub run
         chdir $config::dir;
 	$config::dir		= cwd;
 	&undo::clear;
+	$fix_name::last_dir	= '';
 	prep_globals;
 
 	if(!$config::CLI)
@@ -116,8 +119,13 @@ sub run
 sub find_fix
 {
 	my $file = $_;
-	my $d = cwd();
-	push @config::find_arr, "$d/$file";
+	my $d = cwd;
+
+	my $path = "$d/$file";
+
+# 	print "$path\n";
+
+	push @config::find_arr, $path;
 	return 1;
 }
 
@@ -133,9 +141,7 @@ sub find_fix_process
 	for my $file(@config::find_arr)
 	{
 		$config::percent_done = int(($count++ / $total) * 100);
-
-		my ($d, $fn, $p) =  &misc::get_file_info($file);
-		&fixname::fix($fn);
+		&fixname::fix($file);
 	}
 	return 1;
 }

@@ -896,7 +896,7 @@ my $id3_mode_chk = $tab2 -> Checkbutton
 (
 	-text=>"Process Tags",
 	-variable=>\$config::hash{id3_mode}{value},
-	-command=>\&dir_hlist::draw_list,
+	-command=>\&dir::ls_dir,
 	-activeforeground => 'blue'
 )
 -> grid
