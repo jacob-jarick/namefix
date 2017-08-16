@@ -140,8 +140,8 @@ sub set_col
 sub get_home
 {
 	my $home = undef;
-	$home = $ENV{HOME}		if defined $ENV{HOME} && lc $^O ne lc 'MSWin32';
-	$home = $ENV{USERPROFILE}	if lc $^O eq lc 'MSWin32';
+	$home = $ENV{HOME}		if defined $ENV{HOME} && lc $^O ne 'mswin32';
+	$home = $ENV{USERPROFILE}	if lc $^O eq 'mswin32';
 
 
 	$home = $ENV{TMP}		if ! defined $home; # surely the os has a tmp if nothing else
@@ -158,7 +158,10 @@ sub get_home
 
 sub display
 {
+	my $row = 1;
+
 	$main = $main::mw -> Toplevel(-title => 'Styles' );
+	$main->raise;
 
 	$main->protocol
 	(
@@ -181,11 +184,7 @@ sub display
 		-anchor => 'n'
 	);
 
-	my @arr = &list;
-
-	my $row = 1;
-
-	for my $name(@arr)
+	for my $name(&list)
 	{
 		my $col = 0;
 
@@ -249,13 +248,25 @@ sub display
 			-command => sub { &set_col($name, 'bgcol'); }
 		)-> grid
 		(
-			-row=>$row,
-			-column=>$col++,
-			-sticky=>'nw',
-			-padx =>2
+			-row=>		$row,
+			-column=>	$col++,
+			-sticky=>	'nw',
+			-padx=>		2
 		);
 		$row++;
 	}
+	$frame_top -> Button
+	(
+		-text=>			'Close',
+		-activebackground=>	'white',
+		-command=>		sub { destroy $main; }
+	)
+	-> grid
+	(
+		-row=>		$row,
+		-column=>	1,
+		-sticky=>	'nw'
+	);
 }
 
 

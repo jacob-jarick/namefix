@@ -21,11 +21,11 @@ High:
 
 Medium:
 
-* rename all flags nicely and uppercase.
 * jpeg and other picture tag support.
 
 Low:
 
+* rename all flags nicely and uppercase - mostly done.
 * multi level undo
 * revisting fucking utf8 issues.
 
