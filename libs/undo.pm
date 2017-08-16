@@ -47,7 +47,6 @@ sub undo_rename
 	my $c = 0;
 	my $pre = '';
 
-
 	if(&config::busy)
 	{
 		&plog(0, "undo_rename: aborting, namefix is busy");
@@ -55,6 +54,7 @@ sub undo_rename
 		return;
 	}
 	$config::RUN = 1;
+	&dir_hlist::draw_list;	# blank main hlist
 
 	for my $c (0 .. $#config::undo_cur)
 	{
@@ -71,11 +71,9 @@ sub undo_rename
 		my $dir = $1;
 		$pre =~ s/^(.*\/)(.*?)$/$2/;
 
-
-
   		if(!-f $cur)
  		{
- 			&misc::plog(0, "sub undo_rename: aborted, '$cur' current file does not exist");
+ 			&misc::plog(0, "undo_rename: aborted, '$cur' current file does not exist");
  			$config::RUN = 0;
  			return;
  		}
@@ -89,11 +87,12 @@ sub undo_rename
  			next;
  		}
 
-		&misc::plog(2, "sub undo_rename: rename '$cur' -> '$pre'");
+		&misc::plog(2, "undo_rename: rename '$cur' -> '$pre'");
 		&fixname::fn_rename($cur, $pre);
 		&nf_print::p($cur, $pre);
 	}
 	chdir $config::dir;
+	$config::RUN = 0;
 	return 1;
 }
 

@@ -2,7 +2,10 @@
 - Bugs -
 ========
 
-* undo gui broken - undo is also likely broken.
+* when renaming (not preview but rename) hlist shows newfile -> newfile and not file -> newfile
+  but log prints info correctly.
+
+* FIXED (but needs more testing) undo gui broken - undo is also likely broken.
 
 * FIXED - block rename broken - subs are very ugly.
 

@@ -34,8 +34,8 @@ sub display
         	-command => sub
 		{
         		&undo::undo_rename;
-        		destroy $top;
         		&dir::ls_dir;
+        		destroy $top;
         	}
         )
         -> grid
