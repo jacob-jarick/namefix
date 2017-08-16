@@ -2,7 +2,9 @@
 - Bugs -
 ========
 
-* block rename broken - subs are very ugly.
+* undo gui broken - undo is also likely broken.
+
+* FIXED - block rename broken - subs are very ugly.
 
 * FIXED - applying preview in recursive mode then selecting manual rename on same file crashes out.
 
