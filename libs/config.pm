@@ -39,7 +39,6 @@ our $LISTING		= 0;
 our $PREVIEW		= 1;
 our $RUN		= 0;
 our $STOP		= 0;
-our $BR_DONE		= 0;	# a block rename has occured
 our $MR_DONE		= 0;	# a manual rename has occured
 our $UNDO		= 0;
 our $SUGGEST_FSFIX 	= 0;	# suggest using fsfix var

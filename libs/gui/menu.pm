@@ -42,7 +42,7 @@ sub draw
 	(
 	        -label =>'Block Rename',
 	        -underline => 1,
-	        -command =>\&blockrename
+	        -command =>\&blockrename::gui
 	);
 
 	$file -> command
