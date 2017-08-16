@@ -2,6 +2,8 @@
 - Bugs -
 ========
 
+* block rename broken - subs are very ugly.
+
 * FIXED - applying preview in recursive mode then selecting manual rename on same file crashes out.
 
 * FIXED - apply preview fails on recursive
@@ -17,6 +19,9 @@
 High:
 
 * generate filename from id3 tags
+  for each tag:
+
+
 * make filter and directory text box resize with the main window.
 
 Medium:
