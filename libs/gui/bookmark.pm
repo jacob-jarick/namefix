@@ -33,13 +33,13 @@ sub bm_add
 
 sub draw_menu
 {
-	my $n = "";
-	my $u = "";
+	my $n = '';
+	my $u = '';
 	my $count = 0;
 
         $bookmarks = $menu::mbar -> cascade
         (
-        	-label=>"Bookmarks",
+        	-label=>'Bookmarks',
 	        -underline=>0,
 	        -tearoff=>0,
 	);
@@ -54,7 +54,7 @@ sub draw_menu
 	# menu command - edit bookmarks
 	$bookmarks -> command
 	(
-	        -label=>"Edit Bookmarks",
+	        -label=>'Edit Bookmarks',
 	        -command=> sub { &edit_bookmark_list; }
 	);
 
@@ -63,66 +63,51 @@ sub draw_menu
 
 	$main::help = $menu::mbar -> cascade
 	(
-	        -label =>"Help",
+	        -label =>'Help',
 	        -underline=>0,
 	        -tearoff => 0
 	);
 	$main::help -> command
 	(
-	        -label=>'Help',
-	        -command=> sub
-	        {
-	        my $help_text =
-"Welcome to the very basic help txt:
-
-DEBUG LEVELS:
-0	ERROR
-1	warnings & startup messages
-2	not used
-3	Sub routine called
-4	Important but noisy sub details
-5	Very noisy sub details
-";
-			&dialog::show("Help", $help_text);
-	        }
+		-label=>'Help',
+		-command=> sub { &dialog::show('Help', "TODO: create help.txt"); }
 	);
 
-        $main::help -> separator();
+	$main::help -> separator();
 
 	$main::help -> command
 	(
 	        -label=>'About',
-	        -command=> sub {&about::show_about; }
+	        -command=> sub { &about::show_about; }
 	);
 
 	$main::help -> command
 	(
-	        -label=>"Changelog",
-	        -command=> sub  {&dialog::show("Changelog",	join('', &misc::readf($config::changelog))); }
+	        -label=>'Changelog',
+	        -command=> sub  {&dialog::show('Changelog',	join('', &misc::readf($config::changelog))); }
 	);
 
 	$main::help -> command
 	(
-	        -label=>"Todo List",
-	        -command=> sub { &dialog::show("Todo",		join('', &misc::readf($config::todo))); }
+	        -label=>'Todo List',
+	        -command=> sub { &dialog::show('Todo',		join('', &misc::readf($config::todo))); }
 	);
 
 	$main::help -> command
 	(
 	        -label=>'Credits/ Thanks',
-	        -command=> sub { &dialog::show("Thanks",	join('', &misc::readf($config::thanks))); }
+	        -command=> sub { &dialog::show('Thanks',	join('', &misc::readf($config::thanks))); }
 	);
 
-        $main::help -> separator();
+	$main::help -> separator();
 
 	$main::help -> command
 	(
-	        -label=>"Links",
-	        -command=> sub
+		-label=>'Links',
+		-command=> sub
 	        {
-			print $_;
-			my $links_txt = join("", &misc::readf($config::links));
-			&dialog::show("Link", $links_txt);
+			my $links_txt = join('', &misc::readf($config::links));
+			&dialog::show('Link', $links_txt);
 	        }
 	);
 
@@ -186,26 +171,14 @@ sub bm_list_bookmarks
 
 sub edit_bookmark_list
 {
-# 	&misc::plog(3, "sub edit_bookmark_list:");
-        my $dtext = "";
+        my $dtext = '';
+	$dtext = &misc::readjf($config::bookmark_file) if(-f $config::bookmark_file);
 
-        if(-f $config::bookmark_file)
-        {
-                $dtext = &misc::readjf($config::bookmark_file);
-        }
-        else
-        {
-                $dtext = "";
-        }
+	my $top = $main::mw -> Toplevel();
+	$top -> title("Edit Bookmark List");
 
-        my $top = $main::mw -> Toplevel();
-        $top -> title("Edit Bookmark List");
-
-        $top->Label
-        (
-        	-text=>"Format: <Bookmark Name><TAB><TAB><url>"
-        )
-        ->grid(-row => 1, -column => 1, -columnspan => 2);
+	$top->Label(-text=>'Format: <Bookmark Name><TAB><TAB><url>')
+	->grid(-row => 1, -column => 1, -columnspan => 2);
 
         my $txt = $top -> Scrolled
         (
@@ -224,17 +197,17 @@ sub edit_bookmark_list
         );
         $txt->menu(undef);
 
-        $txt->insert('end', "$dtext");
+        $txt->insert('end', $dtext);
 
         $top -> Button
         (
-        	-text=>"Save",
+        	-text=>'Save',
         	-activebackground => 'white',
         	-command => sub
         	{
         		&misc::save_file
         		(
-        			"$config::bookmark_file",
+        			$config::bookmark_file,
         			$txt -> get
         			(
         				'0.0',
@@ -248,12 +221,12 @@ sub edit_bookmark_list
         (
         	-row=>4,
         	-column=>1,
-        	-sticky=>"ne"
+        	-sticky=>'ne'
         );
 
         my $but_close = $top -> Button
         (
-        	-text=>"Close",
+        	-text=>'Close',
         	-activebackground=>'white',
         	-command => sub
         	{
@@ -264,7 +237,7 @@ sub edit_bookmark_list
         (
         	-row=>4,
         	-column=>2,
-        	-sticky=>"nw"
+        	-sticky=>'nw'
         );
 
 	$top->resizable(0,0);

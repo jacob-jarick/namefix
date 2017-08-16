@@ -17,14 +17,15 @@ our $hlist_cwd		= cwd;
 our $version 		= '4.1.2';
 our $folderimage 	= '';
 our $fileimage   	= '';
+our $dialog_font	= '';
 our $home		= &misc::get_home;
 
 # File locations
-our $thanks		= "$Bin/txt/thanks.txt";
-our $todo		= "$Bin/txt/todo.txt";
-our $about		= "$Bin/txt/about.txt";
-our $links		= "$Bin/txt/links.txt";
-our $changelog		= "$Bin/txt/changelog.txt";;
+our $thanks		= "$Bin/data/txt/thanks.txt";
+our $todo		= "$Bin/data/txt/todo.txt";
+our $about		= "$Bin/data/txt/about.txt";
+our $links		= "$Bin/data/txt/links.txt";
+our $changelog		= "$Bin/data/txt/changelog.txt";;
 our $fonts_file		= "$home/.namefix.pl/fonts.ini";
 our $bookmark_file	= "$home/.namefix.pl/bookmarks.txt";
 our $undo_cur_file	= "$home/.namefix.pl/undo.current.filenames.txt";

@@ -11,7 +11,7 @@ use warnings;
 
 sub show_about
 {
-	my $help_text = join("", &misc::readf($config::about));
+	my $help_text = join('', &misc::readf($config::about));
 
 	my $row = 1;
         my $top = $main::mw -> Toplevel();
@@ -36,9 +36,9 @@ sub show_about
         my $txt = $top -> Scrolled
 	(
         	'ROText',
-        	-scrollbars=>'osoe',
-		-wrap=>"word",
-        	-font=>$main::dialog_font,
+        	-scrollbars=>	'osoe',
+		-wrap=>		'word',
+        	-font=>		$config::dialog_font,
         	-width=>60,
         	-height=>18
         )
@@ -56,8 +56,8 @@ sub show_about
 
         $top -> Button
 	(
-        	-text=>"Close",
-        	-activebackground=>'cyan',
+        	-text=>			'Close',
+        	-activebackground=>	'cyan',
         	-command => sub
 		{
         		destroy $top;

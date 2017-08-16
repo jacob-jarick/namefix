@@ -161,9 +161,8 @@ sub readf_clean
         for my $l(@file)
         {
 		# clean file of empty lines
-		$l =~ s/^\n+//g;
 		$l =~ s/\n+//g;
-		$l =~ s/\s+#.*?\n//g;
+		$l =~ s/\s*#.*?$//g;
 
 		next if $l eq '';
 

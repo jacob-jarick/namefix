@@ -159,7 +159,7 @@ sub pat_list
 
         if(-f $config::killpat_file)
         {
-                $dtext = &readsjf("$config::killpat_file");
+                $dtext = &misc::readsjf($config::killpat_file);
         }
         else
         {
@@ -189,26 +189,26 @@ sub pat_list
 
         my $but_save = $top -> Button
         (
-        	-text=>"Save",
+        	-text=>'Save',
         	-activebackground => 'white',
         	-command => sub { &misc::save_file( "$config::killpat_file", $txt -> get('0.0', 'end') ); }
         )
         -> grid(
         	-row => 4,
         	-column => 1,
-        	-sticky=>"ne"
+        	-sticky=>'ne'
         );
 
         my $but_close = $top -> Button
         (
-        	-text=>"Close",
+        	-text=>'Close',
         	-activebackground => 'white',
         	-command => sub { destroy $top; }
         )
         -> grid(
         	-row => 4,
         	-column => 2,
-        	-sticky=>"nw"
+        	-sticky=>'nw'
         );
 
         $top->resizable(0,0);

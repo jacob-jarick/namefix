@@ -681,27 +681,27 @@ $frm_left -> Label
 )
 -> grid
 (
-	-row=>$row++,
-	-column=>1,
-	-sticky=>'ne'
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'ne'
 );
 
 my $K_chk = $frm_left -> Checkbutton
 (
-	-text=>"RM Word List",
-	-variable=>\$config::hash{kill_cwords}{value},
-	-activeforeground => 'blue'
+	-text=>			'RM Word List',
+	-variable=>		\$config::hash{kill_cwords}{value},
+	-activeforeground=>	'blue'
 )
 -> grid
 (
-	-row=>$row++,
-	-column=>1,
-	-sticky=>'nw'
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'nw'
 );
 $balloon->attach
 (
 	$K_chk,
-	-msg => "Remove list of words specified in the \"Remove Word List\""
+	-msg => "Remove list of words specified in the 'Remove Word List'"
 );
 
 my $P_chk = $frm_left -> Checkbutton
@@ -719,7 +719,7 @@ my $P_chk = $frm_left -> Checkbutton
 $balloon->attach
 (
 	$P_chk,
-	-msg => "Removes list of regexps specified in \"Remove Pattern List\".\n\nNote: Mainly used to match urls"
+	-msg => "Removes list of regexps specified in 'Remove Pattern List'.\n\nNote: Mainly used to match urls"
 );
 
 $frm_left -> Label
