@@ -26,11 +26,12 @@ sub ls_dir
 	$config::LISTING	= 1;
 	$config::STOP		= 0;
 	$config::percent_done	= 0;
+
+	$config::dir		= cwd;
+
 	my @file_list		= ();
 	my @dirlist		= &dir_filtered($config::dir);
 
-	chdir $config::dir;
-	$config::dir = cwd();
 	&dir_hlist::draw_list;
 
 	&ls_dir_print('..');
@@ -185,7 +186,7 @@ sub fn_readdir
 	my @dirlist_clean	= ();
 	my @d			= ();
 
-	opendir(DIR, "$dir") or &main::quit("can't open dir \"$dir\": $!");
+	opendir(DIR, $dir) or &main::quit("can't open dir \"$dir\": $!");
 	@dirlist = CORE::readdir(DIR);
 	closedir DIR;
 
@@ -209,15 +210,10 @@ sub dir_filtered
 	for my $file (@dirlist)
 	{
 		# $file is dir automatically fail filter
-		next if !$config::LISTING && (!$config::hash{PROC_DIRS}{value} && -d $file);
-		if($config::hash{FILTER}{value})
-		{
-			push @d, $file if &filter::match($file);	# apply listing filter
-		}
-		else
-		{
-			push @d, $file;
-		}
+		next if !$config::LISTING && !$config::hash{PROC_DIRS}{value} && -d $file;
+		next if $config::hash{FILTER}{value} && !&filter::match($file);
+
+		push @d, $file;
 	}
 	return @d;
 }

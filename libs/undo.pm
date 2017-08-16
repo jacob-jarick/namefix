@@ -81,7 +81,7 @@ sub undo_rename
  		}
  		if
  		(
-			!($hash{fat32fix}{value} && lc $pre eq lc $cur) &&	# allow fat32fix to do its magic
+			!($config::hash{fat32fix}{value} && lc $pre eq lc $cur) &&	# allow fat32fix to do its magic
 			-f $pre
  		)
  		{

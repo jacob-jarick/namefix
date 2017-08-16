@@ -5,6 +5,8 @@ require Exporter;
 use strict;
 use warnings;
 
+use Cwd;
+
 our $bookmarks;
 our %bmhash = ();
 my $bookmark_dir = '';
@@ -15,8 +17,8 @@ my $bookmark_dir = '';
 
 sub bm_add
 {
-	my $name = shift;
-	my $dir = shift;
+	my $name	= shift;
+	my $dir		= shift;
 
 	if($name !~ /\:(\\|\/)$/)
 	{
@@ -39,23 +41,23 @@ sub draw_menu
 
         $bookmarks = $menu::mbar -> cascade
         (
-        	-label=>'Bookmarks',
-	        -underline=>0,
-	        -tearoff=>0,
+        	-label=>	'Bookmarks',
+	        -underline=>	0,
+	        -tearoff=>	0,
 	);
 
 	# menu command - bookmark cur dir
 	$bookmarks -> command
 	(
-	        -label=>"Bookmark current Directory",
-	        -command=> sub { &bm_add($config::dir, $config::dir); }
+	        -label=>	"Bookmark current Directory",
+	        -command=>	sub { &bm_add($config::dir, $config::dir); }
 	);
 
 	# menu command - edit bookmarks
 	$bookmarks -> command
 	(
-	        -label=>'Edit Bookmarks',
-	        -command=> sub { &edit_bookmark_list; }
+	        -label=>	'Edit Bookmarks',
+	        -command=>	sub { &edit_bookmark_list; }
 	);
 
         #create help menu
@@ -63,9 +65,9 @@ sub draw_menu
 
 	$main::help = $menu::mbar -> cascade
 	(
-	        -label =>'Help',
-	        -underline=>0,
-	        -tearoff => 0
+	        -label=>	'Help',
+	        -underline=>	0,
+	        -tearoff=>	0
 	);
 	$main::help -> command
 	(
@@ -111,7 +113,7 @@ sub draw_menu
 	        }
 	);
 
-	&bm_list_bookmarks;
+	&list_bookmarks;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -120,7 +122,7 @@ sub draw_menu
 
 # no hacks on me :D
 
-sub bm_list_bookmarks
+sub list_bookmarks
 {
 	my $n = '';
 	my $u = '';
@@ -154,8 +156,10 @@ sub bm_list_bookmarks
 			-variable	=> \$bookmark_dir,
 			-command	=> sub
 			{
-				$config::dir = $bookmark_dir;
-				&misc::plog(3, "change to bookmark dir '$config::dir'\n");
+				chdir $bookmark_dir;
+				$config::dir = cwd;
+
+				&misc::plog(3, "bookmark: cd '$config::dir'");
 
 				&dir::ls_dir;
 			}
@@ -183,17 +187,17 @@ sub edit_bookmark_list
         my $txt = $top -> Scrolled
         (
         	'Text',
-                -scrollbars=>'osoe',
-        	-font=>$config::dialog_font,
-        	-wrap=>'none',
-                -width=>80,
-                -height=>15
+                -scrollbars=>	'osoe',
+        	-font=>		$config::dialog_font,
+        	-wrap=>		'none',
+                -width=>	80,
+                -height=>	15
         )
         -> grid
         (
-        	-row=>2,
-                -column=>1,
-                -columnspan=>2
+        	-row=>		2,
+                -column=>	1,
+                -columnspan=>	2
         );
         $txt->menu(undef);
 
@@ -205,43 +209,31 @@ sub edit_bookmark_list
         	-activebackground => 'white',
         	-command => sub
         	{
-        		&misc::save_file
-        		(
-        			$config::bookmark_file,
-        			$txt -> get
-        			(
-        				'0.0',
-        				'end'
-        			)
-        		);
+        		&misc::save_file($config::bookmark_file, $txt -> get('0.0', 'end') );
                         &menu::draw;
         	}
         )
         -> grid
         (
-        	-row=>4,
-        	-column=>1,
-        	-sticky=>'ne'
+        	-row=>		4,
+        	-column=>	1,
+        	-sticky=>	'ne'
         );
 
         my $but_close = $top -> Button
         (
         	-text=>'Close',
         	-activebackground=>'white',
-        	-command => sub
-        	{
-        		destroy $top;
-        	}
+        	-command => sub { destroy $top; }
         )
         -> grid
         (
-        	-row=>4,
-        	-column=>2,
-        	-sticky=>'nw'
+        	-row=>		4,
+        	-column=>	2,
+        	-sticky=>	'nw'
         );
 
 	$top->resizable(0,0);
 }
-
 
 1;
