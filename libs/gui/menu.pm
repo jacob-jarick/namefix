@@ -49,7 +49,7 @@ sub draw
 	(
 	        -label =>'Undo GUI',
 	        -underline => 1,
-	        -command =>\&undo_gui
+	        -command =>\&undo_gui::display
 	);
 
 	$file -> command

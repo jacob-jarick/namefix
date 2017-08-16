@@ -45,32 +45,53 @@ sub undo_rename
 
 	&misc::plog(1, "Preforming Undo");
 	my $c = 0;
-	my $pre = "";
-	my $dir = "";
+	my $pre = '';
 
-	for my $cur(@config::undo_cur)
+
+	if(&config::busy)
 	{
-		$pre = $config::undo_pre[$c];
-		$cur =~ m/^(.*\/)(.*?)$/;
-		$dir = $1;
-		$cur = $2;
-		chdir $dir;
-		$pre =~ m/^(.*\/)(.*?)$/;
-		$pre = $2;
+		&plog(0, "undo_rename: aborting, namefix is busy");
+		$config::RUN = 0;
+		return;
+	}
+	$config::RUN = 1;
 
-  		if(!-f "$cur")
+	for my $c (0 .. $#config::undo_cur)
+	{
+		my $cur = $config::undo_cur[$c];
+		my $pre = $config::undo_pre[$c];
+		if($config::STOP)
+		{
+			&plog(0, "undo_rename: STOPPED");
+			$config::RUN = 0;
+			return;
+		}
+
+		$cur =~ s/^(.*\/)(.*?)$/$2/;
+		my $dir = $1;
+		$pre =~ s/^(.*\/)(.*?)$/$2/;
+
+
+
+  		if(!-f $cur)
  		{
- 			&misc::plog(0, "sub undo_rename: \"$cur\" current file does not exist");
+ 			&misc::plog(0, "sub undo_rename: aborted, '$cur' current file does not exist");
+ 			$config::RUN = 0;
+ 			return;
  		}
- 		if(-f "$pre")
+ 		if
+ 		(
+			!($hash{fat32fix}{value} && lc $pre eq lc $cur) &&	# allow fat32fix to do its magic
+			-f $pre
+ 		)
  		{
- 			&misc::plog(0, "sub undo_rename: \"$pre\" previous filename to revert undo to allready exists");
+ 			&misc::plog(0, "undo_rename:  aborted, cannot rename '$cur' to '$pre', file exists");
+ 			next;
  		}
 
-		&misc::plog(1, "sub undo_rename: rename $cur $pre");
-		rename $cur, $pre;
+		&misc::plog(2, "sub undo_rename: rename '$cur' -> '$pre'");
+		&fixname::fn_rename($cur, $pre);
 		&nf_print::p($cur, $pre);
-		$c++;
 	}
 	chdir $config::dir;
 	return 1;

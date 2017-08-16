@@ -2,7 +2,7 @@ package undo_gui;
 require Exporter;
 @ISA = qw(Exporter);
 
-sub show_undo_gui
+sub display
 {
 	my $row		= 0;
 	my $col		= 0;
@@ -33,7 +33,7 @@ sub show_undo_gui
         	-activebackground => 'white',
         	-command => sub
 		{
-        		&undo_rename;
+        		&undo::undo_rename;
         		destroy $top;
         		&dir::ls_dir;
         	}

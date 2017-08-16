@@ -264,8 +264,8 @@ sub fn_rename
 {
 	return 0 if $config::STOP;
 
-	my $file = shift;
-	my $newfile = shift;
+	my $file	= shift;
+	my $newfile	= shift;
 
 	&main::quit("fn_rename \$file is undef\n")		if ! defined $file;
 	&main::quit("fn_rename \$file eq ''\n")			if $file eq '';
@@ -279,7 +279,7 @@ sub fn_rename
 	my $dir = &misc::get_file_parent_dir($file);
 	$newfile = "$dir/$newfile";
 
-	my $tmpfile = $newfile."-FSFIX";
+	my $tmpfile = $newfile.'-FSFIX';
 
 	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
 	{
