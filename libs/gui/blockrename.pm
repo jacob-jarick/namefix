@@ -295,10 +295,8 @@ sub br
 	my $result_text	= '';
 	my @new_l 	= split(/\n/, $rename_box->	get('1.0', 'end'));
 	my @old_l 	= split(/\n/, $list_box->	get('1.0', 'end'));
-	my @a 		= ();
-	my @b 		= ();
-	my $of 		= '';	# old file
-	my $nf 		= '';	# new file
+	my @new_a 		= ();
+	my @new_b 		= ();
 
 	# clean arrarys of return chars
 	# using chomp caused issues with filenames containing whitespaces at beginging or the end
@@ -313,12 +311,12 @@ sub br
 	&run_namefix::prep_globals;
 
 	&misc::plog(4, "sub br: checking that files to be renamed exist");
-	for $of(@old_l)
+	for my $file_old(@old_l)
 	{
-		&misc::plog(4, "sub br: checking '$of'");
-		if(!-f $of)
+		&misc::plog(4, "sub br: checking '$file_old'");
+		if(!-f $file_old)
 		{
-			&misc::plog(0, "sub br: ERROR: old file '$of' does not exist");
+			&misc::plog(0, "sub br: ERROR: old file '$file_old' does not exist");
 			$config::RUN = 1;
 			return 0;
 		}
@@ -333,41 +331,39 @@ sub br
 
 	for my $c(0 .. $#old_l)	# check for changes - then rename
 	{
-		if($config::STOP == 1)
+		if($config::STOP)
 		{
 			$config::RUN = 0;
 			return 0;
 		}
 
-		$of = $old_l[$c];
-		$nf = $new_l[$c];
+		my $file_old = $old_l[$c];
+		my $file_new = $new_l[$c];
 
-		&misc::plog(4, "sub br: processing '$of' -> '$nf'");
+		&misc::plog(4, "sub br: processing '$file_old' -> '$file_new'");
 
-		if(!$nf) # finish when we hit a blank line, else we risk zero'ing the rest of the filenames
+		if($file_new eq '') # finish when we hit a blank line, else we risk zero'ing the rest of the filenames
 		{
-			&misc::plog(4, "sub br: no new filename for '$of' provided, assuming end of renaming");
+			&misc::plog(4, "br: \$file_new eq '', assuming end of renaming");
 			last;
 		}
 
-		&misc::plog(4, "sub br: renaming '$of' -> '$nf'");
+		next if $file_old eq $file_new;
 
-		next if $of eq $nf;
-
-		if(&fn_rename ($of, $nf))
+		if(&fixname::fn_rename ($file_old, $file_new))
 		{
-			push @config::undo_pre, "$dir/$of";
-			push @config::undo_cur, "$dir/$nf";
-			push @a, $of;
-			push @b, $nf;
+			&misc::plog(4, "br: renamed '$file_old' -> '$file_new'");
+
+			push @config::undo_pre, "$dir/$file_old";
+			push @config::undo_cur, "$dir/$file_new";
+			push @new_a, $file_old;
+			push @new_b, $file_new;
 			&misc::plog(2, "block rename preformed");
+			next;
 		}
-		else
-		{
-			&misc::plog(0, "block rename failed !");
-		}
+		&misc::plog(0, "block rename failed !: '$file_old' -> '$file_new'");
 	}
-	&br_show_lists("Block Rename Results", \@a, \@b);
+	&br_show_lists("Block Rename Results", \@new_a, \@new_b);
 	&txt_reset;
 
 	$config::RUN = 0;
@@ -377,8 +373,8 @@ sub br
 
 sub br_readdir
 {
-        my @dir_contents = ();
-        my @dir_clean = ();
+        my @dir_contents	= ();
+        my @dir_clean		= ();
 
 	&misc::plog(3, "br_readdir: '$dir'");
 
@@ -389,19 +385,12 @@ sub br_readdir
         for my $file(@dir_contents)
         {
         	next if $file eq '.' || $file eq '..' || $file eq '';
-
-                next if !$config::hash{PROC_DIRS}{value} && -d $file;
-
-                if(!$config::IGNORE_FILE_TYPE == 0 && $file !~ /\.($config::hash{file_ext_2_proc}{value})$/i)
-                {
-                	next;
-                }
-
-		next if $config::hash{FILTER}{value} && !&filter::match($file);
+                next if !$config::hash{PROC_DIRS}	{value} && -d $file;
+                next if !$config::hash{IGNORE_FILE_TYPE}{value} && $file !~ /\.($config::hash{file_ext_2_proc}{value})$/i;
+		next if  $config::hash{FILTER}		{value} && !&filter::match($file);
 
                 push @dir_clean, $file;
         }
-
         return &misc::ci_sort(@dir_clean);
 }
 

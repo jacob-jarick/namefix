@@ -11,14 +11,13 @@ use warnings;
 
 sub preview
 {
-	&misc::plog(3, "sub br_preview");
 	&run_namefix::prep_globals;
 
 	my $ref1 = shift;
 	my $ref2 = shift;
 
 	my @new_l = @$ref1;
-	my @old_l = @$ref1;
+	my @old_l = @$ref2;
 
 	&main::quit("preview: \$ref1 is undef")		if ! defined $ref1;
 	&main::quit("preview: \$ref2 is undef")		if ! defined $ref2;
@@ -43,27 +42,21 @@ sub preview
 		$nf =~ s/\n|\r//g;
 		$of =~ s/\n|\r//g;
 
-		if(!$nf) # return when we hit a blank line, else we risk zero'ing the rest of the filenames
+		if($nf eq '') # return when we hit a blank line, else we risk zero'ing the rest of the filenames
 		{
-			&misc::plog(0, "preview: error no string for new filename");
+			&misc::plog(0, "preview: line ".($c+1).": error no string for new filename, aborting preview");
 			return;
 		}
 
-		if($of ne $nf)
-		{
-			&misc::plog(4, "_preview preview rename:\n\t'$of'\n\t'$nf'");
-			push @new_a, $of;
-			push @new_b, $nf;
-		}
-		else
-		{
-			&misc::plog(4, "preview no changes to '$of'");
-		}
+		next if $of eq $nf;
+
+		&misc::plog(3, "preview: '$of' -> '$nf'");
+		push @new_a, $of;
+		push @new_b, $nf;
 	}
 	&br_show_lists('BR Preview', \@new_a, \@new_b);
 	return 1;
 }
-
 
 #--------------------------------------------------------------------------------------------------------------
 # br_preview_list
@@ -123,7 +116,7 @@ sub br_show_lists
 	{
 		$hlist->add($c);
 		$hlist->itemCreate($c, 0, -text => $new_a[$c]);
-		$hlist->itemCreate($c, 1, -text => " -> ");
+		$hlist->itemCreate($c, 1, -text => ' -> ');
 		$hlist->itemCreate($c, 2, -text => $new_b[$c]);
 		$c++;
 	}
