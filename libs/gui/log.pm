@@ -5,6 +5,8 @@ require Exporter;
 use strict;
 use warnings;
 
+use Data::Dumper::Concise;
+
 our @output	= ();
 our $pos	= 0;
 our %hash	= ();
@@ -34,8 +36,8 @@ sub add
 	{
 		$text .= "\n";
 	}
-	$hash{$pos}{level} = $level;
-	$hash{$pos}{text} = $text;
+	$hash{$pos}{level}	= $level;
+	$hash{$pos}{text}	= $text;
 	&draw($pos);
 	$pos++;
 }
@@ -52,6 +54,10 @@ sub draw
 		$main::log_box->tag('configure', 'info',	-font=>$style::hash{info}{font},	-foreground=>$style::hash{info}{fgcol},		-background=>$style::hash{info}{bgcol});
 		$main::log_box->tag('configure', 'normal');
 
+		&main::quit("draw: \$hash{$k} is undef \$k = $k")	if ! defined $hash{$k};
+		&main::quit("draw: \$hash{$k}{level} is undef")		if ! defined $hash{$k}{level};
+		&main::quit("draw: \$tags{$hash{$k}{level}} is undef")	if ! defined $tags{$hash{$k}{level}};
+
 		my $mode = $tags{$hash{$k}{level}};
 		$main::log_box->insert('end', $hash{$k}{text}, $mode);
  		$main::log_box->moveTextEnd;
@@ -61,6 +67,7 @@ sub draw
 sub clear
 {
 	%hash = ();
+	$pos = 0;
 	$main::log_box->Contents([]);
 }
 
@@ -68,7 +75,7 @@ sub prune
 {
 	my $prune_limit = 10;
 	my $count = 0;
-	$main::log_box->Contents([]);
+	$main::log_box->Contents([]); # clear log box for redraw
 	for my $k (sort{$a <=> $b} keys %hash)
 	{
 		$count++;
@@ -76,12 +83,11 @@ sub prune
 		last if $count >= $prune_limit;
 
 	}
+	# redraw logbox
 	for my $k (sort{$a <=> $b} keys %hash)
 	{
-		&draw($hash{$k}{level}, $hash{$k}{text});
+		&draw($k);
 	}
 }
-
-
 
 1;

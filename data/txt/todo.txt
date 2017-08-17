@@ -2,6 +2,8 @@
 - Bugs -
 ========
 
+* FIXED - pruning log window caused crash.
+
 * FIXED (but needs more testing) undo gui broken - undo is also likely broken.
 
 * FIXED - when renaming (not preview but rename) hlist shows newfile -> newfile and not file -> newfile
