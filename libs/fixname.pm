@@ -435,14 +435,11 @@ sub fn_kill_sp_patterns
 	&main::quit("fn_kill_sp_patterns \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_kill_sp_patterns \$file_new eq ''\n")		if $file_new eq '';
 
-        if($config::hash{kill_sp_patterns}{value})
-        {
-                for my $pattern (@config::kill_patterns_arr)
-                {
-                        $file_new =~ s/$pattern//ig;
-                }
-        }
-
+        return $file_new if !$config::hash{kill_sp_patterns}{value};
+	for my $pattern (@config::kill_patterns_arr)
+	{
+		$file_new =~ s/$pattern//ig;
+	}
 	return $file_new;
 }
 

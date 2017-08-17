@@ -73,6 +73,12 @@ sub p
 		&dir_hlist::info_add($hlpos, $path, $tmp1, $tmp2);
 	}
 
+	if($mode eq 'rename')
+	{
+		$file_name = $file1;
+		$file_name =~ s/^.*(\\|\/)//;
+	}
+
 	&dir_hlist::fn_update_delay;
 	$dir_hlist::hlist->add( $hlpos );
 
