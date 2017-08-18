@@ -1,0 +1,58 @@
+========
+- Bugs -
+========
+
+* FIXED - pruning log window caused crash.
+
+* FIXED (but needs more testing) undo gui broken - undo is also likely broken.
+
+* FIXED - when renaming (not preview but rename) hlist shows newfile -> newfile and not file -> newfile
+  but log prints info correctly.
+
+* FIXED - block rename broken - subs are very ugly.
+
+* FIXED - applying preview in recursive mode then selecting manual rename on same file crashes out.
+
+* FIXED - apply preview fails on recursive
+
+* FIXED - guessing tags rename works
+  but does not show new info on list when doing applying
+  but does show on preview (weird huh)
+
+==============
+=- GUI Todo -=
+==============
+
+High:
+
+* generate filename from id3 tags
+  for each tag:
+
+
+* make filter and directory text box resize with the main window.
+
+Medium:
+
+* jpeg and other picture tag support.
+
+Low:
+
+* rename all flags nicely and uppercase - mostly done.
+* multi level undo
+* revisting fucking utf8 issues.
+
+==============
+=- CLI Todo -=
+==============
+
+* Single file processing
+
+==================
+=- Known Issues -=
+==================
+
+* truncate from middle will round down to nearest even number
+  - this is not a problem in my eyes.
+
+* Unicode characters are supported, but some weirdness may occur on some
+  systems depending on systems unicode support & codepages supported.

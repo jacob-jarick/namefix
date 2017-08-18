@@ -1,4 +1,7 @@
-#!/usr/bin/perl
+package filter;
+require Exporter;
+@ISA = qw(Exporter);
+
 
 use strict;
 use warnings;
@@ -7,47 +10,37 @@ use warnings;
 # currently in namefix gui filter is always on, it always returns a positive match
 # if the filter is blank
 
-sub match_filter
+sub match
 {
-	my $string = shift;
-	my $filt = "";
+	return 1 if $config::filter_string eq '';
 
-	if($main::filter_string eq "")
+	my $string	= shift;
+	my $filt	= $config::filter_string;
+
+	&misc::plog(3, "sub match: \"$string\"");
+
+	if($string eq '')
 	{
+		&misc::plog(0, "sub match: ERROR: blank file passed");
 		return 1;
 	}
 
-	&plog(3, "sub match_filter: \"$string\"");
-
-	if($string eq "")
+	if(!$config::hash{FILTER_REGEX}{value})
 	{
-		&plog(0, "sub match_filter: ERROR: blank file passed");
-		return 1;
-	}
-
-	if($string eq "..")
-	{
-		&plog(4, "sub match_filter: got .. passed");
-		return 1;
-	}
-
-	$filt = $main::filter_string;
-	if($main::disable_regexp == 1)
-	{
-		&plog(4, "sub match_filter: regexp disabled, using escaped string");
-		$filt = $main::filter_string_escaped;
+		&misc::plog(4, "sub match: regexp disabled, using escaped string");
+		$filt = quotemeta $config::filter_string;
 	}
 
 	if
 	(
-		($main::filter_cs == 1 && $string =~ /.*($filt).*/) ||
-		($main::filter_cs == 0 && $string =~ /.*($filt).*/i)
-	) 
+		( $config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /$filt/) ||
+		(!$config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /$filt/i)
+	)
 	{
-		&plog(4, "sub match_filter: string \"$string\" matched filter \"$filt\"");
+		&misc::plog(4, "sub match: string \"$string\" matched filter \"$filt\"");
 		return 1;
 	}
-	&plog(4, "sub match_filter: string \"$string\" failed matched filter \"$filt\"");
+	&misc::plog(4, "sub match: string \"$string\" failed matched filter \"$filt\"");
         return 0;
 }
 

@@ -1,7 +1,13 @@
+package dialog;
+require Exporter;
+@ISA = qw(Exporter);
+
 use strict;
 use warnings;
 use File::stat;
-use Time::localtime; 
+use Time::localtime;
+use File::Find;
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Show dialog
@@ -10,7 +16,7 @@ use Time::localtime;
 # no plogging is this func will be called from plog at times
 # also its a very simple funtion non related to renaming
 
-sub show_dialog 
+sub show
 {
 	my $title = shift;
 	my $text = shift;
@@ -28,9 +34,9 @@ sub show_dialog
         my $txt = $top -> Scrolled
 	(
         	"ROText",
-        	-scrollbars=>"osoe",
+        	-scrollbars=>'osoe',
 		-wrap=>'none',
-        	-font=>$main::dialog_font
+        	-font=>$config::dialog_font
         )
         -> grid
 	(
@@ -46,7 +52,7 @@ sub show_dialog
 	(
         	-text=>"Close",
         	-activebackground => "white",
-        	-command => sub 
+        	-command => sub
 		{
         		destroy $top;
         	}
@@ -63,21 +69,23 @@ sub show_dialog
 
 sub show_file_prop
 {
-	my $title = "File Properties";
-	my $text = "";
-	my $ff = shift;
+	my $ff	= shift;
+
+	&main::quit("show_file_prop: \$ff is undef")			if ! defined $ff;
+	&main::quit("show_file_prop: \$ff eq ''")			if $ff eq '';
+	&main::quit("show_file_prop: '$ff' is not a dir or file")	if ! -f $ff && ! -d $ff;
 
 	my $row	= 1;
 
         my $top = $main::mw -> Toplevel();
-        $top -> title("$title");
+        $top -> title('File Properties');
 
 	my $txt = $top -> Scrolled
 	(
-        		"ROText",
-        		-scrollbars=>"osoe",
+        	'ROText',
+        	-scrollbars=>'osoe',
 		-wrap=>'none',
-		-font=>$main::dialog_font,
+		-font=>$config::dialog_font,
 		-height=>5,
 	)
 	-> grid
@@ -89,45 +97,50 @@ sub show_file_prop
 
         $top -> Button
 	(
-		-text=>"Close",
-		-activebackground => "white",
-		-command => sub 
-		{
-			destroy $top;
-		}
+		-text=>'Close',
+		-activebackground => 'white',
+		-command => sub { destroy $top; }
 	)
 	-> grid
 	(
-		-row => $row++,
-		-column => 1,
-		-columnspan => 2
+		-row=>$row++,
+		-column=>1,
+		-columnspan=>2
 	);
 
-#	$top->resizable(0,0);
+	my @txt = ();
+	my $txt_str = '';
+	if(-f $ff)
+	{
+		my $size = stat($ff)->size;
+		my $ff_date = ctime(stat($ff)->mtime);
 
+		@txt =
+		(
+			"File:		$ff",
+			"Size:		$size",
+			"Date Created:	$ff_date",
+			"",
+		);
+	}
+	else
+	{
+		my $ff_date = ctime(stat($ff)->mtime);
 
-	my $size = stat($ff)->size;
-	my $ff_date = ctime(stat($ff)->mtime); 
-
-	my @txt = 
-	(
-		"File:		$ff",
-		"Size:		$size",
-		"Date Created:	$ff_date",	
-		"",
-	);
-
-	my $txt_str = join("\n", @txt);
-	
+		@txt =
+		(
+			"Dir:		$ff",
+			"Date Created:	$ff_date",
+			"",
+		);
+	}
+	$txt_str = join("\n", @txt);
 	# display text last
 	$txt->menu(undef);
-	$txt -> insert('end', "$txt_str");
-
-
+	$txt -> insert('end', $txt_str);
 }
 
-
-sub show_del_dialog 
+sub show_del_dialog
 {
 	my $ff = shift;
 	my $top = $main::mw -> Toplevel();
@@ -135,56 +148,112 @@ sub show_del_dialog
 
 	$top -> title("Confirm Delete");
 
-	my $txt = $top -> Scrolled
+	my $frm_top = $top -> Frame()
+	-> pack
+	(
+		-side => 'top',
+		-fill => 'both',
+		-expand=> 1,
+		-anchor => 'n'
+	);
+
+	my $frm_bottom = $top -> Frame()
+	-> pack
+	(
+		-side => 'bottom',
+		-fill => 'x',
+		-expand=> 0,
+		-anchor => 's'
+	);
+
+	my $txt = $frm_top -> Scrolled
 	(
 		"ROText",
-		-scrollbars=>"osoe",
+		-scrollbars=>'osoe',
 		-wrap=>'none',
-		-font=>$main::dialog_font,
-		-height=>4,
+		-font=>$config::dialog_font,
+		-height=>10,
 		-width=>$ffl
         )
-        -> grid
+        -> pack
 	(
-        		-row => 1,
-        		-column => 1,
-        		-columnspan => 2
+		-side => "top",
+		-expand=> 1,
+		-fill => "both",
         );
 
         $txt->menu(undef);
-        $txt -> insert('end', "Do you want to delete\n\"$ff\"");
 
-	$top -> Button
-	(
-        		-text=>"Yes",
-        		-activebackground => "white",
-        		-command => sub 
+        if(-d $ff)
+        {
+		find(\&run_namefix::find_fix, $ff);
+		$txt -> insert('end', "\nWarning Deleting Directory - ARE YOU SURE ?\nDirectory Tree:\n\n");
+
+		for my $f3(@config::find_arr)
 		{
-			unlink($ff);
-			&ls_dir;
-			destroy $top;
+			$txt -> insert('end', "$f3\n");
+		}
+        }
+        else
+        {
+	        $txt -> insert('end', "Do you want to delete\n\"$ff\"\n");
+        }
 
+	$frm_bottom -> Button
+	(
+		-text=>"Yes",
+		-activebackground => "white",
+		-command => sub
+		{
+			&misc::plog(2, "Deleting $ff");
+			if(-d $ff)
+			{
+				my @tmp = ();
+				for my $f3(@config::find_arr)
+				{
+					if(-f $f3)
+					{
+						unlink($f3);
+					}
+					elsif(-d $f3)
+					{
+						push @tmp, $f3;
+					}
+				}
+				for my $d(reverse @tmp)
+				{
+					rmdir($d);
+				}
+			}
+			else
+			{
+				unlink($ff);
+			}
+			&dir::ls_dir;
+			destroy $top;
 		}
 	)
-	-> grid
+	->pack
 	(
-		-row => 2,
-        		-column => 1,
+		-side => "left",
+		-expand=> 1,
+		-fill => "x",
 	);
 
-	$top -> Button
+	$frm_bottom -> Button
 	(
 		-text=>"No",
 		-activebackground => "white",
-		-command => sub 
+		-command => sub
 		{
 			destroy $top;
 		}
 	)
-	-> grid
+	->pack
 	(
-		-row => 2,
-		-column => 2,
+		-side => "left",
+		-expand=> 1,
+		-fill => "x",
 	);
 }
 

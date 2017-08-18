@@ -1,31 +1,34 @@
 # undo routines
+package undo;
+require Exporter;
+@ISA = qw(Exporter);
 
 use warnings;
 use strict;
+use Cwd;
 
-sub clear_undo
+sub clear
 {
  	# clear undo arrays, atm we only have 1 level of undo
-	&plog(3, "sub clear_undo: wiping undo history");
-	@main::undo_cur		= ();
-	@main::undo_pre		= ();
+	@config::undo_cur		= ();
+	@config::undo_pre		= ();
 
-	&save_file($main::undo_cur_file, "");
-	&save_file($main::undo_pre_file, "");
-	&save_file($main::undo_dir_file, $main::dir);
-	$main::undo_dir = $main::dir;
+	&misc::null_file($config::undo_cur_file);
+	&misc::null_file($config::undo_pre_file);
+	&misc::save_file($config::undo_dir_file, cwd);
+	$config::undo_dir = $config::dir = cwd;
 }
 
-sub undo_add
+sub add
 {
 	my $f1 = shift;
 	my $f2 = shift;
 
-	push @main::undo_pre, $f1;
-	push @main::undo_cur, $f2;
+	push @config::undo_pre, $f1;
+	push @config::undo_cur, $f2;
 
-	&file_append($main::undo_pre_file, "$f1\n");
-	&file_append($main::undo_cur_file, "$f2\n");
+	&misc::file_append($config::undo_pre_file, "$f1\n");
+	&misc::file_append($config::undo_cur_file, "$f2\n");
 }
 
 sub undo_rename
@@ -40,37 +43,56 @@ sub undo_rename
 	# changes to directory
 	# chops FQ filename to filename.
 
-	&plog(3, "sub undo_rename");
-	&plog(1, "Preforming Undo");
+	&misc::plog(1, "Preforming Undo");
 	my $c = 0;
-	my $pre = "";
-	my $dir = "";
+	my $pre = '';
 
-	for my $cur(@main::undo_cur)
+	if(&config::busy)
 	{
-		$pre = $main::undo_pre[$c];
-		$cur =~ m/^(.*\/)(.*?)$/;
-		$dir = $1;
-		$cur = $2;
-		chdir $dir;
-		$pre =~ m/^(.*\/)(.*?)$/;
-		$pre = $2;
-
-  		if(!-f "$cur")
- 		{
- 			&plog(0, "sub undo_rename: \"$cur\" current file does not exist");
- 		}
- 		if(-f "$pre")
- 		{
- 			&plog(0, "sub undo_rename: \"$pre\" previous filename to revert undo to allready exists");
- 		}
- 
-		&plog(4, "sub undo_rename: rename $cur $pre");
-		rename $cur, $pre;
-		&nf_print($cur, $pre);
-		$c++;
+		&plog(0, "undo_rename: aborting, namefix is busy");
+		$config::RUN = 0;
+		return;
 	}
-	chdir $main::dir;
+	$config::RUN = 1;
+	&dir_hlist::draw_list;	# blank main hlist
+
+	for my $c (0 .. $#config::undo_cur)
+	{
+		my $cur = $config::undo_cur[$c];
+		my $pre = $config::undo_pre[$c];
+		if($config::STOP)
+		{
+			&plog(0, "undo_rename: STOPPED");
+			$config::RUN = 0;
+			return;
+		}
+
+		$cur =~ s/^(.*\/)(.*?)$/$2/;
+		my $dir = $1;
+		$pre =~ s/^(.*\/)(.*?)$/$2/;
+
+  		if(!-f $cur)
+ 		{
+ 			&misc::plog(0, "undo_rename: aborted, '$cur' current file does not exist");
+ 			$config::RUN = 0;
+ 			return;
+ 		}
+ 		if
+ 		(
+			!($config::hash{fat32fix}{value} && lc $pre eq lc $cur) &&	# allow fat32fix to do its magic
+			-f $pre
+ 		)
+ 		{
+ 			&misc::plog(0, "undo_rename:  aborted, cannot rename '$cur' to '$pre', file exists");
+ 			next;
+ 		}
+
+		&misc::plog(2, "undo_rename: rename '$cur' -> '$pre'");
+		&fixname::fn_rename($cur, $pre);
+		&nf_print::p($cur, $pre);
+	}
+	chdir $config::dir;
+	$config::RUN = 0;
 	return 1;
 }
 

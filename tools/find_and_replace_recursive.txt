@@ -1,0 +1,9 @@
+$faw
+
+git grep -l '-scrollbars=>osoe,' | xargs sed -i 's/-scrollbars=>osoe,/-scrollbars=>\'osoe\',/g'
+
+
+git grep -l 'INS_END' | xargs sed -i 's/\$config::INS_END/\$config::hash{'INS_END'}{'value'}/g'
+git grep -l 'INS_END' | xargs sed -i 's/\$INS_END/\$config::hash{'INS_END'}{'value'}/g'
+
+

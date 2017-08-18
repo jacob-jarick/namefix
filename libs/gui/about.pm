@@ -1,13 +1,17 @@
-#--------------------------------------------------------------------------------------------------------------
-# Show about box
-#--------------------------------------------------------------------------------------------------------------
+package about;
+require Exporter;
+@ISA = qw(Exporter);
 
 use strict;
 use warnings;
 
-sub show_about 
+#--------------------------------------------------------------------------------------------------------------
+# Show about box
+#--------------------------------------------------------------------------------------------------------------
+
+sub show_about
 {
-my $help_text = join("", &readf($main::about));
+	my $help_text = join('', &misc::readf($config::about));
 
 	my $row = 1;
         my $top = $main::mw -> Toplevel();
@@ -32,9 +36,9 @@ my $help_text = join("", &readf($main::about));
         my $txt = $top -> Scrolled
 	(
         	'ROText',
-        	-scrollbars=>'osoe',
-		-wrap=>"word",
-        	-font=>$main::dialog_font,
+        	-scrollbars=>	'osoe',
+		-wrap=>		'word',
+        	-font=>		$config::dialog_font,
         	-width=>60,
         	-height=>18
         )
@@ -52,9 +56,9 @@ my $help_text = join("", &readf($main::about));
 
         $top -> Button
 	(
-        	-text=>"Close",
-        	-activebackground=>'cyan',
-        	-command => sub 
+        	-text=>			'Close',
+        	-activebackground=>	'cyan',
+        	-command => sub
 		{
         		destroy $top;
         	}

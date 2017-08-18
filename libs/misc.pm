@@ -1,11 +1,16 @@
 # home to all my small misc functions.
+package misc;
+require Exporter;
+@ISA = qw(Exporter);
 
 use strict;
 use warnings;
+use File::Spec::Functions;
+use Cwd qw(realpath);
+use File::stat;
 
 sub ci_sort
 {
-	&plog(3, "sub ci_sort:");
 	my @sortme2 = sort { lc($a) cmp lc($b) } @_;
 	return @sortme2;
 }
@@ -13,45 +18,41 @@ sub ci_sort
 # plog - print log
 
 # Notes:
-# Since i will be logging all subs (excluding plog itself, plug cannot call any namefix subs (recursion errors which locked linux on my system)
+# plug cannot call any namefix subs avoids recursion errors
 
 sub plog
 {
-	my $level = shift;
-	my $text = shift;
+	my $level	= shift;
+	my $text	= shift;
 
-	if($level == 0)
+	if(!$config::CLI) # gui mode
 	{
-		$text = "ERROR>$text";
-
-		# CLI will (for now) always spit out & log errors
-		if($main::CLI)
-		{
-			open(FILE, ">>$main::log_file");
-			print FILE "$text\n";
-			close(FILE);
-
-			print "$text\n";
-			
-			return 1;
-		}
-	}
-	else
-	{
-		$text = "DBG".$level."> ".$text;
+		&log::add($level, $text);
 	}
 
-	if($level <= $main::debug)
+	# CLI will (for now) always spit out & log errors
+	if(!$level && $config::CLI)
 	{
 		open(FILE, ">>$main::log_file");
 		print FILE "$text\n";
 		close(FILE);
-		if($main::LOG_STDOUT)
+
+		print "$text\n";
+
+		return 1;
+	}
+
+	if($level <= $config::hash{debug}{value})
+	{
+		open(FILE, ">>$main::log_file");
+		print FILE "$text\n";
+		close(FILE);
+		if($config::hash{LOG_STDOUT}{value})
 		{
 			print "$text\n";
 		}
 	}
-	if($level == 0 && $main::ERROR_NOTIFY)
+	if(!$level && $config::hash{ERROR_NOTIFY}{value})
 	{
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
@@ -68,28 +69,53 @@ sub clog
 # save_file
 #--------------------------------------------------------------------------------------------------------------
 
-sub save_file 
+sub get_home
+{
+	my $home = undef;
+	$home = $ENV{HOME}		if defined $ENV{HOME} && lc $^O ne lc 'MSWin32';
+	$home = $ENV{USERPROFILE}	if lc $^O eq lc 'MSWin32';
+
+
+	$home = $ENV{TMP}		if ! defined $home; # surely the os has a tmp if nothing else
+	$home =~ s/\\/\//g;
+
+	if(!-d "$home/.namefix.pl")
+	{
+		mkdir("$home/.namefix.pl", 0755) or &main::quit("Cannot mkdir :$home/.namefix.pl $!\n");
+	}
+	return $home;
+}
+
+sub null_file
 {
         my $file = shift;
-        my $t = shift;
 
-	&plog(3, "sub save_file: \"$file\"");	
-#	print "savefile: $file : $t\n";
-        $t =~ s/^\n//g;		# no blank line @ start of file
-        $t =~ s/\n\n+/\n/g;	# no blank lines in file
-        open(FILE, ">$file") or die "ERROR: sub save_file, Couldnt open $file to write to. $!";
-        print FILE $t;
+        open(FILE, ">$file") or &main::quit("ERROR: sub null_file, Couldnt open $file to write to. $!");
         close(FILE);
 }
 
-sub file_append 
+sub save_file
 {
-	my $file = shift;
-	my $string = shift;
+        my $file	= shift;
+        my $string	= shift;
 
-	&plog(3, "sub file_append: \"$file\"");
+        &main::quit("save_file \$file is undef")	if ! defined $file;
+        &main::quit("save_file \$string is undef")	if ! defined $string;
 
-	open(FILE, ">>$file") or die "ERROR: Couldnt open $file to append to. $!";
+        $string =~ s/^\n//g;		# no blank line @ start of file
+        $string =~ s/\n\n+/\n/g;	# no blank lines in file
+
+        open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldnt open $file to write to. $!");
+        print FILE $string;
+        close(FILE);
+}
+
+sub file_append
+{
+	my $file	= shift;
+	my $string	= shift;
+
+	open(FILE, ">>$file") or &main::quit("ERROR: Couldnt open $file to append to. $!");
         print FILE $string;
         close(FILE);
 }
@@ -98,13 +124,17 @@ sub file_append
 # read file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readf 
+sub readf
 {
-        my $file = $_[0];
+        my $file = shift;
 
-	&plog(3, "sub readf: \"$file\"");
+        if(!-f $file)
+        {
+		print "misc::readf WARNING: file '$file' not found\n";
+		return ();
+        }
 
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
 
@@ -116,16 +146,40 @@ sub readf
 }
 
 #--------------------------------------------------------------------------------------------------------------
+# read file
+#--------------------------------------------------------------------------------------------------------------
+
+sub readf_clean
+{
+        my $file = shift;
+
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
+        my @file = <FILE>;
+        close(FILE);
+
+	my @tmp;
+        for my $l(@file)
+        {
+		# clean file of empty lines
+		$l =~ s/\n+//g;
+		$l =~ s/\s*#.*?$//g;
+
+		next if $l eq '';
+
+		push @tmp, $l;
+	}
+        return sort {lc $a cmp lc $b} @tmp;
+}
+
+#--------------------------------------------------------------------------------------------------------------
 # read and sort file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readsf 
+sub readsf
 {
-        my $file = $_[0];
+        my $file = shift;
 
-	&plog(3, "sub readsf: \"$file\"");
-
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
 
@@ -133,7 +187,7 @@ sub readsf
         $file = join('', sort @file);
         $file =~ s/^\n//g;
         $file =~ s/\n\n+/\n/g;
-        @file = split('\n+', $file);
+        @file = split(/\n+/, $file);
 
         return @file;
 }
@@ -142,11 +196,10 @@ sub readsf
 # read, sort and join file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readsjf 
+sub readsjf
 {
-        my $file = $_[0];
-	&plog(3, "sub readsjf: \"$file\"");
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+	my $file = shift;
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
         $file = join('', sort @file);
@@ -160,12 +213,11 @@ sub readsjf
 # read and join file
 #--------------------------------------------------------------------------------------------------------------
 
-sub readjf 
+sub readjf
 {
-        my $file = $_[0];
-	&plog(3, "sub readjf: \"$file\"");
+        my $file = shift;
 
-        open(FILE, "$file") or die("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
         $file = join('', @file);
@@ -179,47 +231,117 @@ sub readjf
 # clear options
 #--------------------------------------------------------------------------------------------------------------
 
-sub clr_no_save 
+sub clr_no_save
 {
-	&plog(3, "sub clr_no_save ");
 	# clear options that are never saved
 
-        $main::replace		= 0;
-	$main::rpwold         	= "";
-        $main::rpwnew         	= "";
-        $main::front_a		= 0;
-        $main::faw            	= "";
-        $main::end_a		= 0;
-        $main::eaw            	= "";
+        $config::hash{replace}{value}		= 0;
+        $config::hash{INS_START}{value}		= 0;
+        $config::end_a			= 0;
+	$config::ins_str_old         	= '';
+        $config::ins_str         	= '';
+        $config::ins_front_str		= '';
+        $config::ins_end_str		= '';
 
-	$main::id3_art_str	= "";
-	$main::id3_alb_str	= "";
-	$main::id3_com_str	= "";
-	$main::id3_gen_str 	= "Metal";
-	$main::id3_year_str 	= "";
+	$config::id3_gen_str 		= 'Metal';
+	$config::id3_art_str		= '';
+	$config::id3_alb_str		= '';
+	$config::id3_com_str		= '';
+	$config::id3_year_str 		= '';
 
-	$main::id3_art_set	= 0;
-	$main::id3_alb_set	= 0;
-	$main::id3_com_set	= 0;
-	$main::id3_gen_set 	= 0;
-        $main::id3_year_set 	= 0;
-
-	$main::id3v1_rm		= 0;
-	$main::id3v2_rm		= 0;
+	$config::hash{AUDIO_SET_ARTIST}{value}	= 0;
+	$config::hash{AUDIO_SET_ALBUM}{value}	= 0;
+	$config::hash{AUDIO_SET_COMMENT}{value}	= 0;
+	$config::hash{AUDIO_SET_GENRE}{value} 	= 0;
+        $config::hash{AUDIO_SET_YEAR}{value} 	= 0;
+	$config::hash{RM_AUDIO_TAGS}{value}		= 0;
 }
 
 #--------------------------------------------------------------------------------------------------------------
 # Escape strings for use in regexp - wrote my own cos uri is fucked.
 #--------------------------------------------------------------------------------------------------------------
 
-sub escape_string 
+# TODO remove
+sub escape_string
 {
 	my $s = shift;
-	&plog(5, "sub escape_string: \"$s\"");	# very noisy sub
-	$s =~ s/(\~|\`|\!|@|\#|\$|\%|\^|\&|\(|\)|\=|\+|\{|\[|\]|\}|\:|\;|\"|\'|\<|\,|\.|\>|\?)/"\\".$1/eg;
-	return $s;
+	return quotemeta $s;
 }
 
+sub is_in_array
+{
+	my $string	= shift;
+	my $array_ref	= shift;
+
+	return 1 if grep { $_ eq $string} @$array_ref;
+
+	return 0;
+}
+
+# my ($d, $f, $p) = get_file_info($file);
+sub get_file_info
+{
+	my $file	= shift;
+
+	&main::quit("get_file_info: \$file is undef") if ! defined $file;
+	&main::quit("get_file_info: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+
+	my $file_path	= &get_file_path($file);
+	my $file_name	= &get_file_name($file_path);
+	my $file_dir	= &get_file_parent_dir($file_path);
+
+	return ($file_dir, $file_name, $file_path);
+}
+
+sub get_file_path
+{
+	my $file	= shift;
+
+	&main::quit("get_file_path: \$file is undef") if ! defined $file;
+	&main::quit("get_file_path: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+
+	my $file_path	= File::Spec->rel2abs($file);
+	$file_path	=~ s/\\/\//g;
+
+	return $file_path;
+}
+
+sub get_file_parent_dir
+{
+	my $file_path	= shift;
+	$file_path	= &get_file_path($file_path);
+	my @tmp		= split(/\//, $file_path);
+	my $file_name	= splice @tmp , $#tmp, 1;
+	my $file_dir	= join('/', @tmp);
+
+	return $file_dir;
+}
+
+sub get_file_name
+{
+	my $file_path	= shift;
+	$file_path	= &get_file_path($file_path);
+	my @tmp		= split(/\//, $file_path);
+
+	return $tmp[$#tmp];
+}
+
+sub get_file_ext
+{
+	my $file_path	= shift;
+
+	return undef if !-f $file_path;
+
+	$file_path	= &get_file_path($file_path);
+	my @tmp		= split(/\//, $file_path);
+	my $file_name	= splice @tmp , $#tmp, 1;
+
+	if ( $file_name =~ /^(.+)\.(.+?)$/)
+	{
+		return ($1, $2);
+	}
+	return undef;
+}
 
 
 1;

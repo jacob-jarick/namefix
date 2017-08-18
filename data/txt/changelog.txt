@@ -1,0 +1,85 @@
+4.1.2 - ie refresh in progress
+
+* enumerate fixed and added a new option: string
+  string allows you to wrap the enumerated digit in a start and end string of your choosing.
+  3 new cli options added
+  --enum-add-strings			enables padding enum digit like so: <front><digit><end>
+  --enum-string-(front|start)=<front>	sets enum-add-strings, sets front to <front>
+  --enum-string-(end|stop)=<end>	sets enum-add-strings, sets end to <end>
+
+* added clear button to MP3 tab to clear that tabs settings
+
+* ogg's get their id3 tags written
+
+* new option in misc "pad N to NN" eg:
+  Artist - 1 - track.ogg
+  to
+  Artist - 01 - track.ogg
+
+* clear button works again and also clears log window
+
+* guess tags now correctly guesses tags AFTER all tag modifications
+
+*  only show needed amont of columns (correctly this time).
+
+* fixname::fix - added quit errors to catch undef filenames and '' as filenames
+
+* ls_dir now only shows neccesary headers + massive cleanup
+
+* massive overhaul of nf_print::p
+  only shows files & dirs
+
+* drastic overhaul of mp3 library.
+  updated to use new methods of writing tags, as my old method is now depreciated
+  new methods enabled writing to ogg files and other audio formats.
+  information for mp3 (audio files) tags are stored in a hash whenever possible
+
+*  rm_tags now removed both id3v1 and id3v2
+
+* id3 tags supported on the following file types: mp3, mp2, ogg, mpg, mpeg, mp4, aiff, flac, ape, ram, mpc
+  WIP - currently ogg's dont get their id3 tags written
+
+* make_test_dir.pl updated. now sets mimetypes for music files (allows testing of mp3 tags)
+
+* rc_menu
+  delete can now delete a directory - shows dir contents in dialog
+
+* config
+  all configurable options shifted to TSV $HOME/.namefix.pl/config_hash.tsv
+
+* filter regex
+  now users quotemeta
+
+* fn_sp_word now uses quotemeta
+
+* all libraries updated to proper library format
+
+* bookmarks.pm no longer uses self generating code.
+
+* mass libraries updated to proper libs
+
+4.1.1 - ie refresh in progress
+
+* about.pm is a proper lib now
+
+* .msi & .exe's updated
+
+* nsis installer script updated so it doesnt include .git
+
+* Hot Keys Added:
+  ESC = Stop doing whatever your doing
+  F2  = Manual Rename
+  F5  = Refresh current dir listing
+  F6  = Preview current changes (if any)
+
+* make_test_dir.pl updated - creates fake music files in fake album directories
+* added cool progress bar.
+
+* updating NSIS - probally quite broken on stuff like:
+  ENV path,
+  registry entry to ad namefix.pl to right click.
+
+* adding right click Apply Preview to hlist
+* update about dialog to refer to github: https://github.com/jacob-jarick/namefix
+* created make_test_dir.pl for generating files I can test with.
+* turned on strict and warnings for namefix.pl - redirected warnings for Jcombox

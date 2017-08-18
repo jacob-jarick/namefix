@@ -1,172 +1,128 @@
+package fixname;
+require Exporter;
+@ISA = qw(Exporter);
+
 use strict;
 use warnings;
 
+use Data::Dumper::Concise;
+use Cwd;
+use Carp;
+
+our $last_dir = '';
+our $dir = '';
+
 #--------------------------------------------------------------------------------------------------------------
-# fixname
+# vars
 #--------------------------------------------------------------------------------------------------------------
 
-sub fixname
+our $enum_count = 0;
+
+sub fix
 {
-	return 0 if $main::STOP == 1;
-
-	&plog(3, "sub fixname");
+	return 0 if $config::STOP == 1;
 
         # -----------------------------------------
 	# Vars
         # -----------------------------------------
 
 	my $file 	= shift;
-        if(!$file) { return; }     # prevent null entrys being processed
-	&plog(3, "sub fixname: processing \"$file\"");
+	my $path	= '';
 
-        $main::id3_writeme 	= 0;
-        my $newfile		= $file;
-        my $tmpr 		= 1;
-        my @tmp_arr;
+	&main::quit ("fixname::fix : ERROR file is undef")			if ! defined $file;
+	&main::quit ("fixname::fix : ERROR file eq ''")				if $file eq '';
+	&main::quit ("fixname::fix : ERROR file '$file' isnt dir/file")		if !-d $file && !-f $file;
 
+	($dir, $file, $path) =  &misc::get_file_info($file);
+	chdir $dir;
+
+        my $IS_AUDIO_FILE	= 0;
         my $tag 		= 0;
-        my $art 		= "";
-        my $tit			= "";
-        my $tra			= "";
-        my $alb			= "";
-        my $gen			= "";
-        my $year		= "";
-        my $com			= "";
-        my $newart 		= "";
-        my $newtit		= "";
-        my $newtra		= "";
-        my $newalb		= "";
-        my $newgen		= "";
-        my $newyear		= "";
-        my $newcom		= "";
-
-        my $tmp	       		= "";
-        my $t_s	       		= "";
-        my $tl	       		= 0;
         my $file_ext_length	= 0;
         my $trunc_char_length	= 0;
-        my $l	       		= 0;
-        my $enum_n		= 0;
-        my $file_ext		= "";
-        my $tmpfile		= "";
 
-        $main::cwd 		= cwd;	# RM - legacy code ???
+        my $newfile		= $file;
+        my $file_ext		= '';
+        my $tmpfile		= '';
 
-	if($main::id3_mode && !-f $file)
+	$IS_AUDIO_FILE = 1 if $file =~ /\.$config::id3_ext_regex$/i;
+
+	if($config::hash{id3_mode}{value} && !-f $file)
 	{
-		&plog(0, "sub fixname: \"$file\" does not exist");
-		&plog(0, "sub fixname: current directory = \"$main::dir\"");
+		&misc::plog(0, "sub fixname: \"$dir/$file\" does not exist");
+		&misc::plog(0, "sub fixname: current directory = \"$config::dir\"");
+		return;
 	}
 
         # -----------------------------------------
 	# make sure file is allowed to be renamed
         # -----------------------------------------
+        &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::hash{IGNORE_FILE_TYPE}{value});
 
-        if((!-d $file) && ($main::ig_type || $file =~ /\.($main::file_ext_2_proc)$/i))
-	{
-		&plog(4, "sub fixname: \"$file\" passed file extionsion check");
-                $tmpr = 0;
-        }
+        my $RENAME = 0;
 
-        if($main::proc_dirs && -d $file)
-	{
-		&plog(4, "sub fixname: \"$file\" passed dir check, is a directory, dir mode is enabled");
-                $tmpr = 0;
-        }
+        # file extionsion check
+        $RENAME = 1 if -f $file && ($config::hash{IGNORE_FILE_TYPE}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
 
-        if($main::proc_dirs && $main::ig_type)
-	{
-		&plog(4, "sub fixname: \"$file\" being passed regardless, we are processing all file types");
-                $tmpr = 0;
-        }
+	# dir check, is a directory, dir mode is enabled
+        $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
 
-        if($main::FILTER && &match_filter($file) == 0)
-	{
-		&plog(4, "sub fixname: \"$file\" didnt match filter");
-        	return;
-        }
-        if($tmpr == 1)
-	{
-		&plog(4, "sub fixname: rules say file shouldnt be renamed");
-        	return;
-        }
+	# processing all file types & dirs
+        $RENAME = 1 if $config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value};
+
+	# didnt match filter
+        return if $config::hash{FILTER}{value} && !&filter::match($file);
+
+	# rules say file shouldnt be renamed
+	return if !$RENAME;
 
 	# recursive, print stuff
 	# this code inserts a line between directorys and prints the parent directory.
 
 	if
 	(
-        	$main::recr &&
-                $main::last_recr_dir ne "$main::cwd" &&	# if pwd != last dir
-                $main::proc_dirs == 0
+        	$config::hash{RECURSIVE}{value} &&
+                $last_dir ne $dir &&
+                !$config::hash{PROC_DIRS}{value}
         )
 	{
-		&plog(4, "sub fixname: Printing dir in gui dirlist");
-		$main::last_recr_dir = $main::cwd;
+		$last_dir = $dir;
 
-		&nf_print(" ", "<MSG>");
-		&nf_print($main::cwd, $main::cwd);
+		&nf_print::p(' ', '<BLANK>');
+		&nf_print::p($dir);
 	}
 
-	# Fetch mp3 tags, if file is a mp3 and id3 mode is enabled
-	# $tag will =1 only if tags r found & id3 mode is enabled
+	#------------------------------------------------------------------------------
+	# Fetch & process audio tags
+	# $tag = 1 only if tags are found & id3 mode is enabled
 
-	if($main::id3_mode & $file =~ /.*\.mp3$/)
+	my %tags_h	= ();
+	my %tags_h_new	= ();
+
+	if($config::hash{id3_mode}{value} && $IS_AUDIO_FILE)
 	{
-	&plog(4, "sub fixname: getting mp3 tags");
-		@tmp_arr = &get_tags($file);
-		if($tmp_arr[0] eq "id3v1")
+		my $ref		= &mp3::get_tags($file);
+		%tags_h		= %$ref;
+		%tags_h_new	= %tags_h;
+		$tag		= 1;
+
+		my @tags_to_fix = ('artist', 'title', 'album', 'comment');
+		for my $k(@tags_to_fix)
 		{
-			$tag = 1;
-			$newart 	= $art 		= $tmp_arr[1];
-			$newtit 	= $tit 		= $tmp_arr[2];
-			$newtra 	= $tra 		= $tmp_arr[3];
-			$newalb 	= $alb 		= $tmp_arr[4];
-                        $newgen		= $gen	 	= $tmp_arr[5];
-                        $newyear 	= $year		= $tmp_arr[6];
-			$newcom 	= $com 		= $tmp_arr[7];
+			&main::quit("ERROR processing audio file $file - $k is undef") if ! defined $tags_h_new{$k};
+			$tags_h_new{$k} = &fn_pre_clean	(0, $tags_h_new{$k});
+			$tags_h_new{$k} = &fn_replace	(0, $tags_h_new{$k});
+			$tags_h_new{$k} = &fn_spaces	(0, $tags_h_new{$k});
+			$tags_h_new{$k} = &fn_case	(0, $tags_h_new{$k});
+			$tags_h_new{$k} = &fn_sp_word	(0, $file, $tags_h_new{$k});
+			$tags_h_new{$k} = &fn_case_fl	(0, $tags_h_new{$k});
+			$tags_h_new{$k} = &fn_post_clean(0, $tags_h_new{$k});
 		}
-
-		# Do tag stuff now
-
-		$newart = &fn_replace($newart);
-		$newtit = &fn_replace($newtit);
-		$newalb = &fn_replace($newalb);
-		$newcom = &fn_replace($newcom);
-
-		$newart = &fn_spaces($newart);
-		$newtit = &fn_spaces($newtit);
-		$newalb = &fn_spaces($newalb);
-		$newcom = &fn_spaces($newcom);
-
-		$newart = &fn_case($newart);
-		$newtit = &fn_case($newtit);
-		$newalb = &fn_case($newalb);
-		$newcom = &fn_case($newcom);
-
-		$newart = &fn_sp_word($file, $newart);
-		$newtit = &fn_sp_word($file, $newtit);
-		$newalb = &fn_sp_word($file, $newalb);
-		$newcom = &fn_sp_word($file, $newcom);
-
-		$newart = &fn_case_fl($newart);
-		$newtit = &fn_case_fl($newtit);
-		$newalb = &fn_case_fl($newalb);
-		$newcom = &fn_case_fl($newcom);
-
-		$newart = &fn_post_clean($newart);
-		$newtit = &fn_post_clean($newtit);
-		$newalb = &fn_post_clean($newalb);
-		$newcom = &fn_post_clean($newcom);
 	}
 
-	$newfile = &run_fixname_subs($file, $newfile);
+	#------------------------------------------------------------------------------
 
-	# guess id3 tags
-	if($main::id3_guess_tag == 1 && $_ =~ /.*\.mp3$/)
-        {
-		($newart, $newtra, $newtit, $newalb) = &guess_tags($newfile);
-	}
+	$newfile = run_fixname_subs($file, $newfile);
 
 	# End of cleanups
 
@@ -174,228 +130,185 @@ sub fixname
 	# check for and apply filename/ id3 changes
 	#==========================================================================================================================================
 
-	&plog(4, "sub fixname: set user entered tags if any");
+	# set user entered audio tags overrides if any
 
-	if($main::id3_art_set && $file =~ /.*\.mp3$/i)
+	if($config::hash{AUDIO_SET_ARTIST}{value} && $IS_AUDIO_FILE)
 	{
-		$newart = $main::id3_art_str;
+		$tags_h_new{artist} = $config::id3_art_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_alb_set && $file =~ /.*\.mp3$/i)
+	if($config::hash{AUDIO_SET_ALBUM}{value} && $IS_AUDIO_FILE)
 	{
-		$newalb = $main::id3_alb_str;
+		$tags_h_new{album} = $config::id3_alb_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_gen_set && $file =~ /.*\.mp3$/i)
+	if($config::hash{AUDIO_SET_GENRE}{value} && $IS_AUDIO_FILE)
 	{
-		$newgen = $main::id3_gen_str;
+		$tags_h_new{genre} = $config::id3_gen_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_year_set && $file =~ /.*\.mp3$/i)
+	if($config::hash{AUDIO_SET_YEAR}{value} && $IS_AUDIO_FILE)
 	{
-		$newyear = $main::id3_year_str;
+		$tags_h_new{year} = $config::id3_year_str;
 		$tag	= 1;
 	}
 
-	if($main::id3_com_set && $file =~ /.*\.mp3$/i)
+	if($config::hash{AUDIO_SET_COMMENT}{value} && $IS_AUDIO_FILE)
 	{
-		$newcom = $main::id3_com_str;
+		$tags_h_new{comment} = $config::id3_com_str;
 		$tag	= 1;
 	}
-
-        if($main::id3v1_rm && $file =~ /.*\.mp3$/i)
-	{
-        	if(!$main::testmode)
-		{
-        		&rm_tags($file, "id3v1");
-                }
-                else
-		{
-                	$main::tags_rm++;
-                }
-                $tmp = "printme";
-        }
 
 	# rm mp3 id3v2 tags
-        if($main::id3v2_rm && $_ =~ /.*\.mp3$/i)
+        if($IS_AUDIO_FILE && $config::hash{RM_AUDIO_TAGS}{value})
 	{
-        	if(!$main::testmode)
+        	if(!$config::PREVIEW)
 		{
-        		&rm_tags($file, "id3v2");
+        		&mp3::rm_tags($file);
                 }
                 else
 		{
-                	$main::tags_rm++;
+                	$config::tags_rm++;
                 }
-                $tmp = "printme";
+        	$tag = 1;
         }
 
-	# rm mp3 id3v1 tags
-        if($main::id3v1_rm && $main::id3v2_rm && $file =~ /.*\.mp3$/i)
-	{
-        	$tag = 0;
-        }
-
-	if($tag == 0 && $file eq $newfile)
-	{
-        	if($tmp eq "printme")
-		{
-                	&nf_print($file, $newfile);
-                }
-		&plog(3, "sub fixname: no tags and no fn change, dont rename");
-		return;
+        # guess id3 tags
+	if($config::hash{id3_guess_tag}{value} && $IS_AUDIO_FILE)
+        {
+		(
+			$tags_h_new{artist},
+			$tags_h_new{track},
+			$tags_h_new{title},
+			$tags_h_new{album},
+		) = &mp3::guess_tags($newfile);
 	}
+
+        # no tags and no fn change, dont rename
+	return if !$tag && $file eq $newfile;
 
        	if($tag)
 	{
        		# fn & tags havent changed
-
+       		my $TAGS_CHANGED = 0;
 		if
 		(
-			$main::id3_writeme == 0 &&
-			$file eq $newfile &&
-			$art eq $newart &&
-			$tit eq $newtit &&
-			$tra eq $newtra &&
-			$alb eq $newalb &&
-			$com eq $newcom &&
-			$gen eq $newgen &&
-			$year eq $newyear
-        	)
+			$tags_h{artist}		ne $tags_h_new{artist}	||
+			$tags_h{title}		ne $tags_h_new{title}	||
+			$tags_h{track}		ne $tags_h_new{track}	||
+			$tags_h{album}		ne $tags_h_new{album}	||
+			$tags_h{genre}		ne $tags_h_new{genre}	||
+			$tags_h{comment}	ne $tags_h_new{comment}	||
+			$tags_h{year}		ne $tags_h_new{year}
+		)
 		{
-			if($tmp eq "printme")
-			{
-				&nf_print($file, $newfile);
-			}
+			$TAGS_CHANGED = 1;
+		}
+
+		if($file eq $newfile && !$TAGS_CHANGED)	# nothing happened to file or tags
+		{
         		return;
         	}
 
-		if
-		(
-			$main::id3_writeme == 1 ||
-			$art ne $newart ||
-			$tit ne $newtit ||
-			$tra ne $newtra ||
-			$alb ne $newalb ||
-			$com ne $newcom ||
-			$gen ne $newgen ||
-			$year ne $newyear
-        	)
+		$config::id3_change++ if $TAGS_CHANGED;
+
+		if($TAGS_CHANGED && !$config::PREVIEW)
 		{
-			&plog(4, "sub fixname: one or more tags changed, write n bump counter");
-        		if(!$main::testmode)
-			{
-				&write_tags($file, $newart, $newtit, $newtra, $newalb, $newcom, $newgen, $newyear);
-			}
-			$main::id3_change++;
+			&mp3::write_tags($file, \%tags_h_new);
 		}
 	}
 
 	if($file ne $newfile)
 	{
-		if(!$main::testmode)
+		if(!$config::PREVIEW)
 		{
 			if(!&fn_rename($file, $newfile) )
 			{
-				plog(0, "sub fixname: \"$newfile\" cannot preform rename, file allready exists");
+				&misc::plog(0, "fixname: '$newfile' cannot preform rename, file allready exists");
 				return 0;
 			}
 		}
 		else
 		{
-			# increment change for preview count
-			$main::change++;
+			$config::change++; # increment change for preview count
 		}
 	}
 
-	&nf_print
+	&nf_print::p
 	(
 		$file,
 		$newfile,
 
-		$art,
-		$tit,
-		$tra,
-		$alb,
-		$com,
-		$gen,
-		$year,
-
-		$newart,
-		$newtit,
-		$newtra,
-		$newalb,
-		$newcom,
-		$newgen,
-		$newyear
+		\%tags_h,
+		\%tags_h_new,
 	);
 };
 
 #==========================================================================================================================================
-#==========================================================================================================================================
-#==========================================================================================================================================
 
 # returns 1 if succesfull rename, errors are printed to console
 
-# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$main::overwrite) "
+# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::hash{OVERWRITE}{value}) "
 # bloody fat32 returns positive when we dont want it, ie case correcting
 
 sub fn_rename
 {
-	if($main::STOP == 1)
+	return 0 if $config::STOP;
+
+	my $file	= shift;
+	my $newfile	= shift;
+
+	&main::quit("fn_rename \$file is undef\n")		if ! defined $file;
+	&main::quit("fn_rename \$file eq ''\n")			if $file eq '';
+
+	&main::quit("fn_rename \$newfile is undef\n")		if ! defined $newfile;
+	&main::quit("fn_rename \$newfile eq ''\n")		if $newfile eq '';
+
+	my $file_name = &misc::get_file_name($file);
+	&misc::plog(3, "rename '$file_name' to '$newfile'");
+
+	my $dir		= &misc::get_file_parent_dir($file);
+	$newfile	= "$dir/$newfile";
+
+	my $tmpfile = $newfile.'-FSFIX';
+
+	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
 	{
-		return 0;
-	}
-
-	&plog(3, "sub fn_rename");
-	my $file = shift;
-	my $newfile = shift;
-	my $tmpfile = $newfile."-FSFIX";
-
-	&plog(4, "sub fn_rename: \"$file\" \"$newfile\"");
-
-	if($main::fat32fix) 	# work around case insensitive filesystem renaming problems
-	{
-
-		if( -e $tmpfile && !$main::overwrite)
+		if( -e $tmpfile && !$config::hash{OVERWRITE}{value})
 		{
-			$main::tmpfilefound++;
-			$main::tmpfilelist .= "$tmpfile\n";
-			&plog(0, "sub fn_rename: \"$tmpfile\" <- tmpfilefound");
+			$config::FOUND_TMP++;
+			$config::tmpfilelist .= "$tmpfile\n";
+			&misc::plog(0, "fn_rename: \"$tmpfile\" <- FOUND_TMP");
 			return 0;
 		}
 		rename $file, $tmpfile;
-		if(-e $newfile && !$main::overwrite)
+		if(-e $newfile && !$config::hash{OVERWRITE}{value})
 		{
 			rename $tmpfile, $file;
-			&plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");
+			&misc::plog(0, "fn_rename: \"$newfile\" refusing to rename, file exists");
 			return 0;
 		}
 		else
 		{
 			rename $tmpfile, $newfile;
-			&undo_add("$main::cwd/$file", "$main::cwd/$newfile");
+			&undo::add($file, $newfile);
 		}
 	}
 	else
 	{
-		if(-e $newfile && !$main::overwrite)
+		if(-e $newfile && !$config::hash{OVERWRITE}{value})
 		{
-			$main::suggestF++;
-			&plog(0, "sub fn_rename: \"$newfile\" refusing to rename, file exists");
+			$config::SUGGEST_FSFIX++;
+			&misc::plog(0, "fn_rename: '$newfile' refusing to rename, file exists");
 			return 0;
 		}
-		else
-		{
-			rename $file, $newfile;
-			&undo_add("$main::cwd/$file", "$main::cwd/$newfile");
-		}
+		rename $file, $newfile;
+		&undo::add($file, "$dir/$newfile");
 	}
-	&plog(4, "sub fn_rename: \"$file\" to \"$newfile\" renamed.");
-	$main::change++;
+	$config::change++;
 	return 1;
 }
 
@@ -403,79 +316,68 @@ sub fn_rename
 
 sub run_fixname_subs
 {
-	my $file = shift;
-	my $newfile = shift;
+	my $file	= shift;
+	my $newfile	= shift;
 
-	&plog(3, "sub run_fixname_subs:");
-	if(!$newfile)
-	{
-		&plog(4, "sub run_fixname_subs: processing \"$file\"");
-	}
-	else
-	{
-		&plog(4, "sub run_fixname_subs: processing \"$file\", \"$newfile\"");
-	}
+	&main::quit("run_fixname_subs \$file is undef\n")		if ! defined $file;
+	&main::quit("run_fixname_subs \$file eq ''\n")			if $file eq '';
+	&main::quit("run_fixname_subs \$file isnt a dir or file\n")	if !-f $file && !-d $file;
+
+	$newfile = $file if !$newfile;
 
 	# ---------------------------------------
 	# 1st Run, do before cleanup
 	# ---------------------------------------
 
-	$newfile = &fn_scene($newfile);			# Scenify Season & Episode numbers
-	$newfile = &fn_unscene($newfile);		# Unscene Season & Episode numbers
-	$newfile = &fn_kill_sp_patterns($newfile);	# remove patterns
-        $newfile = &fn_kill_cwords($file, $newfile);	# remove list of words
-	$newfile = &fn_replace($newfile);		# remove user entered word (also replace if anything is specified)
-	$newfile = &fn_spaces($newfile);		# convert underscores to spaces
-	$newfile = &fn_pad_dash($newfile);		# pad -
-	$newfile = &fn_dot2space($file, $newfile);	# Dots to spaces
-	$newfile = &fn_sp_char($newfile);		# remove nasty characters
-	$newfile = &fn_rm_digits($newfile);		# remove all digits
-	$newfile = &fn_digits($newfile);		# remove digits from front of filename
-	$newfile = &fn_split_dddd($newfile);		# split season episode numbers
+	$newfile = &fn_scene		(	$newfile);			# Scenify Season & Episode numbers
+	$newfile = &fn_unscene		(	$newfile);			# Unscene Season & Episode numbers
+	$newfile = &fn_kill_sp_patterns	(	$newfile);			# remove patterns
+        $newfile = &fn_kill_cwords	(	$file,		$newfile);	# remove list of words
+	$newfile = &fn_replace		(1,	$newfile);			# remove user entered word (also replace if anything is specified)
+	$newfile = &fn_spaces		(1,	$newfile);			# convert underscores to spaces
+	$newfile = &fn_pad_dash		(	$newfile);			# pad -
+	$newfile = &fn_pad_N_to_NN	(	$newfile);			# pad -
 
-	$newfile = &fn_pre_clean($newfile);		# Preliminary cleanup (just cleans up after 1st run)
+	$newfile = &fn_dot2space	(1,	$file,		$newfile);	# Dots to spaces
+	$newfile = &fn_sp_char		(	$newfile);			# remove nasty characters
+	$newfile = &fn_rm_digits	(	$newfile);			# remove all digits
+	$newfile = &fn_digits		(	$newfile);			# remove digits from front of filename
+	$newfile = &fn_split_dddd	(	$newfile);			# split season episode numbers
+	$newfile = &fn_pre_clean	(1,	$file,		$newfile);	# Preliminary cleanup (just cleans up after 1st run)
 
 	# ---------------------------------------
 	# Main Clean - these routines expect a fairly clean string
 	# ---------------------------------------
 
-	$newfile = &fn_intr_char($newfile);		# International Character translation
-	$newfile = &fn_case($newfile);			# Apply casing
-	$newfile = &fn_pad_digits_w_zero($newfile);	# Pad digits with 0
-	$newfile = &fn_pad_digits($newfile);		# Pad NN w - , Pad digits with " - "
-        $newfile = &fn_sp_word($file, $newfile); 	# Specific word casing
+	$newfile = &fn_intr_char	(1,	$newfile);			# International Character translation
+	$newfile = &fn_case		(1,	$newfile);			# Apply casing
+	$newfile = &fn_pad_digits_w_zero(	$newfile);			# Pad digits with 0
+	$newfile = &fn_pad_digits	(	$newfile);			# Pad NN w - , Pad digits with " - "
+        $newfile = &fn_sp_word		(1,	$file,		$newfile); 	# Specific word casing
 
-	$newfile = &fn_post_clean($file, $newfile);	# Post General cleanup
+	$newfile = &fn_post_clean	(1,	$file,		$newfile);	# Post General cleanup
 
 	# ---------------------------------------
 	# 2nd runs some routines need to be run before & after cleanup in order to work fully (allows for lazy matching)
 	# ---------------------------------------
 
-	$newfile = &fn_kill_sp_patterns($newfile);	# remove patterns
-        $newfile = &fn_kill_cwords($file, $newfile);	# remove list of words
+	$newfile = &fn_kill_sp_patterns	(	$newfile);			# remove patterns
+        $newfile = &fn_kill_cwords	(	$file,		$newfile);	# remove list of words
 
 	# ---------------------------------------
 	# Final cleanup
 	# ---------------------------------------
-	$newfile = &fn_spaces($newfile);		# spaces
+	$newfile = &fn_spaces		(1,	$newfile);			# spaces
 
-	$newfile = &fn_front_a($newfile);		# Front append
-	$newfile = &fn_end_a($newfile);			# End append
+	$newfile = &fn_front_a		(	$newfile);			# Front append
+	$newfile = &fn_end_a		(	$newfile);			# End append
 
-	$newfile = &fn_case_fl($newfile);		# UC 1st letter of filename
-	$newfile = &fn_lc_all($newfile);		# lowercase all
-	$newfile = &fn_uc_all($newfile);		# uppercase all
-	$newfile = &fn_truncate($file, $newfile);	# truncate file
-	$newfile = &fn_enum($file, $newfile); 		# Enumerate
+	$newfile = &fn_case_fl		(1,	$newfile);			# UC 1st letter of filename
+	$newfile = &fn_lc_all		(	$newfile);			# lowercase all
+	$newfile = &fn_uc_all		(	$newfile);			# uppercase all
+	$newfile = &fn_truncate		(	$file,		$newfile);	# truncate file
+	$newfile = &fn_enum		(	$file,		$newfile); 	# Enumerate
 
-	if($file eq $newfile)
-	{
-		&plog(4, "sub run_fixname_subs: no modifications to \"$file\"");
-	}
-	else
-	{
-		&plog(4, "sub run_fixname_subs: \"$file\" to \"$newfile\"");
-	}
 	return $newfile;
 }
 
@@ -484,147 +386,112 @@ sub run_fixname_subs
 
 sub fn_kill_cwords
 {
-	&plog(3, "sub fn_kill_cwords");
-	my $f = shift;
-	my $fn = shift;
-	my $a = "";
+	my $file	= shift;
+	my $file_new	= shift;
 
-	if(!$fn)
-	{
-		$fn = $f;
-	}
-        if($main::kill_cwords)
+	&main::quit("fn_kill_cwords \$file is undef\n")	if ! defined $file;
+	&main::quit("fn_kill_cwords \$file eq ''\n")	if $file eq '';
+
+	$file_new = $file if !defined $file_new || $file_new eq '';
+
+	if($config::hash{kill_cwords}{value})
         {
-        	if(-d $f)	# if directory process as normal
+        	if(-d $file)	# if directory process as normal
                 {
-
-	                for $a(@main::kill_words_arr_escaped)
+	                for my $a(@config::kill_words_arr)
                         {
-	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1.$3/ig;
+				$a = quotemeta $a;
+	                        $file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1$3/ig;
 	                }
 		}
                 else		# if its a file, be careful not to remove the extension, hence why we dont match on $
                 {
-	                for $a(@main::kill_words_arr_escaped)
+	                for my $a(@config::kill_words_arr)
                         {
-	                        $fn =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1.$3/ig;
+				$a = quotemeta $a;
+	                        $file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1$3/ig;
 	                }
                 }
         }
-
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_kill_cwords: \$f\" to \"$fn\"");
-	}
-	return $fn;
+	return $file_new;
 }
 
 sub fn_replace
 {
-	&plog(3, "sub fn_replace ");
-	my $fn = shift;
-	my $f = $fn;
+	my $FILE	= shift;
+	my $file_new	= shift;
 
-	if($main::replace)
-        {
-                $fn =~ s/($main::rpwold_escaped)/$main::rpwnew/ig;
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_replace: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	&main::quit("fn_replace \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_replace \$file_new eq ''\n")		if $FILE && $file_new eq '';
+
+	return $file_new if $config::hash{replace}{value};
+	$file_new =~ s/($config::ins_str_old_escaped)/$config::ins_str/ig;
+	return $file_new;
 }
 
 sub fn_kill_sp_patterns
 {
-	&plog(3, "sub fn_kill_sp_patterns ");
-	my $fn = shift;
-	my $f = $fn;
+	my $file_new = shift;
+	&main::quit("fn_kill_sp_patterns \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_kill_sp_patterns \$file_new eq ''\n")		if $file_new eq '';
 
-        if($main::kill_sp_patterns)
-        {
-                for (@main::kill_patterns_arr)
-                {
-                        $fn =~ s/$_//ig;
-                }
-        }
-
-	if($f ne $fn)
+        return $file_new if !$config::hash{kill_sp_patterns}{value};
+	for my $pattern (@config::kill_patterns_arr)
 	{
-		&plog(4, "sub fn_kill_sp_patterns: \"$f\" to \"$fn\"");
+		$file_new =~ s/$pattern//ig;
 	}
-	return $fn;
+	return $file_new;
 }
 
 sub fn_unscene
 {
-	&plog(3, "sub fn_unscene ");
-	my $fn = shift;
-	my $f = $fn;
+	my $file_new = shift;
+	&main::quit("fn_unscene \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_unscene \$file_new eq ''\n")		if $file_new eq '';
 
-	if($main::unscene)
-	{
-		$fn =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie;
-	}
+	$file_new =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie if($config::hash{unscene}{value});
 
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_unscene: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	return $file_new;
 }
 
 sub fn_scene
 {
-	&plog(3, "sub fn_scene ");
-	my $fn = shift;
-	my $f = $fn;
+	my $file_new = shift;
+	&main::quit("fn_scene \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_scene \$file_new eq ''\n")	if $file_new eq '';
 
-	if($main::scene)
-	{
-		$fn =~ s/(^|\W)(\d+)(x)(\d+)/$1.qw(S).$2.qw(E).$4/ie;
-	}
+	return $file_new if $config::hash{scene}{value};
 
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_scene: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	$file_new =~ s/(^|\W)(\d+)(x)(\d+)/$1.qw(S).$2.qw(E).$4/ie;
+
+	return $file_new;
 }
 
+# underscores to spaces
 sub fn_spaces
 {
-	&plog(3, "sub fn_spaces");
-	my $fn = shift;
-	my $f = $fn;
+	my $FILE	= shift;
+	my $file_new	= shift;
 
-        if($main::spaces)
-        {
-                # underscores to spaces
-                $fn =~ s/(\s|_)+/$main::space_character/g;
-	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_spaces: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	&main::quit("fn_spaces \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_spaces \$file_new eq ''\n")	if $FILE && $file_new eq '';
+
+        return $file_new if !$config::hash{spaces}{value};
+	$file_new =~ s/(\s|_)+/$config::hash{space_character}{value}/g;
+
+	return $file_new;
 }
 
 sub fn_sp_char
 {
-	&plog(3, "sub fn_sp_char");
-	my $fn = shift;
-	my $f = $fn;
-        if($main::sp_char)
-        {
-                $fn =~ s/[\~\@\%\{\}\[\]\"\<\>\!\`\'\,\#\(|\)]//g;
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_sp_char: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $file_new = shift;
+	&main::quit("fn_sp_char \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_sp_char \$file_new eq ''\n")	if $file_new eq '';
+
+        return $file_new if !$config::hash{sp_char}{value};
+
+        $file_new =~ s/[\~\@\%\{\}\[\]\"\<\>\!\`\'\,\#\(|\)]//g;
+	return $file_new;
 }
 
 # split supposed episode numbers, eg 0103 to 01x03
@@ -632,36 +499,29 @@ sub fn_sp_char
 
 sub fn_split_dddd
 {
-	&plog(3, "sub fn_split_dddd");
-	my $fn = shift;
-	my $f = $fn;
+	my $file_new = shift;
+	&main::quit("fn_split_dddd \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_split_dddd \$file_new eq ''\n")		if $file_new eq '';
 
-        if($main::split_dddd)
+        return $file_new if !$config::hash{SPLIT_DDDD}{value};
+	if($file_new =~ /(.*?)(\d{3,4})(.*)/)
 	{
-        	if($fn =~ /(.*?)(\d{3,4})(.*)/)
-                {
-	                my @tmp_arr = ($1, $2, $3);
-	                if(length $tmp_arr[1] == 3)
-                        {
-	                        $tmp_arr[1] =~ s/(\d{1})(\d{2})/$1."x".$2/e;
-	                        $fn = $tmp_arr[0].$tmp_arr[1].$tmp_arr[2];
-	                }
-	                elsif(length $tmp_arr[1] == 4)
-                        {
-                        	if($tmp_arr[1] !~ /^(19|20)(\d+)/)
-                                {
-	                                $tmp_arr[1] =~ s/(\d{2})(\d{2})/$1."x".$2/e;
-	                                $fn = $tmp_arr[0].$tmp_arr[1].$tmp_arr[2];
-                                }
-	                }
-
-                }
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_split_dddd: \"$f\" to \"$fn\"");
+		my @tmp_arr = ($1, $2, $3);
+		if(length $tmp_arr[1] == 3)
+		{
+			$tmp_arr[1] =~ s/(\d{1})(\d{2})/$1."x".$2/e;
+			$file_new = $tmp_arr[0].$tmp_arr[1].$tmp_arr[2];
+		}
+		elsif(length $tmp_arr[1] == 4)
+		{
+			if($tmp_arr[1] !~ /^(19|20)(\d+)/)
+			{
+				$tmp_arr[1] =~ s/(\d{2})(\d{2})/$1."x".$2/e;
+				$file_new = $tmp_arr[0].$tmp_arr[1].$tmp_arr[2];
+			}
+		}
 	}
-	return $fn;
+	return $file_new;
 }
 
 # case 1st letter
@@ -669,518 +529,486 @@ sub fn_split_dddd
 
 sub fn_case_fl
 {
-	&plog(3, "sub fn_case_fl");
-	my $fn = shift;
-	my $f = $fn;
+	my $FILE = shift;
+	my $file_new = shift;
 
-	if($main::case)
-	{
-                $fn =~ s/^(\w)/uc($1)/e;
-	}
+	&main::quit("fn_case_fl: \$file_new is undef\n")	if !defined $file_new;
+	&main::quit("fn_case_fl: \$file_new eq ''\n")		if $FILE && $file_new eq '';
 
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_case_fl: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	return $file_new if !$config::hash{case}{value};
+	$file_new =~ s/^(\w)/uc($1)/e;
+	return $file_new;
 }
 
 # --------------------
 # fn_sp_word
 
 # this func gets passed filename (when needed)
-# reason being is directory and strings are processed normally
-# and files are checked for a file extension and handled accordingly
-# so we need to check if its a file and not a dir
-# easier to send filename each time than a special flag / string I figured
+# because the file extensions need special handling IF $f is a file
 
 sub fn_sp_word
 {
-	&plog(3, "sub fn_sp_word");
-	my $f = shift;
-	if(!$f)
-	{
-		&plog(4, "sub fn_sp_word, got passed null");
-		return;
-	}
-	my $fn = shift;
-	my $fn_old = $fn;
+	my $FILE = shift;
+	my $file = shift;
+	&main::quit("fn_sp_word \$file is undef\n")	if ! defined $file;
+	&main::quit("fn_sp_word \$file eq ''\n")		if $FILE && $file eq '';
 
-        if($main::sp_word)
-        {
-        	my $word = "";
-                foreach $word(@main::word_casing_arr_escaped)
-                {
-                	chomp $word;
-			if(-f $f && !-d $f)	# is file and not a directory
-			{
-				$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\)|\]|\..{3,4}$)/$1.$word.$3/egi;
-			}
-			else			# not a file treat as a string
-			{
-				$fn =~ s/(^|\s+|_|\.|\(|\[)($word)(\s+|_|\.|\(|\]|$)/$1.$word.$3/egi
-			}
-                }
-        }
-	if($f ne $fn)
+	my $file_new = shift;
+	&main::quit("fn_sp_word \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_sp_word \$file_new eq ''\n")	if $FILE && $file_new eq '';
+
+	return $file_new if !$config::hash{WORD_SPECIAL_CASING}{value};
+	foreach my $word(@config::word_casing_arr)
 	{
-		&plog(4, "sub fn_sp_word: \"$fn_old\" to \"$fn\"");
+		my $w = quotemeta $word;
+		if(-f $file)	# is file and not a directory
+		{
+			$file_new =~ s/(^|\s+|_|\.|\(|\[)($w)(\s+|_|\.|\)|\]|\..{3,4}$)/$1.$w.$3/egi;
+			next;
+		}
+		# not a file treat as a string
+		$file_new =~ s/(^|\s+|_|\.|\(|\[)($w)(\s+|_|\.|\(|\]|$)/$1.$w.$3/egi
 	}
-	return $fn;
+	return $file_new;
 }
 
 sub fn_dot2space
 {
-	&plog(3, "sub fn_dot2space");
-	my $f = shift;
-	my $fn = shift;
-        if($main::dot2space)
-        {
-        	if(-f $f && !-d $f)	# is file and not a directory
-        	{
-                	$fn =~ s/\./$main::space_character/g;
-	                # put last dot back in front of the ext
-        	        # there may be a cleaner way to do this but oh well
-                	$fn =~ s/(.*)($main::space_character)(.{3,4}$)/$1\.$3/g;
-                }
-		else			# not a file treat as a string
-		{
-			$fn =~ s/\./$main::space_character/g;
-		}
-        }
-	if($f ne $fn)
+	my $FILE = shift;
+	my $field = shift;
+	&main::quit("fn_dot2space \$field is undef\n")	if ! defined $field;
+	&main::quit("fn_dot2space \$field eq ''\n")	if $FILE && $field eq '';
+
+	my $file_new = shift;
+	return $file_new if !$config::hash{dot2space}{value};
+	if(-f $field && $file_new =~ /(.*)\.(.*?)/g)	# is file and not a directory
 	{
-		&plog(4, "sub fn_dot2space: \"$f\" to \"$fn\"");
+		my $name = $1;
+		my $ext = $2;
+		$name =~ s/\./$config::hash{space_character}{value}/g;
+		$file_new = "$name.$ext";
 	}
-	return $fn;
+	else
+	{
+		# not a file treat as a string
+		$file_new =~ s/\./$config::hash{space_character}{value}/g;
+	}
+        return $file_new;
 }
 
 # Pad digits with " - " (must come after pad digits with 0 to catch any new
 sub fn_pad_digits
 {
-	&plog(3, "sub fn_pad_digits");
-	my $fn = shift;
-	my $f = $fn;
-	if($main::pad_digits)
-	{
-		# optimize me
+	my $file_new = shift;
+	&main::quit("fn_pad_digits \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_pad_digits \$file_new eq ''\n")		if $file_new eq '';
 
-		my $tmp = $main::space_character."-".$main::space_character;
-		$fn =~ s/($main::space_character)+(\d\d|\d+x\d+)($main::space_character)+/$tmp.$2.$tmp/ie;
-		$fn =~ s/($main::space_character)+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
-		$fn =~ s/^(\d\d|\d+x\d+)($main::space_character)+/$1.$tmp/ie;
-	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_pad_digits: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	return $file_new if !$config::hash{pad_digits}{value};
+
+	# optimize me
+	my $tmp = $config::hash{space_character}{value}."-".$config::hash{space_character}{value};
+	$file_new =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$tmp.$2.$tmp/ie;
+	$file_new =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
+	$file_new =~ s/^(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$1.$tmp/ie;
+
+	return $file_new;
 }
 
 sub fn_pad_digits_w_zero
 {
-	&plog(3, "sub fn_pad_digits_w_zero");
-	my $fn = shift;
-	my $f = $fn;
-	if($main::pad_digits_w_zero)
-	{
-		# rm extra 0's
-		$fn =~ s/(^|\s+|\.|_)(\d{1,2})(x0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."x".$4.$5/ieg;
+	my $file_new = shift;
+	&main::quit("fn_pad_digits_w_zero \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_pad_digits_w_zero \$file_new eq ''\n")		if $file_new eq '';
 
-		# pad NxN
-		$fn =~ s/(^|\s+|\.|_)(\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4/ie;	# NxN to 0Nx0N
-		$fn =~ s/(^|\s+|\.|_)(\d\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2."0".$3.$4/ie;	# NNxN to NNx0N
-		$fn =~ s/(^|\s+|\.|_)(\dx)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4/ie;	# NxNN to 0NxNN
+	return $file_new if !$config::hash{pad_digits_w_zero}{value};
 
-		# clean scene style
-		# rm extra 0's
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d{1,2})(e0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."e".$4.$5/ieg;
+	# rm extra 0's
+	$file_new =~ s/(^|\s+|\.|_)(\d{1,2})(x0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."x".$4.$5/ieg;
 
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4.$5/ie;	# sNeN to S0Ne0N
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2.$3."0".$4.$5/ie;		# sNNeN to sNNe0N
-		$fn =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4.$5/ie;		# SNeNN to S0NeNN
-	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_pad_digits_w_zero: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	# pad NxN
+	$file_new =~ s/(^|\s+|\.|_)(\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4/ie;	# NxN to 0Nx0N
+	$file_new =~ s/(^|\s+|\.|_)(\d\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2."0".$3.$4/ie;	# NNxN to NNx0N
+	$file_new =~ s/(^|\s+|\.|_)(\dx)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4/ie;	# NxNN to 0NxNN
+
+	# clean scene style
+	# rm extra 0's
+	$file_new =~ s/(^s|\s+s|\.s|_s)(\d{1,2})(e0)(\d{2})(\s+|\.|_|\..{3,4}$)/$1.$2."e".$4.$5/ieg;
+
+	$file_new =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4.$5/ie;	# sNeN to S0Ne0N
+	$file_new =~ s/(^s|\s+s|\.s|_s)(\d\d)(e)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2.$3."0".$4.$5/ie;		# sNNeN to sNNe0N
+	$file_new =~ s/(^s|\s+s|\.s|_s)(\d)(e)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4.$5/ie;		# SNeNN to S0NeNN
+
+	return $file_new;
 }
 
 sub fn_digits
 {
-	&plog(3, "sub fn_digits");
-	my $fn = shift;
-	my $f = $fn;
-	if($main::digits)
-	{
-		# remove leading digits (Track Nr)
-		$fn =~ s/^\d*\s*//;
-	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_digits: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	# remove leading digits (Track Nr)
+
+	my $file_new = shift;
+	&main::quit("fn_digits \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_digits \$file_new eq ''\n")	if $file_new eq '';
+
+	$file_new =~ s/^\d*\s*// if $config::hash{digits}{value};
+
+	return $file_new;
 }
 
 sub fn_enum
 {
-	&plog(3, "sub fn_enum");
-	my $f = shift;
-	my $fn = shift;
-	if($main::enum)
+	my $file	= shift;
+	my $file_new	= shift;
+
+	&main::quit("fn_enum \$file is undef\n")				if ! defined $file;
+	&main::quit("fn_enum \$file eq ''\n")					if $file eq '';
+	&main::quit("fn_enum \$file '$file' is not a file or directory")	if !-f $file && !-d $file;
+
+	return $file_new if ! $config::hash{enum}{value};
+
+	if($config::hash{enum_pad}{value})
 	{
-        	my $enum_n = $main::enum_count;
+		$a = "%.$config::hash{enum_pad_zeros}{value}"."d";
+		$enum_count = sprintf($a, $enum_count);
+	}
+	my $enum_str = $enum_count;
+	if($config::hash{enum_add}{value})
+	{
+		$enum_str = $config::enum_start_str.$enum_count.$config::enum_end_str;
+	}
 
-        	if($main::enum_pad == 1)
-        	{
-        		$a = "%.$main::enum_pad_zeros"."d";
-        		$enum_n = sprintf($a, $enum_n);
- 		}
+	my $ext = '';
+	$ext = lc $1 if $file_new =~ m/\.(.+?)$/; # get file extension
 
-        	if($main::enum_opt == 0)
-        	{
-        		if(-d $f)
-        		{
-        			$fn = $enum_n;
-        		}
-        		else
-        		{
-        			# numbers and file ext only
-        			$fn =~ s/^.*\././;
-        			$fn = "$enum_n"."$fn";
-        		}
-        	} elsif($main::enum_opt == 1)
-        	{
-			# Insert N at begining of filename
-        	        $fn = "$enum_n"."$fn";
-		} elsif($main::enum_opt == 2)
+	# ---------------------------------------------------------
+	# enum number only - remove the rest of the filename
+	if($config::hash{enum_opt}{value} == 0)
+	{
+		$file_new = $enum_str.'.'.$ext;
+		$file_new = $enum_str if -d $file;
+	}
+
+	# ---------------------------------------------------------
+	# Insert N at begining of filename
+
+	elsif($config::hash{enum_opt}{value} == 1)
+	{
+		$file_new = "$enum_str$file_new";
+	}
+
+	# ---------------------------------------------------------
+	# Insert N at end of filename
+
+	elsif($config::hash{enum_opt}{value} == 2)
+	{
+		if(-d $file)
+		{
+			$file_new = "$file_new$enum_str";
+		}
+		else
 		{
 			# Insert N at end of filename but before file ext
-			$fn =~ s/(.*)(\..*$)/$1$enum_n$2/g;
+			$file_new =~ s/(.*)(\..*$)/$1$enum_str$2/g;
 		}
-                $main::enum_count++;
 	}
-	if($f ne $fn)
+	else
 	{
-		&plog(4, "sub fn_enum: \"$f\" to \"$fn\"");
+		&main::quit("fn_enum unknown value set for \$config::hash{enum_opt}{value}\n" . Dumper($config::hash{enum_opt}));
 	}
-	return $fn;
+	$enum_count++;
+	return $file_new;
 }
 
 sub fn_truncate
 {
-	&plog(3, "sub fn_truncate");
-	my $f = shift;
-	my $fn = shift;
-	my $tl = "";
+	my $file	= shift;
+	my $file_new	= shift;
 
-	my $l = length $fn;
-	if($l > $main::max_fn_length && $main::truncate == 0)
+	&main::quit("fn_truncate \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_truncate \$file_new eq ''\n")		if $file_new eq '';
+
+	my $trunc_length = 0;
+
+	my $l = length $file_new;
+	if($l > $config::hash{'max_fn_length'}{value} && $config::hash{'truncate_to'}{value} == 0)
 	{
-		&plog(0, "sub fn_truncate: $fn exceeds maximum filename length.");
+		&misc::plog(0, "sub fn_truncate: $file_new exceeds maximum filename length.");
 		return;
 	}
-	if($l > $main::truncate_to && $main::truncate == 1)
+	if($l > $config::hash{'truncate_to'}{value} && $config::hash{truncate}{value} == 1)
 	{
-		my $file_ext = $fn;
-		$file_ext =~ s/^(.*)(\.)(.{3,4})$/$3/e;
-		my $file_ext_length = length $file_ext;	# doesnt include . in length
+		my $file_ext		= $file_new;
+		$file_ext		=~ s/^(.*)(\.)(.{3,4})$/$3/e;
+		my $file_ext_length	= length $file_ext;		# doesnt include . in length
 
 		# var for adjusted truncate to, gotta take into account file ext length
-		$tl = $main::truncate_to - ($file_ext_length + 1);	# tl = truncate length
+		$trunc_length = $config::hash{'truncate_to'}{value} - ($file_ext_length + 1);	# tl = truncate length
 
 		# adjust tl to allow for added enum digits if enum mode is enabled
-		if($main::enum && $main::enum_pad)
+		if($config::hash{enum}{value} && $config::hash{enum_pad}{value})
 		{
-			$tl = $tl - $main::enum_pad_zeros
+			$trunc_length = $trunc_length - $config::hash{enum_pad_zeros}{value};
 		}
-		elsif($main::enum)
+		elsif($config::hash{enum}{value})
 		{
-			$tl = $tl - length "$main::enum_count";
+			$trunc_length = $trunc_length - length "$config::hash{enum}{value}_count";
 		}
 
 		# start truncating
 
 		# from front
-		if($main::truncate_style == 0)
+		if($config::hash{truncate_style}{value} == 0)
 		{
-			$fn =~ s/^(.*)(.{$tl})(\..{$file_ext_length})$/$2.$3/e;
+			$file_new =~ s/^(.*)(.{$trunc_length})(\..{$file_ext_length})$/$2.$3/e;
 		}
 
 		# from end
-		elsif($main::truncate_style == 1)
+		elsif($config::hash{truncate_style}{value} == 1)
 		{
- 			$fn =~ s/^(.{$tl})(.*)(\..{$file_ext_length})$/$1.$3/e;
+ 			$file_new =~ s/^(.{$trunc_length})(.*)(\..{$file_ext_length})$/$1.$3/e;
 		}
 
 		# from middle
-		elsif($main::truncate_style == 2)
+		elsif($config::hash{truncate_style}{value} == 2)
 		{
-			$tl = int ($tl - length $main::trunc_char) / 2;
+			$trunc_length = int ($trunc_length - length $config::hash{trunc_char}{value}) / 2;
 
-			$fn =~ s/^(.{$tl})(.*)(.{$tl})(\..{$file_ext_length})$/$1.$main::trunc_char.$3.$4/e;
+			$file_new =~ s/^(.{$trunc_length})(.*)(.{$trunc_length})(\..{$file_ext_length})$/$1.$config::hash{trunc_char}{value}.$3.$4/e;
 		}
 	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_truncate: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	return $file_new;
 }
 
 sub fn_pre_clean
 {
-	&plog(3, "sub fn_pre_clean");
-	my $fn = shift;
-	my $f = $fn;
-        if($main::cleanup == 1)
-        {
-                # "fix Artist - - track" type filenames that can pop up when stripping words
-                $fn =~ s/-(\s|_|\.)+-/-/g;
+	my $FILE	= shift;	# flag
+	my $file	= shift;	# file / string
+	my $file_new	= shift;
+	$file_new	= $file if ! defined $file_new;
 
-                # rm trailing characters
-                $fn =~ s/(\s|_|\.|-)+(\..{3,4})$/$2/e;
+	&main::quit("fn_pre_clean \$file is undef\n")	if ! defined $file;
+	&main::quit("fn_pre_clean \$file eq ''\n")	if $FILE && $file eq '';
+	&main::quit("fn_pre_clean \$FILE = 1 but '$file' is not a file and not a directory\n")	if $FILE && !-f $file && !-d $file;
 
-                # remove leading chars
-                $fn =~ s/^(\s|_|\.|-)+//;
+	return $file_new if !$config::hash{CLEANUP_GENERAL}{value};
 
-                # I hate mpeg or jpeg as extensions personally :P
-                $fn =~ s/\.mpeg$/\.mpg/i;
-                $fn =~ s/\.jpeg$/\.jpg/i;
-        }
-	if($f ne $fn)
+	# "fix Artist - - track" type filenames that can pop up when stripping words
+	$file_new =~ s/-(\s|_|\.)+-/-/g;
+
+	# remove leading chars
+	$file_new =~ s/^(\s|_|\.|-)+//;
+
+	# string rm trailing characters
+	$file_new =~ s/(\s|_|\.|-)+$/$2/e if !$FILE;
+
+	if($FILE && -f $file)
 	{
-		&plog(4, "sub fn_pre_clean: \"$f\" to \"$fn\"");
+		# rm trailing characters
+		$file_new =~ s/(\s|_|\.|-)+(\..{3,4})$/$2/e;
+
+		# I hate mpeg or jpeg as extensions personally :P
+		$file_new =~ s/\.mpeg$/\.mpg/i;
+		$file_new =~ s/\.jpeg$/\.jpg/i;
 	}
-	return $fn;
+	return $file_new;
 }
 
 sub fn_post_clean
 {
-	&plog(3, "sub fn_post_clean");
+	my $FILE = shift;
 	my $f = shift;
-	my $fn = shift;
+	my $file_new = shift;
 
-	if(!$fn)
+	$file_new = $f if !$file_new;
+
+	&main::quit("fn_post_clean: \$f is undef\n")		if ! defined $f;
+	&main::quit("fn_post_clean: \$f eq ''\n")		if $FILE && $f eq '';
+	&main::quit("fn_post_clean: \$f '$f' not found\n")	if $FILE && !-f $f;
+
+	return $file_new if !$config::hash{CLEANUP_GENERAL}{value};
+
+	# remove childless brackets () [] {}
+	$file_new =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;
+
+	# remove doubled up -'s
+	$file_new =~ s/-(\s|_|\.)+-|--/-/g;
+
+	# rm trailing characters
+	$file_new =~ s/(\s|\+|_|\.|-)+(\..{3,4})$/$2/;
+
+	# rm leading characters
+	$file_new =~ s/^(\s|\+|_|\.|-)+//;
+
+	# rm extra whitespaces
+	$file_new =~ s/\s+/ /g;
+	$file_new =~ s/$config::hash{space_character}{value}+/$config::hash{space_character}{value}/g;
+
+	# change file extension to lower case and remove anyspaces before file ext
+	$file_new =~ s/^(.*)(\..{3,4})$/$1.lc($2)/e if $FILE && -f $f;
+
+	# remove trailing junk on directorys or strings
+	if(-d $f || !$FILE)
 	{
-		$fn = $f;
+		$file_new =~ s/(\s|\+|_|\.|-)+$//;
 	}
-
-        if($main::cleanup == 1)
-	{
-                # remove childless brackets () [] {}
-                $fn =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;
-
-                # remove doubled up -'s
-                $fn =~ s/-(\s|_|\.)+-|--/-/g;
-
-                # rm trailing characters
-                $fn =~ s/(\s|\+|_|\.|-)+(\..{3,4})$/$2/;
-
-                # rm leading characters
-                $fn =~ s/^(\s|\+|_|\.|-)+//;
-
-                # rm extra whitespaces
-                $fn =~ s/\s+/ /g;
-                $fn =~ s/$main::space_character+/$main::space_character/g;
-
-		# change file extension to lower case and remove anyspaces before file ext
-                $fn =~ s/^(.*)(\..{3,4})$/$1.lc($2)/e;
-
-                if(-d $f)
-                {
-                	$fn =~ s/(\s|\+|_|\.|-)+$//;
-                }
-	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_post_clean: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	return $file_new;
 }
 
 sub fn_front_a
 {
-	&plog(3, "sub fn_front_a");
-	my $fn = shift;
-	my $f = $fn;
-        if($main::front_a)
-        {
-                $fn = $main::faw.$fn;
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_front_a: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $file_new = shift;
+	&main::quit("fn_front_a \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_front_a \$file_new eq ''\n")		if $file_new eq '';
+
+	return $file_new if $config::hash{INS_START}{value};
+	$file_new = $config::ins_front_str.$file_new;
+	return $file_new;
 }
 
 sub fn_end_a
 {
-	&plog(3, "sub fn_end_a");
-	my $fn = shift;
-	my $f = $fn;
-        if($main::end_a)
-        {
-                $fn =~ s/(.*)(\..*$)/$1$main::eaw$2/g;
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_end_a:  \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $file_new = shift;
+	&main::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_end_a \$file_new eq ''\n")	if $file_new eq '';
+
+        return $file_new if $config::end_a;
+	$file_new =~ s/(.*)(\..*?$)/$1$config::ins_end_str$2/g;
+	return $file_new;
+}
+
+sub fn_pad_N_to_NN
+{
+	my $file_new = shift;
+	&main::quit("fn_pad_N_to_NN \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_pad_N_to_NN \$file_new eq ''\n")	if $file_new eq '';
+
+	return $file_new if !$config::hash{pad_N_to_NN}{value};
+	$file_new =~ s/(\s+|_|\.)(\d{1,1})(\s+|_|\.)/$1."0".$2.$3/e;
+	return $file_new;
 }
 
 sub fn_pad_dash
 {
-	&plog(3, "sub fn_pad_dash");
-	my $fn = shift;
-	my $f = $fn;
-	if($main::pad_dash == 1)
-	{
-		$fn =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$main::space_character."-".$main::space_character/eg;
-	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_pad_dash: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $file_new = shift;
+	&main::quit("fn_pad_dash \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_pad_dash \$file_new eq ''\n")		if $file_new eq '';
+
+	my $f = $file_new;
+	return $file_new if !$config::hash{pad_dash}{value};
+	$file_new =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$config::hash{space_character}{value}."-".$config::hash{space_character}{value}/eg;
+	return $file_new;
 }
 
 sub fn_rm_digits
 {
-	&plog(3, "sub fn_rm_digits");
-	my $fn = shift;
-	my $f = $fn;
-        if($main::rm_digits)
-        {
-        	my $t_s = "";
-                $fn =~ s/\d+//g;
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_rm_digits: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $file_new = shift;
+	&main::quit("fn_rm_digits \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_rm_digits \$file_new eq ''\n")	if $file_new eq '';
+
+        return $file_new if !$config::hash{RM_DIGITS}{value};
+	$file_new =~ s/\d+//g;
+	return $file_new;
 }
 
 sub fn_lc_all
 {
-	&plog(3, "sub fn_lc_all");
 	# lowercase all
-	my $fn = shift;
-	my $f = $fn;
-        if($main::lc_all)
-	{
-                $fn = lc($fn);
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_lc_all: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $file_new = shift;
+	&main::quit("fn_lc_all \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_lc_all \$file_new eq ''\n")		if $file_new eq '';
+
+	return $file_new if !$config::hash{lc_all}{value};
+	$file_new = lc($file_new);
+	return $file_new;
 }
 
 sub fn_uc_all
 {
-	&plog(3, "sub fn_uc_all");
 	# uppercase all
-	my $fn = shift;
-	my $f = $fn;
-        if($main::uc_all)
-	{
-                $fn = uc($fn);
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_uc_all: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $file_new = shift;
+	&main::quit("fn_uc_all \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_uc_all \$file_new eq ''\n")		if $file_new eq '';
+
+	return $file_new if !$config::hash{uc_all}{value};
+	$file_new = uc($file_new);
+	return $file_new;
 }
 
 sub fn_intr_char
 {
-	&plog(3, "sub fn_intr_char");
+	my $FILE = shift;
 	# International Character translation
         # WARNING: This might break really badly on some systems, esp. non-Unix ones...
 	# if you see alot of ? in your filenames, you need to add the correct codepage for the filesystem.
 
-	my $fn = shift;
-	my $f = $fn;
+	my $file_new = shift;
+	&main::quit("fn_intr_char \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_intr_char \$file_new eq ''\n")	if $FILE && $file_new eq '';
 
-        if($main::intr_char)
-        {
-                $fn =~ s/�/Aa/g;
-                $fn =~ s/�/Ae/g;
-                $fn =~ s/�/A/g;
-                $fn =~ s/�/ae/g;
+	my $f = $file_new;
 
-		$fn =~ s/�/ss/g;
+	return $file_new if !$config::hash{intr_char}{value};
 
-                $fn =~ s/�/E/g;
+	$file_new =~ s/�/Aa/g;
+	$file_new =~ s/�/Ae/g;
+	$file_new =~ s/�/A/g;
+	$file_new =~ s/�/ae/g;
 
-                $fn =~ s/�/I/g;
+	$file_new =~ s/�/ss/g;
 
-		$fn =~ s/�/N/g;
+	$file_new =~ s/�/E/g;
 
-		$fn =~ s/�/O/g;
-                $fn =~ s/�/Oe/g;
-                $fn =~ s/�/Oo/g;
+	$file_new =~ s/�/I/g;
 
-                $fn =~ s/�/Ue/g;
-		$fn =~ s/�/U/g;
+	$file_new =~ s/�/N/g;
 
-                $fn =~ s/�/a/g;
-                $fn =~ s/�/a/g;	# mems 1st addition to int support
-                $fn =~ s/�/a/g;
-                $fn =~ s/�/aa/g;
-                $fn =~ s/�/ae/g;
-                $fn =~ s/�/ae/g;
+	$file_new =~ s/�/O/g;
+	$file_new =~ s/�/Oe/g;
+	$file_new =~ s/�/Oo/g;
 
-		$fn =~ s/�/c/g;
+	$file_new =~ s/�/Ue/g;
+	$file_new =~ s/�/U/g;
 
-                $fn =~ s/�/e/g;
-		$fn =~ s/�/e/g;
+	$file_new =~ s/�/a/g;
+	$file_new =~ s/�/a/g;	# mems 1st addition to int support
+	$file_new =~ s/�/a/g;
+	$file_new =~ s/�/aa/g;
+	$file_new =~ s/�/ae/g;
+	$file_new =~ s/�/ae/g;
 
-                $fn =~ s/�/i/g;
+	$file_new =~ s/�/c/g;
 
-		$fn =~ s/�/n/g;
+	$file_new =~ s/�/e/g;
+	$file_new =~ s/�/e/g;
 
-                $fn =~ s/�/oo/g;
-                $fn =~ s/�/oe/g;
-		$fn =~ s/�/o/g;
-		$fn =~ s/�/o/g;
+	$file_new =~ s/�/i/g;
 
-		$fn =~ s/�/u/g;
-                $fn =~ s/�/ue/g;
+	$file_new =~ s/�/n/g;
 
-		$fn =~ s/�//g;
-		$fn =~ s/�//g;
-		$fn =~ s/�//g;
-        }
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_intr_char: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	$file_new =~ s/�/oo/g;
+	$file_new =~ s/�/oe/g;
+	$file_new =~ s/�/o/g;
+	$file_new =~ s/�/o/g;
+
+	$file_new =~ s/�/u/g;
+	$file_new =~ s/�/ue/g;
+
+	$file_new =~ s/�//g;
+	$file_new =~ s/�//g;
+	$file_new =~ s/�//g;
+	return $file_new;
 }
 
 sub fn_case
 {
-	&plog(3, "sub fn_case");
-	my $fn = shift;
-	my $f = $fn;
-        if($main::case)
-        {
-                $fn =~ s/(^| |\.|_|\(|-)([A-Za-z������������������������������])(([A-Za-z������������������������������]|\'|\�|\�|\�)*)/$1.uc($2).lc($3)/eg;
-	}
-	if($f ne $fn)
-	{
-		&plog(4, "sub fn_case: \"$f\" to \"$fn\"");
-	}
-	return $fn;
+	my $FILE = shift;
+	my $file_new = shift;
+	&main::quit("fn_case \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_case \$file_new eq ''\n")	if $FILE && $file_new eq '';
+
+	my $f = $file_new;
+        return $file_new if !$config::hash{case}{value};
+	$file_new =~ s/(^| |\.|_|\(|-)([A-Za-z������������������������������])(([A-Za-z������������������������������]|\'|\�|\�|\�)*)/$1.uc($2).lc($3)/eg;
+	return $file_new;
 }
 
 

@@ -2,8 +2,16 @@
 # directory listing related functions
 # =============================================================================================================
 
+package dir;
+require Exporter;
+@ISA = qw(Exporter);
+
 use strict;
 use warnings;
+
+use Cwd;
+use File::Find;
+use File::Spec;
 
 #--------------------------------------------------------------------------------------------------------------
 # List Directory
@@ -11,78 +19,73 @@ use warnings;
 
 sub ls_dir
 {
-	&plog(3, "sub ls_dir");
-	&prep_globals;
-	&hlist_clear;
+	&run_namefix::prep_globals;
 
-	$main::percent_done = 0;
-
-	if($main::LISTING)
+	if(&config::busy)
 	{
-		&plog(0, "sub ls_dir: Allready preforming a list, aborting new list attempt");
-		return 0;
+		&misc::plog(1,"ls_dir: BUSY, aborting new list attempt");
+		return;
 	}
 
-	$main::STOP = 0;
-	$main::LISTING = 1;
-	chdir $main::dir;	# shift directory, not just list ;)
-	$main::dir = cwd();
+	$config::LISTING	= 1;
+	$config::STOP		= 0;
+	$config::percent_done	= 0;
 
-        my @file_list = ();
-        my @dirlist = &dir_filtered($main::dir);
+	$config::dir		= cwd;
 
-	&ls_dir_print("..");
+	my @file_list		= ();
+	my @dirlist		= &dir_filtered($config::dir);
 
-        if($main::recr)
+	&dir_hlist::draw_list;
+
+	&ls_dir_print('..');
+
+        if($config::hash{RECURSIVE}{value})
         {
-		&plog(4, "sub ls_dir: recursive mode");
-		@main::find_arr = ();
-	        find(\&find_fix, "$main::dir");
+		@config::find_arr = ();
+	        find(\&run_namefix::find_fix, $config::dir);
 		&ls_dir_find_fix;
-                $main::LISTING = 0;
-                $main::FIRST_DIR_LISTED = 0;
+                $config::LISTING = 0;
 	        return;
         }
-        else
-        {
-		my $count = 1;
-		my $total = scalar @dirlist + scalar @file_list;
-		$main::percent_done = int(($count / $total) * 100);
 
-		&plog(4, "sub ls_dir: non recursive mode");
-        	for my $f (@dirlist)
-        	{
-			$count++;
-			$main::percent_done = int(($count / $total) * 100);
+        my $count		= 1;
+	my $total		= scalar @dirlist + scalar @file_list;
+	$config::percent_done	= int(($count / $total) * 100);
 
-			if($f eq "..")
-			{
-				next;
-			}
-                	if(-d $f)
-                	{
-	                	&ls_dir_print($f);	# print directorys 1st
-                        }
-                        else
-                        {
-                        	push @file_list, $f;	# push files to array
-                        }
-                }
-                for my $f (@file_list)
-                {
-			$count++;
-			$main::percent_done = int(($count / $total) * 100);
+	for my $f (@dirlist)
+	{
+		if($config::STOP)
+		{
+			$config::LISTING = 0;
+			return;
+		}
 
-                	if($main::STOP == 1)
-			{
-				return 0;
-			}
-                	&ls_dir_print($f);		# then print the file array after all dirs have been printed
-                }
-                $main::LISTING = 0;
-                $main::FIRST_DIR_LISTED = 0;
-                return;
-        }
+		$count++;
+		$config::percent_done = int(($count / $total) * 100);
+
+		next if $f eq '..';
+		if(-d $f)
+		{
+			&ls_dir_print($f);	# print directorys 1st
+			next;
+		}
+		push @file_list, $f;
+	}
+	for my $f (@file_list)
+	{
+		$count++;
+		$config::percent_done = int(($count / $total) * 100);
+
+		if($config::STOP)
+		{
+			$config::LISTING = 0;
+			return;
+		}
+		&ls_dir_print($f);		# then print the file array after all dirs have been printed
+	}
+	$config::LISTING = 0;
+	return;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -93,127 +96,86 @@ sub ls_dir_find_fix
 {
 	# this sub should recieve an array of files from find_fix
 
-	my @list = @main::find_arr;
-	my $d = cwd();
-	my $file = "";
-	my $dir = "";
+	my @list	= @config::find_arr;
+	my $file	= '';
 
-	&plog(3, "sub ls_dir_find_fix:");
-	$main::percent_done = 0;
-	my $total = scalar @main::find_arr;
+	$config::percent_done = 0;
+	my $total = scalar @config::find_arr;
 	my $count = 1;
 
-	for $file(@main::find_arr)
+	for my $file(@config::find_arr)
 	{
-		$main::percent_done = int(($count++/$total) * 100);
-		&plog(4, "sub ls_dir_find_fix: list line \"$file\"");
-		$file =~ m/^(.*)\/(.*?)$/;
-		$dir = $1;
-		$file = $2;
-		&plog(4, "sub ls_dir_find_fix: dir = \"$dir\"");
-		&plog(4, "sub ls_dir_find_fix: file = \"$file\"");
+		$config::percent_done = int(($count++/$total) * 100);
 
-		chdir $dir;	# change to dir containing file
+		$file		=~ m/^(.*)\/(.*?)$/;
+		my $f		= $2;
+		my $fdir	= File::Spec->abs2rel($file);
+
 		&ls_dir_print($file);
-		chdir $d;	# change back to dir sub started in
 	}
-	&plog(3, "sub find_fix_process: done");
 	return 1;
 }
-
 
 # this function is only called from ls_dir & ls_dir_find_fix
 
 sub ls_dir_print
 {
+	return 0 if $config::STOP;
+
 	my $file = shift;
 
-	if($main::STOP == 1)
+        &main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
+        &main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
+
+        return if $file eq '.';
+	if($file eq '..')
 	{
-		&plog(4, "sub ls_dir_print: \$main::STOP = \"$main::STOP\" - not printing");
-		return 0;
-	}
-	&plog(3, "sub ls_dir_print: \"$file\"");
-
-	$main::hlist_cwd = cwd;
-
-        my $tag = "";
-        my $art = "";
-        my $tit = "";
-        my $tra = "";
-        my $alb = "";
-        my $com = "";
-        my $gen = "";
-        my $year = "";
-	my $d = cwd();
-
-        if(!$file || $file eq "" || $file eq ".")
-        {
-		&plog(4, "sub ls_dir_print: \$file = \"$file\" not printing");
-        	return;
-        }
-
-	if($file eq "..")
-	{
-		&nf_print("..", "..");
+		&nf_print::p('..');
 		return;
 	}
 
 	# recursive padding
 
-	# when doing recursive, pad new dir with a blank line
-	# since when doing recursive we step through each directory while listing,
-	# we simply print cwd for a full dir path.
-
-	if(-d $file && $main::recr)
+	if(-d $file && $config::hash{RECURSIVE}{value})
 	{
-		&nf_print(" ", "<MSG>");
-		&nf_print("$d/$file", "$d/$file");
+		&nf_print::p(' ', '<BLANK>');
+		&nf_print::p($file);
 		return;
 	}
 
-	# if is mp3 & id3_mode enabled then grab id3 tags
-	if($file =~ /.*\.mp3$/i && $main::id3_mode == 1)
+	# check for audio tags
+	if($config::hash{id3_mode}{value})
 	{
-		&plog(4, "sub ls_dir_print: if is mp3 & id3_mode enabled then grab id3 tags");
-		($tag, $art, $tit, $tra, $alb, $gen, $year, $com) = &get_tags($file);
-
-       		if ($tag eq "id3v1")
-       		{
-			&plog(4, "sub ls_dir_print: got id3 tags, printing");
-			&nf_print($file, $file, $art, $tit, $tra, $alb, $com, $gen, $year);
-			return;
-		}
+		my $ref = &mp3::get_tags($file);
+		&nf_print::p($file, undef, $ref);
+		return;
 	}
-
-	&plog(4, "sub ls_dir_print: doesnt meet any special conditions, just print it");
-	&nf_print($file, $file);
+	&nf_print::p($file);
 }
 
 #--------------------------------------------------------------------------------------------------------------
 # Dir Dialog
 #--------------------------------------------------------------------------------------------------------------
 
-sub dir_dialog
+sub dialog
 {
-	&plog(3, "sub dir_dialog");
-	my $old_dir = $main::dir;
+	my $old_dir = $config::dir;
 
 	my $dd_dir = $main::mw->chooseDirectory
 	(
-		-initialdir=>$main::dir,
+		-initialdir=>$config::dir,
 		-title=>"Choose a directory"
 	);
 
 	if($dd_dir)
 	{
-		$main::dir = $dd_dir;
-                chdir $main::dir;
+		$config::dir = $dd_dir;
+                chdir $config::dir;
 		&ls_dir;
 	}
 	else
 	{
-		$main::dir = $old_dir;
+		$config::dir = $old_dir;
 	}
 }
 
@@ -223,64 +185,39 @@ sub dir_dialog
 
 sub fn_readdir
 {
-	&plog(3, "sub fn_readdir");
-	my $dir = shift;
-	my @dirlist = ();
-	my @dirlist_clean = ();
-	my @d = ();
+	my $dir			= shift;
+	my @dirlist		= ();
+	my @dirlist_clean	= ();
+	my @d			= ();
 
-	opendir(DIR, "$dir") or die "can't open dir \"$dir\": $!";
+	opendir(DIR, $dir) or &main::quit("can't open dir \"$dir\": $!");
 	@dirlist = CORE::readdir(DIR);
 	closedir DIR;
 
-	# -- make sure we dont have . and .. in array --
+	# -- make sure we dont have . and .. in array
 	for my $item(@dirlist)
 	{
-		if($item eq "." || $item eq "..")
-		{
-			next;
-		}
+		next if $item eq '.' || $item eq '..';
 		push @dirlist_clean, $item;
 	}
 
-	@dirlist = &ci_sort(@dirlist);  # sort array
+	@dirlist = &misc::ci_sort(@dirlist_clean);  # sort array
 	return @dirlist;
 }
 
 sub dir_filtered
 {
-	my $dir = shift;
-	my @d = ();
-	my @dirlist = &fn_readdir($dir);
+	my $dir		= shift;
+	my @d		= ();
+	my @dirlist	= &fn_readdir($dir);
 
-	&plog(3, "sub dir_filtered \"$dir\"");
-
-	for my $i(@dirlist)
+	for my $file (@dirlist)
 	{
-		if(-d $i && (!$main::LISTING && !$main::proc_dirs))	# ta tibbsy for help
- 		{
-			&plog(4, "sub dir_filtered: $i is dir, didnt pass");
- 			next;
- 		}
-		if($main::FILTER)
-		{
-			if(&match_filter($i) == 1)	# apply listing filter
-			{
-				&plog(4, "sub dir_filtered: $i passed");
-				push @d, $i;
-				next;
-			}
-			else
-			{
-				&plog(4, "sub dir_filtered: $i didnt pass");
-				next;
-			}
-		}
-		else
-		{
-			push @d, $i;
-			next;
-		}
+		# $file is dir automatically fail filter
+		next if !$config::LISTING && !$config::hash{PROC_DIRS}{value} && -d $file;
+		next if $config::hash{FILTER}{value} && !&filter::match($file);
+
+		push @d, $file;
 	}
 	return @d;
 }
