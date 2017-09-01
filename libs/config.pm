@@ -14,7 +14,7 @@ our $dir		= cwd;
 our $cwd		= cwd;
 our $hlist_cwd		= cwd;
 
-our $version 		= '4.1.2';
+our $version 		= '4.1.3';
 our $folderimage 	= '';
 our $fileimage   	= '';
 our $dialog_font	= '';
@@ -291,8 +291,11 @@ $hash{FILTER_REGEX}		{value}	= 0;
 $hash{file_ext_2_proc}		{save}	= 'norm';
 $hash{file_ext_2_proc}		{value}	= "jpeg|jpg|mp3|mpc|mpg|mpeg|avi|asf|wmf|wmv|ogg|ogm|rm|rmvb|mkv";
 
-$hash{OVERWRITE}{save}		= 'norm';
-$hash{OVERWRITE}{value}		= 0;
+$hash{OVERWRITE}		{save}	= 'norm';
+$hash{OVERWRITE}		{value}	= 0;
+
+$hash{REMOVE_REGEX}		{save}	= 'norm';
+$hash{REMOVE_REGEX}		{value}	= 0;
 
 #############################################################################################
 # CONFIG DIALOG - DEBUG TAB
@@ -389,8 +392,7 @@ sub load_hash
 	my %h = ();
 	for my $line(@tmp)
 	{
-		$line =~ s/\n$//;
-		$line =~ s/\r$//;
+		$line =~ s/(\n|\r)+$//;
 
 		next if $line !~ /.+\t.*/;
 		next if($line !~ /(\S+)\t+(.*?)$/);	# warning this can sometimes match a tab. fixed below
