@@ -424,8 +424,15 @@ sub fn_replace
 	&main::quit("fn_replace \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_replace \$file_new eq ''\n")		if $FILE && $file_new eq '';
 
-	return $file_new if $config::hash{replace}{value};
-	$file_new =~ s/($config::ins_str_old_escaped)/$config::ins_str/ig;
+	return $file_new if !$config::hash{replace}{value};
+
+	my $rm = $config::ins_str_old;
+	if(!$config::hash{REMOVE_REGEX}{value})
+	{
+		$rm = quotemeta $config::ins_str_old;
+	}
+
+	$file_new =~ s/($rm)/$config::ins_str/ig;
 	return $file_new;
 }
 
@@ -575,24 +582,28 @@ sub fn_sp_word
 sub fn_dot2space
 {
 	my $FILE = shift;
-	my $field = shift;
-	&main::quit("fn_dot2space \$field is undef\n")	if ! defined $field;
-	&main::quit("fn_dot2space \$field eq ''\n")	if $FILE && $field eq '';
-
+	my $file = shift;
 	my $file_new = shift;
+
+	&main::quit("fn_dot2space \$FILE value '$FILE' is invalid\n")	if $FILE != 0 && $FILE != 1;
+	&main::quit("fn_dot2space \$file is undef\n")	if ! defined $file;
+	&main::quit("fn_dot2space \$file eq ''\n")	if $FILE && $file eq '';
+
 	return $file_new if !$config::hash{dot2space}{value};
-	if(-f $field && $file_new =~ /(.*)\.(.*?)/g)	# is file and not a directory
+	if($FILE && $file_new =~ m/^(.*)\.(.*?)$/g)	# is file and not a directory
 	{
 		my $name = $1;
 		my $ext = $2;
 		$name =~ s/\./$config::hash{space_character}{value}/g;
 		$file_new = "$name.$ext";
+# 		&misc::plog(2, "sub fn_dot2space: \$ext = '$ext'\n");
 	}
 	else
 	{
 		# not a file treat as a string
 		$file_new =~ s/\./$config::hash{space_character}{value}/g;
 	}
+# 	&misc::plog(2, "sub fn_dot2space: \$file_new 2 '$file_new'\n");
         return $file_new;
 }
 
@@ -859,7 +870,7 @@ sub fn_front_a
 	&main::quit("fn_front_a \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_front_a \$file_new eq ''\n")		if $file_new eq '';
 
-	return $file_new if $config::hash{INS_START}{value};
+	return $file_new if !$config::hash{INS_START}{value};
 	$file_new = $config::ins_front_str.$file_new;
 	return $file_new;
 }

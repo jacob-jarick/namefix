@@ -240,8 +240,8 @@ sub edit_prefs
 
 	my $tab7_regexp_chk = $tab7 -> Checkbutton
 	(
-		-text=>"Disable Regexp pattern matching for Remove option",
-		-variable=>\$config::hash{FILTER_REGEX}{value},
+		-text=>"Enable Regexp pattern matching for Remove option",
+		-variable=>\$config::hash{REMOVE_REGEX}{value},
 		-activeforeground => "blue"
 	)
 	-> grid

@@ -134,40 +134,39 @@ $config::fileimage   	= $main::mw->Getimage('file');
 
 $mw->bind('<KeyPress>' => sub
 {
-    if($Tk::event->K eq 'F2')
-    {
-	$config::PREVIEW = 1;
-	if(defined $config::hlist_file && defined $config::hlist_cwd)
+	if($Tk::event->K eq 'F2')
 	{
-		print "Manual Rename '$config::hlist_file' \n";
-		&manual::edit($config::hlist_file, $config::hlist_cwd);
+		$config::PREVIEW = 1;
+		if(defined $config::hlist_file && defined $config::hlist_cwd)
+		{
+			print "Manual Rename '$config::hlist_file' \n";
+			&manual::edit($config::hlist_file, $config::hlist_cwd);
+		}
 	}
-    }
-    if($Tk::event->K eq 'F5')
-    {
-	print "refresh\n";
-	$config::PREVIEW = 1;
-	&dir::ls_dir;
-    }
-    if($Tk::event->K eq 'F6')
-    {
-	print "preview\n";
-	$config::PREVIEW = 1;
-	&run_namefix::run;
-    }
-    # Escape
-    if($Tk::event->K eq 'Escape')
-    {
-	print "Escape Key = stopping any actions\n";
-	&config::halt;
-    }
+	if($Tk::event->K eq 'F5')
+	{
+		print "refresh\n";
+		$config::PREVIEW = 1;
+		&dir::ls_dir;
+	}
+	if($Tk::event->K eq 'F6')
+	{
+		print "preview\n";
+		$config::PREVIEW = 1;
+		&run_namefix::run;
+	}
+	# Escape
+	if($Tk::event->K eq 'Escape')
+	{
+		print "Escape Key = stopping any actions\n";
+		&config::halt;
+	}
 
-        # Escape
-    if($Tk::event->K eq 'F1')
-    {
-	print "Hello\n";
-	&config::halt;
-    }
+	# Help - TODO
+	if($Tk::event->K eq 'F1')
+	{
+		print "Hello\n";
+	}
 
 });
 our $balloon = $mw->Balloon();

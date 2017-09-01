@@ -1,3 +1,11 @@
+4.1.3 - ie refresh in progress
+
+* fixed front append option
+
+* fixed regex option for remove
+
+* fixed dots to spaces function (was droppping file extensions).
+
 4.1.2 - ie refresh in progress
 
 * enumerate fixed and added a new option: string
