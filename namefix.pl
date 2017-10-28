@@ -338,7 +338,7 @@ my $open_but = $frm_bottom -> Button
 	-padx=>		2
 );
 
-my $cwd_ent = $frm_bottom->Entry(-textvariable=>\$config::dir)
+my $cwd_ent = $frm_bottom->Entry(-textvariable=>\$config::dir, -width=>0)
 -> grid
 (
 	-row=>		1,
@@ -1820,7 +1820,7 @@ $tab7 -> Label
 
 
 #--------------------------------------------------------------------------------------------------------------
-# draw filter main screen menu
+# draw filter 'main screen menu'
 #--------------------------------------------------------------------------------------------------------------
 
 our $f_frame = $main::frm_right2->Frame() -> pack(-side=>"top",);
@@ -1854,7 +1854,7 @@ $f_frame->Label(-text=>" ")->pack(-side=>'left',);
 $f_frame->Entry
 (
         -textvariable=>\$config::filter_string,
-        -width=>35
+        -width=>50
 )
 ->pack(-side=>'left',);
 

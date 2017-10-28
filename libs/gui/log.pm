@@ -30,7 +30,7 @@ sub add
 	&main::quit("add: \$level '$level' is not a number") if $level !~ /^\d+$/;
 	&main::quit("add: \$text is undef") if ! defined $text;
 
-	&prune	if scalar %hash > $size;
+	&prune	if (scalar keys %hash) > $size;
 
 	if($text !~ /\n/ && length $text > 2 && $text ne ' ' && $text ne '')
 	{

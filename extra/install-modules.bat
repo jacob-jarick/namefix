@@ -21,6 +21,9 @@ cmd /c cpanm -v Tk::Text
 cmd /c cpanm -v Tk::ROText
 cmd /c cpanm -v Tk::Text::SuperText
 
+cmd /c cpanm -v Tk::FontDialog
+
+
 cmd /c cpanm -v --force use Config::IniHash
 
 rem  file tag modules
@@ -37,4 +40,6 @@ cmd /c cpanm -v Time::localtime
 rem  debugging
 cmd /c cpanm -v Data::Dumper::Concise
 cmd /c cpanm -v Carp
+
+
 
