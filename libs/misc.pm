@@ -25,10 +25,10 @@ sub plog
 	my $level	= shift;
 	my $text	= shift;
 
-	if(!$config::CLI) # gui mode
-	{
-		&log::add($level, $text);
-	}
+# 	if(!$config::CLI) # gui mode
+# 	{
+# 		&log::add($level, $text);
+# 	}
 
 	# CLI will (for now) always spit out & log errors
 	if(!$level && $config::CLI)
