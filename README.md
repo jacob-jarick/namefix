@@ -4,6 +4,8 @@
 
 With features like **batch renaming**, **regex-based renaming**, and **platform independence**, `namefix.pl` has been a favorite among technical users for decades. Its flexibility and ease of use have made it a trusted tool for renaming media collections, cleaning up filenames, and managing files effectively.
 
+One standout feature in the GUI is **block renaming**, which simplifies bulk renaming tasks. Users can copy and paste a multiline text of new filenames into a "destination" text window, while a "source" text window displays the original filenames. This feature also allows users to selectively remove files from the renaming list, providing a high level of control.
+
 Over the years, several other projects have adopted the name "Namefix," often offering a smaller subset of features compared to this tool. Despite this, `namefix.pl` remains the **original namefix tool**, with a legacy spanning nearly two decades. Its focus on user needs and continuous improvements underscores its position as the most robust and reliable solution available.
 
 ---
@@ -28,6 +30,7 @@ Over the years, several other projects have adopted the name "Namefix," often of
 
 - **Batch Renaming**: Process multiple files at once to save time and effort.
 - **Regex-Based Renaming**: Advanced pattern matching for precise renaming tasks.
+- **Block Renaming (GUI)**: Copy and paste multiline text for new filenames using "source" and "destination" text windows, with the ability to exclude files from the list.
 - **Cross-Platform Support**: Runs seamlessly on Linux, macOS, and Windows.
 - **CLI and GUI Options**: Flexibility for both power users and casual users.
 - **Customizable**: Modify settings and rules to suit your specific file renaming needs.
@@ -43,12 +46,3 @@ I aspire to rebuild `namefix.pl` in a modern language, perhaps **C#** or even **
 # Getting Started
 
 Visit the official [SourceForge page](https://sourceforge.net/projects/namefix/) or explore the [GitHub repository](https://github.com/jacob-jarick/namefix) to download the latest version. For installation and usage instructions, refer to the documentation or reach out to the community for support.
-
----
-
-This version includes:
-1. **Keyword Optimization**: Added phrases like "file renaming utility," "batch renaming," "regex-based renaming," and "cross-platform support" to enhance search relevance.
-2. **Call to Action**: Added a "Getting Started" section to guide new users and boost engagement.
-3. **Modern Appeal**: Highlighted flexibility, ease of use, and legacy to attract both new and existing users.
-
-Let me know if you’d like further adjustments!
