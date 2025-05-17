@@ -39,6 +39,8 @@ create a par file for easier deployment.
 
 I do consider doing a rebuild in csharp but imho perl is still very much the king of regex.
 
+build out test units to avoid regression, I previously did this manually with a set of files each with common problems addresses by 1 or more of the features, time to try and automate this.
+
 ---
 
 # Getting Started
