@@ -1,6 +1,6 @@
 # About namefix.pl
 
-`namefix.pl` is a **file renaming utility** originally published on [SourceForge](https://sourceforge.net/projects/namefix/) on **May 30, 2006**, making it one of the earliest and most comprehensive tools of its kind. Designed to provide a powerful and customizable solution for renaming and organizing files—particularly media files—it supports both **command-line interface (CLI)** and **graphical user interface (GUI)** functionalities.
+`namefix.pl` is a **file renaming utility** originally published on [SourceForge](https://sourceforge.net/projects/namefix/) on **May 30, 2006**, making it one of the earliest and most comprehensive tools of its kind. Designed to provide a powerful and customizable solution for renaming and organizing files, particularly media files, it supports both **command-line interface (CLI)** and **graphical user interface (GUI)** functionalities.
 
 With features like **batch renaming**, **regex-based renaming**, and **platform independence**, `namefix.pl` has been a favorite among technical users for decades. Its flexibility and ease of use have made it a trusted tool for renaming media collections, cleaning up filenames, and managing files effectively.
 
@@ -11,9 +11,6 @@ Over the years, several other projects have adopted the name "Namefix," often of
 ---
 
 # Notable Mentions
-
-- [**CNET Download**](https://download.cnet.com/namefix-pl/3000-2072_4-10549329.html)
-  Featured on CNET's download platform, showcasing its recognition as a trusted and useful tool for file renaming.
 
 - [**FreeBSD FreshPorts**](https://www.freshports.org/sysutils/namefix/)
   Included in FreeBSD’s ports collection, highlighting its utility and importance in open-source ecosystems. This was a significant milestone in the project’s history.
@@ -33,13 +30,14 @@ Over the years, several other projects have adopted the name "Namefix," often of
 - **Block Renaming (GUI)**: Copy and paste multiline text for new filenames using "source" and "destination" text windows, with the ability to exclude files from the list.
 - **Cross-Platform Support**: Runs seamlessly on Linux, macOS, and Windows.
 - **CLI and GUI Options**: Flexibility for both power users and casual users.
-- **Customizable**: Modify settings and rules to suit your specific file renaming needs.
 
 ---
 
 # Future Plans
 
-I aspire to rebuild `namefix.pl` in a modern language, perhaps **C#** or even **Python**. While I hold a deep affection for **Perl**, the language that, along with **Linux**, helped build my career, I see potential in leveraging my improved skill set to refresh the codebase. Whether through a rewrite in a modern language or an update to the existing Perl code, the goal remains the same: to enhance and modernize this tool for today's users.
+create a par file for easier deployment.
+
+I do consider doing a rebuild in csharp but imho perl is still very much the king of regex.
 
 ---
 
