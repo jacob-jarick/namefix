@@ -71,7 +71,7 @@ my $text = '';
 if(!-f $config::hash_tsv)
 {
 	&cli_print::print("No config file found, Creating.", "<MSG>");
-	&config::save;
+	&config::save_hash;
 }
 
 if(!-f $config::casing_file)
