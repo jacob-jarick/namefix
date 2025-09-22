@@ -15,7 +15,7 @@ InstallDirRegKey HKLM "Software\NSIS_namefix.pl" "Install_Dir"
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
 
-;!include "EnvVarUpdate.nsh"
+!include "EnvVarUpdate.nsh"
 
 ;--------------------------------
 
@@ -68,9 +68,9 @@ Section "Add namefix.pl to explorer right click menu"
   WriteRegStr HKEY_CLASSES_ROOT "Directory\shell\namefix\command" "" "$\"$INSTDIR\namefix-gui.exe$\" $\"%1$\""
 SectionEnd
 
-Section "Add namefix.pl to system path"
-;${EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR" ; Remove path of old install
-;${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR" ; add path
+Section "Add namefix.pl to system PATH"
+  ; Optionally add install dir to system PATH
+  ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR"
 SectionEnd
 
 ; Optional section (can be disabled by the user)
@@ -105,7 +105,7 @@ Section "Uninstall"
   RMDir "$SMPROGRAMS\namefix.pl"
   RMDir "$INSTDIR"
 
-  ; remove from system path
-  ;${un.EnvVarUpdate} $0 "LIB" "R" "HKLM" "$INSTDIR"
+  ; remove from system PATH if added
+  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR"
 
 SectionEnd

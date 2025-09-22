@@ -1,5 +1,10 @@
 echo installing modules
 
+rem install cpanminus if not already installed
+cmd /c cpan App::cpanminus
+rem Install PAR::Packer for creating executables 
+cmd /c cpanm --notest PAR::Packer
+
 rem  install all Tk modules
 cmd /c cpanm -v Tk
 cmd /c cpanm -v Tk::Menu

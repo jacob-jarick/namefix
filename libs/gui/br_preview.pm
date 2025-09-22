@@ -28,7 +28,7 @@ sub preview
 
 	if(scalar @new_l != scalar @old_l)
 	{
-		&plog(0, "preview: new list length != old list length");
+		&misc::plog(0, "preview: new list length != old list length");
 		return;
 	}
 

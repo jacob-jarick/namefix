@@ -76,20 +76,20 @@ our $hash_tsv	= &misc::get_home."/.namefix.pl/config_hash.tsv";
 $hash{CLEANUP_GENERAL}		{save}	= 'mw';
 $hash{CLEANUP_GENERAL}		{value}	= 0;
 
-$hash{case}			{save}	= 'mw';
-$hash{case}			{value}	= 0;
+$hash{case}					{save}	= 'mw';
+$hash{case}					{value}	= 0;
 
 $hash{WORD_SPECIAL_CASING}	{save}	= 'mw';
 $hash{WORD_SPECIAL_CASING}	{value}	= 0;
 
-$hash{spaces}			{save}	= 'mw';
-$hash{spaces}			{value}	= 0;
+$hash{spaces}				{save}	= 'mw';
+$hash{spaces}				{value}	= 0;
 
-$hash{dot2space}		{save}	= 'mw';
-$hash{dot2space}		{value}	= 0;
+$hash{dot2space}			{save}	= 'mw';
+$hash{dot2space}			{value}	= 0;
 
-$hash{kill_cwords}		{save}	= 'mw';
-$hash{kill_cwords}		{value}	= 0;
+$hash{kill_cwords}			{save}	= 'mw';
+$hash{kill_cwords}			{value}	= 0;
 
 $hash{kill_sp_patterns}		{save}	= 'mw';
 $hash{kill_sp_patterns}		{value}	= 0;
@@ -110,14 +110,14 @@ our $ins_str		= '';
 #############################################################################################
 # MP3 TAB
 
-$hash{id3_mode}			{save}	= 'mw';
-$hash{id3_mode}			{value}	= 0;
+$hash{id3_mode}				{save}	= 'mw';
+$hash{id3_mode}				{value}	= 0;
 
 $hash{id3_guess_tag}		{save}	= 'mw';
 $hash{id3_guess_tag}		{value}	= 0;
 
-$hash{AUDIO_FORCE}		{save}	= 'mw';
-$hash{AUDIO_FORCE}		{value}	= 0;
+$hash{AUDIO_FORCE}			{save}	= 'mw';
+$hash{AUDIO_FORCE}			{value}	= 0;
 
 $hash{RM_AUDIO_TAGS}		{save}	= 'mw';
 $hash{RM_AUDIO_TAGS}		{value}	= 0;
@@ -150,17 +150,17 @@ our $id3_com_str	= '';
 #############################################################################################
 # MISC TAB
 
-$hash{uc_all}			{save}	= 'mw';
-$hash{uc_all}			{value}	= 0;
+$hash{uc_all}				{save}	= 'mw';
+$hash{uc_all}				{value}	= 0;
 
-$hash{lc_all}			{save}	= 'mw';
-$hash{lc_all}			{value}	= 0;
+$hash{lc_all}				{save}	= 'mw';
+$hash{lc_all}				{value}	= 0;
 
-$hash{intr_char}		{save}	= 'mw';
-$hash{intr_char}		{value}	= 0;
+$hash{intr_char}			{save}	= 'mw';
+$hash{intr_char}			{value}	= 0;
 
-$hash{sp_char}			{save}	= 'mw';
-$hash{sp_char}			{value}	= 0;
+$hash{sp_char}				{save}	= 'mw';
+$hash{sp_char}				{value}	= 0;
 
 $hash{RM_DIGITS}{save}		= 'mw'; #	RM ^Digits
 $hash{RM_DIGITS}{value}		= 0;
@@ -168,32 +168,32 @@ $hash{RM_DIGITS}{value}		= 0;
 $hash{digits}{save}     	= 'mw';
 $hash{digits}{value}     	= 0;
 
-$hash{unscene}			{save}	= 'mw';
-$hash{unscene}			{value}	= 0;
+$hash{unscene}				{save}	= 'mw';
+$hash{unscene}				{value}	= 0;
 
-$hash{scene}			{save}	= 'mw';
-$hash{scene}			{value}	= 0;
+$hash{scene}				{save}	= 'mw';
+$hash{scene}				{value}	= 0;
 
-$hash{pad_N_to_NN}		{save}	= 'mw';
-$hash{pad_N_to_NN}		{value}	= 0;
+$hash{pad_N_to_NN}			{save}	= 'mw';
+$hash{pad_N_to_NN}			{value}	= 0;
 
-$hash{pad_dash}			{save}	= 'mw';
-$hash{pad_dash}			{value}	= 0;
+$hash{pad_dash}				{save}	= 'mw';
+$hash{pad_dash}				{value}	= 0;
 
-$hash{pad_digits}		{save}	= 'mw';
-$hash{pad_digits}		{value}	= 0;
+$hash{pad_digits}			{save}	= 'mw';
+$hash{pad_digits}			{value}	= 0;
 
 $hash{pad_digits_w_zero}	{save}	= 'mw';
 $hash{pad_digits_w_zero}	{value}	= 0;
 
-$hash{SPLIT_DDDD}		{save}	= 'mw';
-$hash{SPLIT_DDDD}		{value}	= 0;
+$hash{SPLIT_DDDD}			{save}	= 'mw';
+$hash{SPLIT_DDDD}			{value}	= 0;
 
 #############################################################################################
 # ENUMURATE TAB
 
-$hash{enum}			{save}	= 'mw';
-$hash{enum}			{value}	= 0;
+$hash{enum}				{save}	= 'mw';
+$hash{enum}				{value}	= 0;
 
 $hash{enum_opt}			{save}	= 'mw';
 $hash{enum_opt}			{value}	= 0;
@@ -207,8 +207,8 @@ our $enum_end_str		= '';
 $hash{enum_pad}			{save}	= 'mw';
 $hash{enum_pad}			{value}	= 0;
 
-$hash{enum_pad_zeros}		{save}	= 'mw';
-$hash{enum_pad_zeros}		{value}	= 4;
+$hash{enum_pad_zeros}	{save}	= 'mw';
+$hash{enum_pad_zeros}	{value}	= 4;
 
 #############################################################################################
 # TRUNCATE TAB
@@ -219,8 +219,8 @@ $hash{truncate}			{value}	= 0;
 $hash{truncate_to}		{save}	= 'mw';
 $hash{truncate_to}		{value}	= 256;
 
-$hash{truncate_style}		{save}	= 'mw';
-$hash{truncate_style}		{value}	= 0;
+$hash{truncate_style}	{save}	= 'mw';
+$hash{truncate_style}	{value}	= 0;
 
 $hash{trunc_char}		{save}	= 'mw';
 $hash{trunc_char}		{value}	= '';
@@ -229,8 +229,8 @@ $hash{trunc_char}		{value}	= '';
 #############################################################################################
 # FILTER BAR
 
-$hash{FILTER}			{save}	= 'mw';
-$hash{FILTER}			{value}	= 0;
+$hash{FILTER}				{save}	= 'mw';
+$hash{FILTER}				{value}	= 0;
 
 $hash{FILTER_IGNORE_CASE}	{save}	= 'mw';
 $hash{FILTER_IGNORE_CASE}	{value}	= 0;
@@ -240,14 +240,14 @@ our $filter_string	= '';
 #############################################################################################
 # bottom menu bar
 
-$hash{RECURSIVE}{save}		= 'norm';
-$hash{RECURSIVE}{value}		= 0;
+$hash{RECURSIVE}		{save}		= 'norm';
+$hash{RECURSIVE}		{value}		= 0;
 
-$hash{IGNORE_FILE_TYPE}{save}	= 'mw';
-$hash{IGNORE_FILE_TYPE}{value}	= 0;
+$hash{IGNORE_FILE_TYPE}	{save}		= 'mw';
+$hash{IGNORE_FILE_TYPE}	{value}		= 0;
 
-$hash{PROC_DIRS}{save}		= 'mw';
-$hash{PROC_DIRS}{value}		= 0;
+$hash{PROC_DIRS}		{save}		= 'mw';
+$hash{PROC_DIRS}		{value}		= 0;
 
 #############################################################################################
 # CLI ONLY OPTIONS
@@ -273,29 +273,29 @@ $hash{max_fn_length}		{value}	= 256;
 $hash{save_window_size}		{save}	= 'norm';
 $hash{save_window_size}		{value}	= 0;
 
-$hash{window_g}			{save}	= 'mwg';
-$hash{window_g}			{value}	= '';
+$hash{window_g}				{save}	= 'mwg';
+$hash{window_g}				{value}	= '';
 
-our $load_defaults		= 0;	# save main window options
+our $load_defaults			= 0;	# save main window options
 
 #############################################################################################
 # CONFIG DIALOG - ADVANCED TAB
 
-$hash{fat32fix}			{save}	= 'norm';
-$hash{fat32fix}			{value}	= 0;
-$hash{fat32fix}			{value}	= 1 if lc $^O eq 'mswin32';
+$hash{fat32fix}				{save}	= 'norm';
+$hash{fat32fix}				{value}	= 0;
+$hash{fat32fix}				{value}	= 1 if lc $^O eq 'mswin32';
 
-$hash{FILTER_REGEX}		{save}	= 'norm';
-$hash{FILTER_REGEX}		{value}	= 0;
+$hash{FILTER_REGEX}			{save}	= 'norm';
+$hash{FILTER_REGEX}			{value}	= 0;
 
 $hash{file_ext_2_proc}		{save}	= 'norm';
 $hash{file_ext_2_proc}		{value}	= "jpeg|jpg|mp3|mpc|mpg|mpeg|avi|asf|wmf|wmv|ogg|ogm|rm|rmvb|mkv";
 
-$hash{OVERWRITE}		{save}	= 'norm';
-$hash{OVERWRITE}		{value}	= 0;
+$hash{OVERWRITE}			{save}	= 'norm';
+$hash{OVERWRITE}			{value}	= 0;
 
-$hash{REMOVE_REGEX}		{save}	= 'norm';
-$hash{REMOVE_REGEX}		{value}	= 0;
+$hash{REMOVE_REGEX}			{save}	= 'norm';
+$hash{REMOVE_REGEX}			{value}	= 0;
 
 #############################################################################################
 # CONFIG DIALOG - DEBUG TAB
@@ -325,25 +325,25 @@ $hash{ZERO_LOG}			{value}	= 1;
 
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
-our @kill_words_arr	= ();
-@kill_words_arr		= &misc::readf_clean($killwords_defaults)	if -f $killwords_defaults;
-@kill_words_arr		= &misc::readf_clean($killwords_file)		if -f $killwords_file;
+our @kill_words_arr		= ();
+@kill_words_arr			= &misc::readf_clean($killwords_defaults)	if -f $killwords_defaults;
+@kill_words_arr			= &misc::readf_clean($killwords_file)		if -f $killwords_file;
 
 our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
 our $casing_defaults   	= "$Bin/data/defaults/special_casing.txt";
 our @word_casing_arr	= ();
-@word_casing_arr	= misc::readf_clean($casing_defaults)		if -f $casing_defaults;
-@word_casing_arr	= misc::readf_clean($casing_file)		if -f $casing_file;
+@word_casing_arr		= misc::readf_clean($casing_defaults)		if -f $casing_defaults;
+@word_casing_arr		= misc::readf_clean($casing_file)			if -f $casing_file;
 
 our $killpat_file   	= "$home/.namefix.pl/killpatterns.txt";
 our $killpat_defaults  	= "$Bin/data/defaults/killpatterns.txt";
 our @kill_patterns_arr	= ();
-@kill_patterns_arr	= &misc::readf_clean($killpat_defaults)		if -f $killpat_defaults;
-@kill_patterns_arr	= &misc::readf_clean($killpat_file)		if -f $killpat_file;
+@kill_patterns_arr		= &misc::readf_clean($killpat_defaults)		if -f $killpat_defaults;
+@kill_patterns_arr		= &misc::readf_clean($killpat_file)			if -f $killpat_file;
 
-our $genres_file	= "$Bin/data/txt/genres.txt";
-our @genres		= ();
-@genres			= misc::readf_clean($genres_file)		if -f $genres_file;
+our $genres_file		= "$Bin/data/txt/genres.txt";
+our @genres				= ();
+@genres					= misc::readf_clean($genres_file)			if -f $genres_file;
 
 
 sub save_hash

@@ -49,7 +49,7 @@ sub undo_rename
 
 	if(&config::busy)
 	{
-		&plog(0, "undo_rename: aborting, namefix is busy");
+		&misc::plog(0, "undo_rename: aborting, namefix is busy");
 		$config::RUN = 0;
 		return;
 	}
@@ -62,7 +62,7 @@ sub undo_rename
 		my $pre = $config::undo_pre[$c];
 		if($config::STOP)
 		{
-			&plog(0, "undo_rename: STOPPED");
+			&misc::plog(0, "undo_rename: STOPPED");
 			$config::RUN = 0;
 			return;
 		}

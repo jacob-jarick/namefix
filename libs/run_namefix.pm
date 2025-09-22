@@ -45,22 +45,22 @@ sub run
 {
 	if($config::LISTING)
 	{
-		misc::plog(0, "sub run::namefix: error, a listing is currently being preformed - aborting rename");
+		&misc::plog(0, "sub run::namefix: error, a listing is currently being preformed - aborting rename");
 		return 0;
 	}
 	elsif($config::RUN)
 	{
-		misc::plog(0, "sub run::namefix: error, a rename is currently being preformed - aborting rename");
+		&misc::plog(0, "sub run::namefix: error, a rename is currently being preformed - aborting rename");
 		return 0;
 	}
 
 	$config::RUN		= 1;
 	&dir_hlist::draw_list if !$config::CLI;
 
-        my $t_s 		= '';	# tmp string
+	my $t_s 			= '';	# tmp string
 
-        $config::orig_dir	= cwd;
-        chdir $config::dir;
+	$config::orig_dir	= cwd;
+	chdir $config::dir;
 	$config::dir		= cwd;
 	&undo::clear;
 	$fix_name::last_dir	= '';

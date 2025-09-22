@@ -25,22 +25,30 @@ sub plog
 	my $level	= shift;
 	my $text	= shift;
 
-# 	if(!$config::CLI) # gui mode
-# 	{
-# 		&log::add($level, $text);
-# 	}
+	my $date_time	= localtime();
 
-	# CLI will (for now) always spit out & log errors
-	if(!$level && $config::CLI)
+	# get caller
+	my $subroutine = (caller(1))[3] || 'main'; # Get the calling subroutine name
+
+	$text = "[$date_time] [$subroutine] $text";
+
+	# CLI mode
+	if($config::CLI)
 	{
-		open(FILE, ">>$main::log_file");
-		print FILE "$text\n";
-		close(FILE);
+		# CLI will (for now) always spit out & log errors
+		if($level == 0)
+		{
+			open(FILE, ">>$main::log_file");
+			print FILE "$text\n";
+			close(FILE);
 
-		print "$text\n";
+			print "$text\n";
 
-		return 1;
+			return 1;
+		}
 	}
+
+	# GUI mode
 
 	if($level <= $config::hash{debug}{value})
 	{
@@ -52,11 +60,12 @@ sub plog
 			print "$text\n";
 		}
 	}
-	if(!$level && $config::hash{ERROR_NOTIFY}{value})
+
+	if($level == 0 && $config::hash{ERROR_NOTIFY}{value})
 	{
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
-	return;
+	return 1;
 }
 
 sub clog

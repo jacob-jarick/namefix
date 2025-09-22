@@ -7,7 +7,11 @@ use Data::Dumper::Concise;
 
 use English;
 use Cwd;
-use Carp qw(cluck longmess shortmess);
+use Carp qw(clu	if(!-d $config::dir)
+	{
+		&misc::plog(0, "main: $config::dir is not a directory, cowardly refusing to process it");
+		exit;
+	}ngmess shortmess);
 use MP3::Tag;
 use File::Find;
 use File::Basename qw(&basename &dirname);
@@ -112,7 +116,7 @@ if(-d $config::dir)
 
 	if(!-d $config::dir)
 	{
-		plog(0, "main: $config::dir is not a directory, cowardly refusing to process it");
+		&misc::plog(0, "main: $config::dir is not a directory, cowardly refusing to process it");
 		exit 0;
 	}
 	else
@@ -245,7 +249,7 @@ for my $arg(@ARGV)
 	{
 		if(!$config::hash{replace}{value})
 		{
-			plog(0, "main: option replace present but remove option not");
+			&misc::plog(0, "main: option replace present but remove option not");
 			exit;
 		}
 		$config::ins_str = $1;

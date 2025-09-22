@@ -43,6 +43,15 @@ build out test units to avoid regression, I previously did this manually with a 
 
 ---
 
-# Getting Started
+# Notes
 
-Visit the official [SourceForge page](https://sourceforge.net/projects/namefix/) or explore the [GitHub repository](https://github.com/jacob-jarick/namefix) to download the latest version. For installation and usage instructions, refer to the documentation or reach out to the community for support.
+Old Hosting (pre github) [SourceForge page](https://sourceforge.net/projects/namefix/) 
+
+For windows I need to build with strawberry-perl-5.14.4.1-64bit.msi due to Tk issues with later versions of strawberry perl. This is simply the last versio I built with. 
+
+
+https://stackoverflow.com/questions/78323022/installing-tk-on-strawberry-perl-leads-to-compiler-errors#_=_
+
+There is a current build error with Tk and newer versions of Perl
+
+Currently the namefix.pl_install.exe has not been synced, while I debug some additional issues but the .exe's are the latest built version
