@@ -64,7 +64,7 @@ our $tmpfilelist 	= '';
 our $last_recr_dir 	= '';
 
 # writable_extensions - stolen from mp3::tag and tidied
-our @id3v2_exts = ('mp3', 'mp2', 'ogg', 'mpg', 'mpeg', 'mp4', 'aiff', 'flac', 'ape', 'ram', 'mpc');
+our @id3v2_exts = ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
 our $id3_ext_regex = join('|', @id3v2_exts);
 
 our %hash	= ();
@@ -289,7 +289,7 @@ $hash{FILTER_REGEX}			{save}	= 'norm';
 $hash{FILTER_REGEX}			{value}	= 0;
 
 $hash{file_ext_2_proc}		{save}	= 'norm';
-$hash{file_ext_2_proc}		{value}	= "jpeg|jpg|mp3|mpc|mpg|mpeg|avi|asf|wmf|wmv|ogg|ogm|rm|rmvb|mkv";
+$hash{file_ext_2_proc}		{value}	= "aac|aiff|ape|asf|avi|bmp|flac|gif|jpeg|jpg|m4a|m4v|mkv|mov|mp2|mp3|mp4|mpc|mpg|mpeg|ogg|ogm|opus|png|rm|rmvb|svg|tif|tiff|webm|webp|wma|wmv";
 
 $hash{OVERWRITE}			{save}	= 'norm';
 $hash{OVERWRITE}			{value}	= 0;
