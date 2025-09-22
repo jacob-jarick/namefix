@@ -125,8 +125,8 @@ sub draw_menu
 
 sub list_bookmarks
 {
-	my $n = '';
-	my $u = '';
+	my $bname = '';
+	my $bpath = '';
 
 	$bookmarks -> separator();
 
