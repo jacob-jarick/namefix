@@ -8,8 +8,8 @@ use warnings;
 use Cwd;
 
 our $bookmarks;
-our %bmhash = ();
-my $bookmark_dir = '';
+our %bmhash 		= ();
+my $bookmark_dir 	= '';
 
 #--------------------------------------------------------------------------------------------------------------
 # Bookmark add
@@ -24,9 +24,9 @@ sub bm_add
 	{
 		$name =~ s/(.*)(\\|\/)(.*?$)/$3/;	# set name to directory
 	}
-	&misc::file_append($config::bookmark_file, "$name\t\t$dir\n");
 
-        &menu::draw;
+	&misc::file_append($config::bookmark_file, "$name\t\t$dir\n");
+	&menu::draw;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -35,29 +35,29 @@ sub bm_add
 
 sub draw_menu
 {
-	my $n = '';
-	my $u = '';
-	my $count = 0;
+	my $n		= '';
+	my $u		= '';
+	my $count	= 0;
 
-        $bookmarks = $menu::mbar -> cascade
-        (
-        	-label=>	'Bookmarks',
-	        -underline=>	0,
-	        -tearoff=>	0,
+	$bookmarks = $menu::mbar-> cascade
+	(
+		-label=>		'Bookmarks',
+		-underline=>	0,
+		-tearoff=>		0,
 	);
 
 	# menu command - bookmark cur dir
 	$bookmarks -> command
 	(
-	        -label=>	"Bookmark current Directory",
-	        -command=>	sub { &bm_add($config::dir, $config::dir); }
+		-label=>	"Bookmark current Directory",
+		-command=>	sub { &bm_add($config::dir, $config::dir); }
 	);
 
 	# menu command - edit bookmarks
 	$bookmarks -> command
 	(
-	        -label=>	'Edit Bookmarks',
-	        -command=>	sub { &edit_bookmark_list; }
+		-label=>	'Edit Bookmarks',
+		-command=>	sub { &edit_bookmark_list; }
 	);
 
         #create help menu
@@ -65,52 +65,53 @@ sub draw_menu
 
 	$main::help = $menu::mbar -> cascade
 	(
-	        -label=>	'Help',
-	        -underline=>	0,
-	        -tearoff=>	0
+		-label=>		'Help',
+		-underline=>	0,
+		-tearoff=>		0
 	);
 	$main::help -> command
 	(
-		-label=>'Help',
-		-command=> sub { &dialog::show('Help', "TODO: create help.txt"); }
-	);
-
-	$main::help -> separator();
-
-	$main::help -> command
-	(
-	        -label=>'About',
-	        -command=> sub { &about::show_about; }
-	);
-
-	$main::help -> command
-	(
-	        -label=>'Changelog',
-	        -command=> sub  {&dialog::show('Changelog',	join('', &misc::readf($config::changelog))); }
-	);
-
-	$main::help -> command
-	(
-	        -label=>'Todo List',
-	        -command=> sub { &dialog::show('Todo',		join('', &misc::readf($config::todo))); }
-	);
-
-	$main::help -> command
-	(
-	        -label=>'Credits/ Thanks',
-	        -command=> sub { &dialog::show('Thanks',	join('', &misc::readf($config::thanks))); }
+		-label=>	'Help',
+		-command=>	sub { &dialog::show('Help', "TODO: create help.txt"); }
 	);
 
 	$main::help -> separator();
 
 	$main::help -> command
 	(
-		-label=>'Links',
-		-command=> sub
-	        {
+		-label=>	'About',
+		-command=> 	sub { &about::show_about; }
+	);
+
+	$main::help -> command
+	(
+		-label=>	'Changelog',
+		-command=> 	sub {&dialog::show('Changelog',	join('', &misc::readf($config::changelog))); }
+	);
+
+	$main::help -> command
+	(
+		-label=>	'Todo List',
+		-command=> 	sub { &dialog::show('Todo',		join('', &misc::readf($config::todo))); }
+	);
+
+	$main::help -> command
+	(
+		-label=>	'Credits/ Thanks',
+		-command=> 	sub { &dialog::show('Thanks',	join('', &misc::readf($config::thanks))); }
+	);
+
+	$main::help -> separator();
+
+	$main::help -> command
+	(
+		-label=>	'Links',
+		-command=> 	
+		sub
+		{
 			my $links_txt = join('', &misc::readf($config::links));
 			&dialog::show('Link', $links_txt);
-	        }
+		}
 	);
 
 	&list_bookmarks;
@@ -143,16 +144,16 @@ sub list_bookmarks
 
 		if($line =~ /^\s*\n/) { next; }
 		next if $line !~ /^(.+?)\t+(.+?)$/;
-		($n, $u) = ($1, $2);
+		($bname, $bpath) = ($1, $2);
 
-                # path swap \ with /
-                $u =~ s/\\/\//g if $u =~ /\\/;
+		# path swap \ with /
+		$bpath =~ s/\\/\//g if $bpath =~ /\\/;
 
-                $bookmarks -> checkbutton
+		$bookmarks -> checkbutton
 		(
-			-label		=> $n,
-  			-onvalue	=> $u,
-  			-offvalue	=> $u,
+			-label		=> $bname,
+  			-onvalue	=> $bpath,
+  			-offvalue	=> $bpath,
 			-variable	=> \$bookmark_dir,
 			-command	=> sub
 			{
@@ -175,63 +176,65 @@ sub list_bookmarks
 
 sub edit_bookmark_list
 {
-        my $dtext = '';
-	$dtext = &misc::readjf($config::bookmark_file) if(-f $config::bookmark_file);
+	my $dtext =	'';
+	$dtext = 	&misc::readjf($config::bookmark_file) if(-f $config::bookmark_file);
 
-	my $top = $main::mw -> Toplevel();
-	$top -> title("Edit Bookmark List");
+	my $top 	= $main::mw -> Toplevel();
+	$top-> 		title("Edit Bookmark List");
 
-	$top->Label(-text=>'Format: <Bookmark Name><TAB><TAB><url>')
-	->grid(-row => 1, -column => 1, -columnspan => 2);
+	$top->
+		Label(-text=>'Format: <Bookmark Name><TAB><TAB><url>')
+		->grid(-row => 1, -column => 1, -columnspan => 2);
 
-        my $txt = $top -> Scrolled
-        (
-        	'Text',
-                -scrollbars=>	'osoe',
-        	-font=>		$config::dialog_font,
-        	-wrap=>		'none',
-                -width=>	80,
-                -height=>	15
-        )
-        -> grid
-        (
-        	-row=>		2,
-                -column=>	1,
-                -columnspan=>	2
-        );
-        $txt->menu(undef);
+	my $txt = $top -> Scrolled
+	(
+		'Text',
+		-scrollbars=>	'osoe',
+		-font=>			$config::dialog_font,
+		-wrap=>			'none',
+		-width=>		80,
+		-height=>		15
+	)
+	-> grid
+	(
+		-row=>			2,
+		-column=>		1,
+		-columnspan=>	2
+	);
+	$txt->menu(undef);
 
-        $txt->insert('end', $dtext);
+	$txt->insert('end', $dtext);
 
-        $top -> Button
-        (
-        	-text=>'Save',
-        	-activebackground => 'white',
-        	-command => sub
-        	{
-        		&misc::save_file($config::bookmark_file, $txt -> get('0.0', 'end') );
-                        &menu::draw;
-        	}
-        )
-        -> grid
-        (
-        	-row=>		4,
-        	-column=>	1,
-        	-sticky=>	'ne'
-        );
+	$top -> Button
+	(
+		-text=>					'Save',
+		-activebackground=> 	'white',
+		-command => 			
+		sub
+		{
+			&misc::save_file($config::bookmark_file, $txt -> get('0.0', 'end') );
+			&menu::draw;
+		}
+	)
+	-> grid
+	(
+		-row=>		4,
+		-column=>	1,
+		-sticky=>	'ne'
+	);
 
-        my $but_close = $top -> Button
-        (
-        	-text=>'Close',
-        	-activebackground=>'white',
-        	-command => sub { destroy $top; }
-        )
-        -> grid
-        (
-        	-row=>		4,
-        	-column=>	2,
-        	-sticky=>	'nw'
-        );
+	my $but_close = $top -> Button
+	(
+		-text=>				'Close',
+		-activebackground=>	'white',
+		-command => 		sub { destroy $top; }
+	)
+	-> grid
+	(
+		-row=>		4,
+		-column=>	2,
+		-sticky=>	'nw'
+	);
 
 	$top->resizable(0,0);
 }
