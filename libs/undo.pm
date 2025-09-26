@@ -43,7 +43,7 @@ sub undo_rename
 	# changes to directory
 	# chops FQ filename to filename.
 
-	&misc::plog(1, "Performing Undo");
+	&misc::plog(2, "Performing Undo");
 	my $c = 0;
 	my $pre = '';
 

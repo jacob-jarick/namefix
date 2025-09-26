@@ -95,7 +95,7 @@ $config::dir = $ARGV[0] if defined $ARGV[0];
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
-&misc::plog(1, "**** namefix.pl $config::version start *************************************************");
+&misc::plog(2, "**** namefix.pl $config::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
 if(lc $^O eq 'mswin32')
@@ -483,7 +483,7 @@ $frm_bottom -> Button
 	{
 		if($config::STOP)	# stub
 		{
-			&misc::plog(1, "namefix.pl: STOP flag already enabled, turning off LISTING flag as well");
+			&misc::plog(2, "namefix.pl: STOP flag already enabled, turning off LISTING flag as well");
 			$config::LISTING = 0;
 		}
 		&config::halt;
@@ -1921,13 +1921,13 @@ if($config::hash{window_g}{value} ne "")
 
 # &style::display;
 
-&misc::plog(1, "Perl version: $^V");
-&misc::plog(1, "Tk version: $Tk::VERSION");
-&misc::plog(1, "namefix version: $config::version");
-&misc::plog(1, "Running on $^O");
+&misc::plog(2, "Perl version: $^V");
+&misc::plog(2, "Tk version: $Tk::VERSION");
+&misc::plog(2, "namefix version: $config::version");
+&misc::plog(2, "Running on $^O");
 
 # $log_file
-&misc::plog(1, "Log file: $main::log_file");
+&misc::plog(2, "Log file: $main::log_file");
 
 MainLoop;
 
