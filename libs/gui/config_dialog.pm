@@ -295,7 +295,7 @@ sub edit_prefs
 	$main::balloon->attach
 	(
 		$mfe_ent,
-		-msg => "Enter File extensions of files you wish seperated by |.\nThey will be processed by default.\n\nNote: Case insensitive matching is used."
+		-msg => "Enter File extensions of files you wish separated by |.\nThey will be processed by default.\n\nNote: Case insensitive matching is used."
 	);
 
 	$tab7 -> Label

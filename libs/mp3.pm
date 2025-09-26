@@ -124,7 +124,7 @@ sub write_tags
         {
 		if(!defined $tag_hash{$k})
 		{
-			&main::quit("ERROR: write_tags incomplete hash recieved. \$tag_hash{$k} is undefined\n" . Dumper(\%tag_hash));
+			&main::quit("ERROR: write_tags incomplete hash received. \$tag_hash{$k} is undefined\n" . Dumper(\%tag_hash));
 		}
         }
         # ensure no extra keys in hash

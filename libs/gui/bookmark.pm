@@ -132,7 +132,7 @@ sub list_bookmarks
 
 	if(!-f $config::bookmark_file)
 	{
-		&misc::plog(0, "bookmark::bm_list_bookmarks cant find file $config::bookmark_file");
+		&misc::plog(0, "bookmark::bm_list_bookmarks can't find file $config::bookmark_file");
 		return;
 	}
 

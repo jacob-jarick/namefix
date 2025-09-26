@@ -34,7 +34,7 @@ sub add
 sub undo_rename
 {
 	# for some reason when CLI called undo full paths were causing havoc
-	# I read up on perls rename and it doesnt have the most relaible behaviour
+	# I read up on Perl's rename and it doesn't have the most reliable behaviour
 	# especicially when cross platform coding.
 	# undo_rename needs to be able to handle for paths for recursive undos
 	#

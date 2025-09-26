@@ -62,7 +62,7 @@
 
 * fixname::fix - added quit errors to catch undef filenames and '' as filenames
 
-* ls_dir now only shows neccesary headers + massive cleanup
+* ls_dir now only shows necessary headers + massive cleanup
 
 * massive overhaul of nf_print::p
   only shows files & dirs
@@ -75,7 +75,7 @@
 *  rm_tags now removed both id3v1 and id3v2
 
 * id3 tags supported on the following file types: mp3, mp2, ogg, mpg, mpeg, mp4, aiff, flac, ape, ram, mpc
-  WIP - currently ogg's dont get their id3 tags written
+  WIP - currently ogg's don't get their id3 tags written
 
 * make_test_dir.pl updated. now sets mimetypes for music files (allows testing of mp3 tags)
 
@@ -102,7 +102,7 @@
 
 * .msi & .exe's updated
 
-* nsis installer script updated so it doesnt include .git
+* nsis installer script updated so it doesn't include .git
 
 * Hot Keys Added:
   ESC = Stop doing whatever your doing
@@ -113,7 +113,7 @@
 * make_test_dir.pl updated - creates fake music files in fake album directories
 * added cool progress bar.
 
-* updating NSIS - probally quite broken on stuff like:
+* updating NSIS - probably quite broken on stuff like:
   ENV path,
   registry entry to ad namefix.pl to right click.
 

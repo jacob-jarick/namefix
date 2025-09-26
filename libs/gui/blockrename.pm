@@ -108,7 +108,7 @@ sub gui
         -> pack(-side=>'left');
 
 	# Clear button - clears text in right hand box
-	# usefull for pasting filenames from clipboard.
+	# useful for pasting filenames from clipboard.
 
         my $clear = $button_sub_frame->Button
         (
@@ -127,7 +127,7 @@ sub gui
 		-command=>
 		sub
 		{
-			if($config::hash{FILTER}{value} && $config::filter_string eq '')	# dont enable filter on an empty string
+			if($config::hash{FILTER}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
 			{
 				&misc::plog(1, "sub blockrename: tried to enable filtering with an empty filter");
 				$config::hash{FILTER}{value} = 0;
@@ -378,7 +378,7 @@ sub br_readdir
 
 	&misc::plog(3, "br_readdir: '$dir'");
 
-	opendir(DIR, $dir) or &main::quit("sub br_readdir: cant open directory '$dir', $!");
+	opendir(DIR, $dir) or &main::quit("sub br_readdir: can't open directory '$dir', $!");
 	@dir_contents = CORE::readdir(DIR);
        	closedir DIR;
 

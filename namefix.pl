@@ -617,7 +617,7 @@ my $w_chk = $frm_left -> Checkbutton
 $balloon->attach
 (
 	$w_chk,
-	-msg => "Applys word specific casing from the \"Specific Casing List\"\n\neg: ABBA, ACDC CD1 CD2 XVII"
+	-msg => "Applies word specific casing from the \"Specific Casing List\"\n\neg: ABBA, ACDC CD1 CD2 XVII"
 );
 
 my $p_chk = $frm_left -> Checkbutton
@@ -724,7 +724,7 @@ $balloon->attach
 (
 	$R_chk,
 	-msg =>
-"Remove user entered words\n\nNote 1:\tTo remove multiple words, seperate with |\n\nExample:\tone|two|three\n\nNote 2:\tTo remove | simply escape it like so \\|\nNote 3:\tPerl regexps are available\n\tEnable under File, Preferences, Advance, Enable regexps."
+"Remove user entered words\n\nNote 1:\tTo remove multiple words, separate with |\n\nExample:\tone|two|three\n\nNote 2:\tTo remove | simply escape it like so \\|\nNote 3:\tPerl regexps are available\n\tEnable under File, Preferences, Advance, Enable regexps."
 );
 
 my $R_ent1 = $frm_left -> Entry(-textvariable=>\$config::ins_str_old)
@@ -1859,7 +1859,7 @@ $f_frame -> Checkbutton
 	-activeforeground => 'blue',
         -command=> sub
 	{
-		if($config::hash{FILTER}{value} && $config::filter_string eq '')	# dont enable filter on an empty string
+		if($config::hash{FILTER}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
 		{
 			&misc::plog(1, "namefix: tried to enable filtering with an empty filter");
 			$config::hash{FILTER}{value} = 0;

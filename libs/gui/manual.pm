@@ -11,8 +11,8 @@ sub edit
 {
 	my $path 		= shift;
 
-	&main::quit("edit: \$path isnt defined.") if ! defined $path;
-	&main::quit("edit: \$path '$path' isnt a dir or file.") if !-f $path && !-d $path;
+	&main::quit("edit: \$path isn't defined.") if ! defined $path;
+	&main::quit("edit: \$path '$path' isn't a dir or file.") if !-f $path && !-d $path;
 
 	&misc::plog(1, "sub manual::edit: \"$path\"");
 

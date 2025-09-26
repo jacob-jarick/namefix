@@ -31,7 +31,7 @@ sub fix
 
 	&main::quit ("fixname::fix : ERROR file is undef")			if ! defined $file;
 	&main::quit ("fixname::fix : ERROR file eq ''")				if $file eq '';
-	&main::quit ("fixname::fix : ERROR file '$file' isnt dir/file")		if !-d $file && !-f $file;
+	&main::quit ("fixname::fix : ERROR file '$file' isn't dir/file")		if !-d $file && !-f $file;
 
 	($dir, $file, $path) =  &misc::get_file_info($file);
 	chdir $dir;
@@ -73,7 +73,7 @@ sub fix
 	# didnt match filter
         return if $config::hash{FILTER}{value} && !&filter::match($file);
 
-	# rules say file shouldnt be renamed
+	# rules say file shouldn't be renamed
 	return if !$RENAME;
 
 	# recursive, print stuff
@@ -187,12 +187,12 @@ sub fix
 		) = &mp3::guess_tags($newfile);
 	}
 
-        # no tags and no fn change, dont rename
+        # no tags and no fn change, don't rename
 	return if !$tag && $file eq $newfile;
 
        	if($tag)
 	{
-       		# fn & tags havent changed
+       		# fn & tags haven't changed
        		my $TAGS_CHANGED = 0;
 		if
 		(
@@ -252,7 +252,7 @@ sub fix
 # returns 1 if succesfull rename, errors are printed to console
 
 # this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::hash{OVERWRITE}{value}) "
-# bloody fat32 returns positive when we dont want it, ie case correcting
+# bloody fat32 returns positive when we don't want it, ie case correcting
 
 sub fn_rename
 {
@@ -321,7 +321,7 @@ sub run_fixname_subs
 
 	&main::quit("run_fixname_subs \$file is undef\n")		if ! defined $file;
 	&main::quit("run_fixname_subs \$file eq ''\n")			if $file eq '';
-	&main::quit("run_fixname_subs \$file isnt a dir or file\n")	if !-f $file && !-d $file;
+	&main::quit("run_fixname_subs \$file isn't a dir or file\n")	if !-f $file && !-d $file;
 
 	$newfile = $file if !$newfile;
 
@@ -404,7 +404,7 @@ sub fn_kill_cwords
 	                        $file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1$3/ig;
 	                }
 		}
-                else		# if its a file, be careful not to remove the extension, hence why we dont match on $
+                else		# if its a file, be careful not to remove the extension, hence why we don't match on $
                 {
 	                for my $a(@config::kill_words_arr)
                         {

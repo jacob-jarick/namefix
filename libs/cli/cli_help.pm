@@ -49,7 +49,7 @@ my $txt_main = "Main Options:
 
 	--undo			undo last rename
 
-g	--clean			general cleanup (reccomend)
+g	--clean			general cleanup (recommend)
 
 c	--case			Fix case
 p	--spaces		Convert _ and \" \" to set space delimiter
@@ -162,7 +162,7 @@ D	--dir			process directories
 				Warning: Use with caution
 
 	--overwrite		Preform rename without checking if new filename exists.
-				Please be carefull witht this option
+				Please be careful with this option
 
 A	--all-files		Process all files, not just media files.
 
@@ -198,7 +198,7 @@ my $txt_docs =
 	--about			prints about info
 	--todo			prints namefix.pl's todo list
 	--thanks		Credit / Thankyou list of contributors.
-	--links			Reccomend Links from the author
+	--links			Recommend Links from the author
 
 	--editor=STRING		Set editor to STRING
 
