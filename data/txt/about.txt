@@ -1,23 +1,23 @@
-Please visit the offical pages for documenation/ updates.
+Please visit the official pages for documentation/updates.
 https://github.com/jacob-jarick/namefix
 http://namefix.blogspot.com
 
-namefix.pl: a multiplatform mass file renamer designed to make renaming media files quick and easy. Created by Jacob Jarick and copyrighted under the GPL License.
+namefix.pl: a multiplatform mass file renamer designed to make renaming media files quick and easy. Created by Jacob Jarick and copyrighted under the GPL Licence.
 
-Initialy this script was command lined based and used to convert spaces to underscores on all mp3s in a given directory, namefix quickly grew in popularity so case formatting and many other options were added. Now it sports a sexy, simplistic GUI and can run on multiple operating systems.
+Initially this script was command line based and used to convert spaces to underscores on all mp3s in a given directory, namefix quickly grew in popularity so case formatting and many other options were added. Now it sports a sexy, simplistic GUI and can run on multiple operating systems.
 
 -----------
 
 About the Creator:
 
-Im Currently working as a software engineer/ systems administrator/ IT Consultant.
+I'm currently a unix sys admin who expanded into dev ops and currently does C# restful APIs, blockchain smart contracts, azure devops and... well you name it.
 
-Im a lazy person, Id rather make a tool todo a job than just do the job.
+I'm a lazy person, I'd rather make a tool to do a job than just do the job.
 
-Hi Im Jacob the guy who was the 1st created (for linux at least) an automatic mp3 renaming (now all media types) program for neat freaks like myself. Now there are quite a few which I think is great. Id like to give prior recognition to Dave 'Zoid' Kirsch it was his quake 2 skin renamer for linux (it shifted all names to lower case) that gave me the idea.
+Hi I'm Jacob the guy who was the first to create (for linux at least) an automatic mp3 renaming (now all media types) program for neat freaks like myself. Now there are quite a few which I think is great. I'd like to give prior recognition to Dave 'Zoid' Kirsch - it was his quake 2 skin renamer for linux (it shifted all names to lower case) that gave me the idea.
 
-perl is my language of preference, Ive used it extensively with apache for cgi automisation.
+Perl is my language of preference (but I am partial to C# and C++), I've used Perl extensively with apache for CGI automation.
 
-If any1 is impressed by my work and would like speak about coding work please contact me.
+If anyone is impressed by my work and would like to speak about coding work please contact me.
 
-Yes thats me in the photo, No I dont still have the green mowhawk :P
+Yes that's me in the photo, No I don't still have the green mohawk :P

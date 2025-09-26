@@ -1,3 +1,33 @@
+4.1.4 - Windows deployment improvements and build optimisation
+
+* Fixed Windows PP deployment JPEG display issue with robust 3-tier fallback system:
+  - Tier 1: Attempt Tk::JPEG module (preferred)
+  - Tier 2: Fallback to PPM file conversion if JPEG module fails
+  - Tier 3: Text description if image unavailable
+  Applied to both jpgtest utility and about dialog
+
+* Optimised build system for Windows executables:
+  - Removed data bundling from executables (NSIS installer provides data files)
+  - Reduced GUI executable size from ~130MB to 6.69MB  
+  - Reduced CLI executable size to 5.71MB
+  - Added PAR archive builds (GUI: 1.16MB, CLI: 244KB)
+  - Improved build script with silent operations and clean output
+  - Fixed batch script PAR build hanging issues
+
+* Updated NSIS installer:
+  - Changed output filename from namefix.pl_install.exe to namefix-installer.exe
+  - Modern naming convention alignment
+
+* Documentation improvements:
+  - Corrected spelling and grammar in about.txt (Australian English)
+  - Updated thanks.txt to clarify sole maintainer status
+  - Proper crediting of past contributors
+
+* Build infrastructure enhancements:
+  - Reliable timestamp generation for builds
+  - Consistent executable naming convention
+  - Error handling and validation in build process
+
 4.1.3 - ie refresh in progress
 
 * fixed front append option

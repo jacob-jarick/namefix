@@ -12,7 +12,9 @@ use File::Find;
 use File::Basename qw(&basename &dirname);
 
 use Tk;
-use Tk::JPEG;
+# Try to load Tk::JPEG but don't fail if it's not available
+eval { require Tk::JPEG; };
+our $HAS_JPEG = !$@;
 use Tk::DirTree;
 use Tk::Balloon;
 use Tk::NoteBook;

@@ -26,6 +26,7 @@ our $todo		= "$Bin/data/txt/todo.txt";
 our $about		= "$Bin/data/txt/about.txt";
 our $links		= "$Bin/data/txt/links.txt";
 our $changelog		= "$Bin/data/txt/changelog.txt";;
+our $mempic		= "$Bin/data/mem.jpg";
 our $fonts_file		= "$home/.namefix.pl/fonts.ini";
 our $bookmark_file	= "$home/.namefix.pl/bookmarks.txt";
 our $undo_cur_file	= "$home/.namefix.pl/undo.current.filenames.txt";

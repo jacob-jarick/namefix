@@ -7,11 +7,7 @@ use Data::Dumper::Concise;
 
 use English;
 use Cwd;
-use Carp qw(clu	if(!-d $config::dir)
-	{
-		&misc::plog(0, "main: $config::dir is not a directory, cowardly refusing to process it");
-		exit;
-	}ngmess shortmess);
+use Carp qw(cluck longmess shortmess);
 use MP3::Tag;
 use File::Find;
 use File::Basename qw(&basename &dirname);
