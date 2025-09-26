@@ -357,9 +357,9 @@ $col = 1;
 
 my $open_but = $frm_bottom -> Button
 (
-	-text=>			'Browse',
+	-text=>				'Browse',
 	-activebackground=>	'cyan',
-	-command=>		\&dir::dialog
+	-command=>			\&dir::dialog
 )
 -> grid
 (
@@ -374,7 +374,7 @@ my $cwd_ent = $frm_bottom->Entry(-textvariable=>\$config::dir, -width=>0)
 (
 	-row=>		1,
 	-column=>	$col++,
-	-sticky=>	'nw',
+	-sticky=>	'ew',
 	-padx=>		2
 );
 $balloon->attach($cwd_ent, -msg => \$config::dir);
@@ -548,6 +548,9 @@ $frm_bottom->Label(-text=>' ')
 	-column=>	$col++,
 	-sticky=>	'ne'
 );
+
+# Configure the directory entry column to expand with window
+$frm_bottom->gridColumnconfigure(2, -weight => 1);
 
 #--------------------------------------------------------------------------------------------------------------
 # main options / tab1 / frame left
