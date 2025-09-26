@@ -10,7 +10,10 @@ REM
 REM NOTE: Data files not bundled - provided by .nsi installer
 REM ===============================================
 
-SET dtStamp24=%date:~-4%%date:~7,2%%date:~4,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+REM Generate timestamp without spaces by replacing spaces with zeros
+SET "hour=%time:~0,2%"
+SET "hour=%hour: =0%"
+SET dtStamp24=%date:~-4%%date:~7,2%%date:~4,2%_%hour%%time:~3,2%%time:~6,2%
 
 ECHO ===============================================
 ECHO Packaging
@@ -87,6 +90,25 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 ECHO .  
+ECHO ===============================================
+ECHO Building NSI Installer
+ECHO .
+
+IF NOT EXIST "extra\build installer.nsi" (
+    ECHO ERROR: NSI script not found at "extra\build installer.nsi"
+    ECHO Skipping installer build.
+) ELSE (
+    ECHO Building installer from "extra\build installer.nsi"...
+    ECHO on
+    "C:\Program Files (x86)\NSIS\Bin\makensis.exe" "extra\build installer.nsi"
+    @ECHO off
+    IF %ERRORLEVEL% NEQ 0 (
+        ECHO ERROR: NSI installer build failed with error level %ERRORLEVEL%
+    ) ELSE (
+        ECHO NSI installer build completed successfully.
+    )
+)
+
 ECHO .  
 ECHO ===============================================
 ECHO Done

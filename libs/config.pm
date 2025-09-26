@@ -14,7 +14,7 @@ our $dir				= cwd;
 our $cwd				= cwd;
 our $hlist_cwd			= cwd;
 
-our $version 			= '4.1.5';
+our $version 			= '4.1.6';
 our $folderimage 		= '';
 our $fileimage   		= '';
 our $dialog_font		= '';
@@ -302,7 +302,7 @@ $hash{REMOVE_REGEX}			{value}	= 0;
 # CONFIG DIALOG - DEBUG TAB
 
 $hash{debug}			{save}	= 'norm';
-$hash{debug}			{value}	= 0;
+$hash{debug}			{value}	= 2;
 
 $hash{LOG_STDOUT}		{save}	= 'norm';
 $hash{LOG_STDOUT}		{value}	= 0;

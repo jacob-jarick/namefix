@@ -22,23 +22,49 @@ sub ci_sort
 
 sub plog
 {
-	my $level	= shift;
-	my $text	= shift;
+	my $level		= shift;
+	my $text		= shift;
 
 	my $date_time	= localtime();
+	my $subroutine	= 'main'; # get caller - handle packed executables better
+	my $depth		= 1;
 
-	# get caller
-	my $subroutine = (caller(1))[3] || 'main'; # Get the calling subroutine name
+	# Limit depth to avoid infinite loops
+	while ($depth < 10) 
+	{ 
+		my $caller_sub = (caller($depth))[3];
+		last if !defined $caller_sub;
+		# Skip PAR packer and eval contexts
+		if 
+		(
+			$caller_sub ne '(eval)' && 
+		    $caller_sub !~ /^PAR::/ && 
+		    $caller_sub !~ /^___par_pl::/ &&
+		    $caller_sub !~ /::BEGIN$/
+		) 
+		{
+			$subroutine = $caller_sub;
+			last;
+		}
+		$depth++;
+	}
 
 	# Add level information to message
 	my $level_text;
-	if ($level == 0) {
+	if ($level == 0) 
+	{
 		$level_text = "ERROR";
-	} elsif ($level == 1) {
+	} 
+	elsif ($level == 1) 
+	{
 		$level_text = "WARN";
-	} elsif ($level == 2) {
+	} 
+	elsif ($level == 2) 
+	{
 		$level_text = "INFO";
-	} else {
+	} 
+	else 
+	{
 		my $debug_level = $level - 2;
 		$level_text = "DEBUG($debug_level)";
 	}

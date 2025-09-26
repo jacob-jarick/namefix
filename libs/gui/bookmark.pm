@@ -72,7 +72,7 @@ sub draw_menu
 	$main::help -> command
 	(
 		-label=>	'Help',
-		-command=>	sub { &dialog::show('Help', "TODO: create help.txt"); }
+		-command=>	sub { &dialog::show('Help', "Help system available via F1 key or command line --help options.\n\nSee README.md for detailed documentation."); }
 	);
 
 	$main::help -> separator();

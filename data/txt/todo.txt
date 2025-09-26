@@ -11,7 +11,7 @@
 High:
 
 * generate filename from id3 tags
-* make filter and directory text box resize with the main window.
+* DONE - make filter and directory text box resize with the main window.
 
 Medium:
 

@@ -1733,7 +1733,7 @@ $balloon->attach
 	-msg => "Enter the number of characters to truncate to.\n\nNote: Atm this is the same variable as maximum file length\nSo if u save options this number will become the new maximum filelength"
 );
 
-$tab7 -> Label
+$tab7->Label
 (
 	-justify=>"left",
 	-text=>"\nStyles:\n"
@@ -1745,18 +1745,18 @@ $tab7 -> Label
 	-sticky=>'nw'
 );
 
-my $rdb_ts_a = $tab7 -> Radiobutton
+my $rdb_ts_a = $tab7->Radiobutton
 (
-	-text=>"From Start",
-	-value=>"0",
-	-variable=>\$config::hash{truncate_style}{value},
-	-activeforeground => 'blue'
+	-text=>				"From Start",
+	-value=>			"0",
+	-variable=>			\$config::hash{truncate_style}{value},
+	-activeforeground=>	'blue'
 )
 -> grid
 (
-	-row=>$row++,
-	-column=>1,
-	-sticky=>'nw'
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'nw'
 );
 $balloon->attach
 (
@@ -1764,36 +1764,36 @@ $balloon->attach
 	-msg => "Remove characters from start of filename."
 );
 
-my $rdb_ts_b = $tab7 -> Radiobutton
+my $rdb_ts_b = $tab7->Radiobutton
 (
-	-text=>"From Middle",
-	-value=>"2",
-	-variable=>\$config::hash{truncate_style}{value},
-	-activeforeground => 'blue'
+	-text=>				"From Middle",
+	-value=>			"2",
+	-variable=>			\$config::hash{truncate_style}{value},
+	-activeforeground=>	'blue'
 )
 -> grid
 (
-	-row=>$row++,
-	-column=>1,
-	-sticky=>'nw'
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'nw'
 );
 $balloon->attach
 (
 	$rdb_ts_b,
 	-msg => "Remove characters from the middle of the filename."
 );
-my $rdb_ts_c = $tab7 -> Radiobutton
+my $rdb_ts_c = $tab7-> Radiobutton
 (
-	-text=>"From End",
-	-value=>"1",
-	-variable=>\$config::hash{truncate_style}{value},
-	-activeforeground => 'blue'
+	-text=>					"From End",
+	-value=>				"1",
+	-variable=>				\$config::hash{truncate_style}{value},
+	-activeforeground =>	'blue'
 )
 -> grid
 (
-	-row=>$row++,
-	-column=>1,
-	-sticky=>'nw'
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'nw'
 );
 $balloon->attach
 (
@@ -1801,7 +1801,7 @@ $balloon->attach
 	-msg => "Remove characters from end of filename."
 );
 
-my $tab7_spacer1 = $tab7 -> Label
+my $tab7_spacer1 = $tab7->Label
 (
 	-text=>" "
 )
@@ -1812,17 +1812,17 @@ my $tab7_spacer1 = $tab7 -> Label
 	-sticky=>'nw'
 );
 
-$tab7 -> Label
+$tab7-> Label
 (
-	-justify=>"left",
-	-text=>"Insert Character\/s: "
+	-justify=>		"left",
+	-text=>			"Insert Character\/s: "
 )
 -> grid
 (
-	-row=>$row++,
-	-column=>1,
-	-columnspan=>1,
-	-sticky=>'nw'
+	-row=>			$row++,
+	-column=>		1,
+	-columnspan=>	1,
+	-sticky=>		'nw'
 );
 
 my $tab7_trunc_ent = $tab7 -> Entry
@@ -1857,14 +1857,14 @@ $tab7 -> Label
 # draw filter 'main screen menu'
 #--------------------------------------------------------------------------------------------------------------
 
-our $f_frame = $main::frm_right2->Frame() -> pack(-side=>"top",);
+our $f_frame = $main::frm_right2->Frame() -> pack(-side=>"top", -fill=>'x');
 
 $f_frame -> Checkbutton
 (
-	-text=>'Filter',
-	-variable=>\$config::hash{FILTER}{value},
+	-text=> 'Filter',
+	-variable=> \$config::hash{FILTER}{value},
 	-activeforeground => 'blue',
-        -command=> sub
+	-command=> sub
 	{
 		if($config::hash{FILTER}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
 		{
@@ -1887,10 +1887,10 @@ $f_frame->Label(-text=>" ")->pack(-side=>'left',);
 
 $f_frame->Entry
 (
-        -textvariable=>\$config::filter_string,
-        -width=>50
+	-textvariable=>\$config::filter_string,
+	-width=>50
 )
-->pack(-side=>'left',);
+->pack(-side=>'left', -expand=>1, -fill=>'x');
 
 $f_frame -> Checkbutton
 (
@@ -1942,8 +1942,8 @@ MainLoop;
 sub callback
 {
     print "\n";
-    print "callback args  = @_\n";
-    print "\$Tk::event     = $Tk::event\n";
-    print "\$Tk::widget    = $Tk::widget\n";
-    print "\$Tk::event->W  = ", $Tk::event->W, "\n";
+    print "callback args	= @_\n";
+    print "\$Tk::event		= $Tk::event\n";
+    print "\$Tk::widget		= $Tk::widget\n";
+    print "\$Tk::event->W	= ", $Tk::event->W, "\n";
 }
