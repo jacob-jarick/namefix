@@ -47,7 +47,7 @@ our $SUGGEST_FSFIX		= 0;	# suggest using fsfix var
 # undo VARS
 our @undo_cur			= ();	# undo array - current filenames
 our @undo_pre			= ();	# undo array - previous filenames
-our $undo_dir			= '';	# directory to preform undo in
+our $undo_dir			= '';	# directory to perform undo in
 
 # hlist vars
 our $hlist_newfile_row	= 0;

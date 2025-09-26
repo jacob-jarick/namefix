@@ -329,53 +329,53 @@ sub run_fixname_subs
 	# 1st Run, do before cleanup
 	# ---------------------------------------
 
-	$newfile = &fn_scene		(	$newfile);			# Scenify Season & Episode numbers
-	$newfile = &fn_unscene		(	$newfile);			# Unscene Season & Episode numbers
-	$newfile = &fn_kill_sp_patterns	(	$newfile);			# remove patterns
+	$newfile = &fn_scene			(	$newfile);				# Scenify Season & Episode numbers
+	$newfile = &fn_unscene			(	$newfile);				# Unscene Season & Episode numbers
+	$newfile = &fn_kill_sp_patterns	(	$newfile);				# remove patterns
         $newfile = &fn_kill_cwords	(	$file,		$newfile);	# remove list of words
-	$newfile = &fn_replace		(1,	$newfile);			# remove user entered word (also replace if anything is specified)
-	$newfile = &fn_spaces		(1,	$newfile);			# convert underscores to spaces
-	$newfile = &fn_pad_dash		(	$newfile);			# pad -
-	$newfile = &fn_pad_N_to_NN	(	$newfile);			# pad -
+	$newfile = &fn_replace			(1,	$newfile);				# remove user entered word (also replace if anything is specified)
+	$newfile = &fn_spaces			(1,	$newfile);				# convert underscores to spaces
+	$newfile = &fn_pad_dash			(	$newfile);				# pad -
+	$newfile = &fn_pad_N_to_NN		(	$newfile);				# pad -
 
-	$newfile = &fn_dot2space	(1,	$file,		$newfile);	# Dots to spaces
-	$newfile = &fn_sp_char		(	$newfile);			# remove nasty characters
-	$newfile = &fn_rm_digits	(	$newfile);			# remove all digits
-	$newfile = &fn_digits		(	$newfile);			# remove digits from front of filename
-	$newfile = &fn_split_dddd	(	$newfile);			# split season episode numbers
-	$newfile = &fn_pre_clean	(1,	$file,		$newfile);	# Preliminary cleanup (just cleans up after 1st run)
+	$newfile = &fn_dot2space		(1,	$file,		$newfile);	# Dots to spaces
+	$newfile = &fn_sp_char			(	$newfile);				# remove nasty characters
+	$newfile = &fn_rm_digits		(	$newfile);				# remove all digits
+	$newfile = &fn_digits			(	$newfile);				# remove digits from front of filename
+	$newfile = &fn_split_dddd		(	$newfile);				# split season episode numbers
+	$newfile = &fn_pre_clean		(1,	$file,		$newfile);	# Preliminary cleanup (just cleans up after 1st run)
 
 	# ---------------------------------------
 	# Main Clean - these routines expect a fairly clean string
 	# ---------------------------------------
 
-	$newfile = &fn_intr_char	(1,	$newfile);			# International Character translation
-	$newfile = &fn_case		(1,	$newfile);			# Apply casing
-	$newfile = &fn_pad_digits_w_zero(	$newfile);			# Pad digits with 0
-	$newfile = &fn_pad_digits	(	$newfile);			# Pad NN w - , Pad digits with " - "
+	$newfile = &fn_intr_char		(1,	$newfile);				# International Character translation
+	$newfile = &fn_case				(1,	$newfile);				# Apply casing
+	$newfile = &fn_pad_digits_w_zero(	$newfile);				# Pad digits with 0
+	$newfile = &fn_pad_digits		(	$newfile);				# Pad NN w - , Pad digits with " - "
         $newfile = &fn_sp_word		(1,	$file,		$newfile); 	# Specific word casing
 
-	$newfile = &fn_post_clean	(1,	$file,		$newfile);	# Post General cleanup
+	$newfile = &fn_post_clean		(1,	$file,		$newfile);	# Post General cleanup
 
 	# ---------------------------------------
 	# 2nd runs some routines need to be run before & after cleanup in order to work fully (allows for lazy matching)
 	# ---------------------------------------
 
-	$newfile = &fn_kill_sp_patterns	(	$newfile);			# remove patterns
-        $newfile = &fn_kill_cwords	(	$file,		$newfile);	# remove list of words
+	$newfile = &fn_kill_sp_patterns	(	$newfile);				# remove patterns
+	$newfile = &fn_kill_cwords		(	$file,		$newfile);	# remove list of words
 
 	# ---------------------------------------
 	# Final cleanup
 	# ---------------------------------------
-	$newfile = &fn_spaces		(1,	$newfile);			# spaces
+	$newfile = &fn_spaces	(1,	$newfile);				# spaces
 
-	$newfile = &fn_front_a		(	$newfile);			# Front append
-	$newfile = &fn_end_a		(	$newfile);			# End append
+	$newfile = &fn_front_a	(	$newfile);				# Front append
+	$newfile = &fn_end_a	(	$newfile);				# End append
 
-	$newfile = &fn_case_fl		(1,	$newfile);			# UC 1st letter of filename
-	$newfile = &fn_lc_all		(	$newfile);			# lowercase all
-	$newfile = &fn_uc_all		(	$newfile);			# uppercase all
-	$newfile = &fn_truncate		(	$file,		$newfile);	# truncate file
+	$newfile = &fn_case_fl	(1,	$newfile);				# UC 1st letter of filename
+	$newfile = &fn_lc_all	(	$newfile);				# lowercase all
+	$newfile = &fn_uc_all	(	$newfile);				# uppercase all
+	$newfile = &fn_truncate	(	$file,		$newfile);	# truncate file
 	$newfile = &fn_enum		(	$file,		$newfile); 	# Enumerate
 
 	return $newfile;
@@ -386,7 +386,7 @@ sub run_fixname_subs
 
 sub fn_kill_cwords
 {
-	my $file	= shift;
+	my $file		= shift;
 	my $file_new	= shift;
 
 	&main::quit("fn_kill_cwords \$file is undef\n")	if ! defined $file;
@@ -395,30 +395,30 @@ sub fn_kill_cwords
 	$file_new = $file if !defined $file_new || $file_new eq '';
 
 	if($config::hash{kill_cwords}{value})
-        {
-        	if(-d $file)	# if directory process as normal
-                {
-	                for my $a(@config::kill_words_arr)
-                        {
+	{
+		if(-d $file)	# if directory process as normal
+		{
+			for my $a(@config::kill_words_arr)
+			{
 				$a = quotemeta $a;
-	                        $file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1$3/ig;
-	                }
+				$file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1$3/ig;
+			}
 		}
-                else		# if its a file, be careful not to remove the extension, hence why we don't match on $
-                {
-	                for my $a(@config::kill_words_arr)
-                        {
+		else		# if its a file, be careful not to remove the extension, hence why we don't match on $
+		{
+			for my $a(@config::kill_words_arr)
+			{
 				$a = quotemeta $a;
-	                        $file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1$3/ig;
-	                }
-                }
-        }
+				$file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1$3/ig;
+			}
+		}
+	}
 	return $file_new;
 }
 
 sub fn_replace
 {
-	my $FILE	= shift;
+	my $FILE		= shift;
 	my $file_new	= shift;
 
 	&main::quit("fn_replace \$file_new is undef\n")	if ! defined $file_new;
@@ -433,6 +433,7 @@ sub fn_replace
 	}
 
 	$file_new =~ s/($rm)/$config::ins_str/ig;
+
 	return $file_new;
 }
 
@@ -442,21 +443,24 @@ sub fn_kill_sp_patterns
 	&main::quit("fn_kill_sp_patterns \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_kill_sp_patterns \$file_new eq ''\n")		if $file_new eq '';
 
-        return $file_new if !$config::hash{kill_sp_patterns}{value};
+	return $file_new if !$config::hash{kill_sp_patterns}{value};
+
 	for my $pattern (@config::kill_patterns_arr)
 	{
 		$file_new =~ s/$pattern//ig;
 	}
+
 	return $file_new;
 }
 
 sub fn_unscene
 {
 	my $file_new = shift;
-	&main::quit("fn_unscene \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_unscene \$file_new eq ''\n")		if $file_new eq '';
 
-	$file_new =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie if($config::hash{unscene}{value});
+	&main::quit("fn_unscene \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_unscene \$file_new eq ''\n")	if $file_new eq '';
+
+	$file_new =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie 	if($config::hash{unscene}{value});
 
 	return $file_new;
 }
@@ -465,7 +469,7 @@ sub fn_scene
 {
 	my $file_new = shift;
 	&main::quit("fn_scene \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_scene \$file_new eq ''\n")	if $file_new eq '';
+	&main::quit("fn_scene \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if $config::hash{scene}{value};
 
@@ -477,13 +481,14 @@ sub fn_scene
 # underscores to spaces
 sub fn_spaces
 {
-	my $FILE	= shift;
+	my $FILE		= shift;
 	my $file_new	= shift;
 
 	&main::quit("fn_spaces \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_spaces \$file_new eq ''\n")	if $FILE && $file_new eq '';
 
-        return $file_new if !$config::hash{spaces}{value};
+	return $file_new if !$config::hash{spaces}{value};
+
 	$file_new =~ s/(\s|_)+/$config::hash{space_character}{value}/g;
 
 	return $file_new;
@@ -495,9 +500,10 @@ sub fn_sp_char
 	&main::quit("fn_sp_char \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_sp_char \$file_new eq ''\n")	if $file_new eq '';
 
-        return $file_new if !$config::hash{sp_char}{value};
+	return $file_new if !$config::hash{sp_char}{value};
 
-        $file_new =~ s/[\~\@\%\{\}\[\]\"\<\>\!\`\'\,\#\(|\)]//g;
+	$file_new =~ s/[\~\@\%\{\}\[\]\"\<\>\!\`\'\,\#\(|\)]//g;
+
 	return $file_new;
 }
 
@@ -507,6 +513,7 @@ sub fn_sp_char
 sub fn_split_dddd
 {
 	my $file_new = shift;
+
 	&main::quit("fn_split_dddd \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_split_dddd \$file_new eq ''\n")		if $file_new eq '';
 
@@ -536,8 +543,8 @@ sub fn_split_dddd
 
 sub fn_case_fl
 {
-	my $FILE = shift;
-	my $file_new = shift;
+	my $FILE		= shift;
+	my $file_new	= shift;
 
 	&main::quit("fn_case_fl: \$file_new is undef\n")	if !defined $file_new;
 	&main::quit("fn_case_fl: \$file_new eq ''\n")		if $FILE && $file_new eq '';
@@ -557,7 +564,8 @@ sub fn_sp_word
 {
 	my $FILE = shift;
 	my $file = shift;
-	&main::quit("fn_sp_word \$file is undef\n")	if ! defined $file;
+
+	&main::quit("fn_sp_word \$file is undef\n")		if ! defined $file;
 	&main::quit("fn_sp_word \$file eq ''\n")		if $FILE && $file eq '';
 
 	my $file_new = shift;
@@ -586,16 +594,18 @@ sub fn_dot2space
 	my $file_new = shift;
 
 	&main::quit("fn_dot2space \$FILE value '$FILE' is invalid\n")	if $FILE != 0 && $FILE != 1;
-	&main::quit("fn_dot2space \$file is undef\n")	if ! defined $file;
-	&main::quit("fn_dot2space \$file eq ''\n")	if $FILE && $file eq '';
+	&main::quit("fn_dot2space \$file is undef\n")					if ! defined $file;
+	&main::quit("fn_dot2space \$file eq ''\n")						if $FILE && $file eq '';
 
 	return $file_new if !$config::hash{dot2space}{value};
+
 	if($FILE && $file_new =~ m/^(.*)\.(.*?)$/g)	# is file and not a directory
 	{
-		my $name = $1;
-		my $ext = $2;
-		$name =~ s/\./$config::hash{space_character}{value}/g;
-		$file_new = "$name.$ext";
+		my $name	= $1;
+		my $ext		= $2;
+		$name		=~ s/\./$config::hash{space_character}{value}/g;
+		$file_new	= "$name.$ext";
+
 # 		&misc::plog(2, "sub fn_dot2space: \$ext = '$ext'\n");
 	}
 	else
@@ -603,7 +613,7 @@ sub fn_dot2space
 		# not a file treat as a string
 		$file_new =~ s/\./$config::hash{space_character}{value}/g;
 	}
-# 	&misc::plog(2, "sub fn_dot2space: \$file_new 2 '$file_new'\n");
+	 	# &misc::plog(2, "sub fn_dot2space: \$file_new 2 '$file_new'\n");
         return $file_new;
 }
 
@@ -638,8 +648,8 @@ sub fn_pad_digits_w_zero
 
 	# pad NxN
 	$file_new =~ s/(^|\s+|\.|_)(\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2."0".$3.$4/ie;	# NxN to 0Nx0N
-	$file_new =~ s/(^|\s+|\.|_)(\d\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2."0".$3.$4/ie;	# NNxN to NNx0N
-	$file_new =~ s/(^|\s+|\.|_)(\dx)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4/ie;	# NxNN to 0NxNN
+	$file_new =~ s/(^|\s+|\.|_)(\d\dx)(\d)(\s+|\.|_|\..{3,4}$)/$1.$2."0".$3.$4/ie;		# NNxN to NNx0N
+	$file_new =~ s/(^|\s+|\.|_)(\dx)(\d\d)(\s+|\.|_|\..{3,4}$)/$1."0".$2.$3.$4/ie;		# NxNN to 0NxNN
 
 	# clean scene style
 	# rm extra 0's
@@ -667,11 +677,11 @@ sub fn_digits
 
 sub fn_enum
 {
-	my $file	= shift;
+	my $file		= shift;
 	my $file_new	= shift;
 
-	&main::quit("fn_enum \$file is undef\n")				if ! defined $file;
-	&main::quit("fn_enum \$file eq ''\n")					if $file eq '';
+	&main::quit("fn_enum \$file is undef\n")							if ! defined $file;
+	&main::quit("fn_enum \$file eq ''\n")								if $file eq '';
 	&main::quit("fn_enum \$file '$file' is not a file or directory")	if !-f $file && !-d $file;
 
 	return $file_new if ! $config::hash{enum}{value};
@@ -731,7 +741,7 @@ sub fn_enum
 
 sub fn_truncate
 {
-	my $file	= shift;
+	my $file		= shift;
 	my $file_new	= shift;
 
 	&main::quit("fn_truncate \$file_new is undef\n")	if ! defined $file_new;
@@ -743,13 +753,15 @@ sub fn_truncate
 	if($l > $config::hash{'max_fn_length'}{value} && $config::hash{'truncate_to'}{value} == 0)
 	{
 		&misc::plog(0, "sub fn_truncate: $file_new exceeds maximum filename length.");
+
 		return;
 	}
+
 	if($l > $config::hash{'truncate_to'}{value} && $config::hash{truncate}{value} == 1)
 	{
 		my $file_ext		= $file_new;
-		$file_ext		=~ s/^(.*)(\.)(.{3,4})$/$3/e;
-		my $file_ext_length	= length $file_ext;		# doesnt include . in length
+		$file_ext			=~ s/^(.*)(\.)(.{3,4})$/$3/e;
+		my $file_ext_length	= length $file_ext;		# doesn't include . in length
 
 		# var for adjusted truncate to, gotta take into account file ext length
 		$trunc_length = $config::hash{'truncate_to'}{value} - ($file_ext_length + 1);	# tl = truncate length
@@ -786,15 +798,16 @@ sub fn_truncate
 			$file_new =~ s/^(.{$trunc_length})(.*)(.{$trunc_length})(\..{$file_ext_length})$/$1.$config::hash{trunc_char}{value}.$3.$4/e;
 		}
 	}
+
 	return $file_new;
 }
 
 sub fn_pre_clean
 {
-	my $FILE	= shift;	# flag
-	my $file	= shift;	# file / string
+	my $FILE		= shift;	# flag
+	my $file		= shift;	# file / string
 	my $file_new	= shift;
-	$file_new	= $file if ! defined $file_new;
+	$file_new		= $file if ! defined $file_new;
 
 	&main::quit("fn_pre_clean \$file is undef\n")	if ! defined $file;
 	&main::quit("fn_pre_clean \$file eq ''\n")	if $FILE && $file eq '';
@@ -820,6 +833,7 @@ sub fn_pre_clean
 		$file_new =~ s/\.mpeg$/\.mpg/i;
 		$file_new =~ s/\.jpeg$/\.jpg/i;
 	}
+
 	return $file_new;
 }
 
@@ -832,7 +846,7 @@ sub fn_post_clean
 	$file_new = $f if !$file_new;
 
 	&main::quit("fn_post_clean: \$f is undef\n")		if ! defined $f;
-	&main::quit("fn_post_clean: \$f eq ''\n")		if $FILE && $f eq '';
+	&main::quit("fn_post_clean: \$f eq ''\n")			if $FILE && $f eq '';
 	&main::quit("fn_post_clean: \$f '$f' not found\n")	if $FILE && !-f $f;
 
 	return $file_new if !$config::hash{CLEANUP_GENERAL}{value};
@@ -861,17 +875,20 @@ sub fn_post_clean
 	{
 		$file_new =~ s/(\s|\+|_|\.|-)+$//;
 	}
+
 	return $file_new;
 }
 
 sub fn_front_a
 {
 	my $file_new = shift;
-	&main::quit("fn_front_a \$file_new is undef\n")	if ! defined $file_new;
+	&main::quit("fn_front_a \$file_new is undef\n")		if ! defined $file_new;
 	&main::quit("fn_front_a \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{INS_START}{value};
+
 	$file_new = $config::ins_front_str.$file_new;
+
 	return $file_new;
 }
 
@@ -881,8 +898,10 @@ sub fn_end_a
 	&main::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_end_a \$file_new eq ''\n")	if $file_new eq '';
 
-        return $file_new if $config::end_a;
+	return $file_new if $config::end_a;
+
 	$file_new =~ s/(.*)(\..*?$)/$1$config::ins_end_str$2/g;
+
 	return $file_new;
 }
 
@@ -893,7 +912,9 @@ sub fn_pad_N_to_NN
 	&main::quit("fn_pad_N_to_NN \$file_new eq ''\n")	if $file_new eq '';
 
 	return $file_new if !$config::hash{pad_N_to_NN}{value};
+
 	$file_new =~ s/(\s+|_|\.)(\d{1,1})(\s+|_|\.)/$1."0".$2.$3/e;
+
 	return $file_new;
 }
 
@@ -904,8 +925,11 @@ sub fn_pad_dash
 	&main::quit("fn_pad_dash \$file_new eq ''\n")		if $file_new eq '';
 
 	my $f = $file_new;
+
 	return $file_new if !$config::hash{pad_dash}{value};
+
 	$file_new =~ s/(\s*|_|\.)(-)(\s*|_|\.)/$config::hash{space_character}{value}."-".$config::hash{space_character}{value}/eg;
+
 	return $file_new;
 }
 
@@ -915,8 +939,10 @@ sub fn_rm_digits
 	&main::quit("fn_rm_digits \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_rm_digits \$file_new eq ''\n")	if $file_new eq '';
 
-        return $file_new if !$config::hash{RM_DIGITS}{value};
+	return $file_new if !$config::hash{RM_DIGITS}{value};
+
 	$file_new =~ s/\d+//g;
+
 	return $file_new;
 }
 
@@ -928,7 +954,9 @@ sub fn_lc_all
 	&main::quit("fn_lc_all \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{lc_all}{value};
+
 	$file_new = lc($file_new);
+
 	return $file_new;
 }
 
@@ -940,7 +968,9 @@ sub fn_uc_all
 	&main::quit("fn_uc_all \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{uc_all}{value};
+
 	$file_new = uc($file_new);
+
 	return $file_new;
 }
 
@@ -948,12 +978,12 @@ sub fn_intr_char
 {
 	my $FILE = shift;
 	# International Character translation
-        # WARNING: This might break really badly on some systems, esp. non-Unix ones...
+	# WARNING: This might break really badly on some systems, esp. non-Unix ones...
 	# if you see alot of ? in your filenames, you need to add the correct codepage for the filesystem.
 
 	my $file_new = shift;
 	&main::quit("fn_intr_char \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_intr_char \$file_new eq ''\n")	if $FILE && $file_new eq '';
+	&main::quit("fn_intr_char \$file_new eq ''\n")		if $FILE && $file_new eq '';
 
 	my $f = $file_new;
 
@@ -1006,6 +1036,7 @@ sub fn_intr_char
 	$file_new =~ s/�//g;
 	$file_new =~ s/�//g;
 	$file_new =~ s/�//g;
+
 	return $file_new;
 }
 
@@ -1014,11 +1045,14 @@ sub fn_case
 	my $FILE = shift;
 	my $file_new = shift;
 	&main::quit("fn_case \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_case \$file_new eq ''\n")	if $FILE && $file_new eq '';
+	&main::quit("fn_case \$file_new eq ''\n")		if $FILE && $file_new eq '';
 
 	my $f = $file_new;
-        return $file_new if !$config::hash{case}{value};
+
+	return $file_new if !$config::hash{case}{value};
+
 	$file_new =~ s/(^| |\.|_|\(|-)([A-Za-z������������������������������])(([A-Za-z������������������������������]|\'|\�|\�|\�)*)/$1.uc($2).lc($3)/eg;
+
 	return $file_new;
 }
 
