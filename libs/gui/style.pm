@@ -17,16 +17,16 @@ use Data::Dumper::Concise;
 
 our @default_styles 	= ('message', 'info', 'error', 'warning');
 
-my $home		= &get_home;
-my $config_file		= "$home/styles.ini";
+my $home				= &get_home;
+my $config_file			= "$home/styles.ini";
 
-my %defaults		= ();
-$defaults{font}		= 'font6';
-$defaults{fgcol}	= '#ffffff';
-$defaults{bgcol}	= '#000000';
+my %defaults			= ();
+$defaults{font}			= 'font6';
+$defaults{fgcol}		= '#ffffff';
+$defaults{bgcol}		= '#000000';
 $defaults{underline}	= 0;
 
-our %hash		= ();
+our %hash				= ();
 
 our $main;
 
@@ -41,9 +41,9 @@ sub load
 
 		for my $k(keys %hash)
 		{
-			$hash{$k}{font}		= $defaults{font}	if ! defined $hash{$k}{font}		|| $hash{$k}{font} eq '';
-			$hash{$k}{fgcol}	= $defaults{fgcol}	if ! defined $hash{$k}{fgcol}		|| $hash{$k}{fgcol} eq '';
-			$hash{$k}{bgcol}	= $defaults{bgcol}	if ! defined $hash{$k}{bgcol}		|| $hash{$k}{bgcol} eq '';
+			$hash{$k}{font}			= $defaults{font}		if ! defined $hash{$k}{font}		|| $hash{$k}{font} eq '';
+			$hash{$k}{fgcol}		= $defaults{fgcol}		if ! defined $hash{$k}{fgcol}		|| $hash{$k}{fgcol} eq '';
+			$hash{$k}{bgcol}		= $defaults{bgcol}		if ! defined $hash{$k}{bgcol}		|| $hash{$k}{bgcol} eq '';
 			$hash{$k}{underline}	= $defaults{underline}	if ! defined $hash{$k}{underline}	|| $hash{$k}{underline} eq '';
 		}
 	}
@@ -65,20 +65,22 @@ sub save
 
 sub add
 {
-	my $name	= shift;
-	my $font	= shift;
-	my $fgcol	= shift;
-	my $bgcol	= shift;
+	my $name		= shift;
+	my $font		= shift;
+	my $fgcol		= shift;
+	my $bgcol		= shift;
 	my $underline	= shift;
 
-	%{$hash{$name}}		= %defaults;
+	%{$hash{$name}}			= %defaults;
 
-	$hash{$name}{font}	= $font		if defined $font;
-	$hash{$name}{fgcol}	= $fgcol	if defined $fgcol;
-	$hash{$name}{bgcol}	= $bgcol	if defined $bgcol;
+	$hash{$name}{font}		= $font			if defined $font;
+	$hash{$name}{fgcol}		= $fgcol		if defined $fgcol;
+	$hash{$name}{bgcol}		= $bgcol		if defined $bgcol;
 	$hash{$name}{underline}	= $underline	if defined $underline;
 
 	&save;
+	# Refresh log display with new styles
+	&log::refresh;
 	destroy $main;
 	&display;
 }
@@ -123,8 +125,8 @@ sub set_col
 	my $type	= shift;
 
 	confess "set_col: \$name '$name' not found in \$hash"	if ! defined $hash{$name};
-	confess "set_col: \$type is undef"			if ! defined $type;
-	confess "set_col: \$type '$type' is unknown"		if $type ne 'fgcol' && $type ne 'bgcol';
+	confess "set_col: \$type is undef"						if ! defined $type;
+	confess "set_col: \$type '$type' is unknown"			if $type ne 'fgcol' && $type ne 'bgcol';
 
 	my $col_dialog	= $main::mw->ColourChooser();
 	$col_dialog	= $main::mw->ColourChooser
@@ -140,7 +142,7 @@ sub set_col
 sub get_home
 {
 	my $home = undef;
-	$home = $ENV{HOME}		if defined $ENV{HOME} && lc $^O ne 'mswin32';
+	$home = $ENV{HOME}			if defined $ENV{HOME} && lc $^O ne 'mswin32';
 	$home = $ENV{USERPROFILE}	if lc $^O eq 'mswin32';
 
 
@@ -178,10 +180,10 @@ sub display
 		-height => 10,
 	)->pack
 	(
-		-side => 'top',
-		-expand=> 1,
-		-fill => 'both',
-		-anchor => 'n'
+		-side=> 	'top',
+		-expand=> 	1,
+		-fill=> 	'both',
+		-anchor=>	'n'
 	);
 
 	for my $name(&list)
@@ -191,61 +193,61 @@ sub display
 
 		my $text = $frame_top -> ROText
 		(
-			-height=>	1,
-			-width=>	20,
+			-height=>		1,
+			-width=>		20,
 			-background=>	$hash{$name}{bgcol},
 			-foreground=>	$hash{$name}{fgcol},
-			-font=>		$hash{$name}{font},
+			-font=>			$hash{$name}{font},
 		)
 		-> grid
 		(
-			-row=>$row,
-			-column=>$col++,
-			-sticky=>'nw',
-			-padx =>2
+			-row=>		$row,
+			-column=>	$col++,
+			-sticky=>	'nw',
+			-padx=>		2
 		);
 		$text->Contents($name);
 
 		$frame_top -> Button
 		(
-			-text=>		"Font",
-			-background=>	$hash{$name}{bgcol},
-			-foreground=>	$hash{$name}{fgcol},
-			-font=>		$hash{$name}{font},
-			-activebackground=> 'cyan',
-			-command => sub { &set_font($name); }
+			-text=>				"Font",
+			-background=>		$hash{$name}{bgcol},
+			-foreground=>		$hash{$name}{fgcol},
+			-font=>				$hash{$name}{font},
+			-activebackground=>	'cyan',
+			-command=> 			sub { &set_font($name); }
 		)
 		-> grid
 		(
-			-row=>$row,
-			-column=>$col++,
-			-sticky=>'nw',
-			-padx =>2
+			-row=>		$row,
+			-column=>	$col++,
+			-sticky=>	'nw',
+			-padx=>		2
 		);
 
 		$frame_top -> Button
 		(
-			-text=>"FG Colour",
-			-background=>	$hash{$name}{bgcol},
-			-foreground=>	$hash{$name}{fgcol},
-			-font=>		$hash{$name}{font},
+			-text=>				"FG Colour",
+			-background=>		$hash{$name}{bgcol},
+			-foreground=>		$hash{$name}{fgcol},
+			-font=>				$hash{$name}{font},
 			-activebackground=> 'cyan',
-			-command => sub { &set_col($name, 'fgcol');  }
+			-command=>	 		sub { &set_col($name, 'fgcol');  }
 		)-> grid
 		(
-			-row=>$row,
-			-column=>$col++,
-			-sticky=>'nw',
-			-padx =>2
+			-row=>		$row,
+			-column=>	$col++,
+			-sticky=>	'nw',
+			-padx=>		2
 		);
 		$frame_top -> Button
 		(
-			-text=>"BG Colour",
-			-background=>	$hash{$name}{bgcol},
-			-foreground=>	$hash{$name}{fgcol},
-			-font=>		$hash{$name}{font},
+			-text=>				"BG Colour",
+			-background=>		$hash{$name}{bgcol},
+			-foreground=>		$hash{$name}{fgcol},
+			-font=>				$hash{$name}{font},
 			-activebackground=> 'cyan',
-			-command => sub { &set_col($name, 'bgcol'); }
+			-command=>			sub { &set_col($name, 'bgcol'); }
 		)-> grid
 		(
 			-row=>		$row,
@@ -257,9 +259,9 @@ sub display
 	}
 	$frame_top -> Button
 	(
-		-text=>			'Close',
+		-text=>				'Close',
 		-activebackground=>	'white',
-		-command=>		sub { destroy $main; }
+		-command=>			sub { destroy $main; }
 	)
 	-> grid
 	(
@@ -268,6 +270,5 @@ sub display
 		-sticky=>	'nw'
 	);
 }
-
 
 1;

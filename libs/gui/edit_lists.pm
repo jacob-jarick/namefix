@@ -90,7 +90,7 @@ sub word_list
 
         if(-f $config::killwords_file)
         {
-                $dtext = &readsjf("$config::killwords_file");
+                $dtext = &misc::readsjf("$config::killwords_file");
         }
 	else
         {

@@ -48,14 +48,8 @@ sub draw
 
 	if(defined $main::log_box) # plog can occur before gui is ready
 	{
-		$main::log_box->tag('configure', 'message',	-font=>$style::hash{message}{font},	-foreground=>$style::hash{message}{fgcol}, 	-background=>$style::hash{message}{bgcol});
-		$main::log_box->tag('configure', 'error',	-font=>$style::hash{error}{font},	-foreground=>$style::hash{error}{fgcol},	-background=>$style::hash{error}{bgcol});
-		$main::log_box->tag('configure', 'warning',	-font=>$style::hash{warning}{font},	-foreground=>$style::hash{warning}{fgcol},	-background=>$style::hash{warning}{bgcol});
-		$main::log_box->tag('configure', 'info',	-font=>$style::hash{info}{font},	-foreground=>$style::hash{info}{fgcol},		-background=>$style::hash{info}{bgcol});
-		$main::log_box->tag('configure', 'normal');
-
-		&main::quit("draw: \$hash{$k} is undef \$k = $k")	if ! defined $hash{$k};
-		&main::quit("draw: \$hash{$k}{level} is undef")		if ! defined $hash{$k}{level};
+		&main::quit("draw: \$hash{$k} is undef \$k = $k")		if ! defined $hash{$k};
+		&main::quit("draw: \$hash{$k}{level} is undef")			if ! defined $hash{$k}{level};
 		&main::quit("draw: \$tags{$hash{$k}{level}} is undef")	if ! defined $tags{$hash{$k}{level}};
 
 		my $mode = $tags{$hash{$k}{level}};
@@ -87,6 +81,53 @@ sub prune
 	for my $k (sort{$a <=> $b} keys %hash)
 	{
 		&draw($k);
+	}
+}
+
+sub configure_tags
+{
+	# Configure log box tags with current styles
+	if(defined $main::log_box)
+	{
+		$main::log_box->tag('configure', 'message',	
+			-font=>($style::hash{message}{font} || 'TkDefaultFont'),
+			-foreground=>($style::hash{message}{fgcol} || '#ffffffff'), 	
+			-background=>($style::hash{message}{bgcol} || '#000000ff'));
+
+		$main::log_box->tag('configure', 'error',	
+			-font=>($style::hash{error}{font} || 'TkDefaultFont'),	
+			-foreground=>($style::hash{error}{fgcol} || '#ffffffff'),	
+			-background=>($style::hash{error}{bgcol} || '#ff0000ff'));
+
+		$main::log_box->tag('configure', 'warning',	
+			-font=>($style::hash{warning}{font} || 'TkDefaultFont'),	
+			-foreground=>($style::hash{warning}{fgcol} || '#ffffffff'),	
+			-background=>($style::hash{warning}{bgcol} || '#ff8800ff'));
+
+		$main::log_box->tag('configure', 'info',	
+			-font=>($style::hash{info}{font} || 'TkDefaultFont'),	
+			-foreground=>($style::hash{info}{fgcol} || '#ffffffff'),		
+			-background=>($style::hash{info}{bgcol} || '#2200ffff'));
+
+		$main::log_box->tag('configure', 'normal');
+	}
+}
+
+sub refresh
+{
+	# Clear and redraw log box with current styles
+	if(defined $main::log_box)
+	{
+		# Reconfigure tags with new styles
+		&configure_tags;
+		
+		$main::log_box->Contents([]); # clear log box for redraw
+		
+		# redraw all log entries with updated styles
+		for my $k (sort{$a <=> $b} keys %hash)
+		{
+			&draw($k);
+		}
 	}
 }
 

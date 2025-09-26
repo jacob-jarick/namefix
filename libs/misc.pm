@@ -55,6 +55,12 @@ sub plog
 		open(FILE, ">>$main::log_file");
 		print FILE "$text\n";
 		close(FILE);
+		
+		# Add to GUI log with styling if not in CLI mode
+		if(!$config::CLI) {
+			&log::add($level, "$text\n");
+		}
+		
 		if($config::hash{LOG_STDOUT}{value})
 		{
 			print "$text\n";
@@ -63,6 +69,10 @@ sub plog
 
 	if($level == 0 && $config::hash{ERROR_NOTIFY}{value})
 	{
+		# Add error to GUI log with styling if not in CLI mode
+		if(!$config::CLI) {
+			&log::add($level, "$text\n");
+		}
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
 	return 1;

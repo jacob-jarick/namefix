@@ -44,19 +44,20 @@ InitPluginsDir
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
-  ; Put file there (excluding installers directory)
+  ; Dir Includes
   File /r "..\data"
-  File /r "..\extra"
   File /r "..\libs"
-  File /r "..\tools"
-  ; Explicitly excluding: installers directory, .git, .vscode, etc.
-  File  "..\namefix*.*"
-  File  "..\*.pl"
+  
+  ; Explicit file includes
+  SetOutPath $INSTDIR\extra
+  File  "..\extra\*.reg"
+  SetOutPath $INSTDIR
+  File  "..\namefix.exe"
+  File  "..\namefix-gui.exe"
   File  "..\LICENSE"
   File  "..\README.md"
-  File  "..\jpgtest.*"
-
-
+  File  "..\builddate.txt"
+  
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\NSIS_namefix.pl "Install_Dir" "$INSTDIR"
 

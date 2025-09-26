@@ -229,6 +229,9 @@ our $log_box = $frm_bottom3->Scrolled
 );
 $log_box->Contents();
 
+# Configure log text tags with styles
+&log::configure_tags;
+
 # Tie the log file to the log box
 our $log_file_pos;
 $log_file_pos = -s $main::log_file if -f $main::log_file; # Get initial size
@@ -236,18 +239,19 @@ $log_file_pos = 0 if !defined $log_file_pos;
 
 sub tail_log_file
 {
-    if (-f $main::log_file)
-    {
-        open my $fh, '<', $main::log_file or return;
-        seek $fh, $log_file_pos, 0;
-        while (my $line = <$fh>)
-        {
-            $main::log_box->insert('end', $line);
-            $main::log_box->see('end');
-        }
-        $log_file_pos = tell $fh;
-        close $fh;
-    }
+    # Disabled - log messages now go through log::add with proper styling
+    # if (-f $main::log_file)
+    # {
+    #     open my $fh, '<', $main::log_file or return;
+    #     seek $fh, $log_file_pos, 0;
+    #     while (my $line = <$fh>)
+    #     {
+    #         $main::log_box->insert('end', $line);
+    #         $main::log_box->see('end');
+    #     }
+    #     $log_file_pos = tell $fh;
+    #     close $fh;
+    # }
     # Reschedule the next check
     $main::mw->after(1000, \&tail_log_file);
 }
