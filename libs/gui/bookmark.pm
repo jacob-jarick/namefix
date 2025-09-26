@@ -128,15 +128,16 @@ sub list_bookmarks
 	my $bname = '';
 	my $bpath = '';
 
+	%bmhash = ();
+
 	$bookmarks -> separator();
 
 	if(!-f $config::bookmark_file)
 	{
-		&misc::plog(0, "bookmark::bm_list_bookmarks can't find file $config::bookmark_file");
+		&misc::plog(2, "bookmark::bm_list_bookmarks bookmarks file not found, creating emptyfile $config::bookmark_file");
+		&misc::null_file($config::bookmark_file);
 		return;
 	}
-
-	%bmhash = ();
 
 	for my $line(&misc::readf($config::bookmark_file))
 	{

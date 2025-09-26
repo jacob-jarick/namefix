@@ -8,68 +8,68 @@ use Cwd;
 use Data::Dumper::Concise;
 use FindBin qw($Bin);
 
-use misc;
+require misc;
 
-our $dir		= cwd;
-our $cwd		= cwd;
-our $hlist_cwd		= cwd;
+our $dir				= cwd;
+our $cwd				= cwd;
+our $hlist_cwd			= cwd;
 
-our $version 		= '4.1.4';
-our $folderimage 	= '';
-our $fileimage   	= '';
-our $dialog_font	= '';
-our $home		= &misc::get_home;
+our $version 			= '4.1.5';
+our $folderimage 		= '';
+our $fileimage   		= '';
+our $dialog_font		= '';
+our $home				= &misc::get_home;
 
 # File locations
-our $thanks		= "$Bin/data/txt/thanks.txt";
-our $todo		= "$Bin/data/txt/todo.txt";
-our $about		= "$Bin/data/txt/about.txt";
-our $links		= "$Bin/data/txt/links.txt";
-our $changelog		= "$Bin/data/txt/changelog.txt";;
-our $mempic		= "$Bin/data/mem.jpg";
-our $fonts_file		= "$home/.namefix.pl/fonts.ini";
-our $bookmark_file	= "$home/.namefix.pl/bookmarks.txt";
-our $undo_cur_file	= "$home/.namefix.pl/undo.current.filenames.txt";
-our $undo_pre_file	= "$home/.namefix.pl/undo.previous.filenames.txt";
-our $undo_dir_file	= "$home/.namefix.pl/undo.dir.txt";
+our $thanks				= "$Bin/data/txt/thanks.txt";
+our $todo				= "$Bin/data/txt/todo.txt";
+our $about				= "$Bin/data/txt/about.txt";
+our $links				= "$Bin/data/txt/links.txt";
+our $changelog			= "$Bin/data/txt/changelog.txt";
+our $mempic				= "$Bin/data/mem.jpg";
+our $fonts_file			= "$home/.namefix.pl/fonts.ini";
+our $bookmark_file		= "$home/.namefix.pl/bookmarks.txt";
+our $undo_cur_file		= "$home/.namefix.pl/undo.current.filenames.txt";
+our $undo_pre_file		= "$home/.namefix.pl/undo.previous.filenames.txt";
+our $undo_dir_file		= "$home/.namefix.pl/undo.dir.txt";
 
 # system internal FLAGS
-our $CLI		= 0;
-our $FOUND_TMP	 	= 0;
-our $LISTING		= 0;
-our $PREVIEW		= 1;
-our $RUN		= 0;
-our $STOP		= 0;
-our $MR_DONE		= 0;	# a manual rename has occured
-our $UNDO		= 0;
-our $SUGGEST_FSFIX 	= 0;	# suggest using fsfix var
+our $CLI				= 0;
+our $FOUND_TMP	 		= 0;
+our $LISTING			= 0;
+our $PREVIEW			= 1;
+our $RUN				= 0;
+our $STOP				= 0;
+our $MR_DONE			= 0;	# a manual rename has occured
+our $UNDO				= 0;
+our $SUGGEST_FSFIX		= 0;	# suggest using fsfix var
 
 # undo VARS
-our @undo_cur		= ();	# undo array - current filenames
-our @undo_pre		= ();	# undo array - previous filenames
-our $undo_dir		= '';	# directory to preform undo in
+our @undo_cur			= ();	# undo array - current filenames
+our @undo_pre			= ();	# undo array - previous filenames
+our $undo_dir			= '';	# directory to preform undo in
 
 # hlist vars
 our $hlist_newfile_row	= 0;
-our $hlist_file_row	= 1;
-our $change 		= 0;
-our $delay		= 3;		# delay
-our $update_delay	= $delay;	# initial value
-our $hlist_file		= '';
-our $hlist_file_new	= '';
+our $hlist_file_row		= 1;
+our $change 			= 0;
+our $delay				= 3;		# delay
+our $update_delay		= $delay;	# initial value
+our $hlist_file			= '';
+our $hlist_file_new		= '';
 
 # misc vars
-our $tags_rm		= 0;	# counter for number of tags removed
-our @find_arr		= ();
-our $tmpfilelist 	= '';
-our $last_recr_dir 	= '';
+our $tags_rm			= 0;	# counter for number of tags removed
+our @find_arr			= ();
+our $tmpfilelist 		= '';
+our $last_recr_dir 		= '';
 
 # writable_extensions - stolen from mp3::tag and tidied
-our @id3v2_exts = ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
-our $id3_ext_regex = join('|', @id3v2_exts);
+our @id3v2_exts 		= ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
+our $id3_ext_regex 		= join('|', @id3v2_exts);
 
-our %hash	= ();
-our $hash_tsv	= &misc::get_home."/.namefix.pl/config_hash.tsv";
+our %hash				= ();
+our $hash_tsv			= &misc::get_home."/.namefix.pl/config_hash.tsv";
 
 #############################################################################################
 # MAIN TAB

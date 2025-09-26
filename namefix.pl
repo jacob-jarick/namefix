@@ -479,7 +479,7 @@ $frm_bottom -> Button
 	{
 		if($config::STOP)	# stub
 		{
-			&misc::plog(1, "namefix.pl: STOP flag allready enabled, turning off LISTING flag as well");
+			&misc::plog(1, "namefix.pl: STOP flag already enabled, turning off LISTING flag as well");
 			$config::LISTING = 0;
 		}
 		&config::halt;
@@ -580,7 +580,7 @@ my $clean_chk = $frm_left->Checkbutton
 $balloon->attach
 (
 	$clean_chk,
-	-msg => "Preform general cleanups on filename.\n\nNote: Leave on unless doing very specific renaming."
+	-msg => "Perform general cleanups on filename.\n\nNote: Leave on unless doing very specific renaming."
 );
 
 my $case_chk = $frm_left -> Checkbutton

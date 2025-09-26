@@ -325,7 +325,7 @@ sub edit_prefs
 	$main::balloon->attach
 	(
 		$overwrite_chk,
-		-msg => "Overwrite: Preform rename without checking if new filename exists.\n\nThis Option is not saved, Please be carefull witht this option"
+		-msg => "Overwrite: Perform rename without checking if new filename exists.\n\nThis Option is not saved, Please be careful with this option"
 	);
 
 	# ----------------------------------------------------------------------------------------------------------
@@ -457,7 +457,7 @@ sub edit_prefs
 
 sub save_fonts
 {
-	open(FILE, ">$config::fonts_file") or &main::quit("ERROR: couldnt open $config::fonts_file to write to\n$!\n");
+	open(FILE, ">$config::fonts_file") or &main::quit("ERROR: couldn't open $config::fonts_file to write to\n$!\n");
 
 	print FILE
 

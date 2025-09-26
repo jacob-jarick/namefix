@@ -227,7 +227,7 @@ sub fix
 		{
 			if(!&fn_rename($file, $newfile) )
 			{
-				&misc::plog(0, "fixname: '$newfile' cannot preform rename, file allready exists");
+				&misc::plog(0, "fixname: '$newfile' cannot perform rename, file already exists");
 				return 0;
 			}
 		}
@@ -249,7 +249,7 @@ sub fix
 
 #==========================================================================================================================================
 
-# returns 1 if succesfull rename, errors are printed to console
+# returns 1 if successful rename, errors are printed to console
 
 # this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::hash{OVERWRITE}{value}) "
 # bloody fat32 returns positive when we don't want it, ie case correcting

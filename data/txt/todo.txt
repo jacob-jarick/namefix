@@ -2,22 +2,7 @@
 - Bugs -
 ========
 
-* FIXED - pruning log window caused crash.
-
-* FIXED (but needs more testing) undo gui broken - undo is also likely broken.
-
-* FIXED - when renaming (not preview but rename) hlist shows newfile -> newfile and not file -> newfile
-  but log prints info correctly.
-
-* FIXED - block rename broken - subs are very ugly.
-
-* FIXED - applying preview in recursive mode then selecting manual rename on same file crashes out.
-
-* FIXED - apply preview fails on recursive
-
-* FIXED - guessing tags rename works
-  but does not show new info on list when doing applying
-  but does show on preview (weird huh)
+* None currently known or reported
 
 ==============
 =- GUI Todo -=
@@ -26,20 +11,22 @@
 High:
 
 * generate filename from id3 tags
-  for each tag:
-
-
 * make filter and directory text box resize with the main window.
 
 Medium:
 
 * jpeg and other picture tag support.
 
+* JPEG metadata stripping for privacy (remove GPS, camera info, EXIF data)
+  - Use Image::ExifTool library (avoid Tk::JPEG dependencies)
+  - CLI options: --strip-exif, --strip-gps, --strip-privacy
+  - GUI: checkbox option in misc tab with granular controls
+  - Risk: Additional library dependency for Windows PP deployment
+  - Consider external tool integration (exiftool.exe) as alternative
+
 Low:
 
-* rename all flags nicely and uppercase - mostly done.
-* multi level undo
-* revisting fucking utf8 issues.
+* multi level undo - dismissed, not really a scalable idea for file renaming.
 
 ==============
 =- CLI Todo -=

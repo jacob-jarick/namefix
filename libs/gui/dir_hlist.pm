@@ -228,7 +228,7 @@ sub draw_list
 
 			if(!&fixname::fn_rename( $file_old, $file_new) )
 			{
-				&misc::plog(0, "ERROR Apply Preview: '$file_old' cannot preform rename, new file '$file_new' allready exists\n");
+				&misc::plog(0, "ERROR Apply Preview: '$file_old' cannot perform rename, new file '$file_new' already exists\n");
 			}
 			else
 			{
@@ -239,7 +239,7 @@ sub draw_list
 					$config::hlist_file_row,
 					-text => $file_new
 				);
-				# TODO update info hash
+				# Update info hash with new filename
 				$info{$hlist_selection}{filename} = $info{$hlist_selection}{new_filename};
 			}
        		}

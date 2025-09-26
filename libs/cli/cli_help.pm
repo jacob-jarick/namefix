@@ -42,7 +42,7 @@ my $txt_help =
 
 my $txt_main = "Main Options:
 
-!	--rename		preform rename
+!	--rename		perform rename
 	--ren			enable once you are happy with preview.
 				Without this option namefix defaults to
 				preview mode.
@@ -161,7 +161,7 @@ my $txt_advance =
 D	--dir			process directories
 				Warning: Use with caution
 
-	--overwrite		Preform rename without checking if new filename exists.
+	--overwrite		Perform rename without checking if new filename exists.
 				Please be careful with this option
 
 A	--all-files		Process all files, not just media files.

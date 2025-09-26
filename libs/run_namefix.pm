@@ -45,12 +45,12 @@ sub run
 {
 	if($config::LISTING)
 	{
-		&misc::plog(0, "sub run::namefix: error, a listing is currently being preformed - aborting rename");
+		&misc::plog(0, "sub run::namefix: error, a listing is currently being performed - aborting rename");
 		return 0;
 	}
 	elsif($config::RUN)
 	{
-		&misc::plog(0, "sub run::namefix: error, a rename is currently being preformed - aborting rename");
+		&misc::plog(0, "sub run::namefix: error, a rename is currently being performed - aborting rename");
 		return 0;
 	}
 

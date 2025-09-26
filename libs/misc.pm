@@ -99,7 +99,7 @@ sub null_file
 {
         my $file = shift;
 
-        open(FILE, ">$file") or &main::quit("ERROR: sub null_file, Couldnt open $file to write to. $!");
+        open(FILE, ">$file") or &main::quit("ERROR: sub null_file, Couldn't open $file to write to. $!");
         close(FILE);
 }
 
@@ -114,7 +114,7 @@ sub save_file
         $string =~ s/^\n//g;		# no blank line @ start of file
         $string =~ s/\n\n+/\n/g;	# no blank lines in file
 
-        open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldnt open $file to write to. $!");
+        open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldn't open $file to write to. $!");
         print FILE $string;
         close(FILE);
 }
@@ -124,7 +124,7 @@ sub file_append
 	my $file	= shift;
 	my $string	= shift;
 
-	open(FILE, ">>$file") or &main::quit("ERROR: Couldnt open $file to append to. $!");
+	open(FILE, ">>$file") or &main::quit("ERROR: Couldn't open $file to append to. $!");
         print FILE $string;
         close(FILE);
 }
@@ -143,7 +143,7 @@ sub readf
 		return ();
         }
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
 
@@ -162,7 +162,7 @@ sub readf_clean
 {
         my $file = shift;
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
 
@@ -188,7 +188,7 @@ sub readsf
 {
         my $file = shift;
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
 
@@ -208,7 +208,7 @@ sub readsf
 sub readsjf
 {
 	my $file = shift;
-        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
         $file = join('', sort @file);
@@ -226,7 +226,7 @@ sub readjf
 {
         my $file = shift;
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldnt open $file to read.\n");
+        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
         my @file = <FILE>;
         close(FILE);
         $file = join('', @file);
@@ -244,25 +244,25 @@ sub clr_no_save
 {
 	# clear options that are never saved
 
-        $config::hash{replace}{value}		= 0;
-        $config::hash{INS_START}{value}		= 0;
-        $config::end_a			= 0;
-	$config::ins_str_old         	= '';
-        $config::ins_str         	= '';
-        $config::ins_front_str		= '';
-        $config::ins_end_str		= '';
+	$config::hash{replace}{value}		= 0;
+	$config::hash{INS_START}{value}		= 0;
+	$config::end_a						= 0;
+	$config::ins_str_old         		= '';
+	$config::ins_str         			= '';
+	$config::ins_front_str				= '';
+	$config::ins_end_str				= '';
 
-	$config::id3_gen_str 		= 'Metal';
-	$config::id3_art_str		= '';
-	$config::id3_alb_str		= '';
-	$config::id3_com_str		= '';
-	$config::id3_year_str 		= '';
+	$config::id3_gen_str 				= 'Metal';
+	$config::id3_art_str				= '';
+	$config::id3_alb_str				= '';
+	$config::id3_com_str				= '';
+	$config::id3_year_str 				= '';
 
 	$config::hash{AUDIO_SET_ARTIST}{value}	= 0;
 	$config::hash{AUDIO_SET_ALBUM}{value}	= 0;
 	$config::hash{AUDIO_SET_COMMENT}{value}	= 0;
 	$config::hash{AUDIO_SET_GENRE}{value} 	= 0;
-        $config::hash{AUDIO_SET_YEAR}{value} 	= 0;
+    $config::hash{AUDIO_SET_YEAR}{value} 	= 0;
 	$config::hash{RM_AUDIO_TAGS}{value}		= 0;
 }
 
@@ -270,16 +270,9 @@ sub clr_no_save
 # Escape strings for use in regexp - wrote my own cos uri is fucked.
 #--------------------------------------------------------------------------------------------------------------
 
-# TODO remove
-sub escape_string
-{
-	my $s = shift;
-	return quotemeta $s;
-}
-
 sub is_in_array
 {
-	my $string	= shift;
+	my $string		= shift;
 	my $array_ref	= shift;
 
 	return 1 if grep { $_ eq $string} @$array_ref;
@@ -318,8 +311,8 @@ sub get_file_path
 sub get_file_parent_dir
 {
 	my $file_path	= shift;
-	$file_path	= &get_file_path($file_path);
-	my @tmp		= split(/\//, $file_path);
+	$file_path		= &get_file_path($file_path);
+	my @tmp			= split(/\//, $file_path);
 	my $file_name	= splice @tmp , $#tmp, 1;
 	my $file_dir	= join('/', @tmp);
 
@@ -329,8 +322,8 @@ sub get_file_parent_dir
 sub get_file_name
 {
 	my $file_path	= shift;
-	$file_path	= &get_file_path($file_path);
-	my @tmp		= split(/\//, $file_path);
+	$file_path		= &get_file_path($file_path);
+	my @tmp			= split(/\//, $file_path);
 
 	return $tmp[$#tmp];
 }
@@ -341,8 +334,8 @@ sub get_file_ext
 
 	return undef if !-f $file_path;
 
-	$file_path	= &get_file_path($file_path);
-	my @tmp		= split(/\//, $file_path);
+	$file_path		= &get_file_path($file_path);
+	my @tmp			= split(/\//, $file_path);
 	my $file_name	= splice @tmp , $#tmp, 1;
 
 	if ( $file_name =~ /^(.+)\.(.+?)$/)

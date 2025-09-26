@@ -280,12 +280,12 @@ sub br
 
 	if($main::LISTING)
 	{
-		&misc::plog(0, "sub br: error, a listing is currently being preformed - aborting rename");
+		&misc::plog(0, "sub br: error, a listing is currently being performed - aborting rename");
 		return 0;
 	}
 	elsif($config::RUN)
 	{
-		&misc::plog(0, "sub br: error, a rename is currently being preformed - aborting rename");
+		&misc::plog(0, "sub br: error, a rename is currently being performed - aborting rename");
 		return 0;
 	}
 
@@ -358,7 +358,7 @@ sub br
 			push @config::undo_cur, "$dir/$file_new";
 			push @new_a, $file_old;
 			push @new_b, $file_new;
-			&misc::plog(2, "block rename preformed");
+			&misc::plog(2, "block rename performed");
 			next;
 		}
 		&misc::plog(0, "block rename failed !: '$file_old' -> '$file_new'");

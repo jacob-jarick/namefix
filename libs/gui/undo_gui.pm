@@ -29,7 +29,7 @@ sub display
 
         $top -> Button
 	(
-        	-text=>'Preform Undo',
+        	-text=>'Perform Undo',
         	-activebackground => 'white',
         	-command => sub
 		{
