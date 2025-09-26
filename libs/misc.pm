@@ -30,7 +30,20 @@ sub plog
 	# get caller
 	my $subroutine = (caller(1))[3] || 'main'; # Get the calling subroutine name
 
-	$text = "[$date_time] [$subroutine] $text";
+	# Add level information to message
+	my $level_text;
+	if ($level == 0) {
+		$level_text = "ERROR";
+	} elsif ($level == 1) {
+		$level_text = "WARN";
+	} elsif ($level == 2) {
+		$level_text = "INFO";
+	} else {
+		my $debug_level = $level - 2;
+		$level_text = "DEBUG($debug_level)";
+	}
+
+	$text = "[$date_time] [$subroutine] [$level_text] $text";
 
 	# CLI mode
 	if($config::CLI)

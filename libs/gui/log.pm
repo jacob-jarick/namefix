@@ -13,12 +13,12 @@ our %hash	= ();
 our $size	= 100;
 
 our %tags = ();
-$tags{0}	= 'error';
-$tags{1}	= 'warning';
-$tags{2}	= 'message';
-$tags{3}	= 'info';
-$tags{4}	= 'info';
-$tags{5}	= 'info';
+$tags{0}	= 'error';    # ERROR
+$tags{1}	= 'warning';  # WARN
+$tags{2}	= 'info';     # INFO
+$tags{3}	= 'message';  # DEBUG(1)
+$tags{4}	= 'message';  # DEBUG(2)
+$tags{5}	= 'message';  # DEBUG(3)
 
 
 sub add
@@ -26,9 +26,9 @@ sub add
 	my $level	= shift;
 	my $text	= shift;
 
-	&main::quit("add: \$level is undef") if ! defined $level;
-	&main::quit("add: \$level '$level' is not a number") if $level !~ /^\d+$/;
-	&main::quit("add: \$text is undef") if ! defined $text;
+	&main::quit("add: \$level is undef") 					if ! defined $level;
+	&main::quit("add: \$level '$level' is not a number")	if $level !~ /^\d+$/;
+	&main::quit("add: \$text is undef")						if ! defined $text;
 
 	&prune	if (scalar keys %hash) > $size;
 
