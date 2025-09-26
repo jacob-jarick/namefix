@@ -6,3 +6,6 @@ tools/1/Movies/ACCORDS_[2010].AVI
 gpt.flatten.sh
 namefix.txt
 error.txt
+
+# Ignore temporary workspace docs and scratch files
+temp/
