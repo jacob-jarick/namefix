@@ -154,7 +154,7 @@ namefix-cli.pl --regexp --remove="(19|20)\d{2}" --case-sp --rename /path/to/Movi
 
 # Truncate Options - Multiple patterns available  
 namefix-cli.pl --trunc=50 --trunc-pat=0 --rename /path/to/Documents/           # Truncate from start (default)
-namefix-cli.pl --trunc=50 --trunc-pat=1 --trunc-ins="..." --rename /path/to/  # Truncate from middle with insertion
+namefix-cli.pl --trunc=50 --trunc-pat=1 --trunc-ins="..." --rename /path/to/   # Truncate from middle with insertion
 namefix-cli.pl --trunc=50 --trunc-pat=2 --rename /path/to/Files/               # Truncate from end
 
 # Digit Processing Options
@@ -171,7 +171,7 @@ namefix-cli.pl --uc --rename /path/to/UPPERCASE/                               #
 namefix-cli.pl --lc --clean --rename /path/to/lowercase/                       # Convert to lowercase
 
 # Advanced Filtering & Processing
-namefix-cli.pl --all-files --filt="vacation" --clean --rename /path/to/Files/ # Process all files containing "vacation"
+namefix-cli.pl --all-files --filt="vacation" --clean --rename /path/to/Files/  # Process all files containing "vacation"
 namefix-cli.pl --filt-regexp --filt="IMG_\d+" --enum --rename /path/to/Photos/ # Regex filtering with enumeration
 namefix-cli.pl --media-types="mp4|mkv|avi" --clean --rename /path/to/Videos/   # Process only specific video types
 ```
