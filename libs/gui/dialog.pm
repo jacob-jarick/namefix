@@ -8,6 +8,11 @@ use File::stat;
 use Time::localtime;
 use File::Find;
 
+# Add libs directory to path for jpegexif module
+use FindBin;
+use lib "$FindBin::Bin/../../libs";
+use jpegexif;
+
 #--------------------------------------------------------------------------------------------------------------
 # Show dialog
 #--------------------------------------------------------------------------------------------------------------
@@ -85,7 +90,7 @@ sub show_file_prop
         -scrollbars=>   'osoe',
 		-wrap=>         'none',
 		-font=>         $config::dialog_font,
-		-height=>      5,
+		-height=>      15,
 	)
 	-> grid
 	(
@@ -110,27 +115,57 @@ sub show_file_prop
 	my @txt = ();
 	my $txt_str = '';
 
+	# Handle files vs directories differently (already validated at line 75)
 	if(-f $ff)
 	{
+		# File: show size and date
 		my $size = stat($ff)->size;
 		my $ff_date = ctime(stat($ff)->mtime);
 
 		@txt =
 		(
-			"File:		$ff",
-			"Size:		$size",
-			"Date Created:	$ff_date",
+			"File:          $ff",
+			"Size:          $size",
+			"Date Created:  $ff_date",
 			"",
 		);
+
+		# If it's a JPEG and EXIF module is available, show EXIF data
+		if($ff =~ /\.jpe?g$/i && is_exif_available())
+		{
+			if(has_exif_data($ff))
+			{
+				push @txt, "EXIF Data:";
+				push @txt, "-" x 40;
+				
+				my $exif_tags = list_exif_tags($ff);
+				for my $tag (sort keys %$exif_tags)
+				{
+					my $value = $exif_tags->{$tag} // '';
+					# Truncate very long values for display
+					if(length($value) > 50)
+					{
+						$value = substr($value, 0, 47) . "...";
+					}
+					push @txt, sprintf("%-20s %s", $tag . ":", $value);
+				}
+			}
+			else
+			{
+				push @txt, "EXIF Data:         None found";
+			}
+			push @txt, "";
+		}
 	}
 	else
 	{
+		# Directory: show only date (no size info)
 		my $ff_date = ctime(stat($ff)->mtime);
 
 		@txt =
 		(
-			"Dir:		$ff",
-			"Date Created:	$ff_date",
+			"Dir:           $ff",
+			"Date Created:  $ff_date",
 			"",
 		);
 	}
