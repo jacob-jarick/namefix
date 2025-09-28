@@ -76,17 +76,25 @@ sub has_exif_data
     my $exifTool = Image::ExifTool->new();
     my $info = $exifTool->ImageInfo($filepath);
     
-    # Get writable tags and check if any exist in this file
-    my @writable_tags = $exifTool->GetWritableTags();
-    my %writable_lookup = map { $_ => 1 } @writable_tags;
+    # Count metadata tags, excluding basic file info
+    # These are typically non-removable file structure tags
+    my @excluded_tags = qw(
+        FileSize FileName Directory FileModifyDate FileAccessDate FileCreateDate
+        FilePermissions MIMEType FileType FileTypeExtension ExifByteOrder
+        ImageWidth ImageHeight EncodingProcess BitsPerSample ColorComponents
+        YCbCrSubSampling
+    );
+    my %excluded = map { $_ => 1 } @excluded_tags;
     
-    # Check if any writable tags exist
-    for my $tag (keys %$info) 
-    {
-        return 1 if $writable_lookup{$tag};
+    # Count tags that are likely removable EXIF metadata
+    my $metadata_count = 0;
+    for my $tag (keys %$info) {
+        next if $excluded{$tag};
+        $metadata_count++;
     }
     
-    return 0;
+    # If we have metadata beyond basic file info, assume it's removable
+    return $metadata_count > 0;
 }
 
 =head2 list_exif_tags($filepath)
@@ -108,15 +116,21 @@ sub list_exif_tags
     my $exifTool = Image::ExifTool->new();
     my $info = $exifTool->ImageInfo($filepath);
     
-    # Get writable tags and filter results
-    my @writable_tags = $exifTool->GetWritableTags();
-    my %writable_lookup = map { $_ => 1 } @writable_tags;
+    # Return metadata tags, excluding basic file structure info
+    my @excluded_tags = qw(
+        FileSize FileName Directory FileModifyDate FileAccessDate FileCreateDate
+        FilePermissions MIMEType FileType FileTypeExtension ExifByteOrder
+        ImageWidth ImageHeight EncodingProcess BitsPerSample ColorComponents
+        YCbCrSubSampling
+    );
+    my %excluded = map { $_ => 1 } @excluded_tags;
     
-    # Get only writable tags present in the file
+    # Get metadata tags (potentially removable)
     my %tags_found = ();
     for my $tag (keys %$info) 
     {
-        $tags_found{$tag} = $info->{$tag} if $writable_lookup{$tag};
+        next if $excluded{$tag};
+        $tags_found{$tag} = $info->{$tag};
     }
     
     return \%tags_found;
@@ -143,8 +157,8 @@ sub remove_exif_data
     
     my $exifTool = Image::ExifTool->new();
     
-    # Remove all writable EXIF data
-    $exifTool->SetNewValuesFromFile();  # Clear all tags
+    # Remove all writable EXIF/metadata tags
+    $exifTool->SetNewValue('*');  # Remove all tags
     
     # Write the cleaned file
     my $result = $exifTool->WriteInfo($filepath);

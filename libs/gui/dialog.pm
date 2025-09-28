@@ -124,9 +124,9 @@ sub show_file_prop
 
 		@txt =
 		(
-			"File:          $ff",
-			"Size:          $size",
-			"Date Created:  $ff_date",
+			"File:\t\t$ff",
+			"Size:\t\t$size",
+			"Date Created:\t$ff_date",
 			"",
 		);
 
@@ -135,10 +135,22 @@ sub show_file_prop
 		{
 			if(has_exif_data($ff))
 			{
-				push @txt, "EXIF Data:";
+				push @txt, "\nEXIF Data:";
 				push @txt, "-" x 40;
 				
 				my $exif_tags = list_exif_tags($ff);
+
+				# --- Advanced Padding for Stable Alignment ---
+				# 1. Find the length of the longest tag to determine alignment target
+				my $max_len = 0;
+				for my $tag (keys %$exif_tags) {
+					$max_len = length($tag) if length($tag) > $max_len;
+				}
+
+				# 2. Set alignment target just beyond the longest tag (at the next tab stop)
+				my $tab_width = 8;
+				my $align_col = (int($max_len / $tab_width) + 1) * $tab_width;
+
 				for my $tag (sort keys %$exif_tags)
 				{
 					my $value = $exif_tags->{$tag} // '';
@@ -147,12 +159,19 @@ sub show_file_prop
 					{
 						$value = substr($value, 0, 47) . "...";
 					}
-					push @txt, sprintf("%-20s %s", $tag . ":", $value);
+					
+					# 3. Calculate padding using a mix of tabs and spaces
+					my $len = length($tag);
+					my $spaces_to_align = $align_col - $len;
+					my $padding = "\t"; # Always start with at least one tab
+					if ($spaces_to_align > $tab_width) 
+{
+						# If more than one tab stop away, add more tabs
+						$padding .= "\t" x int(($spaces_to_align - 1) / $tab_width);
+					}
+
+					push @txt, "$tag$padding$value";
 				}
-			}
-			else
-			{
-				push @txt, "EXIF Data:         None found";
 			}
 			push @txt, "";
 		}
@@ -164,8 +183,8 @@ sub show_file_prop
 
 		@txt =
 		(
-			"Dir:           $ff",
-			"Date Created:  $ff_date",
+			"Dir:\t\t$ff",
+			"Date Created:\t$ff_date",
 			"",
 		);
 	}
