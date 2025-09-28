@@ -22,28 +22,28 @@ sub fix
 {
 	return 0 if $config::STOP == 1;
 
-        # -----------------------------------------
+    # -----------------------------------------
 	# Vars
-        # -----------------------------------------
+    # -----------------------------------------
 
 	my $file 	= shift;
 	my $path	= '';
 
-	&main::quit ("fixname::fix : ERROR file is undef")			if ! defined $file;
-	&main::quit ("fixname::fix : ERROR file eq ''")				if $file eq '';
-	&main::quit ("fixname::fix : ERROR file '$file' isn't dir/file")		if !-d $file && !-f $file;
+	&main::quit ("fixname::fix : ERROR file is undef")		        	if ! defined $file;
+	&main::quit ("fixname::fix : ERROR file eq ''")			        	if $file eq '';
+	&main::quit ("fixname::fix : ERROR file '$file' isn't dir/file")	if !-d $file && !-f $file;
 
 	($dir, $file, $path) =  &misc::get_file_info($file);
 	chdir $dir;
 
-        my $IS_AUDIO_FILE	= 0;
-        my $tag 		= 0;
-        my $file_ext_length	= 0;
-        my $trunc_char_length	= 0;
+    my $IS_AUDIO_FILE	    = 0;
+    my $tag 		        = 0;
+    my $file_ext_length	    = 0;
+    my $trunc_char_length	= 0;
 
-        my $newfile		= $file;
-        my $file_ext		= '';
-        my $tmpfile		= '';
+    my $newfile		        = $file;
+    my $file_ext		    = '';
+    my $tmpfile		        = '';
 
 	$IS_AUDIO_FILE = 1 if $file =~ /\.$config::id3_ext_regex$/i;
 
@@ -54,24 +54,24 @@ sub fix
 		return;
 	}
 
-        # -----------------------------------------
+    # -----------------------------------------
 	# make sure file is allowed to be renamed
-        # -----------------------------------------
-        &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::hash{IGNORE_FILE_TYPE}{value});
+    # -----------------------------------------
+    &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::hash{IGNORE_FILE_TYPE}{value});
 
-        my $RENAME = 0;
+    my $RENAME = 0;
 
-        # file extionsion check
-        $RENAME = 1 if -f $file && ($config::hash{IGNORE_FILE_TYPE}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
+    # file extionsion check
+    $RENAME = 1 if -f $file && ($config::hash{IGNORE_FILE_TYPE}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
 
 	# dir check, is a directory, dir mode is enabled
-        $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
+    $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
 
 	# processing all file types & dirs
-        $RENAME = 1 if $config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value};
+    $RENAME = 1 if $config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value};
 
 	# didnt match filter
-        return if $config::hash{FILTER}{value} && !&filter::match($file);
+    return if $config::hash{FILTER}{value} && !&filter::match($file);
 
 	# rules say file shouldn't be renamed
 	return if !$RENAME;
@@ -81,10 +81,10 @@ sub fix
 
 	if
 	(
-        	$config::hash{RECURSIVE}{value} &&
-                $last_dir ne $dir &&
-                !$config::hash{PROC_DIRS}{value}
-        )
+        $config::hash{RECURSIVE}{value} &&
+        $last_dir ne $dir &&
+        !$config::hash{PROC_DIRS}{value}
+    )
 	{
 		$last_dir = $dir;
 
@@ -96,7 +96,7 @@ sub fix
 	# Fetch & process audio tags
 	# $tag = 1 only if tags are found & id3 mode is enabled
 
-	my %tags_h	= ();
+	my %tags_h	    = ();
 	my %tags_h_new	= ();
 
 	if($config::hash{id3_mode}{value} && $IS_AUDIO_FILE)
@@ -163,22 +163,22 @@ sub fix
 	}
 
 	# rm mp3 id3v2 tags
-        if($IS_AUDIO_FILE && $config::hash{RM_AUDIO_TAGS}{value})
+    if($IS_AUDIO_FILE && $config::hash{RM_AUDIO_TAGS}{value})
 	{
-        	if(!$config::PREVIEW)
+        if(!$config::PREVIEW)
 		{
-        		&mp3::rm_tags($file);
-                }
-                else
-		{
-                	$config::tags_rm++;
-                }
-        	$tag = 1;
+            &mp3::rm_tags($file);
         }
+        else
+		{
+            $config::tags_rm++;
+        }
+        $tag = 1;
+    }
 
-        # guess id3 tags
+    # guess id3 tags
 	if($config::hash{id3_guess_tag}{value} && $IS_AUDIO_FILE)
-        {
+    {
 		(
 			$tags_h_new{artist},
 			$tags_h_new{track},
@@ -187,13 +187,13 @@ sub fix
 		) = &mp3::guess_tags($newfile);
 	}
 
-        # no tags and no fn change, don't rename
+    # no tags and no fn change, don't rename
 	return if !$tag && $file eq $newfile;
 
-       	if($tag)
+    if($tag)
 	{
-       		# fn & tags haven't changed
-       		my $TAGS_CHANGED = 0;
+        # fn & tags haven't changed
+        my $TAGS_CHANGED = 0;
 		if
 		(
 			$tags_h{artist}		ne $tags_h_new{artist}	||
@@ -210,8 +210,8 @@ sub fix
 
 		if($file eq $newfile && !$TAGS_CHANGED)	# nothing happened to file or tags
 		{
-        		return;
-        	}
+            return;
+        }
 
 		$config::id3_change++ if $TAGS_CHANGED;
 
@@ -264,7 +264,7 @@ sub fn_rename
 	&main::quit("fn_rename \$file is undef\n")		if ! defined $file;
 	&main::quit("fn_rename \$file eq ''\n")			if $file eq '';
 
-	&main::quit("fn_rename \$newfile is undef\n")		if ! defined $newfile;
+    &main::quit("fn_rename \$newfile is undef\n")	if ! defined $newfile;
 	&main::quit("fn_rename \$newfile eq ''\n")		if $newfile eq '';
 
 	my $file_name = &misc::get_file_name($file);
@@ -272,7 +272,6 @@ sub fn_rename
 
 	my $dir		= &misc::get_file_parent_dir($file);
 	$newfile	= "$dir/$newfile";
-
 	my $tmpfile = $newfile.'-FSFIX';
 
 	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
@@ -332,7 +331,7 @@ sub run_fixname_subs
 	$newfile = &fn_scene			(	$newfile);				# Scenify Season & Episode numbers
 	$newfile = &fn_unscene			(	$newfile);				# Unscene Season & Episode numbers
 	$newfile = &fn_kill_sp_patterns	(	$newfile);				# remove patterns
-        $newfile = &fn_kill_cwords	(	$file,		$newfile);	# remove list of words
+    $newfile = &fn_kill_cwords	(	$file,		$newfile);	    # remove list of words
 	$newfile = &fn_replace			(1,	$newfile);				# remove user entered word (also replace if anything is specified)
 	$newfile = &fn_spaces			(1,	$newfile);				# convert underscores to spaces
 	$newfile = &fn_pad_dash			(	$newfile);				# pad -
@@ -349,13 +348,13 @@ sub run_fixname_subs
 	# Main Clean - these routines expect a fairly clean string
 	# ---------------------------------------
 
-	$newfile = &fn_intr_char		(1,	$newfile);				# International Character translation
-	$newfile = &fn_case				(1,	$newfile);				# Apply casing
-	$newfile = &fn_pad_digits_w_zero(	$newfile);				# Pad digits with 0
-	$newfile = &fn_pad_digits		(	$newfile);				# Pad NN w - , Pad digits with " - "
-        $newfile = &fn_sp_word		(1,	$file,		$newfile); 	# Specific word casing
+	$newfile = &fn_intr_char		(1,	        $newfile);	# International Character translation
+	$newfile = &fn_case				(1,	        $newfile);	# Apply casing
+	$newfile = &fn_pad_digits_w_zero(	        $newfile);	# Pad digits with 0
+	$newfile = &fn_pad_digits		(	        $newfile);	# Pad NN w - , Pad digits with " - "
+    $newfile = &fn_sp_word		    (1,	$file,	$newfile); 	# Specific word casing
 
-	$newfile = &fn_post_clean		(1,	$file,		$newfile);	# Post General cleanup
+	$newfile = &fn_post_clean		(1,	$file,	$newfile);	# Post General cleanup
 
 	# ---------------------------------------
 	# 2nd runs some routines need to be run before & after cleanup in order to work fully (allows for lazy matching)
@@ -422,7 +421,7 @@ sub fn_replace
 	my $file_new	= shift;
 
 	&main::quit("fn_replace \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_replace \$file_new eq ''\n")		if $FILE && $file_new eq '';
+	&main::quit("fn_replace \$file_new eq ''\n")	if $FILE && $file_new eq '';
 
 	return $file_new if !$config::hash{replace}{value};
 
@@ -485,7 +484,7 @@ sub fn_spaces
 	my $file_new	= shift;
 
 	&main::quit("fn_spaces \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_spaces \$file_new eq ''\n")	if $FILE && $file_new eq '';
+	&main::quit("fn_spaces \$file_new eq ''\n") 	if $FILE && $file_new eq '';
 
 	return $file_new if !$config::hash{spaces}{value};
 
@@ -589,9 +588,9 @@ sub fn_sp_word
 
 sub fn_dot2space
 {
-	my $FILE = shift;
-	my $file = shift;
-	my $file_new = shift;
+	my $FILE        = shift;
+	my $file        = shift;
+	my $file_new    = shift;
 
 	&main::quit("fn_dot2space \$FILE value '$FILE' is invalid\n")	if $FILE != 0 && $FILE != 1;
 	&main::quit("fn_dot2space \$file is undef\n")					if ! defined $file;
@@ -626,8 +625,9 @@ sub fn_pad_digits
 
 	return $file_new if !$config::hash{pad_digits}{value};
 
-	# optimize me
+	# TODO: optimize me
 	my $tmp = $config::hash{space_character}{value}."-".$config::hash{space_character}{value};
+
 	$file_new =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$tmp.$2.$tmp/ie;
 	$file_new =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
 	$file_new =~ s/^(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$1.$tmp/ie;
@@ -668,7 +668,7 @@ sub fn_digits
 
 	my $file_new = shift;
 	&main::quit("fn_digits \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_digits \$file_new eq ''\n")	if $file_new eq '';
+	&main::quit("fn_digits \$file_new eq ''\n")     if $file_new eq '';
 
 	$file_new =~ s/^\d*\s*// if $config::hash{digits}{value};
 
@@ -807,6 +807,7 @@ sub fn_pre_clean
 	my $FILE		= shift;	# flag
 	my $file		= shift;	# file / string
 	my $file_new	= shift;
+
 	$file_new		= $file if ! defined $file_new;
 
 	&main::quit("fn_pre_clean \$file is undef\n")	if ! defined $file;
@@ -896,7 +897,7 @@ sub fn_end_a
 {
 	my $file_new = shift;
 	&main::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_end_a \$file_new eq ''\n")	if $file_new eq '';
+	&main::quit("fn_end_a \$file_new eq ''\n")	    if $file_new eq '';
 
 	return $file_new if $config::end_a;
 

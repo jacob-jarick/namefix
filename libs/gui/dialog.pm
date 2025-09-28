@@ -8,7 +8,6 @@ use File::stat;
 use Time::localtime;
 use File::Find;
 
-
 #--------------------------------------------------------------------------------------------------------------
 # Show dialog
 #--------------------------------------------------------------------------------------------------------------
@@ -28,41 +27,41 @@ sub show
 
 	my $row	= 1;
 
-        my $top = $main::mw -> Toplevel();
-        $top -> title("$title");
+    my $top = $main::mw -> Toplevel();
+    $top -> title("$title");
 
-        my $txt = $top -> Scrolled
+    my $txt = $top -> Scrolled
 	(
-        	"ROText",
-        	-scrollbars=>'osoe',
-		-wrap=>'none',
-        	-font=>$config::dialog_font
-        )
-        -> grid
+        "ROText",
+        -scrollbars=>   'osoe',
+		-wrap=>         'none',
+        -font=>         $config::dialog_font
+    )
+    -> grid
 	(
-        	-row => $row++,
-        	-column => 1,
-        	-columnspan => 2
-        );
+        -row=>          $row++,
+        -column=>       1,
+        -columnspan=>   2
+    );
 
-        $txt->menu(undef);
-        $txt -> insert('end', "$text");
+    $txt->menu(undef);
+    $txt->insert('end', "$text");
 
-        $top -> Button
-	(
-        	-text=>"Close",
-        	-activebackground => "white",
-        	-command => sub
-		{
-        		destroy $top;
-        	}
-        )
-        -> grid
-	(
-        	-row => $row++,
-        	-column => 1,
-        	-columnspan => 2
-        );
+    $top -> Button
+    (
+        -text=>             "Close",
+        -activebackground=> "white",
+        -command=>          sub
+        {
+            destroy $top;
+        }
+    )
+    -> grid
+    (
+        -row=>          $row++,
+        -column=>       1,
+        -columnspan=>   2
+    );
 
 	$top->resizable(0,0);
 }
@@ -71,45 +70,46 @@ sub show_file_prop
 {
 	my $ff	= shift;
 
-	&main::quit("show_file_prop: \$ff is undef")			if ! defined $ff;
-	&main::quit("show_file_prop: \$ff eq ''")			if $ff eq '';
+	&main::quit("show_file_prop: \$ff is undef")			    if ! defined $ff;
+	&main::quit("show_file_prop: \$ff eq ''")			        if $ff eq '';
 	&main::quit("show_file_prop: '$ff' is not a dir or file")	if ! -f $ff && ! -d $ff;
 
 	my $row	= 1;
 
-        my $top = $main::mw -> Toplevel();
-        $top -> title('File Properties');
+    my $top = $main::mw -> Toplevel();
+    $top -> title('File Properties');
 
 	my $txt = $top -> Scrolled
 	(
-        	'ROText',
-        	-scrollbars=>'osoe',
-		-wrap=>'none',
-		-font=>$config::dialog_font,
-		-height=>5,
+        'ROText',
+        -scrollbars=>   'osoe',
+		-wrap=>         'none',
+		-font=>         $config::dialog_font,
+		-height=>      5,
 	)
 	-> grid
 	(
-		-row => $row++,
-		-column => 1,
-		-columnspan => 2
+		-row=>          $row++,
+		-column=>       1,
+		-columnspan=>   2
 	);
 
-        $top -> Button
+    $top -> Button
 	(
-		-text=>'Close',
-		-activebackground => 'white',
-		-command => sub { destroy $top; }
+		-text=>             'Close',
+		-activebackground=> 'white',
+		-command=>          sub { destroy $top; }
 	)
 	-> grid
 	(
-		-row=>$row++,
-		-column=>1,
-		-columnspan=>2
+		-row=>          $row++,
+		-column=>       1,
+		-columnspan=>   2
 	);
 
 	my @txt = ();
 	my $txt_str = '';
+
 	if(-f $ff)
 	{
 		my $size = stat($ff)->size;
@@ -151,59 +151,59 @@ sub show_del_dialog
 	my $frm_top = $top -> Frame()
 	-> pack
 	(
-		-side => 'top',
-		-fill => 'both',
-		-expand=> 1,
-		-anchor => 'n'
+		-side=>     'top',
+		-fill=>     'both',
+		-expand=>   1,
+		-anchor=>   'n'
 	);
 
 	my $frm_bottom = $top -> Frame()
 	-> pack
 	(
-		-side => 'bottom',
-		-fill => 'x',
-		-expand=> 0,
-		-anchor => 's'
+		-side=>     'bottom',
+		-fill=>     'x',
+		-expand=>   0,
+		-anchor=>   's'
 	);
 
 	my $txt = $frm_top -> Scrolled
 	(
 		"ROText",
-		-scrollbars=>'osoe',
-		-wrap=>'none',
-		-font=>$config::dialog_font,
-		-height=>10,
-		-width=>$ffl
-        )
-        -> pack
-	(
-		-side => "top",
-		-expand=> 1,
-		-fill => "both",
-        );
+		-scrollbars=>   'osoe',
+		-wrap=>         'none',
+		-font=>         $config::dialog_font,
+		-height=>       10,
+		-width=>        $ffl
+    )
+    -> pack
+    (
+        -side=>     "top",
+        -expand=>   1,
+        -fill=>     "both",
+    );
 
         $txt->menu(undef);
 
-        if(-d $ff)
-        {
-		find(\&run_namefix::find_fix, $ff);
-		$txt -> insert('end', "\nWarning Deleting Directory - ARE YOU SURE ?\nDirectory Tree:\n\n");
+    if(-d $ff)
+    {
+        find(\&run_namefix::find_fix, $ff);
+        $txt -> insert('end', "\nWarning Deleting Directory - ARE YOU SURE ?\nDirectory Tree:\n\n");
 
-		for my $f3(@config::find_arr)
-		{
-			$txt -> insert('end', "$f3\n");
-		}
-        }
-        else
+        for my $f3(@config::find_arr)
         {
-	        $txt -> insert('end', "Do you want to delete\n\"$ff\"\n");
+            $txt -> insert('end', "$f3\n");
         }
+    }
+    else
+    {
+        $txt -> insert('end', "Do you want to delete\n\"$ff\"\n");
+    }
 
 	$frm_bottom -> Button
 	(
-		-text=>"Yes",
-		-activebackground => "white",
-		-command => sub
+		-text=>             "Yes",
+		-activebackground=> "white",
+		-command=>          sub
 		{
 			&misc::plog(2, "Deleting $ff");
 			if(-d $ff)
@@ -235,25 +235,25 @@ sub show_del_dialog
 	)
 	->pack
 	(
-		-side => "left",
-		-expand=> 1,
-		-fill => "x",
+		-side=>     "left",
+		-expand=>   1,
+		-fill=>     "x",
 	);
 
 	$frm_bottom -> Button
 	(
-		-text=>"No",
-		-activebackground => "white",
-		-command => sub
+		-text=>             "No",
+		-activebackground=> "white",
+		-command=>          sub
 		{
 			destroy $top;
 		}
 	)
 	->pack
 	(
-		-side => "left",
-		-expand=> 1,
-		-fill => "x",
+		-side=>     "left",
+		-expand=>   1,
+		-fill=>     "x",
 	);
 }
 

@@ -28,12 +28,12 @@ sub info_add
 	my $file	= shift;	# old / current filename
 	my $newfile	= shift;	# new / undef filename
 
-	&main::quit("info_add: \$index is undef")			if ! defined $index;
-	&main::quit("info_add: \$index '$index' is not an int")		if $index !~ /^\d+$/;
-	&main::quit("info_add: \$path is undef")			if ! defined $path;
+	&main::quit("info_add: \$index is undef")		                if ! defined $index;
+	&main::quit("info_add: \$index '$index' is not an int")	    	if $index !~ /^\d+$/;
+	&main::quit("info_add: \$path is undef")		            	if ! defined $path;
 	&main::quit("info_add: \$path '$path' is not a file or dir")	if !-f $path && !-d $path;
 
-	$info{$index}{path}		= &misc::get_file_path($path);
+	$info{$index}{path}		    = &misc::get_file_path($path);
 	$info{$index}{filename}		= $file;
 	$info{$index}{parent}		= &misc::get_file_parent_dir($path);
 	$info{$index}{new_filename}	= $newfile if defined $newfile;
@@ -96,7 +96,7 @@ sub hlist_cd
 		&misc::plog(3, "cd: '$wd'");
 		return;
 	}
-        return;
+    return;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ sub draw_list
 	}
 
 	$hlist = $main::frm_right2 -> Scrolled
-        (
+    (
 		'HList',
 		-scrollbars		=> 'osoe',
 		-header			=> 1,
@@ -152,10 +152,10 @@ sub draw_list
 			# when user clicks on an entry update global variables
 			$hlist_selection	= shift;
 # 			print "BROWSE: \n" . Dumper($info{$hlist_selection}) . "\n";
-               	},
+        },
 		-command=> sub
 		{
-                	# user has double clicked
+            # user has double clicked
  			$target_dir	= $info{$hlist_selection}{parent};
 			$target_dir	= $info{$hlist_selection}{path} if -d $info{$hlist_selection}{path} && $config::hlist_file ne '..';
 
@@ -164,7 +164,7 @@ sub draw_list
 	)
 	->pack
 	(
-        	-side=>'bottom',
+        -side=>'bottom',
 		-expand=>1,
 		-fill=>'both'
 	);
@@ -201,21 +201,22 @@ sub draw_list
 	# ----------------------------------------------------------------------------
 	# Right Click Menu
 
-        $rc_menu = $hlist->Menu(-tearoff=>0);
-        $rc_menu -> command
-        (
-		-label=>'Properties',
-		-underline=> 1,
-		-command=> sub
-		{
-			my $path = $info{$hlist_selection}{path};
-			print "Properties path='$path'\n";
+    $rc_menu = $hlist->Menu(-tearoff=>0);
+    $rc_menu -> command
+    (
+        -label=>'Properties',
+        -underline=> 1,
+        -command=> sub
+        {
+            my $path = $info{$hlist_selection}{path};
+            print "Properties path='$path'\n";
 
-			&dialog::show_file_prop($path);
-       		}
+            &dialog::show_file_prop($path);
+        }
 	);
-        $rc_menu -> command
-        (
+
+    $rc_menu -> command
+    (
 		-label=>'Apply Preview',
 		-underline=> 1,
 		-command=> sub
@@ -242,16 +243,18 @@ sub draw_list
 				# Update info hash with new filename
 				$info{$hlist_selection}{filename} = $info{$hlist_selection}{new_filename};
 			}
-       		}
+        }
 	);
-        $rc_menu -> command
-        (
+
+    $rc_menu -> command
+    (
 		-label=>'Manual Rename',
 		-underline=> 1,
 		-command=> sub { &manual::edit( $info{$hlist_selection}{path} ); }
 	);
-        $rc_menu -> command
-        (
+
+    $rc_menu -> command
+    (
 		-label=>'Delete',
 		-underline=> 1,
 		-command=> sub
@@ -259,9 +262,9 @@ sub draw_list
 	);
 
 
-        $hlist->bind('<Any-ButtonPress-3>', \&show_rc_menu);
-        $hlist->bind('<Any-ButtonPress-1>',[\&hide_rc_menu, $rc_menu]);
-        $hlist->bind('<Any-ButtonPress-2>',[\&hide_rc_menu, $rc_menu]);
+    $hlist->bind('<Any-ButtonPress-3>', \&show_rc_menu);
+    $hlist->bind('<Any-ButtonPress-1>',[\&hide_rc_menu, $rc_menu]);
+    $hlist->bind('<Any-ButtonPress-2>',[\&hide_rc_menu, $rc_menu]);
 }
 
 
