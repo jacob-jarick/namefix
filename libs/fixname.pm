@@ -113,7 +113,7 @@ sub fix
 			$tags_h_new{$k} = &fn_pre_clean	(0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_replace	(0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_spaces	(0, $tags_h_new{$k});
-			$tags_h_new{$k} = &fn_case	(0, $tags_h_new{$k});
+			$tags_h_new{$k} = &fn_case	    (0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_sp_word	(0, $file, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_case_fl	(0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_post_clean(0, $tags_h_new{$k});
@@ -194,17 +194,41 @@ sub fix
 	{
         # fn & tags haven't changed
         my $TAGS_CHANGED = 0;
-		if
-		(
-			$tags_h{artist}		ne $tags_h_new{artist}	||
-			$tags_h{title}		ne $tags_h_new{title}	||
-			$tags_h{track}		ne $tags_h_new{track}	||
-			$tags_h{album}		ne $tags_h_new{album}	||
-			$tags_h{genre}		ne $tags_h_new{genre}	||
-			$tags_h{comment}	ne $tags_h_new{comment}	||
-			$tags_h{year}		ne $tags_h_new{year}
-		)
+		
+		# Check and log individual tag changes
+		if($tags_h{artist} ne $tags_h_new{artist})
 		{
+			&misc::plog(3, "'$file' ID3 artist: '$tags_h{artist}' -> '$tags_h_new{artist}'");
+			$TAGS_CHANGED = 1;
+		}
+		if($tags_h{title} ne $tags_h_new{title})
+		{
+			&misc::plog(3, "'$file' ID3 title: '$tags_h{title}' -> '$tags_h_new{title}'");
+			$TAGS_CHANGED = 1;
+		}
+		if($tags_h{track} ne $tags_h_new{track})
+		{
+			&misc::plog(3, "'$file' ID3 track: '$tags_h{track}' -> '$tags_h_new{track}'");
+			$TAGS_CHANGED = 1;
+		}
+		if($tags_h{album} ne $tags_h_new{album})
+		{
+			&misc::plog(3, "'$file' ID3 album: '$tags_h{album}' -> '$tags_h_new{album}'");
+			$TAGS_CHANGED = 1;
+		}
+		if($tags_h{genre} ne $tags_h_new{genre})
+		{
+			&misc::plog(3, "'$file' ID3 genre: '$tags_h{genre}' -> '$tags_h_new{genre}'");
+			$TAGS_CHANGED = 1;
+		}
+		if($tags_h{comment} ne $tags_h_new{comment})
+		{
+			&misc::plog(3, "'$file' ID3 comment: '$tags_h{comment}' -> '$tags_h_new{comment}'");
+			$TAGS_CHANGED = 1;
+		}
+		if($tags_h{year} ne $tags_h_new{year})
+		{
+			&misc::plog(3, "'$file' ID3 year: '$tags_h{year}' -> '$tags_h_new{year}'");
 			$TAGS_CHANGED = 1;
 		}
 
@@ -215,9 +239,14 @@ sub fix
 
 		$config::id3_change++ if $TAGS_CHANGED;
 
-		if($TAGS_CHANGED && !$config::PREVIEW)
+		if($TAGS_CHANGED)
 		{
-			&mp3::write_tags($file, \%tags_h_new);
+			&misc::plog(2, "'$file' ID3 tags updated");
+			
+			if(!$config::PREVIEW)
+			{
+				&mp3::write_tags($file, \%tags_h_new);
+			}
 		}
 	}
 
@@ -318,8 +347,8 @@ sub run_fixname_subs
 	my $file	= shift;
 	my $newfile	= shift;
 
-	&main::quit("run_fixname_subs \$file is undef\n")		if ! defined $file;
-	&main::quit("run_fixname_subs \$file eq ''\n")			if $file eq '';
+	&main::quit("run_fixname_subs \$file is undef\n")		        if ! defined $file;
+	&main::quit("run_fixname_subs \$file eq ''\n")			        if $file eq '';
 	&main::quit("run_fixname_subs \$file isn't a dir or file\n")	if !-f $file && !-d $file;
 
 	$newfile = $file if !$newfile;
@@ -328,54 +357,170 @@ sub run_fixname_subs
 	# 1st Run, do before cleanup
 	# ---------------------------------------
 
-	$newfile = &fn_scene			(	$newfile);				# Scenify Season & Episode numbers
-	$newfile = &fn_unscene			(	$newfile);				# Unscene Season & Episode numbers
-	$newfile = &fn_kill_sp_patterns	(	$newfile);				# remove patterns
-    $newfile = &fn_kill_cwords	(	$file,		$newfile);	    # remove list of words
-	$newfile = &fn_replace			(1,	$newfile);				# remove user entered word (also replace if anything is specified)
-	$newfile = &fn_spaces			(1,	$newfile);				# convert underscores to spaces
-	$newfile = &fn_pad_dash			(	$newfile);				# pad -
-	$newfile = &fn_pad_N_to_NN		(	$newfile);				# pad -
+    # Scenify Season & Episode numbers
+	my $temp = $newfile;
+	$newfile = &fn_scene($newfile);				
+	&misc::plog(3, "fn_scene: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Unscene Season & Episode numbers
+	$temp = $newfile;
+	$newfile = &fn_unscene($newfile);				
+	&misc::plog(3, "fn_unscene: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # remove patterns
+	$temp = $newfile;
+	$newfile = &fn_kill_sp_patterns($newfile);				
+	&misc::plog(3, "fn_kill_sp_patterns: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # remove list of words
+	$temp = $newfile;
+    $newfile = &fn_kill_cwords($file, $newfile);	
+	&misc::plog(3, "fn_kill_cwords: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # remove user entered word (also replace if anything is specified)
+	$temp = $newfile;
+	$newfile = &fn_replace(1, $newfile);				
+	&misc::plog(3, "fn_replace: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # convert underscores to spaces
+	$temp = $newfile;
+	$newfile = &fn_spaces(1, $newfile);				
+	&misc::plog(3, "fn_spaces: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # pad -
+	$temp = $newfile;
+	$newfile = &fn_pad_dash($newfile);				
+	&misc::plog(3, "fn_pad_dash: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # pad N to NN
+	$temp = $newfile;
+	$newfile = &fn_pad_N_to_NN($newfile);				
+	&misc::plog(3, "fn_pad_N_to_NN: '$temp' -> '$newfile'") if $temp ne $newfile;
 
-	$newfile = &fn_dot2space		(1,	$file,		$newfile);	# Dots to spaces
-	$newfile = &fn_sp_char			(	$newfile);				# remove nasty characters
-	$newfile = &fn_rm_digits		(	$newfile);				# remove all digits
-	$newfile = &fn_digits			(	$newfile);				# remove digits from front of filename
-	$newfile = &fn_split_dddd		(	$newfile);				# split season episode numbers
-	$newfile = &fn_pre_clean		(1,	$file,		$newfile);	# Preliminary cleanup (just cleans up after 1st run)
+    # Dots to spaces
+	$temp = $newfile;
+	$newfile = &fn_dot2space(1, $file, $newfile);	
+	&misc::plog(3, "fn_dot2space: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # remove nasty characters
+	$temp = $newfile;
+	$newfile = &fn_sp_char($newfile);				
+	&misc::plog(3, "fn_sp_char: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # remove all digits
+	$temp = $newfile;
+	$newfile = &fn_rm_digits($newfile);				
+	&misc::plog(3, "fn_rm_digits: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # remove digits from front of filename
+	$temp = $newfile;
+	$newfile = &fn_digits($newfile);				
+	&misc::plog(3, "fn_digits: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # split season episode numbers
+	$temp = $newfile;
+	$newfile = &fn_split_dddd($newfile);				
+	&misc::plog(3, "fn_split_dddd: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Preliminary cleanup (just cleans up after 1st run)
+	$temp = $newfile;
+	$newfile = &fn_pre_clean(1, $file, $newfile);	
+	&misc::plog(3, "fn_pre_clean: '$temp' -> '$newfile'") if $temp ne $newfile;
 
 	# ---------------------------------------
 	# Main Clean - these routines expect a fairly clean string
 	# ---------------------------------------
 
-	$newfile = &fn_intr_char		(1,	        $newfile);	# International Character translation
-	$newfile = &fn_case				(1,	        $newfile);	# Apply casing
-	$newfile = &fn_pad_digits_w_zero(	        $newfile);	# Pad digits with 0
-	$newfile = &fn_pad_digits		(	        $newfile);	# Pad NN w - , Pad digits with " - "
-    $newfile = &fn_sp_word		    (1,	$file,	$newfile); 	# Specific word casing
+    # International Character translation
+	$temp = $newfile;
+	$newfile = &fn_intr_char(1, $newfile);	
+	&misc::plog(3, "fn_intr_char: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Apply casing
+	$temp = $newfile;
+	$newfile = &fn_case(1, $newfile);	
+	&misc::plog(3, "fn_case: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Pad digits with 0
+	$temp = $newfile;
+	$newfile = &fn_pad_digits_w_zero($newfile);	
+	&misc::plog(3, "fn_pad_digits_w_zero: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Pad NN w - , Pad digits with " - "
+	$temp = $newfile;
+	$newfile = &fn_pad_digits($newfile);	
+	&misc::plog(3, "fn_pad_digits: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Specific word casing
+	$temp = $newfile;
+    $newfile = &fn_sp_word(1, $file, $newfile); 	
+	&misc::plog(3, "fn_sp_word: '$temp' -> '$newfile'") if $temp ne $newfile;
 
-	$newfile = &fn_post_clean		(1,	$file,	$newfile);	# Post General cleanup
+    # Post General cleanup
+	$temp = $newfile;
+	$newfile = &fn_post_clean(1, $file, $newfile);	
+	&misc::plog(3, "fn_post_clean: '$temp' -> '$newfile'") if $temp ne $newfile;
 
 	# ---------------------------------------
 	# 2nd runs some routines need to be run before & after cleanup in order to work fully (allows for lazy matching)
 	# ---------------------------------------
 
-	$newfile = &fn_kill_sp_patterns	(	$newfile);				# remove patterns
-	$newfile = &fn_kill_cwords		(	$file,		$newfile);	# remove list of words
+    # remove patterns
+	$temp = $newfile;
+	$newfile = &fn_kill_sp_patterns($newfile);          
+	&misc::plog(3, "fn_kill_sp_patterns(2nd): '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # remove list of words
+	$temp = $newfile;
+	$newfile = &fn_kill_cwords($file, $newfile);  
+	&misc::plog(3, "fn_kill_cwords(2nd): '$temp' -> '$newfile'") if $temp ne $newfile;
 
 	# ---------------------------------------
 	# Final cleanup
 	# ---------------------------------------
-	$newfile = &fn_spaces	(1,	$newfile);				# spaces
 
-	$newfile = &fn_front_a	(	$newfile);				# Front append
-	$newfile = &fn_end_a	(	$newfile);				# End append
+    # Spaces
+	$temp = $newfile;
+	$newfile = &fn_spaces(1, $newfile);				
+	&misc::plog(3, "fn_spaces(2nd): '$temp' -> '$newfile'") if $temp ne $newfile;
 
-	$newfile = &fn_case_fl	(1,	$newfile);				# UC 1st letter of filename
-	$newfile = &fn_lc_all	(	$newfile);				# lowercase all
-	$newfile = &fn_uc_all	(	$newfile);				# uppercase all
-	$newfile = &fn_truncate	(	$file,		$newfile);	# truncate file
-	$newfile = &fn_enum		(	$file,		$newfile); 	# Enumerate
+    # Prepend string to front of filename
+	$temp = $newfile;
+	$newfile = &fn_front_a($newfile);				
+	&misc::plog(3, "fn_front_a: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Append string to end of filename before the extension
+	$temp = $newfile;
+	$newfile = &fn_end_a($newfile);				
+	&misc::plog(3, "fn_end_a: '$temp' -> '$newfile'") if $temp ne $newfile;
+
+    # Uppercase 1st letter of filename
+	$temp = $newfile;
+	$newfile = &fn_case_fl(1, $newfile);				
+	&misc::plog(3, "fn_case_fl: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # lowercase all
+	$temp = $newfile;
+	$newfile = &fn_lc_all($newfile);				
+	&misc::plog(3, "fn_lc_all: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # uppercase all
+	$temp = $newfile;
+	$newfile = &fn_uc_all($newfile);				
+	&misc::plog(3, "fn_uc_all: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # truncate file
+	$temp = $newfile;
+	$newfile = &fn_truncate($file, $newfile);	
+	&misc::plog(3, "fn_truncate: '$temp' -> '$newfile'") if $temp ne $newfile;
+	
+    # Enumerate
+	$temp = $newfile;
+	$newfile = &fn_enum($file, $newfile); 	
+	&misc::plog(3, "fn_enum: '$temp' -> '$newfile'") if $temp ne $newfile;
+
+    # log change if any
+    &misc::plog(2, "'$file' -> '$newfile'") if $file ne $newfile;
 
 	return $newfile;
 }

@@ -14,7 +14,7 @@ our $dir				= cwd;
 our $cwd				= cwd;
 our $hlist_cwd			= cwd;
 
-our $version 			= '4.1.6';
+our $version 			= '4.1.7';
 our $folderimage 		= '';
 our $fileimage   		= '';
 our $dialog_font		= '';
