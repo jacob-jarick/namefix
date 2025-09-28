@@ -20,7 +20,7 @@ $id3h{track}	= 'TRCK';
 $id3h{album}	= 'TALB';
 $id3h{comment}	= 'COMM';
 $id3h{genre}	= 'TCON';
-$id3h{year}	= 'TYER';
+$id3h{year}	    = 'TYER';
 
 our %id3_order = ();
 {
@@ -43,8 +43,6 @@ $template{genre}	= '';
 $template{year}		= '';
 $template{comment}	= '';
 
-
-
 # -----------------------------------------------------------------------------------
 # get tags
 # -----------------------------------------------------------------------------------
@@ -54,23 +52,23 @@ sub get_tags
 	my $file	= shift;
 	&main::quit("get_tags \$file is undef") if(!defined $file);
 
-        my %tag_hash = ();
-        $tag_hash{artist}	= '';	# artist
-        $tag_hash{title}	= '';	# track title
-        $tag_hash{track}	= '';	# track number
-        $tag_hash{album}	= '';	# album
-        $tag_hash{genre}	= '';	# genre
-        $tag_hash{year}		= '';	# year
-        $tag_hash{comment}	= '';	# comment
+    my %tag_hash = ();
+    $tag_hash{artist}	= '';	# artist
+    $tag_hash{title}	= '';	# track title
+    $tag_hash{track}	= '';	# track number
+    $tag_hash{album}	= '';	# album
+    $tag_hash{genre}	= '';	# genre
+    $tag_hash{year}		= '';	# year
+    $tag_hash{comment}	= '';	# comment
 
-        return \%tag_hash	if $file !~ /\.$config::id3_ext_regex$/i;
+    return \%tag_hash	if $file !~ /\.$config::id3_ext_regex$/i;
 
 	my $audio_tags		= MP3::Tag->new($file);
 
 	$tag_hash{title}	= $audio_tags->title	if defined $audio_tags->title;
 	$tag_hash{artist} 	= $audio_tags->artist	if defined $audio_tags->artist;
 	$tag_hash{album}	= $audio_tags->album	if defined $audio_tags->album;
-	$tag_hash{year}		= $audio_tags->year	if defined $audio_tags->year;
+	$tag_hash{year}		= $audio_tags->year	    if defined $audio_tags->year;
 	$tag_hash{comment}	= $audio_tags->comment	if defined $audio_tags->comment;
 	$tag_hash{track}	= $audio_tags->track	if defined $audio_tags->track;
 	$tag_hash{genre}	= $audio_tags->genre	if defined $audio_tags->genre;
@@ -91,15 +89,17 @@ sub rm_tags
 
 	if(exists $audio_tags->{ID3v1})
 	{
-        	$audio_tags->{ID3v1}->remove_tag();
-                $config::tags_rm++;
-        }
-        if(exists $audio_tags->{ID3v2})
+        $audio_tags->{ID3v1}->remove_tag();
+        $config::tags_rm++;
+    }
+
+    if(exists $audio_tags->{ID3v2})
 	{
-               	$audio_tags->{ID3v2}->remove_tag();
-                $config::tags_rm++;
-        }
-        return;
+        $audio_tags->{ID3v2}->remove_tag();
+        $config::tags_rm++;
+    }
+
+    return;
 }
 
 sub write_tags
@@ -119,22 +119,22 @@ sub write_tags
 
 	&main::quit("mp3::write_tags: tag_hash is undef") if ! defined $tag_hash{title};
 
-        # ensure all fieldss have been sent
-        for my $k(keys %id3h)
+    # ensure all fieldss have been sent
+    for my $k(keys %id3h)
+    {
+        if(!defined $tag_hash{$k})
         {
-		if(!defined $tag_hash{$k})
-		{
-			&main::quit("ERROR: write_tags incomplete hash received. \$tag_hash{$k} is undefined\n" . Dumper(\%tag_hash));
-		}
+            &main::quit("ERROR: write_tags incomplete hash received. \$tag_hash{$k} is undefined\n" . Dumper(\%tag_hash));
         }
-        # ensure no extra keys in hash
-        for my $k(keys %tag_hash)
+    }
+    # ensure no extra keys in hash
+    for my $k(keys %tag_hash)
+    {
+        if(!defined $id3h{$k})
         {
-		if(!defined $id3h{$k})
-		{
-			&main::quit("ERROR: write_tags extra key '$k' in hash.\n" . Dumper(\%tag_hash));
-		}
+            &main::quit("ERROR: write_tags extra key '$k' in hash.\n" . Dumper(\%tag_hash));
         }
+    }
 
 	my $audio_tags = MP3::Tag->new($work_file);
 
@@ -156,14 +156,14 @@ sub guess_tags
 
 	my $file = shift;
 
-        my $tag = "";
-        my $art = "";
-        my $tra = "";
-        my $tit = "";
-        my $alb = "";
-        my $com = "";
+    my $tag = "";
+    my $art = "";
+    my $tra = "";
+    my $tit = "";
+    my $alb = "";
+    my $com = "";
 
-        my $exts = join('|', @config::id3v2_exts);
+    my $exts = join('|', @config::id3v2_exts);
 
 	if($file =~ /^(\d+)( - |\. )(.*?)( - )(.*?)\.($config::id3_ext_regex)$/i)
 	{

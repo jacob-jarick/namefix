@@ -96,7 +96,8 @@ sub plog
 		close(FILE);
 		
 		# Add to GUI log with styling if not in CLI mode
-		if(!$config::CLI) {
+		if(!$config::CLI) 
+        {
 			&log::add($level, "$text\n");
 		}
 		
@@ -109,18 +110,14 @@ sub plog
 	if($level == 0 && $config::hash{ERROR_NOTIFY}{value})
 	{
 		# Add error to GUI log with styling if not in CLI mode
-		if(!$config::CLI) {
+		if(!$config::CLI) 
+        {
 			&log::add($level, "$text\n");
 		}
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
-	return 1;
-}
 
-sub clog
-{
-	open(FILE, ">$main::log_file");
-	close(FILE);
+	return 1;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -130,42 +127,43 @@ sub clog
 sub get_home
 {
 	my $home = undef;
-	$home = $ENV{HOME}		if defined $ENV{HOME} && lc $^O ne lc 'MSWin32';
+	$home = $ENV{HOME}		    if defined $ENV{HOME} && lc $^O ne lc 'MSWin32';
 	$home = $ENV{USERPROFILE}	if lc $^O eq lc 'MSWin32';
 
 
-	$home = $ENV{TMP}		if ! defined $home; # surely the os has a tmp if nothing else
+	$home = $ENV{TMP}		    if ! defined $home; # surely the os has a tmp if nothing else
 	$home =~ s/\\/\//g;
 
 	if(!-d "$home/.namefix.pl")
 	{
 		mkdir("$home/.namefix.pl", 0755) or &main::quit("Cannot mkdir :$home/.namefix.pl $!\n");
 	}
+
 	return $home;
 }
 
 sub null_file
 {
-        my $file = shift;
+    my $file = shift;
 
-        open(FILE, ">$file") or &main::quit("ERROR: sub null_file, Couldn't open $file to write to. $!");
-        close(FILE);
+    open(FILE, ">$file") or &main::quit("ERROR: sub null_file, Couldn't open $file to write to. $!");
+    close(FILE);
 }
 
 sub save_file
 {
-        my $file	= shift;
-        my $string	= shift;
+    my $file	= shift;
+    my $string	= shift;
 
-        &main::quit("save_file \$file is undef")	if ! defined $file;
-        &main::quit("save_file \$string is undef")	if ! defined $string;
+    &main::quit("save_file \$file is undef")	if ! defined $file;
+    &main::quit("save_file \$string is undef")	if ! defined $string;
 
-        $string =~ s/^\n//g;		# no blank line @ start of file
-        $string =~ s/\n\n+/\n/g;	# no blank lines in file
+    $string =~ s/^\n//g;		# no blank line @ start of file
+    $string =~ s/\n\n+/\n/g;	# no blank lines in file
 
-        open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldn't open $file to write to. $!");
-        print FILE $string;
-        close(FILE);
+    open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldn't open $file to write to. $!");
+    print FILE $string;
+    close(FILE);
 }
 
 sub file_append
@@ -174,8 +172,8 @@ sub file_append
 	my $string	= shift;
 
 	open(FILE, ">>$file") or &main::quit("ERROR: Couldn't open $file to append to. $!");
-        print FILE $string;
-        close(FILE);
+    print FILE $string;
+    close(FILE);
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -184,23 +182,23 @@ sub file_append
 
 sub readf
 {
-        my $file = shift;
+    my $file = shift;
 
-        if(!-f $file)
-        {
-		print "misc::readf WARNING: file '$file' not found\n";
-		return ();
-        }
+    if(!-f $file)
+    {
+        print "misc::readf WARNING: file '$file' not found\n";
+        return ();
+    }
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
-        my @file = <FILE>;
-        close(FILE);
+    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    my @file = <FILE>;
+    close(FILE);
 
-        # clean file of empty lines
-        $file =~ s/^\n//g;
-        $file =~ s/\n\n+/\n/g;
+    # clean file of empty lines
+    $file =~ s/^\n//g;
+    $file =~ s/\n\n+/\n/g;
 
-        return @file;
+    return @file;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -209,15 +207,15 @@ sub readf
 
 sub readf_clean
 {
-        my $file = shift;
+    my $file = shift;
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
-        my @file = <FILE>;
-        close(FILE);
+    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    my @file = <FILE>;
+    close(FILE);
 
 	my @tmp;
-        for my $l(@file)
-        {
+    for my $l(@file)
+    {
 		# clean file of empty lines
 		$l =~ s/\n+//g;
 		$l =~ s/\s*#.*?$//g;
@@ -226,7 +224,8 @@ sub readf_clean
 
 		push @tmp, $l;
 	}
-        return sort {lc $a cmp lc $b} @tmp;
+
+    return sort {lc $a cmp lc $b} @tmp;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -235,19 +234,19 @@ sub readf_clean
 
 sub readsf
 {
-        my $file = shift;
+    my $file = shift;
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
-        my @file = <FILE>;
-        close(FILE);
+    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    my @file = <FILE>;
+    close(FILE);
 
-        # clean file of empty lines
-        $file = join('', sort @file);
-        $file =~ s/^\n//g;
-        $file =~ s/\n\n+/\n/g;
-        @file = split(/\n+/, $file);
+    # clean file of empty lines
+    $file = join('', sort @file);
+    $file =~ s/^\n//g;
+    $file =~ s/\n\n+/\n/g;
+    @file = split(/\n+/, $file);
 
-        return @file;
+    return @file;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -257,14 +256,16 @@ sub readsf
 sub readsjf
 {
 	my $file = shift;
-        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
-        my @file = <FILE>;
-        close(FILE);
-        $file = join('', sort @file);
-        $file =~ s/^\n//g;
-        $file =~ s/\n\n+/\n/g;
 
-        return $file;
+    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    my @file = <FILE>;
+    close(FILE);
+
+    $file = join('', sort @file);
+    $file =~ s/^\n//g;
+    $file =~ s/\n\n+/\n/g;
+
+    return $file;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -273,16 +274,17 @@ sub readsjf
 
 sub readjf
 {
-        my $file = shift;
+    my $file = shift;
 
-        open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
-        my @file = <FILE>;
-        close(FILE);
-        $file = join('', @file);
-        $file =~ s/^\n//g;
-        $file =~ s/\n\n+/\n/g;
+    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    my @file = <FILE>;
+    close(FILE);
 
-        return $file;
+    $file = join('', @file);
+    $file =~ s/^\n//g;
+    $file =~ s/\n\n+/\n/g;
+
+    return $file;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -387,10 +389,11 @@ sub get_file_ext
 	my @tmp			= split(/\//, $file_path);
 	my $file_name	= splice @tmp , $#tmp, 1;
 
-	if ( $file_name =~ /^(.+)\.(.+?)$/)
+	if ($file_name =~ /^(.+)\.(.+?)$/)
 	{
 		return ($1, $2);
 	}
+
 	return undef;
 }
 

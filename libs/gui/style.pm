@@ -105,6 +105,7 @@ sub set_font
 
 	my $old_font = $hash{$name}{font};
 	$hash{$name}{font} = $main::mw->FontDialog(-initfont => $hash{$name}{font})->Show;
+
 	if (defined $hash{$name}{font})
 	{
 		$hash{$name}{font} = $main::mw->GetDescriptiveFontName($hash{$name}{font});
@@ -131,8 +132,8 @@ sub set_col
 	my $col_dialog	= $main::mw->ColourChooser();
 	$col_dialog	= $main::mw->ColourChooser
 	(
-		-title	=> "Select $type Colour",
-		-colour	=> $hash{$name}{$type}
+		-title=>    "Select $type Colour",
+		-colour=>   $hash{$name}{$type}
 	);
 	$hash{$name}{$type}	= $main::mw->chooseColor(-initialcolor=>$hash{$name}{$type});
 
@@ -146,7 +147,7 @@ sub get_home
 	$home = $ENV{USERPROFILE}	if lc $^O eq 'mswin32';
 
 
-	$home = $ENV{TMP}		if ! defined $home; # surely the os has a tmp if nothing else
+	$home = $ENV{TMP}		    if ! defined $home; # surely the os has a tmp if nothing else
 	$home =~ s/\\/\//g;
 
 	my $app_dir = "$home/.namefix.pl";
@@ -155,6 +156,7 @@ sub get_home
 	{
 		mkdir($app_dir, 0755) or &main::quit("Cannot mkdir: '$app_dir' $!\n");
 	}
+
 	return $app_dir;
 }
 

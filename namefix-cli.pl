@@ -51,8 +51,8 @@ our $html_file		= "$config::home/.namefix.pl/namefix_html_output_hack.html";
 
 $config::CLI = 1;	# set cli mode flag
 
-&config::load_hash	if -f	$config::hash_tsv;
-&misc::clog		if	$config::hash{ZERO_LOG}{value};
+&config::load_hash                  if -f	$config::hash_tsv;
+&misc::null_file($main::log_file)	if      $config::hash{ZERO_LOG}{value};
 
 &misc::plog(2, "**** namefix.pl $config::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");

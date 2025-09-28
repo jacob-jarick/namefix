@@ -111,7 +111,7 @@ else
         $config::edit_pat_font		= 'ansi 18 bold';
 }
 
-&misc::clog		if $config::hash{ZERO_LOG}{value};
+&misc::null_file($main::log_file)	if $config::hash{ZERO_LOG}{value};
 
 if (-f $config::hash_tsv)
 {

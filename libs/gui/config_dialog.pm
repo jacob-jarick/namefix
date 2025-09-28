@@ -339,7 +339,7 @@ sub edit_prefs
 		-label=>"Debug"
 	);
 
-	$tab_debug -> Label
+	$tab_debug->Label
 	(
 		-justify=>"left",
 		-text=>"Debug Level"
@@ -355,7 +355,7 @@ sub edit_prefs
 	(
 		-textvariable=>\$config::hash{'debug'}{'value'},
 		-from=>0,
-		-to=>10,
+		-to=>4,
 		-increment=>1,
 		-width=>2
 	)
@@ -366,11 +366,17 @@ sub edit_prefs
 		-sticky=>"nw",
 	);
 
-	$tab_debug -> Checkbutton
+	$main::balloon->attach
 	(
-		-text=>"Print log to stdout",
-		-variable=>\$config::hash{LOG_STDOUT}{value},
-		-activeforeground => "blue"
+		$spin_pad_enum,
+		-msg=> "Logging Levels:\n\n0 = Errors\n1 = Warnings\n2 = Debug Info Level 1\n3 = Debug Info Level 2\n4 = Debug Info Level 3\n"
+	);
+
+	$tab_debug->Checkbutton
+	(
+		-text=>             "Print log to stdout",
+		-variable=>         \$config::hash{LOG_STDOUT}{value},
+		-activeforeground=> "blue"
 	)
 	-> grid
 	(
@@ -379,11 +385,11 @@ sub edit_prefs
 		-sticky=>"nw",
 	);
 
-	$tab_debug -> Checkbutton
+	$tab_debug->Checkbutton
 	(
 		-text=>"Print errors to stdout",
 		-variable=>\$config::hash{ERROR_STDOUT}{value},
-		-activeforeground => "blue"
+		-activeforeground=> "blue"
 	)
 	-> grid
 	(
@@ -392,11 +398,11 @@ sub edit_prefs
 		-sticky=>"nw",
 	);
 
-	$tab_debug -> Checkbutton
+	$tab_debug->Checkbutton
 	(
 		-text=>"Pop up errors in a dialog box",
 		-variable=>\$config::hash{ERROR_NOTIFY}{value},
-		-activeforeground => "blue"
+		-activeforeground=> "blue"
 	)
 	-> grid
 	(
@@ -405,13 +411,13 @@ sub edit_prefs
 		-sticky=>"nw",
 	);
 
-	$tab_debug -> Checkbutton
+	$tab_debug->Checkbutton
 	(
 		-text=>"Zero logfile on start",
 		-variable=>\$config::hash{ZERO_LOG}{value},
-		-activeforeground => "blue"
+		-activeforeground=> "blue"
 	)
-	-> grid
+	->grid
 	(
 		-row=>$n++,
 		-column=>1,
@@ -421,30 +427,30 @@ sub edit_prefs
 	# ----------------------------------------------------------------------------------------------------------
 	# Save n Close Buttons
 
-        my $but_save = $top -> Button
-        (
-        	-text=>"Save",
-        	-activebackground => 'white',
-        	-command => sub { &config::save_hash; }
-        )
-        -> grid
-        (
-        	-row =>5,
-        	-column => 1,
-        	-sticky=>"ne"
-        );
-        my $but_close = $top -> Button
-        (
-        	-text=>"Close",
-        	-activebackground => 'white',
-        	-command => sub { destroy $top; }
-        )
-        -> grid
-        (
-        	-row =>5,
-        	-column => 2,
-        	-sticky=>"nw"
-        );
+    my $but_save = $top -> Button
+    (
+        -text=>"Save",
+        -activebackground=> 'white',
+        -command=> sub { &config::save_hash; }
+    )
+    ->grid
+    (
+        -row=>5,
+        -column=>1,
+        -sticky=>"ne"
+    );
+    my $but_close = $top -> Button
+    (
+        -text=>"Close",
+        -activebackground=> 'white',
+        -command=> sub { destroy $top; }
+    )
+    ->grid
+    (
+        -row=>5,
+        -column=>2,
+        -sticky=>"nw"
+    );
 
 	$main::balloon->attach($but_save, -msg => "Save Preferences to config file");
 
