@@ -3,3 +3,9 @@ root = true
 [*]
 indent_style = tab
 tab_width = 8
+
+[*.{pl,pm}]
+indent_style = space
+indent_size = 4
+# Preserve existing brace style (Allman/BSD style)
+brace_style = allman

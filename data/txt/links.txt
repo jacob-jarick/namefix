@@ -1,7 +1,23 @@
-namefix.pl
+=====================================================================
+namefix.pl links
+=====================================================================
 
-github: https://github.com/jacob-jarick/namefix
-blog: http://namefix.blogspot.com.au/
-linkedin: https://www.linkedin.com/in/jacob-jarick-aa9ba730/
+github repo - https://github.com/jacob-jarick/namefix
+sourceforge repo - https://sourceforge.net/projects/namefix/
+blog - http://namefix.blogspot.com.au/
+My linkedin - https://www.linkedin.com/in/jacob-jarick-aa9ba730/ 
 
-email: mem.namefix@gmail.com
+
+FreeBSD FreshPorts - https://www.freshports.org/sysutils/namefix/
+FSF Directory - https://directory.fsf.org/wiki/Namefix.pl
+Unix.com Community - https://community.unix.com/t/namefix-pl-4-0-default-branch/203714
+
+email - mem.namefix@gmail.com
+
+=====================================================================
+Misc Sites I enjoy
+=====================================================================
+
+https://subsplease.org/ - anime p2p
+https://www.pouet.net/ - demoscene archives
+https://webench.ti.com/power-designer/switching-regulator - webench (I love Texas Instruments, best docs ever)
