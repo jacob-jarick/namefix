@@ -10,14 +10,15 @@
   "[perl]": {
     "editor.defaultFormatter": null,
     "editor.formatOnSave": false,
-    "editor.insertSpaces": true,
+    "editor.insertSpaces": false,
     "editor.tabSize": 4,
     "editor.detectIndentation": false
   },
   
-  // Disable auto-closing brackets to prevent style conflicts
+  // Auto-indentation settings
   "editor.autoClosingBrackets": "never",
-  "editor.autoIndent": "none",
+  "editor.autoIndent": "full",
+  "editor.indentSize": 4,
   
   // Copilot settings for better brace style consistency
   "github.copilot.editor.enableAutoCompletions": true,

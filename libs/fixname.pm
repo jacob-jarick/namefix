@@ -196,37 +196,37 @@ sub fix
         my $TAGS_CHANGED = 0;
 		
 		# Check and log individual tag changes
-		if($tags_h{artist} ne $tags_h_new{artist})
+		if(defined $tags_h{artist} && $tags_h{artist} ne $tags_h_new{artist})
 		{
 			&misc::plog(3, "'$file' ID3 artist: '$tags_h{artist}' -> '$tags_h_new{artist}'");
 			$TAGS_CHANGED = 1;
 		}
-		if($tags_h{title} ne $tags_h_new{title})
+		if(defined $tags_h{title} && $tags_h{title} ne $tags_h_new{title})
 		{
 			&misc::plog(3, "'$file' ID3 title: '$tags_h{title}' -> '$tags_h_new{title}'");
 			$TAGS_CHANGED = 1;
 		}
-		if($tags_h{track} ne $tags_h_new{track})
+		if(defined $tags_h{track} && $tags_h{track} ne $tags_h_new{track})
 		{
 			&misc::plog(3, "'$file' ID3 track: '$tags_h{track}' -> '$tags_h_new{track}'");
 			$TAGS_CHANGED = 1;
 		}
-		if($tags_h{album} ne $tags_h_new{album})
+		if(defined $tags_h{album} && $tags_h{album} ne $tags_h_new{album})
 		{
 			&misc::plog(3, "'$file' ID3 album: '$tags_h{album}' -> '$tags_h_new{album}'");
 			$TAGS_CHANGED = 1;
 		}
-		if($tags_h{genre} ne $tags_h_new{genre})
+		if(defined $tags_h{genre} && $tags_h{genre} ne $tags_h_new{genre})
 		{
 			&misc::plog(3, "'$file' ID3 genre: '$tags_h{genre}' -> '$tags_h_new{genre}'");
 			$TAGS_CHANGED = 1;
 		}
-		if($tags_h{comment} ne $tags_h_new{comment})
+		if(defined $tags_h{comment} && $tags_h{comment} ne $tags_h_new{comment})
 		{
 			&misc::plog(3, "'$file' ID3 comment: '$tags_h{comment}' -> '$tags_h_new{comment}'");
 			$TAGS_CHANGED = 1;
 		}
-		if($tags_h{year} ne $tags_h_new{year})
+		if(defined $tags_h{year} && $tags_h{year} ne $tags_h_new{year})
 		{
 			&misc::plog(3, "'$file' ID3 year: '$tags_h{year}' -> '$tags_h_new{year}'");
 			$TAGS_CHANGED = 1;

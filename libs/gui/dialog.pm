@@ -165,7 +165,7 @@ sub show_file_prop
 					my $spaces_to_align = $align_col - $len;
 					my $padding = "\t"; # Always start with at least one tab
 					if ($spaces_to_align > $tab_width) 
-{
+					{
 						# If more than one tab stop away, add more tabs
 						$padding .= "\t" x int(($spaces_to_align - 1) / $tab_width);
 					}

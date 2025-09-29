@@ -233,6 +233,16 @@ my $txt_mp3 =
 
 ";
 
+my $text_exif =
+"
+EXIF Data Options:
+
+	--exif-show		Show all available EXIF data
+	--exif-rm		Remove all EXIF data
+	--exif-rm-tags=STRING	Remove specific EXIF tags, CSV separated
+
+";
+
 my $msg_help=
 $txt_header.
 $txt_help;
