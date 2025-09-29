@@ -202,6 +202,7 @@ sub draw_list
 	# Right Click Menu
 
     $rc_menu = $hlist->Menu(-tearoff=>0);
+
     $rc_menu -> command
     (
         -label=>'Properties',
@@ -211,7 +212,7 @@ sub draw_list
             my $path = $info{$hlist_selection}{path};
             print "Properties path='$path'\n";
 
-            &dialog::show_file_prop($path);
+            &dialog::show_properties_hlist($path);
         }
 	);
 
