@@ -49,8 +49,8 @@ $template{comment}	= '';
 
 sub get_tags
 {
-	my $file	= shift;
-	&main::quit("get_tags \$file is undef") if !defined $file;
+	my $filepath	= shift;
+	&main::quit("get_tags \$filepath is undef") if !defined $filepath;
 
     my %tag_hash 		= ();
     $tag_hash{artist}	= '';	# artist
@@ -61,11 +61,11 @@ sub get_tags
     $tag_hash{year}		= '';	# year
     $tag_hash{comment}	= '';	# comment
 
-    return \%tag_hash	if $file !~ /\.$config::id3_ext_regex$/i;
+    return \%tag_hash	if $filepath !~ /\.$config::id3_ext_regex$/i;
 
-	&main::quit("get_tags '$file' not found") if !-f $file;
+	&main::quit("get_tags '$filepath' not found") if !-f $filepath;
 
-	my $audio_tags		= MP3::Tag->new($file);
+	my $audio_tags		= MP3::Tag->new($filepath);
 
 	$tag_hash{title}	= $audio_tags->title	if defined $audio_tags->title;
 	$tag_hash{artist} 	= $audio_tags->artist	if defined $audio_tags->artist;
@@ -82,10 +82,14 @@ sub get_tags
 
 sub rm_tags
 {
-	my $file 	= shift;
-	my $audio_tags = MP3::Tag->new($file);
+	my $filepath 	= shift;
+	
+	&main::quit("mp3::rm_tags: \$filepath is undef") if !defined $filepath;
+	&main::quit("mp3::rm_tags: file '$filepath' not found") if !-f $filepath;
+	
+	my $audio_tags = MP3::Tag->new($filepath);
 
-	&misc::plog(3, "sub rm_tags: file = \"$file\"");
+	&misc::plog(3, "sub rm_tags: file = \"$filepath\"");
 
 	$audio_tags->get_tags();
 
@@ -106,13 +110,13 @@ sub rm_tags
 
 sub write_tags
 {
-	my $file = shift;
+	my $filepath = shift;
 
-	&main::quit("mp3::write_tags: \$file is undef")			if ! defined $file;
-	&main::quit("mp3::write_tags: \$file eq ''") 			if $file eq '';
-	&main::quit("mp3::write_tags: file '$file' not found")	if !-f $file;
+	&main::quit("mp3::write_tags: \$filepath is undef")			if ! defined $filepath;
+	&main::quit("mp3::write_tags: \$filepath eq ''") 			if $filepath eq '';
+	&main::quit("mp3::write_tags: file '$filepath' not found")	if !-f $filepath;
 
-	&main::quit("mp3::write_tags: \$file  '$file' is not an audio file\n") if $file !~ /\.$config::id3_ext_regex$/i;
+	&main::quit("mp3::write_tags: \$filepath  '$filepath' is not an audio file\n") if $filepath !~ /\.$config::id3_ext_regex$/i;
 
 	my $ref = shift;
 	my %tag_hash = %$ref;
@@ -136,7 +140,7 @@ sub write_tags
         }
     }
 
-	my $audio_tags = MP3::Tag->new($file);
+	my $audio_tags = MP3::Tag->new($filepath);
 
 	$audio_tags->title_set	($tag_hash{title});
 	$audio_tags->artist_set	($tag_hash{artist});
@@ -152,9 +156,9 @@ sub write_tags
 
 sub guess_tags
 {
-	&misc::plog(3, "sub guess_tags: \$file\"");
+	&misc::plog(3, "sub guess_tags: \$filename\"");
 
-	my $file = shift;
+	my $filename = shift;
 
     my $tag = "";
     my $art = "";
@@ -165,7 +169,7 @@ sub guess_tags
 
     my $exts = join('|', @config::id3v2_exts);
 
-	if($file =~ /^(\d+)( - |\. )(.*?)( - )(.*?)\.($config::id3_ext_regex)$/i)
+	if($filename =~ /^(\d+)( - |\. )(.*?)( - )(.*?)\.($config::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: track - artist - title");
 		$tra = $1;
@@ -173,14 +177,14 @@ sub guess_tags
 		$tit = $5;
 	}
 
-	elsif($file =~ /^(\d+)( - |\. )(.*?)\.($config::id3_ext_regex)$/i)
+	elsif($filename =~ /^(\d+)( - |\. )(.*?)\.($config::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: track - title");
 		$tra = $1;
 		$tit = $3;
 	}
 
-	elsif($file =~ /^(.*?)( - )(.*?)( - )(\d+)( - )(.*)\.($config::id3_ext_regex)$/i)
+	elsif($filename =~ /^(.*?)( - )(.*?)( - )(\d+)( - )(.*)\.($config::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: artist - ablum - track - title");
 		$art = $1;
@@ -190,7 +194,7 @@ sub guess_tags
 	}
 
 	# mems prefered format
-	elsif($file =~ /^(.*?)( - )(\d+)( - )(.*)\.($config::id3_ext_regex)$/i)
+	elsif($filename =~ /^(.*?)( - )(\d+)( - )(.*)\.($config::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: artist - track - title");
 		$art = $1;
@@ -199,7 +203,7 @@ sub guess_tags
 		$alb = "";	# get this later
 	}
 
-	elsif($file =~ /^(.*?)( - )(.*)\.($config::id3_ext_regex)$/)
+	elsif($filename =~ /^(.*?)( - )(.*)\.($config::id3_ext_regex)$/)
 	{
 		&misc::plog(4, "sub guess_tags: artist - title");
 		$art = $1;
