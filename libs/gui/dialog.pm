@@ -82,9 +82,9 @@ sub show_file_prop
 	my $row	= 1;
 
     my $top = $main::mw -> Toplevel();
-    $top -> title('File Properties');
+    $top->title('File Properties');
 
-	my $txt = $top -> Scrolled
+	my $text = $top->Scrolled
 	(
         'ROText',
         -scrollbars=>   'osoe',
@@ -99,13 +99,13 @@ sub show_file_prop
 		-columnspan=>   2
 	);
 
-    $top -> Button
+    $top->Button
 	(
 		-text=>             'Close',
 		-activebackground=> 'white',
 		-command=>          sub { destroy $top; }
 	)
-	-> grid
+	->grid
 	(
 		-row=>          $row++,
 		-column=>       1,
@@ -190,8 +190,8 @@ sub show_file_prop
 	}
 	$txt_str = join("\n", @txt);
 	# display text last
-	$txt->menu(undef);
-	$txt -> insert('end', $txt_str);
+	$text->menu(undef);
+	$text->insert('end', $txt_str);
 }
 
 sub show_del_dialog

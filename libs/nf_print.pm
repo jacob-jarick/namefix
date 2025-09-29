@@ -37,6 +37,7 @@ sub p
 	if($file1 eq '..')
 	{
 		my $parent_dir = &misc::get_file_parent_dir(cwd);
+
 		&dir_hlist::info_add($hlpos, '..', $parent_dir);
 		$dir_hlist::hlist->add($hlpos);
 		$dir_hlist::hlist->itemCreate
@@ -57,8 +58,8 @@ sub p
 	my $target_file	= $file1;
 	$target_file	= $file2 if $mode eq 'rename';
 
-	&main::quit("p: \$target_file is undef")				if ! defined $target_file;
-	&main::quit("p: \$target_file eq '' is not a file or dir")		if $target_file eq '';
+	&main::quit("p: \$target_file is undef")							if ! defined $target_file;
+	&main::quit("p: \$target_file eq '' is not a file or dir")			if $target_file eq '';
 	&main::quit("p: \$target_file '$target_file' is not a file or dir")	if !-f $target_file && !-d $target_file;
 
 	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);
@@ -130,8 +131,8 @@ sub p
 	# ------------------------------------------------------------------------------------------------
 	# Start of rename / preview section
 
-	my $file2_clean			= $file2;
-	$file2_clean			=~ s/^.*\///;
+	my $file2_clean				= $file2;
+	$file2_clean				=~ s/^.*\///;
 	$config::hlist_newfile_row	= $count;
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $arrow);

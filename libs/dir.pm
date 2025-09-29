@@ -27,30 +27,30 @@ sub ls_dir
 		return;
 	}
 
-	$config::LISTING	= 1;
-	$config::STOP		= 0;
+	$config::LISTING		= 1;
+	$config::STOP			= 0;
 	$config::percent_done	= 0;
 
-	$config::dir		= cwd;
+	$config::dir			= cwd;
 
-	my @file_list		= ();
-	my @dirlist		= &dir_filtered($config::dir);
+	my @file_list			= ();
+	my @dirlist				= &dir_filtered($config::dir);
 
 	&dir_hlist::draw_list;
 
 	&ls_dir_print('..');
 
-        if($config::hash{RECURSIVE}{value})
-        {
+	if($config::hash{RECURSIVE}{value})
+	{
 		@config::find_arr = ();
-	        find(\&run_namefix::find_fix, $config::dir);
+		find(\&run_namefix::find_fix, $config::dir);
 		&ls_dir_find_fix;
-                $config::LISTING = 0;
-	        return;
-        }
+		$config::LISTING = 0;
+		return;
+	}
 
-        my $count		= 1;
-	my $total		= scalar @dirlist + scalar @file_list;
+	my $count				= 1;
+	my $total				= scalar @dirlist + scalar @file_list;
 	$config::percent_done	= int(($count / $total) * 100);
 
 	for my $f (@dirlist)
@@ -72,6 +72,7 @@ sub ls_dir
 		}
 		push @file_list, $f;
 	}
+
 	for my $f (@file_list)
 	{
 		$count++;
@@ -170,7 +171,7 @@ sub dialog
 	if($dd_dir)
 	{
 		$config::dir = $dd_dir;
-                chdir $config::dir;
+		chdir $config::dir;
 		&ls_dir;
 	}
 	else
@@ -185,10 +186,10 @@ sub dialog
 
 sub fn_readdir
 {
-	my $dir			= shift;
-	my @dirlist		= ();
+	my $dir				= shift;
+	my @dirlist			= ();
 	my @dirlist_clean	= ();
-	my @d			= ();
+	my @d				= ();
 
 	opendir(DIR, $dir) or &main::quit("can't open dir \"$dir\": $!");
 	@dirlist = CORE::readdir(DIR);
