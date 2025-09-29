@@ -234,13 +234,14 @@ $log_box->Contents();
 
 # Tie the log file to the log box
 our $log_file_pos;
-$log_file_pos = -s $main::log_file if -f $main::log_file; # Get initial size
-$log_file_pos = 0 if !defined $log_file_pos;
+$log_file_pos = -s $main::log_file	if -f $main::log_file; # Get initial size
+$log_file_pos = 0 					if !defined $log_file_pos;
 
 sub tail_log_file
 {
     $main::mw->after(1000, \&tail_log_file);
 }
+
 # Start the first check
 $main::mw->after(1000, \&tail_log_file);
 
@@ -503,9 +504,9 @@ $frm_bottom -> Label(-text=>' ')
 
 my $ls_but = $frm_bottom -> Button
 (
-	-text=>			'LIST',
+	-text=>				'LIST',
 	-activebackground=>	'orange',
-	-command=>		\&dir::ls_dir
+	-command=>			\&dir::ls_dir
 )
 -> grid
 (
@@ -658,7 +659,7 @@ $balloon->attach
 	-msg=> "Swaps period with the set space delimiter\n\neg: Norther.-.Betrayed.mp3 to Norther - Betrayed.mp3"
 );
 
-$frm_left -> Label(-text=>' ')
+$frm_left->Label(-text=>' ')
 -> grid
 (
 	-row=>		$row++,
@@ -666,7 +667,7 @@ $frm_left -> Label(-text=>' ')
 	-sticky=>	'ne'
 );
 
-my $K_chk = $frm_left -> Checkbutton
+my $K_chk = $frm_left->Checkbutton
 (
 	-text=>				'RM Word List',
 	-variable=>			\$config::hash{kill_cwords}{value},
@@ -684,7 +685,7 @@ $balloon->attach
 	-msg => "Remove list of words specified in the 'Remove Word List'"
 );
 
-my $P_chk = $frm_left -> Checkbutton
+my $P_chk = $frm_left->Checkbutton
 (
 	-text=>				'RM Pattern List',
 	-variable=>			\$config::hash{kill_sp_patterns}{value},
@@ -710,7 +711,7 @@ $frm_left->Label(-text=>' ')
 	-sticky=>	'ne'
 );
 
-my $R_chk = $frm_left -> Checkbutton
+my $R_chk = $frm_left->Checkbutton
 (
 	-text=>				"Remove:",
 	-variable=>			\$config::hash{replace}{value},
@@ -728,7 +729,7 @@ $balloon->attach
 	-msg => "Remove user entered words\n\nNote 1:\tTo remove multiple words, separate with |\n\nExample:\tone|two|three\n\nNote 2:\tTo remove | simply escape it like so \\|\nNote 3:\tPerl regexps are available\n\tEnable under File, Preferences, Advance, Enable regexps."
 );
 
-my $R_ent1 = $frm_left -> Entry(-textvariable=>\$config::ins_str_old)
+my $R_ent1 = $frm_left->Entry(-textvariable=>\$config::ins_str_old)
 -> grid
 (
 	-row=>		$row++,
@@ -737,7 +738,7 @@ my $R_ent1 = $frm_left -> Entry(-textvariable=>\$config::ins_str_old)
 );
 $balloon->attach($R_ent1, -msg=> "Enter word/s to remove");
 
-$frm_left -> Label(-text=>"Replace With:")
+$frm_left->Label(-text=>"Replace With:")
 -> grid
 (
 	-row=>		$row++,
@@ -753,7 +754,7 @@ my $R_ent2 = $frm_left->Entry(-textvariable=>\$config::ins_str)
 );
 $balloon->attach($R_ent2, -msg => "Leave blank if your only removing words");
 
-my $f_chk = $frm_left -> Checkbutton
+my $f_chk = $frm_left->Checkbutton
 (
 	-text=>				"Front Append:",
 	-variable=>			\$config::hash{INS_START}{value},
@@ -834,12 +835,13 @@ $tab2->Label
 	-sticky=>	'nw'
 );
 
-my $id3_mode_chk = $tab2 -> Checkbutton
+my $id3_mode_chk = $tab2->Checkbutton
 (
 	-text=>			    "Process Tags",
 	-variable=>		    \$config::hash{id3_mode}{value},
 	-activeforeground=>	'blue',
-	-command=>		    sub 
+	-command=>		    
+	sub 
     {
         &dir::ls_dir;
 
@@ -867,7 +869,7 @@ my $id3_mode_chk = $tab2 -> Checkbutton
 $balloon->attach($id3_mode_chk, -msg=> "Enable processing of audio file tags");
 
 $tab2->Label(-text=>' ')
--> grid
+->grid
 (
 	-row=>      $row++,
 	-column=>   1
@@ -878,7 +880,8 @@ my $id3_guess_tag_chk = $tab2->Checkbutton
 	-text=>			    "Guess tags",
 	-variable=>		    \$config::hash{id3_guess_tag}{value},
 	-activeforeground=>	'blue',
-    -command=>		    sub 
+    -command=>		    
+	sub 
     {
         if($config::hash{id3_guess_tag}{value} == 1)
         {
@@ -886,7 +889,7 @@ my $id3_guess_tag_chk = $tab2->Checkbutton
         }        
     }
 )
--> grid
+->grid
 (
 	-row=>		    $row++,
 	-column=>	    1,
@@ -968,9 +971,17 @@ my $id3_art_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Artist as:",
 	-variable=>			\$config::hash{AUDIO_SET_ARTIST}{value},
-	-activeforeground=>	'blue'
+	-activeforeground=>	'blue',
+    -command=>		    
+	sub 
+    {
+        if($config::hash{AUDIO_SET_ARTIST}{value} == 1)
+        {
+            $config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
+        }        
+    }	
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1000,7 +1011,15 @@ my $id3_alb_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Album as:",
 	-variable=>			\$config::hash{AUDIO_SET_ALBUM}{value},
-	-activeforeground=>	'blue'
+	-activeforeground=>	'blue',
+	-command=>
+	sub 
+	{
+		if($config::hash{AUDIO_SET_ALBUM}{value} == 1)
+		{
+			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
+		}        
+	}
 )
 -> grid
 (
@@ -1028,7 +1047,15 @@ my $id3_genre_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Genre as:",
 	-variable=>			\$config::hash{AUDIO_SET_GENRE}{value},
-	-activeforeground=>	'blue'
+	-activeforeground=>	'blue',
+	-command=>
+	sub 
+	{
+		if($config::hash{AUDIO_SET_GENRE}{value} == 1)
+		{
+			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
+		}        
+	}
 )
 -> grid
 (
@@ -1065,9 +1092,17 @@ my $id3_year_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Year as:",
 	-variable=>			\$config::hash{AUDIO_SET_YEAR}{value},
-	-activeforeground=>	'blue'
+	-activeforeground=>	'blue',
+	-command=>
+	sub 
+	{
+		if($config::hash{AUDIO_SET_YEAR}{value} == 1)
+		{
+			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
+		}        
+	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1094,14 +1129,23 @@ my $id3_com_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Comment as:",
 	-variable=>			\$config::hash{AUDIO_SET_COMMENT}{value},
-	-activeforeground=>	'blue'
+	-activeforeground=>	'blue',
+	-command=>
+	sub 
+	{
+		if($config::hash{AUDIO_SET_COMMENT}{value} == 1)
+		{
+			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
+		}        
+	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
 	-sticky=>	'nw'
 );
+
 $balloon->attach
 (
 	$id3_com_chk,
@@ -1112,7 +1156,7 @@ my $id3_com_ent = $tab2->Entry
 (
 	-textvariable=>\$config::id3_com_str
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
