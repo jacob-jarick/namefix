@@ -12,6 +12,7 @@ use File::Find;
 use FindBin;
 use lib "$FindBin::Bin/../../libs";
 use jpegexif;
+use mp3;
 
 #--------------------------------------------------------------------------------------------------------------
 # Show dialog
@@ -179,6 +180,46 @@ sub show_properties_hlist
 					}
 
 					$hlist->add($entry_num, -text=> $tag);
+					$hlist->itemCreate($entry_num, 1, -text=> $value);
+					$entry_num++;
+				}
+			}
+		}
+
+		# If it's an audio file, show ID3 tags
+		if($ff =~ /\.$config::id3_ext_regex$/i)
+		{
+			my $id3_tags = mp3::get_tags($ff);
+			
+			# Check if any ID3 tags exist (not all empty)
+			my $has_id3_data = 0;
+			for my $tag_name (keys %$id3_tags)
+			{
+				if($id3_tags->{$tag_name} && $id3_tags->{$tag_name} ne '')
+				{
+					$has_id3_data = 1;
+					last;
+				}
+			}
+			
+			if($has_id3_data)
+			{
+				# Add ID3 header
+				$hlist->add($entry_num, -text=> 'ID3 Tags');
+				$hlist->itemCreate($entry_num, 1, -text=> '');
+				$entry_num++;
+
+				# Display ID3 tags in a specific order (artist, title, album, etc.)
+				my @tag_order = qw(artist title album track year genre comment);
+				for my $tag_name (@tag_order)
+				{
+					my $value = $id3_tags->{$tag_name} // '';
+					next if $value eq '';  # Skip empty tags
+					
+					# Capitalize first letter of tag name for display
+					my $display_name = ucfirst($tag_name);
+					
+					$hlist->add($entry_num, -text=> $display_name);
 					$hlist->itemCreate($entry_num, 1, -text=> $value);
 					$entry_num++;
 				}
