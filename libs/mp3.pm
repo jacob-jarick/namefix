@@ -50,9 +50,9 @@ $template{comment}	= '';
 sub get_tags
 {
 	my $file	= shift;
-	&main::quit("get_tags \$file is undef") if(!defined $file);
+	&main::quit("get_tags \$file is undef") if !defined $file;
 
-    my %tag_hash = ();
+    my %tag_hash 		= ();
     $tag_hash{artist}	= '';	# artist
     $tag_hash{title}	= '';	# track title
     $tag_hash{track}	= '';	# track number
@@ -62,6 +62,8 @@ sub get_tags
     $tag_hash{comment}	= '';	# comment
 
     return \%tag_hash	if $file !~ /\.$config::id3_ext_regex$/i;
+
+	&main::quit("get_tags '$file' not found") if !-f $file;
 
 	my $audio_tags		= MP3::Tag->new($file);
 
@@ -106,11 +108,9 @@ sub write_tags
 {
 	my $file = shift;
 
-	&main::quit("mp3::write_tags: \$file is undef") if ! defined $file;
-	&main::quit("mp3::write_tags: \$file eq ''") if $file eq '';
-	&main::quit("mp3::write_tags: file '$config::dir/$file' not found") if !-f "$config::dir/$file";
-
-	my $work_file = "$config::dir/$file";
+	&main::quit("mp3::write_tags: \$file is undef")			if ! defined $file;
+	&main::quit("mp3::write_tags: \$file eq ''") 			if $file eq '';
+	&main::quit("mp3::write_tags: file '$file' not found")	if !-f $file;
 
 	&main::quit("mp3::write_tags: \$file  '$file' is not an audio file\n") if $file !~ /\.$config::id3_ext_regex$/i;
 
@@ -136,7 +136,7 @@ sub write_tags
         }
     }
 
-	my $audio_tags = MP3::Tag->new($work_file);
+	my $audio_tags = MP3::Tag->new($file);
 
 	$audio_tags->title_set	($tag_hash{title});
 	$audio_tags->artist_set	($tag_hash{artist});

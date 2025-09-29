@@ -145,9 +145,20 @@ sub ls_dir_print
 	}
 
 	# check for audio tags
-	if($config::hash{id3_mode}{value})
+	if($config::hash{id3_mode}{value} && -f $file)
 	{
-		my $ref = &mp3::get_tags($file);
+		# Check if $file is already a full path or just a filename
+		my $full_path;
+		if(File::Spec->file_name_is_absolute($file))
+		{
+			$full_path = $file;  # Already a full path
+		}
+		else
+		{
+			$full_path = "$config::dir/$file";  # Just a filename, construct full path
+		}
+		
+		my $ref = &mp3::get_tags($full_path);
 		&nf_print::p($file, undef, $ref);
 		return;
 	}

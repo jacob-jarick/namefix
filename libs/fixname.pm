@@ -101,7 +101,7 @@ sub fix
 
 	if($config::hash{id3_mode}{value} && $IS_AUDIO_FILE)
 	{
-		my $ref		= &mp3::get_tags($file);
+		my $ref		= &mp3::get_tags($path);
 		%tags_h		= %$ref;
 		%tags_h_new	= %tags_h;
 		$tag		= 1;
@@ -240,13 +240,13 @@ sub fix
 		$config::id3_change++ if $TAGS_CHANGED;
 
 		if($TAGS_CHANGED)
-		{
-			&misc::plog(2, "'$file' ID3 tags updated");
-			
+		{	
+			&misc::plog(3, "'$path' update ID3 tags");	
 			if(!$config::PREVIEW)
 			{
-				&mp3::write_tags($file, \%tags_h_new);
+				&mp3::write_tags("$path", \%tags_h_new);
 			}
+			&misc::plog(2, "'$path' ID3 tags updated");
 		}
 	}
 
