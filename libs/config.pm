@@ -8,6 +8,8 @@ use Cwd;
 use Data::Dumper::Concise;
 use FindBin qw($Bin);
 
+our %hash				= ();
+
 require misc;
 
 our $dir				= cwd;
@@ -17,7 +19,23 @@ our $hlist_cwd			= cwd;
 our $version 			= '4.1.7';
 our $folderimage 		= '';
 our $fileimage   		= '';
-our $dialog_font		= '';
+
+$hash{debug}			{save}	= 'base';
+$hash{debug}			{value}	= 0;
+
+$hash{LOG_STDOUT}		{save}	= 'base';
+$hash{LOG_STDOUT}		{value}	= 0;
+
+$hash{ERROR_STDOUT}		{save}	= 'base';
+$hash{ERROR_STDOUT}		{value}	= 1;
+
+$hash{ERROR_NOTIFY}		{save}	= 'base';
+$hash{ERROR_NOTIFY}		{value}	= 1;
+
+$hash{ZERO_LOG}			{save}	= 'base';
+$hash{ZERO_LOG}			{value}	= 1;
+
+our $g_font				= '';
 our $home				= &misc::get_home;
 
 # File locations
@@ -68,40 +86,39 @@ our $last_recr_dir 		= '';
 our @id3v2_exts 		= ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
 our $id3_ext_regex 		= join('|', @id3v2_exts);
 
-our %hash				= ();
 our $hash_tsv			= &misc::get_home."/.namefix.pl/config_hash.tsv";
 
 #############################################################################################
 # MAIN TAB
 
-$hash{CLEANUP_GENERAL}		{save}	= 'mw';
+$hash{CLEANUP_GENERAL}		{save}	= 'extended';
 $hash{CLEANUP_GENERAL}		{value}	= 0;
 
-$hash{case}					{save}	= 'mw';
+$hash{case}					{save}	= 'extended';
 $hash{case}					{value}	= 0;
 
-$hash{WORD_SPECIAL_CASING}	{save}	= 'mw';
+$hash{WORD_SPECIAL_CASING}	{save}	= 'extended';
 $hash{WORD_SPECIAL_CASING}	{value}	= 0;
 
-$hash{spaces}				{save}	= 'mw';
+$hash{spaces}				{save}	= 'extended';
 $hash{spaces}				{value}	= 0;
 
-$hash{dot2space}			{save}	= 'mw';
+$hash{dot2space}			{save}	= 'extended';
 $hash{dot2space}			{value}	= 0;
 
-$hash{kill_cwords}			{save}	= 'mw';
+$hash{kill_cwords}			{save}	= 'extended';
 $hash{kill_cwords}			{value}	= 0;
 
-$hash{kill_sp_patterns}		{save}	= 'mw';
+$hash{kill_sp_patterns}		{save}	= 'extended';
 $hash{kill_sp_patterns}		{value}	= 0;
 
-$hash{replace}{save}		= 'mw';
-$hash{replace}{value}		= 0;
+$hash{replace}				{save}	= 'extended';
+$hash{replace}				{value}	= 0;
 
-$hash{INS_END}{save}		= 'mw';
-$hash{INS_END}{value}		= 0;
-$hash{INS_START}{save}		= 'mw';
-$hash{INS_START}{value}		= 0;
+$hash{INS_END}				{save}	= 'extended';
+$hash{INS_END}				{value}	= 0;
+$hash{INS_START}			{save}	= 'extended';
+$hash{INS_START}			{value}	= 0;
 
 our $ins_front_str	= '';
 our $ins_end_str	= '';
@@ -111,31 +128,31 @@ our $ins_str		= '';
 #############################################################################################
 # MP3 TAB
 
-$hash{id3_mode}				{save}	= 'mw';
+$hash{id3_mode}				{save}	= 'extended';
 $hash{id3_mode}				{value}	= 0;
 
-$hash{id3_guess_tag}		{save}	= 'mw';
+$hash{id3_guess_tag}		{save}	= 'extended';
 $hash{id3_guess_tag}		{value}	= 0;
 
-$hash{AUDIO_FORCE}			{save}	= 'mw';
+$hash{AUDIO_FORCE}			{save}	= 'extended';
 $hash{AUDIO_FORCE}			{value}	= 0;
 
-$hash{RM_AUDIO_TAGS}		{save}	= 'mw';
+$hash{RM_AUDIO_TAGS}		{save}	= 'extended';
 $hash{RM_AUDIO_TAGS}		{value}	= 0;
 
-$hash{AUDIO_SET_ARTIST}		{save}	= 'mw';
+$hash{AUDIO_SET_ARTIST}		{save}	= 'extended';
 $hash{AUDIO_SET_ARTIST}		{value}	= 0;
 
-$hash{AUDIO_SET_ALBUM}		{save}	= 'mw';
+$hash{AUDIO_SET_ALBUM}		{save}	= 'extended';
 $hash{AUDIO_SET_ALBUM}		{value}	= 0;
 
-$hash{AUDIO_SET_GENRE}		{save}	= 'mw';
+$hash{AUDIO_SET_GENRE}		{save}	= 'extended';
 $hash{AUDIO_SET_GENRE}		{value}	= 0;
 
-$hash{AUDIO_SET_YEAR}		{save}	= 'mw';
+$hash{AUDIO_SET_YEAR}		{save}	= 'extended';
 $hash{AUDIO_SET_YEAR}		{value}	= 0;
 
-$hash{AUDIO_SET_COMMENT}	{save}	= 'mw';
+$hash{AUDIO_SET_COMMENT}	{save}	= 'extended';
 $hash{AUDIO_SET_COMMENT}	{value}	= 0;
 
 # id3 tag txt
@@ -151,98 +168,98 @@ our $id3_com_str	= '';
 #############################################################################################
 # MISC TAB
 
-$hash{uc_all}				{save}	= 'mw';
+$hash{uc_all}				{save}	= 'extended';
 $hash{uc_all}				{value}	= 0;
 
-$hash{lc_all}				{save}	= 'mw';
+$hash{lc_all}				{save}	= 'extended';
 $hash{lc_all}				{value}	= 0;
 
-$hash{intr_char}			{save}	= 'mw';
+$hash{intr_char}			{save}	= 'extended';
 $hash{intr_char}			{value}	= 0;
 
-$hash{sp_char}				{save}	= 'mw';
+$hash{sp_char}				{save}	= 'extended';
 $hash{sp_char}				{value}	= 0;
 
-$hash{RM_DIGITS}{save}		= 'mw'; #	RM ^Digits
-$hash{RM_DIGITS}{value}		= 0;
+$hash{RM_DIGITS}			{save}		= 'extended'; #	RM ^Digits
+$hash{RM_DIGITS}			{value}		= 0;
 
-$hash{digits}{save}     	= 'mw';
-$hash{digits}{value}     	= 0;
+$hash{digits}				{save}		= 'extended';
+$hash{digits}				{value}		= 0;
 
-$hash{unscene}				{save}	= 'mw';
+$hash{unscene}				{save}	= 'extended';
 $hash{unscene}				{value}	= 0;
 
-$hash{scene}				{save}	= 'mw';
+$hash{scene}				{save}	= 'extended';
 $hash{scene}				{value}	= 0;
 
-$hash{pad_N_to_NN}			{save}	= 'mw';
+$hash{pad_N_to_NN}			{save}	= 'extended';
 $hash{pad_N_to_NN}			{value}	= 0;
 
-$hash{pad_dash}				{save}	= 'mw';
+$hash{pad_dash}				{save}	= 'extended';
 $hash{pad_dash}				{value}	= 0;
 
-$hash{pad_digits}			{save}	= 'mw';
+$hash{pad_digits}			{save}	= 'extended';
 $hash{pad_digits}			{value}	= 0;
 
-$hash{pad_digits_w_zero}	{save}	= 'mw';
+$hash{pad_digits_w_zero}	{save}	= 'extended';
 $hash{pad_digits_w_zero}	{value}	= 0;
 
-$hash{SPLIT_DDDD}			{save}	= 'mw';
+$hash{SPLIT_DDDD}			{save}	= 'extended';
 $hash{SPLIT_DDDD}			{value}	= 0;
 
 #############################################################################################
 # ENUMURATE TAB
 
-$hash{enum}				{save}	= 'mw';
+$hash{enum}				{save}	= 'extended';
 $hash{enum}				{value}	= 0;
 
-$hash{enum_opt}			{save}	= 'mw';
+$hash{enum_opt}			{save}	= 'extended';
 $hash{enum_opt}			{value}	= 0;
 
-$hash{enum_add}			{save}	= 'mw';
+$hash{enum_add}			{save}	= 'extended';
 $hash{enum_add}			{value}	= 0;
 
 our $enum_start_str		= '';
 our $enum_end_str		= '';
 
-$hash{enum_pad}			{save}	= 'mw';
+$hash{enum_pad}			{save}	= 'extended';
 $hash{enum_pad}			{value}	= 0;
 
-$hash{enum_pad_zeros}	{save}	= 'mw';
+$hash{enum_pad_zeros}	{save}	= 'extended';
 $hash{enum_pad_zeros}	{value}	= 4;
 
 #############################################################################################
 # TRUNCATE TAB
 
-$hash{truncate}			{save}	= 'mw';
+$hash{truncate}			{save}	= 'extended';
 $hash{truncate}			{value}	= 0;
 
-$hash{truncate_to}		{save}	= 'mw';
+$hash{truncate_to}		{save}	= 'extended';
 $hash{truncate_to}		{value}	= 256;
 
-$hash{truncate_style}	{save}	= 'mw';
+$hash{truncate_style}	{save}	= 'extended';
 $hash{truncate_style}	{value}	= 0;
 
-$hash{trunc_char}		{save}	= 'mw';
+$hash{trunc_char}		{save}	= 'extended';
 $hash{trunc_char}		{value}	= '';
 
 #############################################################################################
 # EXIF TAB
 
-$hash{exif_show}		{save}	= 'mw';
+$hash{exif_show}		{save}	= 'extended';
 $hash{exif_show}		{value}	= 0;
 
-$hash{exif_rm_all}		{save}	= 'mw';
+$hash{exif_rm_all}		{save}	= 'extended';
 $hash{exif_rm_all}		{value}	= 0;
 
 
 #############################################################################################
 # FILTER BAR
 
-$hash{FILTER}				{save}	= 'mw';
+$hash{FILTER}				{save}	= 'extended';
 $hash{FILTER}				{value}	= 0;
 
-$hash{FILTER_IGNORE_CASE}	{save}	= 'mw';
+$hash{FILTER_IGNORE_CASE}	{save}	= 'extended';
 $hash{FILTER_IGNORE_CASE}	{value}	= 0;
 
 our $filter_string	= '';
@@ -250,79 +267,79 @@ our $filter_string	= '';
 #############################################################################################
 # bottom menu bar
 
-$hash{RECURSIVE}		{save}		= 'norm';
+$hash{RECURSIVE}		{save}		= 'base';
 $hash{RECURSIVE}		{value}		= 0;
 
-$hash{IGNORE_FILE_TYPE}	{save}		= 'mw';
+$hash{IGNORE_FILE_TYPE}	{save}		= 'extended';
 $hash{IGNORE_FILE_TYPE}	{value}		= 0;
 
-$hash{PROC_DIRS}		{save}		= 'mw';
+$hash{PROC_DIRS}		{save}		= 'extended';
 $hash{PROC_DIRS}		{value}		= 0;
 
 #############################################################################################
 # CLI ONLY OPTIONS
 
-$hash{HTML_HACK}		{save}	= 'norm';
+$hash{HTML_HACK}		{save}	= 'base';
 $hash{HTML_HACK}		{value}	= 0;
 
-$hash{browser}			{save}	= 'norm';
+$hash{browser}			{save}	= 'base';
 $hash{browser}			{value}	= 'elinks';
 
-$hash{editor}			{save}	= 'norm';
+$hash{editor}			{save}	= 'base';
 $hash{editor}			{value}	= 'vim';
 
 #############################################################################################
 # CONFIG DIALOG - MAIN TAB
 
-$hash{space_character}		{save}	= 'norm';
+$hash{space_character}		{save}	= 'base';
 $hash{space_character}		{value}	= ' ';
 
-$hash{max_fn_length}		{save}	= 'norm';
+$hash{max_fn_length}		{save}	= 'base';
 $hash{max_fn_length}		{value}	= 256;
 
-$hash{save_window_size}		{save}	= 'norm';
+$hash{save_window_size}		{save}	= 'base';
 $hash{save_window_size}		{value}	= 0;
 
-$hash{window_g}				{save}	= 'mwg';
+$hash{window_g}				{save}	= 'geometry';
 $hash{window_g}				{value}	= '';
 
-our $load_defaults			= 0;	# save main window options
+our $save_extended			= 0;	# save main window options
 
 #############################################################################################
 # CONFIG DIALOG - ADVANCED TAB
 
-$hash{fat32fix}				{save}	= 'norm';
+$hash{fat32fix}				{save}	= 'base';
 $hash{fat32fix}				{value}	= 0;
 $hash{fat32fix}				{value}	= 1 if lc $^O eq 'mswin32';
 
-$hash{FILTER_REGEX}			{save}	= 'norm';
+$hash{FILTER_REGEX}			{save}	= 'base';
 $hash{FILTER_REGEX}			{value}	= 0;
 
-$hash{file_ext_2_proc}		{save}	= 'norm';
+$hash{file_ext_2_proc}		{save}	= 'base';
 $hash{file_ext_2_proc}		{value}	= "aac|aiff|ape|asf|avi|bmp|flac|gif|jpeg|jpg|m4a|m4v|mkv|mov|mp2|mp3|mp4|mpc|mpg|mpeg|ogg|ogm|opus|png|rm|rmvb|svg|tif|tiff|webm|webp|wma|wmv";
 
-$hash{OVERWRITE}			{save}	= 'norm';
+$hash{OVERWRITE}			{save}	= 'base';
 $hash{OVERWRITE}			{value}	= 0;
 
-$hash{REMOVE_REGEX}			{save}	= 'norm';
+$hash{REMOVE_REGEX}			{save}	= 'base';
 $hash{REMOVE_REGEX}			{value}	= 0;
 
 #############################################################################################
 # CONFIG DIALOG - DEBUG TAB
 
-$hash{debug}			{save}	= 'norm';
+$hash{debug}			{save}	= 'base';
 $hash{debug}			{value}	= 2;
 
-$hash{LOG_STDOUT}		{save}	= 'norm';
+$hash{LOG_STDOUT}		{save}	= 'base';
 $hash{LOG_STDOUT}		{value}	= 0;
 
-$hash{ERROR_STDOUT}		{save}	= 'norm';
+$hash{ERROR_STDOUT}		{save}	= 'base';
 $hash{ERROR_STDOUT}		{value}	= 0;
 
-$hash{ERROR_NOTIFY}		{save}	= 'norm';
+$hash{ERROR_NOTIFY}		{save}	= 'base';
 $hash{ERROR_NOTIFY}		{value}	= 0;
 
-$hash{ZERO_LOG}			{save}	= 'norm';
+$hash{ZERO_LOG}			{save}	= 'base';
 $hash{ZERO_LOG}			{value}	= 1;
 
 #############################################################################################
@@ -358,16 +375,25 @@ our @genres				= ();
 
 sub save_hash
 {
-	&misc::plog(3, "config::save_hash $hash_tsv");
-	&misc::null_file($hash_tsv);
+	my $dry_run = shift || 0;  # Optional dry run parameter
+	
+	&misc::plog(3, "config::save_hash $hash_tsv") unless $dry_run;
+	&misc::null_file($hash_tsv) unless $dry_run;
 
-	$hash{window_g}{value} = $main::mw->geometry if !$CLI;
+	# Capture window geometry if in GUI mode and checkbox is checked
+	$hash{window_g}{value} = $main::mw->geometry if !$CLI && $hash{save_window_size}{value} && !$dry_run;
 
-	my @types = ('norm', 'mw', 'mwg');
+	# Conditional save categories based on checkbox states
+	my @types = ('base');  # Always save base settings
+	push @types, 'extended' if $save_extended;  # Save extended settings if checkbox checked
+	push @types, 'geometry' if !$CLI && $hash{save_window_size}{value};  # Save geometry if GUI mode and checkbox checked
+
+	return @types if $dry_run;  # Return categories for testing
 
 	for my $t (@types)
 	{
 		&misc::file_append($hash_tsv, "\n######## $t ########\n\n");
+
 		for my $k(sort { lc $a cmp lc $b } keys %hash)
 		{
 			if(! defined $hash{$k})
@@ -375,11 +401,13 @@ sub save_hash
 				print Dumper(\%hash);
 				&main::quit("save_hash \$hash{$k} is undef\n");
 			}
+
 			if(! defined $hash{$k}{save})
 			{
 				print Dumper(\%hash);
 				&main::quit("save_hash \$hash{$k}{save} is undef\n");
 			}
+
 			next if $hash{$k}{save} ne $t;
 			save_hash_helper($k);
 		}
@@ -393,7 +421,6 @@ sub save_hash_helper
 	&main::quit("config::save_hash \$hash{$k}{value} is undef". Dumper($hash{$k})) if(!defined $hash{$k}{value});
 	&misc::file_append($hash_tsv, "$k\t\t".$hash{$k}{value}."\n");
 }
-
 
 sub load_hash
 {

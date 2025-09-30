@@ -11,16 +11,16 @@ use warnings;
 
 sub edit_prefs
 {
-	$config::load_defaults = 0;
+	$config::save_extended = 0;	# always reset to 0 on open
 	my $n = 0;
 
-	my $top = $main::mw -> Toplevel
+	my $top = $main::mw->Toplevel
 	(
 		-padx=> 5,
 		-pady=> 5
 	);
 
-	$top -> title("Edit Preferences");
+	$top->title("Edit Preferences");
 
 	my $book = $top->NoteBook()
 	->grid
@@ -172,7 +172,7 @@ sub edit_prefs
 	my $save_defs_chk = $tab1->Checkbutton
 	(
 		-text=>				"Save main window options",
-		-variable=>			\$config::load_defaults,
+		-variable=>			\$config::save_extended,
 		-activeforeground=>	"blue"
 	)
 	->grid
