@@ -40,7 +40,7 @@ sub ls_dir
 
 	&ls_dir_print('..');
 
-	if($config::hash{RECURSIVE}{value})
+	if($config::hash{recursive}{value})
 	{
 		@config::find_arr = ();
 		find(\&run_namefix::find_fix, $config::dir);
@@ -137,7 +137,7 @@ sub ls_dir_print
 
 	# recursive padding
 
-	if(-d $file && $config::hash{RECURSIVE}{value})
+	if(-d $file && $config::hash{recursive}{value})
 	{
 		&nf_print::p(' ', '<BLANK>');
 		&nf_print::p($file);
@@ -226,8 +226,8 @@ sub dir_filtered
 	for my $file (@dirlist)
 	{
 		# $file is dir automatically fail filter
-		next if !$config::LISTING && !$config::hash{PROC_DIRS}{value} && -d $file;
-		next if $config::hash{FILTER}{value} && !&filter::match($file);
+		next if !$config::LISTING && !$config::hash{proc_dirs}{value} && -d $file;
+		next if $config::hash{filter}{value} && !&filter::match($file);
 
 		push @d, $file;
 	}

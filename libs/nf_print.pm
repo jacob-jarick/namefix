@@ -108,7 +108,7 @@ sub p
 	$config::hlist_file_row = $count;
 
 	my $file1_clean	= $file_name;
-	$file1_clean	= $path if $config::hash{RECURSIVE}{value} && -d $path;
+	$file1_clean	= $path if $config::hash{recursive}{value} && -d $path;
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1_clean);
 

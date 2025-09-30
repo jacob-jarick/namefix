@@ -29,7 +29,7 @@ sub prep_globals
 
 	# escape replace word if regexp is disabled
 	$config::ins_str_old_escaped = $config::ins_str_old;
-	$config::ins_str_old_escaped = quotemeta $config::ins_str_old		if($config::hash{FILTER_REGEX}{value} == 1);
+	$config::ins_str_old_escaped = quotemeta $config::ins_str_old		if($config::hash{filter_regex}{value} == 1);
 
 	# update killword list if file exists
 	@config::kill_words_arr = misc::readsf("$config::killwords_file")	if(-f $config::killwords_file);
@@ -72,7 +72,7 @@ sub run
 		nf_print::p('..');
 	}
 
-	if(!$config::hash{RECURSIVE}{value})
+	if(!$config::hash{recursive}{value})
 	{
 		my @dirlist = &dir::dir_filtered($config::dir);
 
@@ -88,11 +88,11 @@ sub run
 			&main::quit("sub run: \$f '$f' is not a dir or file\n")	if !-f $f && !-d $f;
 
 			my ($d, $fn, $p) =  &misc::get_file_info($f);
-			&fixname::fix($fn)	if -f $f || ($config::hash{PROC_DIRS}{value} && -d $f);
+			&fixname::fix($fn)	if -f $f || ($config::hash{proc_dirs}{value} && -d $f);
 		}
 	}
 
-	if($config::hash{RECURSIVE}{value})
+	if($config::hash{recursive}{value})
 	{
 		&misc::plog(4, "sub run::namefix: recursive mode");
 		@config::find_arr = ();

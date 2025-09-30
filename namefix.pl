@@ -111,7 +111,7 @@ else
         $config::edit_pat_font		= 'ansi 18 bold';
 }
 
-&misc::null_file($main::log_file)	if $config::hash{ZERO_LOG}{value};
+&misc::null_file($main::log_file)	if $config::hash{zero_log}{value};
 
 if (-f $config::hash_tsv)
 {
@@ -387,7 +387,7 @@ $frm_bottom -> Label()
 my $recr_chk = $frm_bottom -> Checkbutton
 (
 	-text=>				'Recursive',
-	-variable=>			\$config::hash{RECURSIVE}{value},
+	-variable=>			\$config::hash{recursive}{value},
 	-activeforeground=>	'blue'
 )
 -> grid
@@ -400,7 +400,7 @@ my $recr_chk = $frm_bottom -> Checkbutton
 my $D_chk = $frm_bottom -> Checkbutton
 (
 	-text=>				'Process Dirs',
-	-variable=>			\$config::hash{PROC_DIRS}{value},
+	-variable=>			\$config::hash{proc_dirs}{value},
 	-activeforeground=>	'blue'
 )
 -> grid
@@ -422,7 +422,7 @@ $frm_bottom->Label()
 my $I_chk = $frm_bottom->Checkbutton
 (
 	-text=>				'Process ALL Files',
-	-variable=>			\$config::hash{IGNORE_FILE_TYPE}{value},
+	-variable=>			\$config::hash{ignore_file_type}{value},
 	-activeforeground=>	'blue'
 )
 -> grid
@@ -571,10 +571,10 @@ $frm_left -> Label
 my $clean_chk = $frm_left->Checkbutton
 (
 	-text=>				'General Cleanup',
-	-variable=>			\$config::hash{CLEANUP_GENERAL}{value},
+	-variable=>			\$config::hash{cleanup_general}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -586,7 +586,7 @@ $balloon->attach
 	-msg=> "Perform general cleanups on filename.\n\nNote: Leave on unless doing very specific renaming."
 );
 
-my $case_chk = $frm_left -> Checkbutton
+my $case_chk = $frm_left->Checkbutton
 (
 	-text=>				'Normal Casing',
 	-variable=>			\$config::hash{case}{value},
@@ -605,10 +605,10 @@ $balloon->attach
 	-msg=>"Uppercase the 1st letter of every word and lowercase the rest"
 );
 
-my $w_chk = $frm_left -> Checkbutton
+my $w_chk = $frm_left->Checkbutton
 (
 	-text=>				'Specific Casing',
-	-variable=>			\$config::hash{WORD_SPECIAL_CASING}{value},
+	-variable=>			\$config::hash{word_special_casing}{value},
 	-activeforeground=>	'blue'
 )
 -> grid
@@ -623,7 +623,7 @@ $balloon->attach
 	-msg=> "Applies word specific casing from the \"Specific Casing List\"\n\neg: ABBA, ACDC CD1 CD2 XVII"
 );
 
-my $p_chk = $frm_left -> Checkbutton
+my $p_chk = $frm_left->Checkbutton
 (
 	-text=>				'Spaces',
 	-variable=>			\$config::hash{spaces}{value},
@@ -641,7 +641,7 @@ $balloon->attach
 	-msg=> "Swaps space and underscore with the set space delimiter\n\neg: Weezer_-_Hash_Pipe.mp3 to Weezer - Hash Pipe.mp3"
 );
 
-my $o_chk = $frm_left -> Checkbutton
+my $o_chk = $frm_left->Checkbutton
 (
 	-text=>				". to Space",
 	-variable=>			\$config::hash{dot2space}{value},
@@ -673,7 +673,7 @@ my $K_chk = $frm_left->Checkbutton
 	-variable=>			\$config::hash{kill_cwords}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -682,7 +682,7 @@ my $K_chk = $frm_left->Checkbutton
 $balloon->attach
 (
 	$K_chk,
-	-msg => "Remove list of words specified in the 'Remove Word List'"
+	-msg=> "Remove list of words specified in the 'Remove Word List'"
 );
 
 my $P_chk = $frm_left->Checkbutton
@@ -691,7 +691,7 @@ my $P_chk = $frm_left->Checkbutton
 	-variable=>			\$config::hash{kill_sp_patterns}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -700,11 +700,11 @@ my $P_chk = $frm_left->Checkbutton
 $balloon->attach
 (
 	$P_chk,
-	-msg => "Removes list of regexps specified in 'Remove Pattern List'.\n\nNote: Mainly used to match urls"
+	-msg=> "Removes list of regexps specified in 'Remove Pattern List'.\n\nNote: Mainly used to match urls"
 );
 
 $frm_left->Label(-text=>' ')
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -739,25 +739,25 @@ my $R_ent1 = $frm_left->Entry(-textvariable=>\$config::ins_str_old)
 $balloon->attach($R_ent1, -msg=> "Enter word/s to remove");
 
 $frm_left->Label(-text=>"Replace With:")
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
 	-sticky=>	'nw'
 );
 my $R_ent2 = $frm_left->Entry(-textvariable=>\$config::ins_str)
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
 	-sticky=>	'nw'
 );
-$balloon->attach($R_ent2, -msg => "Leave blank if your only removing words");
+$balloon->attach($R_ent2, -msg=> "Leave blank if your only removing words");
 
 my $f_chk = $frm_left->Checkbutton
 (
 	-text=>				"Front Append:",
-	-variable=>			\$config::hash{INS_START}{value},
+	-variable=>			\$config::hash{ins_start}{value},
 	-activeforeground=>	'blue'
 )
 -> grid
@@ -769,7 +769,7 @@ my $f_chk = $frm_left->Checkbutton
 $balloon->attach($f_chk, -msg=> "Append string (of characters) to front of filename");
 
 my $f_ent = $frm_left->Entry(-textvariable=>\$config::ins_front_str)
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -809,7 +809,7 @@ my $clr_but = $frm_left -> Button
 		&misc::plog(2, 'clear');
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -849,13 +849,13 @@ my $id3_mode_chk = $tab2->Checkbutton
         if($config::hash{id3_mode}{value} == 0)
         {
             $config::hash{id3_guess_tag}{value}     = 0; 
-            $config::hash{AUDIO_FORCE}{value}       = 0;
-            $config::hash{RM_AUDIO_TAGS}{value}     = 0;
-            $config::hash{AUDIO_SET_ARTIST}{value}  = 0;
-            $config::hash{AUDIO_SET_ALBUM}{value}   = 0;  
-            $config::hash{AUDIO_SET_GENRE}{value}   = 0;
-            $config::hash{AUDIO_SET_YEAR}{value}    = 0;
-            $config::hash{AUDIO_SET_COMMENT}{value} = 0;
+            $config::hash{audio_force}{value}       = 0;
+            $config::hash{rm_audio_tags}{value}     = 0;
+            $config::hash{audio_set_artist}{value}  = 0;
+            $config::hash{audio_set_album}{value}   = 0;  
+            $config::hash{audio_set_genre}{value}   = 0;
+            $config::hash{audio_set_year}{value}    = 0;
+            $config::hash{audio_set_comment}{value} = 0;
         }
     }
 )
@@ -907,18 +907,18 @@ $balloon->attach
 my $AUDIO_FORCE_chk = $tab2->Checkbutton
 (
 	-text=>             "Overwrite",
-	-variable=>         \$config::hash{AUDIO_FORCE}{value},
+	-variable=>         \$config::hash{audio_force}{value},
 	-activeforeground=> 'blue',
     -command=>		    
 	sub 
     {
-        if($config::hash{AUDIO_FORCE}{value} == 1)
+        if($config::hash{audio_force}{value} == 1)
         {
             $config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
         }        
     }
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -932,27 +932,27 @@ $balloon->attach
 );
 
 $tab2->Label(-text=>" ")
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1
 );
 
-my $rm_id3v2 = $tab2 -> Checkbutton
+my $rm_id3v2 = $tab2->Checkbutton
 (
 	-text=>             "RM id3 tags",
-	-variable=>         \$config::hash{RM_AUDIO_TAGS}{value},
+	-variable=>         \$config::hash{rm_audio_tags}{value},
 	-activeforeground=> 'blue',
     -command=>			
 	sub 
 	{
-		if($config::hash{RM_AUDIO_TAGS}{value} == 1)
+		if($config::hash{rm_audio_tags}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
 	}
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -961,7 +961,7 @@ my $rm_id3v2 = $tab2 -> Checkbutton
 );
 
 $tab2->Label(-text=>" ")
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1
@@ -970,12 +970,12 @@ $tab2->Label(-text=>" ")
 my $id3_art_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Artist as:",
-	-variable=>			\$config::hash{AUDIO_SET_ARTIST}{value},
+	-variable=>			\$config::hash{audio_set_artist}{value},
 	-activeforeground=>	'blue',
     -command=>		    
 	sub 
     {
-        if($config::hash{AUDIO_SET_ARTIST}{value} == 1)
+        if($config::hash{audio_set_artist}{value} == 1)
         {
             $config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
         }        
@@ -1000,7 +1000,7 @@ my $id3_art_ent = $tab2->Entry
 (
 	-textvariable=>\$config::id3_art_str
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1010,18 +1010,18 @@ my $id3_art_ent = $tab2->Entry
 my $id3_alb_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Album as:",
-	-variable=>			\$config::hash{AUDIO_SET_ALBUM}{value},
+	-variable=>			\$config::hash{audio_set_album}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{AUDIO_SET_ALBUM}{value} == 1)
+		if($config::hash{audio_set_album}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1035,7 +1035,7 @@ $balloon->attach
 );
 
 my $id3_alb_ent = $tab2->Entry(-textvariable=>\$config::id3_alb_str)
--> grid
+->grid
 (
  	-row=>		$row++,
  	-column=>	1,
@@ -1046,18 +1046,18 @@ my $id3_alb_ent = $tab2->Entry(-textvariable=>\$config::id3_alb_str)
 my $id3_genre_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Genre as:",
-	-variable=>			\$config::hash{AUDIO_SET_GENRE}{value},
+	-variable=>			\$config::hash{audio_set_genre}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{AUDIO_SET_GENRE}{value} == 1)
+		if($config::hash{audio_set_genre}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1091,12 +1091,12 @@ my $genre_combo = $tab2->JComboBox
 my $id3_year_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Year as:",
-	-variable=>			\$config::hash{AUDIO_SET_YEAR}{value},
+	-variable=>			\$config::hash{audio_set_year}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{AUDIO_SET_YEAR}{value} == 1)
+		if($config::hash{audio_set_year}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
@@ -1128,12 +1128,12 @@ my $id3_year_ent = $tab2 -> Entry
 my $id3_com_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Comment as:",
-	-variable=>			\$config::hash{AUDIO_SET_COMMENT}{value},
+	-variable=>			\$config::hash{audio_set_comment}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{AUDIO_SET_COMMENT}{value} == 1)
+		if($config::hash{audio_set_comment}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
@@ -1181,13 +1181,13 @@ my $clr_id3_button = $tab2->Button
 	{
 		$config::hash{id3_guess_tag}		{value} = 0;
 
-		$config::hash{RM_AUDIO_TAGS}		{value} = 0;
-		$config::hash{AUDIO_FORCE}			{value} = 0;
-		$config::hash{AUDIO_SET_ARTIST}		{value} = 0;
-		$config::hash{AUDIO_SET_ALBUM}		{value} = 0;
-		$config::hash{AUDIO_SET_GENRE}		{value} = 0;
-		$config::hash{AUDIO_SET_YEAR}		{value} = 0;
-		$config::hash{AUDIO_SET_COMMENT}	{value} = 0;
+		$config::hash{rm_audio_tags}		{value} = 0;
+		$config::hash{audio_force}			{value} = 0;
+		$config::hash{audio_set_artist}		{value} = 0;
+		$config::hash{audio_set_album}		{value} = 0;
+		$config::hash{audio_set_genre}		{value} = 0;
+		$config::hash{audio_set_year}		{value} = 0;
+		$config::hash{audio_set_comment}	{value} = 0;
 
 		$config::id3_art_str		= '';
 		$config::id3_alb_str		= '';
@@ -1198,7 +1198,7 @@ my $clr_id3_button = $tab2->Button
 		&misc::plog(2, 'cleared id3 options');
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1240,7 +1240,7 @@ my $U_chk = $tab5->Checkbutton
 		$config::hash{lc_all}{value} = 0 if $config::hash{uc_all}{value};
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1258,7 +1258,7 @@ my $L_chk = $tab5->Checkbutton
 		$config::hash{uc_all}{value} = 0 if $config::hash{lc_all}{value}; 
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1271,7 +1271,7 @@ my $i_chk = $tab5->Checkbutton
 	-variable=>			\$config::hash{intr_char}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1289,7 +1289,7 @@ my $b_chk = $tab5->Checkbutton
 	-variable=>			\$config::hash{sp_char}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1311,11 +1311,11 @@ my $d_chk = $tab5->Checkbutton
 	{
 		if($config::hash{digits}{value} == 1)
 		{
-			$config::hash{RM_DIGITS}{value} = 0;
+			$config::hash{rm_digits}{value} = 0;
 		}
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1331,17 +1331,17 @@ $balloon->attach
 my $N_chk = $tab5->Checkbutton
 (
 	-text=>				"RM all Digits",
-	-variable=>			\$config::hash{RM_DIGITS}{value},
+	-variable=>			\$config::hash{rm_digits}{value},
 	-activeforeground=>	'blue',
 	-command=> 			sub
 	{
-		if($config::hash{RM_DIGITS}{value} == 1)
+		if($config::hash{rm_digits}{value} == 1)
 		{
 			$config::hash{digits}{value} = 0;
 		}
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1396,7 +1396,7 @@ my $scene_chk = $tab5->Checkbutton
 		}
 	}
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1413,7 +1413,7 @@ $tab5->Label
 	-justify=>	"left",
 	-text=>		"\nPadding options:\n"
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1426,7 +1426,7 @@ my $pad_N_to_NN = $tab5->Checkbutton
 	-variable=>			\$config::hash{pad_N_to_NN}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1444,7 +1444,7 @@ my $pad_chk = $tab5->Checkbutton
 	-variable=>			\$config::hash{pad_dash}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1462,7 +1462,7 @@ my $pad_d_chk = $tab5->Checkbutton
 	-variable=>			\$config::hash{pad_digits}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1480,7 +1480,7 @@ my $pad_d_w_chk = $tab5->Checkbutton
 	-variable=>			\$config::hash{pad_digits_w_zero}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1495,10 +1495,10 @@ $balloon->attach
 my $chk_split_dddd = $tab5->Checkbutton
 (
 	-text=>				"Pad NNNN with x",
-	-variable=>			\$config::hash{SPLIT_DDDD}{value},
+	-variable=>			\$config::hash{split_dddd}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1510,7 +1510,7 @@ $balloon->attach
 	-msg=> "Pads Season and Episode numbers with an x\n\neg:0101 to 01x01, 102 to 1x02"
 );
 
-$tab5 -> Label
+$tab5->Label
 (
 	-text=>""
 )
@@ -1531,7 +1531,7 @@ $tab6->Label
 	-text=>	"Enumerate Options:\n",
 	-font=>	'Arial 10 bold',
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1545,7 +1545,7 @@ my $n_chk = $tab6->Checkbutton
 	-variable=>			\$config::hash{enum}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1563,7 +1563,7 @@ $tab6->Label
 	-justify=>	"left",
 	-text=>		"\nStyles:\n"
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1578,7 +1578,7 @@ my $rdb_a = $tab6->Radiobutton
 	-variable=>			\$config::hash{enum_opt}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1592,7 +1592,7 @@ my $rdb_b = $tab6->Radiobutton
 	-variable=>			\$config::hash{enum_opt}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1606,7 +1606,7 @@ my $rdb_c = $tab6->Radiobutton
 	-variable=>			\$config::hash{enum_opt}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1630,7 +1630,7 @@ my $enum_add_checkbox = $tab6->Checkbutton
 	-variable=>			\$config::hash{enum_add}{value},
 	-activeforeground=> 'blue'
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1643,12 +1643,11 @@ $balloon->attach
 	-msg=> "Pad enumerated digits with string.\neg:\nhello.jpg\nto\n01-holidays-hello.jpg"
 );
 
-
-$tab6 -> Label
+$tab6->Label
 (
 	-text=>"Start String:"
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1659,7 +1658,7 @@ my $entry_enum_start_str = $tab6->Entry
 (
 	-textvariable=>\$config::enum_start_str
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1679,7 +1678,7 @@ my $entry_enum_end_str = $tab6->Entry
 (
 	-textvariable=>\$config::enum_end_str
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1701,7 +1700,7 @@ $tab6->Label
 	-justify=>	"left",
 	-text=>		"Padding:"
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1715,7 +1714,7 @@ my $enum_pad_chk = $tab6->Checkbutton
 	-variable=>			\$config::hash{enum_pad}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1736,7 +1735,7 @@ my $spin_pad_enum = $tab6->Spinbox
 	-increment=>	1,
 	-width=>		8
 )
--> grid
+->grid
 (
 	-row=>		$row,
 	-column=>	1,
@@ -1748,7 +1747,7 @@ $tab6->Label
 	-justify=>	"left",
 	-text=>		"zeros"
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	2,
@@ -1776,7 +1775,7 @@ $tab7->Label
 	-text=>	"Truncate Options:\n",
 	-font=>	'Arial 10 bold',
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1790,7 +1789,7 @@ my $trunc_chk = $tab7->Checkbutton
 	-variable=>			\$config::hash{truncate}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1808,7 +1807,7 @@ $tab7->Label
 	-justify=>	"left",
 	-text=>		"\nFilename Length: "
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1819,7 +1818,7 @@ my $tfl_ent = $tab7->Entry
 (
 	-textvariable=>\$config::hash{'truncate_to'}{'value'},
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1836,7 +1835,7 @@ $tab7->Label
 	-justify=>	"left",
 	-text=>		"\nStyles:\n"
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1850,7 +1849,7 @@ my $rdb_ts_a = $tab7->Radiobutton
 	-variable=>			\$config::hash{truncate_style}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1869,7 +1868,7 @@ my $rdb_ts_b = $tab7->Radiobutton
 	-variable=>			\$config::hash{truncate_style}{value},
 	-activeforeground=>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1880,6 +1879,7 @@ $balloon->attach
 	$rdb_ts_b,
 	-msg => "Remove characters from the middle of the filename."
 );
+
 my $rdb_ts_c = $tab7-> Radiobutton
 (
 	-text=>					"From End",
@@ -1887,7 +1887,7 @@ my $rdb_ts_c = $tab7-> Radiobutton
 	-variable=>				\$config::hash{truncate_style}{value},
 	-activeforeground =>	'blue'
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1903,7 +1903,7 @@ my $tab7_spacer1 = $tab7->Label
 (
 	-text=>" "
 )
--> grid
+->grid
 (
 	-row=>		$row++,
 	-column=>	1,
@@ -1915,7 +1915,7 @@ $tab7->Label
 	-justify=>		"left",
 	-text=>			"Insert Character\/s: "
 )
--> grid
+->grid
 (
 	-row=>			$row++,
 	-column=>		1,
@@ -1940,7 +1940,7 @@ $balloon->attach
 	-msg=> "Enter one or more characters to be placed\nin the middle of each file truncated using the\ntruncate from middle style.\n\nleave blank to have nothing put in."
 );
 
-$tab7 -> Label
+$tab7->Label
 (
 	-text=>"\n\n\n\n\n\n\n\n\n\n"
 )
@@ -1949,7 +1949,6 @@ $tab7 -> Label
 	-row=>		$row++,
 	-column=>	1
 );
-
 
 #--------------------------------------------------------------------------------------------------------------
 # draw filter 'main screen menu'
@@ -1960,15 +1959,15 @@ our $f_frame = $main::frm_right2->Frame() -> pack(-side=>"top", -fill=>'x');
 $f_frame->Checkbutton
 (
 	-text=>				'Filter',
-	-variable=>			\$config::hash{FILTER}{value},
+	-variable=>			\$config::hash{filter}{value},
 	-activeforeground=> 'blue',
 	-command=> 			
 	sub
 	{
-		if($config::hash{FILTER}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
+		if($config::hash{filter}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
 		{
 			&misc::plog(1, "namefix: tried to enable filtering with an empty filter");
-			$config::hash{FILTER}{value} = 0;
+			$config::hash{filter}{value} = 0;
 		}
 		else
 		{
@@ -1994,7 +1993,7 @@ $f_frame->Entry
 $f_frame->Checkbutton
 (
 	-text=>				"Case In-Sensitive",
-	-variable=>			\$config::hash{FILTER_IGNORE_CASE}{value},
+	-variable=>			\$config::hash{filter_ignore_case}{value},
 	-activeforeground=>	'blue'
 )
 ->pack(-side=>'left');
@@ -2002,7 +2001,7 @@ $f_frame->Checkbutton
 $f_frame->Checkbutton
 (
 	-text=>				"regex",
-	-variable=>			\$config::hash{FILTER_REGEX}{value},
+	-variable=>			\$config::hash{filter_regex}{value},
 	-activeforeground=>	'blue'
 )
 ->pack
@@ -2032,7 +2031,6 @@ if($config::hash{window_g}{value} ne "")
 &misc::plog(2, "Log file: $main::log_file");
 
 MainLoop;
-
 
 #--------------------------------------------------------------------------------------------------------------
 # End

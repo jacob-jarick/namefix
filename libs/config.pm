@@ -23,17 +23,17 @@ our $fileimage   		= '';
 $hash{debug}			{save}	= 'base';
 $hash{debug}			{value}	= 0;
 
-$hash{LOG_STDOUT}		{save}	= 'base';
-$hash{LOG_STDOUT}		{value}	= 0;
+$hash{log_stdout}		{save}	= 'base';
+$hash{log_stdout}		{value}	= 0;
 
-$hash{ERROR_STDOUT}		{save}	= 'base';
-$hash{ERROR_STDOUT}		{value}	= 1;
+$hash{error_stdout}		{save}	= 'base';
+$hash{error_stdout}		{value}	= 1;
 
-$hash{ERROR_NOTIFY}		{save}	= 'base';
-$hash{ERROR_NOTIFY}		{value}	= 1;
+$hash{error_notify}		{save}	= 'base';
+$hash{error_notify}		{value}	= 1;
 
-$hash{ZERO_LOG}			{save}	= 'base';
-$hash{ZERO_LOG}			{value}	= 1;
+$hash{zero_log}			{save}	= 'base';
+$hash{zero_log}			{value}	= 1;
 
 our $g_font				= '';
 our $home				= &misc::get_home;
@@ -91,14 +91,14 @@ our $hash_tsv			= &misc::get_home."/.namefix.pl/config_hash.tsv";
 #############################################################################################
 # MAIN TAB
 
-$hash{CLEANUP_GENERAL}		{save}	= 'extended';
-$hash{CLEANUP_GENERAL}		{value}	= 0;
+$hash{cleanup_general}		{save}	= 'extended';
+$hash{cleanup_general}		{value}	= 0;
 
 $hash{case}					{save}	= 'extended';
 $hash{case}					{value}	= 0;
 
-$hash{WORD_SPECIAL_CASING}	{save}	= 'extended';
-$hash{WORD_SPECIAL_CASING}	{value}	= 0;
+$hash{word_special_casing}	{save}	= 'extended';
+$hash{word_special_casing}	{value}	= 0;
 
 $hash{spaces}				{save}	= 'extended';
 $hash{spaces}				{value}	= 0;
@@ -115,10 +115,10 @@ $hash{kill_sp_patterns}		{value}	= 0;
 $hash{replace}				{save}	= 'extended';
 $hash{replace}				{value}	= 0;
 
-$hash{INS_END}				{save}	= 'extended';
-$hash{INS_END}				{value}	= 0;
-$hash{INS_START}			{save}	= 'extended';
-$hash{INS_START}			{value}	= 0;
+$hash{ins_end}				{save}	= 'extended';
+$hash{ins_end}				{value}	= 0;
+$hash{ins_start}			{save}	= 'extended';
+$hash{ins_start}			{value}	= 0;
 
 our $ins_front_str	= '';
 our $ins_end_str	= '';
@@ -134,26 +134,26 @@ $hash{id3_mode}				{value}	= 0;
 $hash{id3_guess_tag}		{save}	= 'extended';
 $hash{id3_guess_tag}		{value}	= 0;
 
-$hash{AUDIO_FORCE}			{save}	= 'extended';
-$hash{AUDIO_FORCE}			{value}	= 0;
+$hash{audio_force}			{save}	= 'extended';
+$hash{audio_force}			{value}	= 0;
 
-$hash{RM_AUDIO_TAGS}		{save}	= 'extended';
-$hash{RM_AUDIO_TAGS}		{value}	= 0;
+$hash{rm_audio_tags}		{save}	= 'extended';
+$hash{rm_audio_tags}		{value}	= 0;
 
-$hash{AUDIO_SET_ARTIST}		{save}	= 'extended';
-$hash{AUDIO_SET_ARTIST}		{value}	= 0;
+$hash{audio_set_artist}		{save}	= 'extended';
+$hash{audio_set_artist}		{value}	= 0;
 
-$hash{AUDIO_SET_ALBUM}		{save}	= 'extended';
-$hash{AUDIO_SET_ALBUM}		{value}	= 0;
+$hash{audio_set_album}		{save}	= 'extended';
+$hash{audio_set_album}		{value}	= 0;
 
-$hash{AUDIO_SET_GENRE}		{save}	= 'extended';
-$hash{AUDIO_SET_GENRE}		{value}	= 0;
+$hash{audio_set_genre}		{save}	= 'extended';
+$hash{audio_set_genre}		{value}	= 0;
 
-$hash{AUDIO_SET_YEAR}		{save}	= 'extended';
-$hash{AUDIO_SET_YEAR}		{value}	= 0;
+$hash{audio_set_year}		{save}	= 'extended';
+$hash{audio_set_year}		{value}	= 0;
 
-$hash{AUDIO_SET_COMMENT}	{save}	= 'extended';
-$hash{AUDIO_SET_COMMENT}	{value}	= 0;
+$hash{audio_set_comment}	{save}	= 'extended';
+$hash{audio_set_comment}	{value}	= 0;
 
 # id3 tag txt
 our $id3_alb_str	= '';
@@ -180,8 +180,8 @@ $hash{intr_char}			{value}	= 0;
 $hash{sp_char}				{save}	= 'extended';
 $hash{sp_char}				{value}	= 0;
 
-$hash{RM_DIGITS}			{save}		= 'extended'; #	RM ^Digits
-$hash{RM_DIGITS}			{value}		= 0;
+$hash{rm_digits}			{save}		= 'extended'; #	RM ^Digits
+$hash{rm_digits}			{value}		= 0;
 
 $hash{digits}				{save}		= 'extended';
 $hash{digits}				{value}		= 0;
@@ -204,8 +204,8 @@ $hash{pad_digits}			{value}	= 0;
 $hash{pad_digits_w_zero}	{save}	= 'extended';
 $hash{pad_digits_w_zero}	{value}	= 0;
 
-$hash{SPLIT_DDDD}			{save}	= 'extended';
-$hash{SPLIT_DDDD}			{value}	= 0;
+$hash{split_dddd}			{save}	= 'extended';
+$hash{split_dddd}			{value}	= 0;
 
 #############################################################################################
 # ENUMURATE TAB
@@ -256,31 +256,31 @@ $hash{exif_rm_all}		{value}	= 0;
 #############################################################################################
 # FILTER BAR
 
-$hash{FILTER}				{save}	= 'extended';
-$hash{FILTER}				{value}	= 0;
+$hash{filter}				{save}	= 'extended';
+$hash{filter}				{value}	= 0;
 
-$hash{FILTER_IGNORE_CASE}	{save}	= 'extended';
-$hash{FILTER_IGNORE_CASE}	{value}	= 0;
+$hash{filter_ignore_case}	{save}	= 'extended';
+$hash{filter_ignore_case}	{value}	= 0;
 
 our $filter_string	= '';
 
 #############################################################################################
 # bottom menu bar
 
-$hash{RECURSIVE}		{save}		= 'base';
-$hash{RECURSIVE}		{value}		= 0;
+$hash{recursive}		{save}		= 'base';
+$hash{recursive}		{value}		= 0;
 
-$hash{IGNORE_FILE_TYPE}	{save}		= 'extended';
-$hash{IGNORE_FILE_TYPE}	{value}		= 0;
+$hash{ignore_file_type}	{save}		= 'extended';
+$hash{ignore_file_type}	{value}		= 0;
 
-$hash{PROC_DIRS}		{save}		= 'extended';
-$hash{PROC_DIRS}		{value}		= 0;
+$hash{proc_dirs}		{save}		= 'extended';
+$hash{proc_dirs}		{value}		= 0;
 
 #############################################################################################
 # CLI ONLY OPTIONS
 
-$hash{HTML_HACK}		{save}	= 'base';
-$hash{HTML_HACK}		{value}	= 0;
+$hash{html_hack}		{save}	= 'base';
+$hash{html_hack}		{value}	= 0;
 
 $hash{browser}			{save}	= 'base';
 $hash{browser}			{value}	= 'elinks';
@@ -312,17 +312,17 @@ $hash{fat32fix}				{save}	= 'base';
 $hash{fat32fix}				{value}	= 0;
 $hash{fat32fix}				{value}	= 1 if lc $^O eq 'mswin32';
 
-$hash{FILTER_REGEX}			{save}	= 'base';
-$hash{FILTER_REGEX}			{value}	= 0;
+$hash{filter_regex}			{save}	= 'base';
+$hash{filter_regex}			{value}	= 0;
 
 $hash{file_ext_2_proc}		{save}	= 'base';
 $hash{file_ext_2_proc}		{value}	= "aac|aiff|ape|asf|avi|bmp|flac|gif|jpeg|jpg|m4a|m4v|mkv|mov|mp2|mp3|mp4|mpc|mpg|mpeg|ogg|ogm|opus|png|rm|rmvb|svg|tif|tiff|webm|webp|wma|wmv";
 
-$hash{OVERWRITE}			{save}	= 'base';
-$hash{OVERWRITE}			{value}	= 0;
+$hash{overwrite}			{save}	= 'base';
+$hash{overwrite}			{value}	= 0;
 
-$hash{REMOVE_REGEX}			{save}	= 'base';
-$hash{REMOVE_REGEX}			{value}	= 0;
+$hash{remove_regex}			{save}	= 'base';
+$hash{remove_regex}			{value}	= 0;
 
 #############################################################################################
 # CONFIG DIALOG - DEBUG TAB
@@ -330,17 +330,17 @@ $hash{REMOVE_REGEX}			{value}	= 0;
 $hash{debug}			{save}	= 'base';
 $hash{debug}			{value}	= 2;
 
-$hash{LOG_STDOUT}		{save}	= 'base';
-$hash{LOG_STDOUT}		{value}	= 0;
+$hash{log_stdout}		{save}	= 'base';
+$hash{log_stdout}		{value}	= 0;
 
-$hash{ERROR_STDOUT}		{save}	= 'base';
-$hash{ERROR_STDOUT}		{value}	= 0;
+$hash{error_stdout}		{save}	= 'base';
+$hash{error_stdout}		{value}	= 0;
 
-$hash{ERROR_NOTIFY}		{save}	= 'base';
-$hash{ERROR_NOTIFY}		{value}	= 0;
+$hash{error_notify}		{save}	= 'base';
+$hash{error_notify}		{value}	= 0;
 
-$hash{ZERO_LOG}			{save}	= 'base';
-$hash{ZERO_LOG}			{value}	= 1;
+$hash{zero_log}			{save}	= 'base';
+$hash{zero_log}			{value}	= 1;
 
 #############################################################################################
 # DONE - MENU CLI and DIALOG options - DONE
@@ -419,7 +419,9 @@ sub save_hash_helper
 	my $k = shift;
 	&main::quit("config::save_hash key '$k' not found in hash". Dumper($hash{$k})) if(!defined $hash{$k});
 	&main::quit("config::save_hash \$hash{$k}{value} is undef". Dumper($hash{$k})) if(!defined $hash{$k}{value});
-	&misc::file_append($hash_tsv, "$k\t\t".$hash{$k}{value}."\n");
+	# Always save keys in lowercase
+	my $k_lower = lc($k);
+	&misc::file_append($hash_tsv, "$k_lower\t\t".$hash{$k}{value}."\n");
 }
 
 sub load_hash
@@ -436,9 +438,17 @@ sub load_hash
 		my ($k, $v) = ($1, $2);
 		next if $v eq "\t";
 
-		&main::quit("load_hash: unknown value '$k' in config hash.tsv") if !defined $hash{$k};
+		# Convert key to lowercase for backward compatibility with old config files
+		my $k_lower = lc($k);
+		
+		# Check both original case and lowercase versions for compatibility
+		if (!defined $hash{$k} && !defined $hash{$k_lower}) {
+			&main::quit("load_hash: unknown value '$k' in config hash.tsv");
+		}
 
-		$h{$k} = $v;
+		# Use lowercase key for storage
+		my $target_key = defined $hash{$k_lower} ? $k_lower : $k;
+		$h{$target_key} = $v;
 	}
 
 	for my $k(keys %h)

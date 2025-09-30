@@ -123,14 +123,14 @@ sub gui
 	my $filt = $button_sub_frame->Checkbutton
 	(
 		-text=>		'Filter',
-		-variable=>	\$config::hash{FILTER}{value},
+		-variable=>	\$config::hash{filter}{value},
 		-command=>
 		sub
 		{
-			if($config::hash{FILTER}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
+			if($config::hash{filter}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
 			{
 				&misc::plog(1, "sub blockrename: tried to enable filtering with an empty filter");
-				$config::hash{FILTER}{value} = 0;
+				$config::hash{filter}{value} = 0;
 			}
 			else
 			{
@@ -385,9 +385,9 @@ sub br_readdir
         for my $file(@dir_contents)
         {
         	next if $file eq '.' || $file eq '..' || $file eq '';
-                next if !$config::hash{PROC_DIRS}	{value} && -d $file;
-                next if !$config::hash{IGNORE_FILE_TYPE}{value} && $file !~ /\.($config::hash{file_ext_2_proc}{value})$/i;
-		next if  $config::hash{FILTER}		{value} && !&filter::match($file);
+                next if !$config::hash{proc_dirs}	{value} && -d $file;
+                next if !$config::hash{ignore_file_type}{value} && $file !~ /\.($config::hash{file_ext_2_proc}{value})$/i;
+		next if  $config::hash{filter}		{value} && !&filter::match($file);
 
                 push @dir_clean, $file;
         }

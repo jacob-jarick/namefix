@@ -242,7 +242,7 @@ sub edit_prefs
 	my $tab7_regexp_chk = $tab7->Checkbutton
 	(
 		-text=>				"Enable Regexp pattern matching for Remove option",
-		-variable=>			\$config::hash{REMOVE_REGEX}{value},
+		-variable=>			\$config::hash{remove_regex}{value},
 		-activeforeground=>	"blue"
 	)
 	-> grid
@@ -314,7 +314,7 @@ sub edit_prefs
 	my $overwrite_chk = $tab7->Checkbutton
 	(
 		-text=>				"Overwrite",
-		-variable=>			\$config::hash{OVERWRITE}{value},
+		-variable=>			\$config::hash{overwrite}{value},
 		-activeforeground=>	"blue"
 	)
 	-> grid
@@ -377,7 +377,7 @@ sub edit_prefs
 	$tab_debug->Checkbutton
 	(
 		-text=>             "Print log to stdout",
-		-variable=>         \$config::hash{LOG_STDOUT}{value},
+		-variable=>         \$config::hash{log_stdout}{value},
 		-activeforeground=> "blue"
 	)
 	->grid
@@ -390,7 +390,7 @@ sub edit_prefs
 	$tab_debug->Checkbutton
 	(
 		-text=>				"Print errors to stdout",
-		-variable=>			\$config::hash{ERROR_STDOUT}{value},
+		-variable=>			\$config::hash{error_stdout}{value},
 		-activeforeground=>	"blue"
 	)
 	-> grid
@@ -403,7 +403,7 @@ sub edit_prefs
 	$tab_debug->Checkbutton
 	(
 		-text=>				"Pop up errors in a dialog box",
-		-variable=>			\$config::hash{ERROR_NOTIFY}{value},
+		-variable=>			\$config::hash{error_notify}{value},
 		-activeforeground=>	"blue"
 	)
 	->grid
@@ -416,7 +416,7 @@ sub edit_prefs
 	$tab_debug->Checkbutton
 	(
 		-text=>				"Zero logfile on start",
-		-variable=>			\$config::hash{ZERO_LOG}{value},
+		-variable=>			\$config::hash{zero_log}{value},
 		-activeforeground=>	"blue"
 	)
 	->grid

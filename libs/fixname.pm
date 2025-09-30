@@ -59,21 +59,21 @@ sub fix
 	# make sure file is allowed to be renamed
     # -----------------------------------------
 
-    &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if !defined $config::hash{IGNORE_FILE_TYPE}{value};
+    &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if !defined $config::hash{ignore_file_type}{value};
 
     my $RENAME = 0;
 
     # file extionsion check
-    $RENAME = 1 if -f $file && ($config::hash{IGNORE_FILE_TYPE}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
+    $RENAME = 1 if -f $file && ($config::hash{ignore_file_type}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
 
 	# dir check, is a directory, dir mode is enabled
-    $RENAME = 1 if $config::hash{PROC_DIRS}{value} && -d $file;
+    $RENAME = 1 if $config::hash{proc_dirs}{value} && -d $file;
 
 	# processing all file types & dirs
-    $RENAME = 1 if $config::hash{PROC_DIRS}{value} && $config::hash{IGNORE_FILE_TYPE}{value};
+    $RENAME = 1 if $config::hash{proc_dirs}{value} && $config::hash{ignore_file_type}{value};
 
 	# didnt match filter
-    return if $config::hash{FILTER}{value} && !&filter::match($file);
+    return if $config::hash{filter}{value} && !&filter::match($file);
 
 	# rules say file shouldn't be renamed
 	return if !$RENAME;
@@ -83,9 +83,9 @@ sub fix
 
 	if
 	(
-        $config::hash{RECURSIVE}{value} &&
+        $config::hash{recursive}{value} &&
         $last_dir ne $dir &&
-        !$config::hash{PROC_DIRS}{value}
+        !$config::hash{proc_dirs}{value}
     )
 	{
 		$last_dir = $dir;
@@ -171,38 +171,38 @@ sub fix
 
 	# set user entered audio tags overrides if any
 
-	if($config::hash{AUDIO_SET_ARTIST}{value} && $IS_AUDIO_FILE)
+	if($config::hash{audio_set_artist}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{artist} = $config::id3_art_str;
 		$tag	= 1;
 	}
 
-	if($config::hash{AUDIO_SET_ALBUM}{value} && $IS_AUDIO_FILE)
+	if($config::hash{audio_set_album}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{album} = $config::id3_alb_str;
 		$tag	= 1;
 	}
 
-	if($config::hash{AUDIO_SET_GENRE}{value} && $IS_AUDIO_FILE)
+	if($config::hash{audio_set_genre}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{genre} = $config::id3_gen_str;
 		$tag	= 1;
 	}
 
-	if($config::hash{AUDIO_SET_YEAR}{value} && $IS_AUDIO_FILE)
+	if($config::hash{audio_set_year}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{year} = $config::id3_year_str;
 		$tag	= 1;
 	}
 
-	if($config::hash{AUDIO_SET_COMMENT}{value} && $IS_AUDIO_FILE)
+	if($config::hash{audio_set_comment}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{comment} = $config::id3_com_str;
 		$tag	= 1;
 	}
 
 	# rm mp3 id3v2 tags
-    if($IS_AUDIO_FILE && $config::hash{RM_AUDIO_TAGS}{value})
+    if($IS_AUDIO_FILE && $config::hash{rm_audio_tags}{value})
 	{
         if(!$config::PREVIEW)
 		{
@@ -334,7 +334,7 @@ sub fix
 
 # returns 1 if successful rename, errors are printed to console
 
-# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::hash{OVERWRITE}{value}) "
+# this code looks messy but it does need to be laid out with the doubled up "if(-e $newfile && !$config::hash{overwrite}{value}) "
 # bloody fat32 returns positive when we don't want it, ie case correcting
 
 sub fn_rename
@@ -359,7 +359,7 @@ sub fn_rename
 
 	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
 	{
-		if( -e $tmpfile && !$config::hash{OVERWRITE}{value})
+		if( -e $tmpfile && !$config::hash{overwrite}{value})
 		{
 			$config::FOUND_TMP++;
 			$config::tmpfilelist .= "$tmpfile\n";
@@ -367,7 +367,7 @@ sub fn_rename
 			return 0;
 		}
 		rename $file, $tmpfile;
-		if(-e $newfile && !$config::hash{OVERWRITE}{value})
+		if(-e $newfile && !$config::hash{overwrite}{value})
 		{
 			rename $tmpfile, $file;
 			&misc::plog(0, "fn_rename: \"$newfile\" refusing to rename, file exists");
@@ -381,7 +381,7 @@ sub fn_rename
 	}
 	else
 	{
-		if(-e $newfile && !$config::hash{OVERWRITE}{value})
+		if(-e $newfile && !$config::hash{overwrite}{value})
 		{
 			$config::SUGGEST_FSFIX++;
 			&misc::plog(0, "fn_rename: '$newfile' refusing to rename, file exists");
@@ -625,7 +625,7 @@ sub fn_replace
 	return $file_new if !$config::hash{replace}{value};
 
 	my $rm = $config::ins_str_old;
-	if(!$config::hash{REMOVE_REGEX}{value})
+	if(!$config::hash{remove_regex}{value})
 	{
 		$rm = quotemeta $config::ins_str_old;
 	}
@@ -715,7 +715,7 @@ sub fn_split_dddd
 	&main::quit("fn_split_dddd \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_split_dddd \$file_new eq ''\n")		if $file_new eq '';
 
-        return $file_new if !$config::hash{SPLIT_DDDD}{value};
+        return $file_new if !$config::hash{split_dddd}{value};
 	if($file_new =~ /(.*?)(\d{3,4})(.*)/)
 	{
 		my @tmp_arr = ($1, $2, $3);
@@ -770,7 +770,7 @@ sub fn_sp_word
 	&main::quit("fn_sp_word \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_sp_word \$file_new eq ''\n")	if $FILE && $file_new eq '';
 
-	return $file_new if !$config::hash{WORD_SPECIAL_CASING}{value};
+	return $file_new if !$config::hash{word_special_casing}{value};
 	foreach my $word(@config::word_casing_arr)
 	{
 		my $w = quotemeta $word;
@@ -1013,7 +1013,7 @@ sub fn_pre_clean
 	&main::quit("fn_pre_clean \$file eq ''\n")	if $FILE && $file eq '';
 	&main::quit("fn_pre_clean \$FILE = 1 but '$file' is not a file and not a directory\n")	if $FILE && !-f $file && !-d $file;
 
-	return $file_new if !$config::hash{CLEANUP_GENERAL}{value};
+	return $file_new if !$config::hash{cleanup_general}{value};
 
 	# "fix Artist - - track" type filenames that can pop up when stripping words
 	$file_new =~ s/-(\s|_|\.)+-/-/g;
@@ -1049,7 +1049,7 @@ sub fn_post_clean
 	&main::quit("fn_post_clean: \$f eq ''\n")			if $FILE && $f eq '';
 	&main::quit("fn_post_clean: \$f '$f' not found\n")	if $FILE && !-f $f;
 
-	return $file_new if !$config::hash{CLEANUP_GENERAL}{value};
+	return $file_new if !$config::hash{cleanup_general}{value};
 
 	# remove childless brackets () [] {}
 	$file_new =~ s/(\(|\[|\{)(\s|_|\.|\+|-)*(\)|\]|\})//g;
@@ -1085,7 +1085,7 @@ sub fn_front_a
 	&main::quit("fn_front_a \$file_new is undef\n")		if ! defined $file_new;
 	&main::quit("fn_front_a \$file_new eq ''\n")		if $file_new eq '';
 
-	return $file_new if !$config::hash{INS_START}{value};
+	return $file_new if !$config::hash{ins_start}{value};
 
 	$file_new = $config::ins_front_str.$file_new;
 
@@ -1139,7 +1139,7 @@ sub fn_rm_digits
 	&main::quit("fn_rm_digits \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_rm_digits \$file_new eq ''\n")	if $file_new eq '';
 
-	return $file_new if !$config::hash{RM_DIGITS}{value};
+	return $file_new if !$config::hash{rm_digits}{value};
 
 	$file_new =~ s/\d+//g;
 

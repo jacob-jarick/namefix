@@ -25,7 +25,7 @@ sub match
 		return 1;
 	}
 
-	if(!$config::hash{FILTER_REGEX}{value})
+	if(!$config::hash{filter_regex}{value})
 	{
 		&misc::plog(4, "sub match: regexp disabled, using escaped string");
 		$filt = quotemeta $config::filter_string;
@@ -33,8 +33,8 @@ sub match
 
 	if
 	(
-		( $config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /$filt/) ||
-		(!$config::hash{FILTER_IGNORE_CASE}{value} && $string =~ /$filt/i)
+		( $config::hash{filter_ignore_case}{value} && $string =~ /$filt/) ||
+		(!$config::hash{filter_ignore_case}{value} && $string =~ /$filt/i)
 	)
 	{
 		&misc::plog(4, "sub match: string \"$string\" matched filter \"$filt\"");

@@ -9,3 +9,5 @@ error.txt
 
 # Ignore temporary workspace docs and scratch files
 temp/
+.claude/settings.local.json
+CLAUDE.md

@@ -101,13 +101,13 @@ sub plog
 			&log::add($level, "$text\n");
 		}
 		
-		if($config::hash{LOG_STDOUT}{value})
+		if($config::hash{log_stdout}{value})
 		{
 			print "$text\n";
 		}
 	}
 
-	if($level == 0 && $config::hash{ERROR_NOTIFY}{value})
+	if($level == 0 && $config::hash{error_notify}{value})
 	{
 		# Add error to GUI log with styling if not in CLI mode
 		if(!$config::CLI) 
@@ -296,7 +296,7 @@ sub clr_no_save
 	# clear options that are never saved
 
 	$config::hash{replace}{value}			= 0;
-	$config::hash{INS_START}{value}			= 0;
+	$config::hash{ins_start}{value}			= 0;
 	$config::end_a							= 0;
 	$config::ins_str_old					= '';
 	$config::ins_str						= '';
@@ -309,12 +309,12 @@ sub clr_no_save
 	$config::id3_com_str					= '';
 	$config::id3_year_str					= '';
 
-	$config::hash{AUDIO_SET_ARTIST}{value}	= 0;
-	$config::hash{AUDIO_SET_ALBUM}{value}	= 0;
-	$config::hash{AUDIO_SET_COMMENT}{value}	= 0;
-	$config::hash{AUDIO_SET_GENRE}{value} 	= 0;
-    $config::hash{AUDIO_SET_YEAR}{value} 	= 0;
-	$config::hash{RM_AUDIO_TAGS}{value}		= 0;
+	$config::hash{audio_set_artist}{value}	= 0;
+	$config::hash{audio_set_album}{value}	= 0;
+	$config::hash{audio_set_comment}{value}	= 0;
+	$config::hash{audio_set_genre}{value} 	= 0;
+    $config::hash{audio_set_year}{value} 	= 0;
+	$config::hash{rm_audio_tags}{value}		= 0;
 }
 
 #--------------------------------------------------------------------------------------------------------------
