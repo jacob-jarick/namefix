@@ -671,7 +671,7 @@ for my $arg(@ARGV)
 	# Save config options
 	#############################
 
-	elsif($arg eq '--save-options' || $_ eq '--save-opt' || $_ eq '--save-config')
+	elsif($arg eq '--save-options' || $arg eq '--save-opt' || $arg eq '--save-config')
 	{
 		&config::save;
 		&cli_print::print("Options Saved, exiting", "<MSG>");
@@ -679,7 +679,7 @@ for my $arg(@ARGV)
 	}
 	else
 	{
-		&quit("main: unkown long option \"$_\", cowardly refusing to run.");
+		&quit("main: unkown long option \"$arg\", cowardly refusing to run.");
 	}
 }
 
