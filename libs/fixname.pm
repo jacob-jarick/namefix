@@ -1189,53 +1189,56 @@ sub fn_intr_char
 
 	return $file_new if !$config::hash{intr_char}{value};
 
-	$file_new =~ s/�/Aa/g;
-	$file_new =~ s/�/Ae/g;
-	$file_new =~ s/�/A/g;
-	$file_new =~ s/�/ae/g;
+	# Nordic/Germanic characters
+	$file_new =~ s/Å/Aa/g;
+	$file_new =~ s/Ä/Ae/g;
+	$file_new =~ s/À/A/g;
+	$file_new =~ s/ä/ae/g;
 
-	$file_new =~ s/�/ss/g;
+	$file_new =~ s/ß/ss/g;
 
-	$file_new =~ s/�/E/g;
+	$file_new =~ s/É/E/g;
 
-	$file_new =~ s/�/I/g;
+	$file_new =~ s/Í/I/g;
 
-	$file_new =~ s/�/N/g;
+	$file_new =~ s/Ñ/N/g;
 
-	$file_new =~ s/�/O/g;
-	$file_new =~ s/�/Oe/g;
-	$file_new =~ s/�/Oo/g;
+	$file_new =~ s/Ø/O/g;
+	$file_new =~ s/Ö/Oe/g;
+	$file_new =~ s/Ô/Oo/g;
 
-	$file_new =~ s/�/Ue/g;
-	$file_new =~ s/�/U/g;
+	$file_new =~ s/Ü/Ue/g;
+	$file_new =~ s/Ù/U/g;
 
-	$file_new =~ s/�/a/g;
-	$file_new =~ s/�/a/g;	# mems 1st addition to int support
-	$file_new =~ s/�/a/g;
-	$file_new =~ s/�/aa/g;
-	$file_new =~ s/�/ae/g;
-	$file_new =~ s/�/ae/g;
+	# Lowercase variants
+	$file_new =~ s/à/a/g;
+	$file_new =~ s/á/a/g;	# mems 1st addition to int support
+	$file_new =~ s/â/a/g;
+	$file_new =~ s/å/aa/g;
+	$file_new =~ s/æ/ae/g;
+	$file_new =~ s/ä/ae/g;
 
-	$file_new =~ s/�/c/g;
+	$file_new =~ s/ç/c/g;
 
-	$file_new =~ s/�/e/g;
-	$file_new =~ s/�/e/g;
+	$file_new =~ s/é/e/g;
+	$file_new =~ s/è/e/g;
 
-	$file_new =~ s/�/i/g;
+	$file_new =~ s/í/i/g;
 
-	$file_new =~ s/�/n/g;
+	$file_new =~ s/ñ/n/g;
 
-	$file_new =~ s/�/oo/g;
-	$file_new =~ s/�/oe/g;
-	$file_new =~ s/�/o/g;
-	$file_new =~ s/�/o/g;
+	$file_new =~ s/ô/oo/g;
+	$file_new =~ s/ö/oe/g;
+	$file_new =~ s/ò/o/g;
+	$file_new =~ s/ø/o/g;
 
-	$file_new =~ s/�/u/g;
-	$file_new =~ s/�/ue/g;
+	$file_new =~ s/ú/u/g;
+	$file_new =~ s/ü/ue/g;
 
-	$file_new =~ s/�//g;
-	$file_new =~ s/�//g;
-	$file_new =~ s/�//g;
+	# Remove any remaining problematic characters
+	$file_new =~ s/['']/'/g;  # Smart quotes to regular apostrophe
+	$file_new =~ s/[""]/"/g;  # Smart quotes to regular quotes
+	$file_new =~ s/…/.../g;   # Ellipsis to three dots
 
 	return $file_new;
 }

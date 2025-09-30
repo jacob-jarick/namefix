@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 11;  # 8 function tests + 3 extension tests
+use Test::More tests => 12;  # 9 function tests + 3 extension tests
 use File::Copy;
 use FindBin qw($Bin);
 
@@ -79,18 +79,17 @@ is( &fixname::fn_sp_char($file), 'Hello - 03x11 - Today Tonight.avi',  'fn_sp_ch
 # fn_uc_all
 $config::hash{uc_all}{value} = 1;
 $file = 'hello world.avi';
-is( &fixname::fn_uc_all($file), 'HELLO WORLD.AVI',  'fn_uc_all test (includes extension)');
+is( &fixname::fn_uc_all($file), 'HELLO WORLD.AVI',  'fn_uc_all test (DOS legacy - includes extension)');
 
 # fn_lc_all  
 $config::hash{lc_all}{value} = 1;
 $file = 'HELLO WORLD.AVI';
 is( &fixname::fn_lc_all($file), 'hello world.avi',  'fn_lc_all test');
 
-# fn_intr_char (TODO: Fix character encoding issues)
-# $config::hash{intr_char}{value} = 1;
-# $file = 'Café München.avi';
-# is( &fixname::fn_intr_char(1, $file), 'Cafe Munchen.avi',  'fn_intr_char test');
-# Character encoding issues need to be resolved
+# fn_intr_char (fixed character mappings)
+$config::hash{intr_char}{value} = 1;
+$file = 'Café München.avi';
+is( &fixname::fn_intr_char(1, $file), 'Cafe Muenchen.avi',  'fn_intr_char test - international characters');
 
 #=============================================================================
 # File Extension Tests
