@@ -23,5 +23,11 @@
   // Copilot settings for better brace style consistency
   "github.copilot.editor.enableAutoCompletions": true,
   "editor.acceptSuggestionOnEnter": "off",
-  "editor.suggest.insertMode": "replace"
+  "editor.suggest.insertMode": "replace",
+  
+  // PerlNavigator settings - completely disabled
+  "perlnavigator.enable": false,
+  "perlnavigator.enableWarnings": false,
+  "perlnavigator.perlcriticEnabled": false,
+  "perlnavigator.enableSyntaxCheck": false
 }

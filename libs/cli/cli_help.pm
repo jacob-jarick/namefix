@@ -9,15 +9,10 @@ use strict;
 sub show
 {
 
-my $mode = shift;
-if(!$mode) { $mode = "long"; }
+	my $mode = shift;
+	if(!$mode) { $mode = "long"; }
 
-my $txt_header="namefix.pl $config::version
-
-I am negelecting cmd line no more.
-cli mode is strictly WIP, options likely to change.
-most options are implemented - but in need of testing.
-have fun.
+	my $txt_header="namefix.pl $config::version
 
 namefix-cli.pl -<shortoptions> <target>
 namefix-cli.pl --<longoption1> --<longoption2> --<longoption3=value> <target>
@@ -240,32 +235,34 @@ EXIF Data Options:
 	--exif-show		Show all available EXIF data
 	--exif-rm		Remove all EXIF data
 	--exif-rm-tags=STRING	Remove specific EXIF tags, CSV separated
+				default jpg,tiff
 
 ";
 
-my $msg_help=
-$txt_header.
-$txt_help;
+	my $msg_help=
+	$txt_header.
+	$txt_help;
 
-my $txt_short=
-$txt_header.
-$txt_main;
+	my $txt_short=
+	$txt_header.
+	$txt_main;
 
-my $msg_long =
-$txt_short.
-$txt_misc.
-$txt_advance;
+	my $msg_long =
+	$txt_short.
+	$txt_misc.
+	$txt_advance;
 
-my $msg_all =
-$txt_short.
-$txt_trunc.
-$txt_enum.
-$txt_misc.
-$txt_advance.
-$txt_hacks.
-$txt_docs.
-$txt_debug.
-$txt_mp3;
+	my $msg_all =
+	$txt_short.
+	$txt_trunc.
+	$txt_enum.
+	$txt_misc.
+	$txt_advance.
+	$txt_hacks.
+	$txt_docs.
+	$txt_debug.
+	$txt_mp3.
+	$text_exif;
 
 	if($mode eq "help")
 	{
@@ -314,6 +311,10 @@ $txt_mp3;
 	elsif($mode eq "hacks")
 	{
 		print $txt_hacks;
+	}
+	elsif($mode eq "exif")
+	{
+		print $text_exif;
 	}
 
 	else

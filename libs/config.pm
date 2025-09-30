@@ -226,6 +226,15 @@ $hash{truncate_style}	{value}	= 0;
 $hash{trunc_char}		{save}	= 'mw';
 $hash{trunc_char}		{value}	= '';
 
+#############################################################################################
+# EXIF TAB
+
+$hash{exif_show}		{save}	= 'mw';
+$hash{exif_show}		{value}	= 0;
+
+$hash{exif_rm_all}		{save}	= 'mw';
+$hash{exif_rm_all}		{value}	= 0;
+
 
 #############################################################################################
 # FILTER BAR
@@ -404,6 +413,7 @@ sub load_hash
 
 		$h{$k} = $v;
 	}
+
 	for my $k(keys %h)
 	{
 		$hash{$k}{value} = $h{$k};
