@@ -142,6 +142,9 @@ N	--pad-num		pad digits with -
 	--px			before: Show 0104 Episode title.avi
 				after : Show 01x04 Episode title.avi
 
+	--gui-test		Test GUI startup (for debugging only)
+				Starts the GUI and exits
+
 ";
 my $txt_advance =
 "Advanced Options:

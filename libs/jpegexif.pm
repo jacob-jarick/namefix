@@ -244,3 +244,5 @@ GPL License
 L<Image::ExifTool>
 
 =cut
+
+1;

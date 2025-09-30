@@ -47,7 +47,9 @@ sub quit
 
 	cluck longmess("quit $string\n");
 	Tk::exit;
+
 	die "Trying to quit via die";
+
 	print "Trying to quit via CORE::exit";
 	CORE::exit;
 }
@@ -87,6 +89,14 @@ use undo_gui;
 #--------------------------------------------------------------------------------------------------------------
 
 our $log_file = "$config::home/.namefix.pl/namefix.pl.$config::version.log";
+
+# --- CLI/GUI test option ---
+my $gui_test = 0;
+if (defined $ARGV[0] && $ARGV[0] eq '--gui-test') 
+{
+	pop @ARGV;  # Remove --gui-test from @ARGV
+	$gui_test = 1;
+}
 
 $config::dir = $ARGV[0] if defined $ARGV[0];
 
@@ -129,10 +139,26 @@ my $row	= 1;
 my $col	= 1;
 
 our $mw = new MainWindow; # Main Window
-$mw -> title("namefix.pl $config::version by Jacob Jarick");
+$mw->title("namefix.pl $config::version by Jacob Jarick");
 
 $config::folderimage 	= $main::mw->Getimage('folder');
 $config::fileimage   	= $main::mw->Getimage('file');
+
+# If --gui-test, set a timer to auto-quit after 5 seconds
+if ($gui_test) 
+{
+	&misc::plog(1, "GUI test mode enabled, will auto-quit after 5 seconds");
+
+    $mw->after
+	(
+		5000, 
+		sub 
+		{
+        	print "[GUI TEST] Timer expired, quitting...\n";
+        	quit("GUI test timer");
+    	}
+	);
+}
 
 $mw->bind('<KeyPress>' => sub
 {
