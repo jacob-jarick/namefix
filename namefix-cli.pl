@@ -575,7 +575,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--exif-show')
 	{
-		$config::hash{EXIF_SHOW}{value} = 1;
+		$config::hash{exif_show}{value} = 1;
 	}
 
 	#####################

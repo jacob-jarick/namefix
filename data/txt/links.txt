@@ -21,3 +21,4 @@ Misc Sites I enjoy
 https://subsplease.org/ - anime p2p
 https://www.pouet.net/ - demoscene archives
 https://webench.ti.com/power-designer/switching-regulator - webench (I love Texas Instruments, best docs ever)
+

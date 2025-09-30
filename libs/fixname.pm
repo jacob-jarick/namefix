@@ -8,6 +8,7 @@ use warnings;
 use Data::Dumper::Concise;
 use Cwd;
 use Carp;
+use jpegexif;
 
 our $last_dir = '';
 our $dir = '';
@@ -57,7 +58,8 @@ sub fix
     # -----------------------------------------
 	# make sure file is allowed to be renamed
     # -----------------------------------------
-    &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if(! defined $config::hash{IGNORE_FILE_TYPE}{value});
+
+    &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if !defined $config::hash{IGNORE_FILE_TYPE}{value};
 
     my $RENAME = 0;
 
@@ -88,8 +90,45 @@ sub fix
 	{
 		$last_dir = $dir;
 
-		&nf_print::p(' ', '<BLANK>');
-		&nf_print::p($dir);
+		if ($config::CLI) 
+		{
+			print "\n=== Processing Directory: $dir ===\n";
+		}
+		else 
+		{
+			&nf_print::p(' ', '<BLANK>');
+			&nf_print::p($dir);
+		}
+	}
+
+	#------------------------------------------------------------------------------
+	# EXIF data processing
+
+	# TODO create an array of extensions with EXIF data
+
+	# I plan to make this CLI only as its not really needed in gui mode
+	# currently it just prints and returns
+	# printing is probably ugly
+	if($config::CLI && $config::hash{exif_show}{value} && -f $file && $file =~ /\.(jpg|jpeg)$/i)
+	{
+		my $exif_tags_ref = &jpegexif::list_exif_tags($file);
+
+		if(defined $exif_tags_ref && ref($exif_tags_ref) eq 'HASH')
+		{
+			print "\n=== EXIF Data for $file ===\n";
+			# loop through tags and print them
+			for my $tag (sort keys %$exif_tags_ref)
+			{
+				print "$tag: $exif_tags_ref->{$tag}\n";
+			}
+			print "=== End EXIF Data ===\n\n";
+		}
+		else
+		{
+			print "No EXIF data found for $file\n";
+		}
+
+		return;
 	}
 
 	#------------------------------------------------------------------------------
@@ -266,14 +305,29 @@ sub fix
 		}
 	}
 
-	&nf_print::p
-	(
-		$file,
-		$newfile,
+	if ($config::CLI) 
+	{
+		# CLI output: simple before -> after format
+		if ($file ne $newfile) 
+		{
+			print "'$file' -> '$newfile'\n";
+		}
+		elsif ($config::hash{debug}{value} >= 2)
+		{
+			print "'$file' (no change)\n";
+		}
+	}
+	else 
+	{
+		&nf_print::p
+		(
+			$file,
+			$newfile,
 
-		\%tags_h,
-		\%tags_h_new,
-	);
+			\%tags_h,
+			\%tags_h_new,
+		);
+	}
 };
 
 #==========================================================================================================================================

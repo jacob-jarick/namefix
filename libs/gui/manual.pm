@@ -27,9 +27,9 @@ sub edit
 	my $EXT					= 0;
 	my $TAGS				= 0;
 
-	my $ent_max_l 	= 50;
-	my $ent_min_l 	= 2;
-	my $ent_l		= 0;
+	my $ent_max_l			= 50;
+	my $ent_min_l			= 2;
+	my $ent_l				= 0;
 
 
 	if($ent_min_l <= $l && $l <= $ent_max_l)
@@ -48,8 +48,8 @@ sub edit
 	if(-f $path && defined $old_ext)
 	{
 		$old_fn		= $new_fn;
-			$old_ext	= $new_ext;
-			$EXT		= 1;
+		$old_ext	= $new_ext;
+		$EXT		= 1;
 	}
 
 	$TAGS = &misc::is_in_array(lc $old_ext, \@config::id3v2_exts) if $config::hash{id3_mode}{value};
@@ -61,289 +61,292 @@ sub edit
 
 	$w->Label
 	(
-		-text=>'Manual Rename',
-		-font=>$config::dialog_title_font
+		-text=>	'Manual Rename',
+		-font=>	$config::dialog_title_font
 	)
 	-> grid
 	(
-		-row=>1,
-		-column=>1,
-		-columnspan=>1
+		-row=>			1,
+		-column=>		1,
+		-columnspan=>	1
 	);
 
 	my $frame1 = $w->Frame(-borderwidth=>1)
 	->grid
 	(
-		-row=>2,
-		-column=>1,
-		-columnspan=>1
+		-row=>			2,
+		-column=>		1,
+		-columnspan=>	1
 	);
 
 	my $button_frame = $w->Frame(-borderwidth=>1)
 	->grid
 	(
-		-row=>3,
-		-column=>1,
-		-columnspan=>1
+		-row=>			3,
+		-column=>		1,
+		-columnspan=>	1
 	);
 
 	$frame1->Label(-text=>'Old Filename: ')
 	->grid
 	(
-		-row=>1,
-		-column=>1
+		-row=>		1,
+		-column=>	1
 	);
 
 	if($EXT)
 	{
 		$frame1->Entry
 		(
-			-textvariable=>\$old_fn,
-			-width=>$ent_l,
-			-state=>'readonly',
+			-textvariable=>	\$old_fn,
+			-width=>		$ent_l,
+			-state=>		'readonly',
 		)
 		->grid
 		(
-			-row=>1,
-			-column=>2
+			-row=>			1,
+			-column=>		2
 		);
 
 		$frame1->Label(-text=>' . ')
 		->grid
 		(
-			-row=>1,
-			-column=>3
+			-row=>		1,
+			-column=>	3
 		);
 
 		$frame1->Entry
 		(
-			-textvariable=>\$old_ext,
-			-width=>5,
-			-state=>'readonly',
+			-textvariable=>	\$old_ext,
+			-width=>		5,
+			-state=>		'readonly',
 		)
 		->grid
 		(
-			-row=>1,
-			-column=>4
+			-row=>		1,
+			-column=>	4
 		);
 	}
 	else
 	{
 		$frame1->Entry
 		(
-			-textvariable=>\$file_name,
-			-width=>$ent_l,
-			-state=>'readonly',
+			-textvariable=>	\$file_name,
+			-width=>		$ent_l,
+			-state=>		'readonly',
 		)
 		->grid
 		(
-			-row=>1,
-			-column=>2
+			-row=>		1,
+			-column=>	2
 		);
 	}
 
 	$frame1->Label(-text=>'New Filename: ')
 	->grid
 	(
-		-row=>2,
-		-column=>1
+		-row=>		2,
+		-column=>	1
 	);
 
 	if($EXT)
 	{
 		$frame1->Entry
 		(
-			-textvariable=>\$new_fn,
-			-width=>$ent_l
+			-textvariable=>	\$new_fn,
+			-width=>		$ent_l
 		)
 		->grid
 		(
-			-row=>2,
-			-column=>2
+			-row=>		2,
+			-column=>	2
 		);
 		$frame1->Label(-text=>' . ')
 		->grid
 		(
-			-row=>2,
-			-column=>3
+			-row=>		2,
+			-column=>	3
 		);
 		$frame1->Entry
 		(
-			-textvariable=>\$new_ext,
-			-width=>5
+			-textvariable=>	\$new_ext,
+			-width=>		5
 		)
 		->grid
 		(
-			-row=>2,
-			-column=>4
+			-row=>		2,
+			-column=>	4
 		);
 	}
 	else
 	{
 		$frame1->Entry
 		(
-			-textvariable=>\$newfile,
-			-width=>$ent_l
+			-textvariable=>	\$newfile,
+			-width=>		$ent_l
 		)
 		->grid
 		(
-			-row=>2,
-			-column=>2
+			-row=>		2,
+			-column=>	2
 		);
 	}
 	if($TAGS)
 	{
 		&misc::plog(4, "sub manual::edit: \"$file_name\" is a mp3, using mp3 rename gui ");
+
 		my $ref = &mp3::get_tags($path);
 		%tag_hash = %$ref;
+
 		$frame1->Label(-text=>'Artist: ')
 		->grid
 		(
-			-row=>3,
-			-column=>1
+			-row=>		3,
+			-column=>	1
 		);
 
 		$frame1->Entry
 		(
-			-textvariable=>\$tag_hash{artist},
-			-width=>30
+			-textvariable=>	\$tag_hash{artist},
+			-width=>		30
 		)
 		->grid
 		(
-			-row=>3,
-			-column=>2,
-			-sticky=>'nw',
-			-columnspan=>3
+			-row=>			3,
+			-column=>		2,
+			-sticky=>		'nw',
+			-columnspan=>	3
 		);
 
 		$frame1->Label(-text=>'Track: ')
 		->grid
 		(
-			-row=>4,
-			-column=>1
+			-row=>		4,
+			-column=>	1
 		);
 
 		$frame1->Entry
 		(
-			-textvariable=>\$tag_hash{track},
-			-width=>2
+			-textvariable=>	\$tag_hash{track},
+			-width=>		2
 		)
 		->grid
 		(
-			-row=>4,
-			-column=>2,
-			-sticky=>'nw',
-			-columnspan=>3
+			-row=>			4,
+			-column=>		2,
+			-sticky=>		'nw',
+			-columnspan=>	3
 		);
 
 		$frame1->Label(-text=>'Title: ')
 		->grid
 		(
-			-row=>5,
-			-column=>1
+			-row=>		5,
+			-column=>	1
 		);
 
 		$frame1->Entry
 		(
-			-textvariable=>\$tag_hash{title},
-			-width=>30
+			-textvariable=>	\$tag_hash{title},
+			-width=>		30
 		)
 		->grid
 		(
-			-row=>5,
-			-column=>2,
-			-sticky=>'nw',
-			-columnspan=>3
+			-row=>			5,
+			-column=>		2,
+			-sticky=>		'nw',
+			-columnspan=>	3
 		);
 
 		$frame1->Label( -text=>'Album: ')
 		->grid
 		(
-			-row=>6,
-			-column=>1
+			-row=>		6,
+			-column=>	1
 		);
 
 		$frame1->Entry
 		(
-			-textvariable=>\$tag_hash{album},
-			-width=>30,
+			-textvariable=>	\$tag_hash{album},
+			-width=>		30,
 		)
 		->grid
 		(
-			-row=>6,
-			-column=>2,
-			-sticky=>'nw',
-			-columnspan=>3
+			-row=>			6,
+			-column=>		2,
+			-sticky=>		'nw',
+			-columnspan=>	3
 		);
 
 		$frame1->Label(-text=>'Genre: ')
 		->grid
-                (
-			-row=>7,
-			-column=>1
+		(
+			-row=>		7,
+			-column=>	1
 		);
 
 		$frame1->JComboBox
 		(
-			-mode=>'readonly',
-			-relief=>'groove',
-			-textvariable =>\$tag_hash{genre},
-			-choices=>\@config::genres,
-			-entrywidth=>16,
+			-mode=>				'readonly',
+			-relief=>			'groove',
+			-textvariable=>		\$tag_hash{genre},
+			-choices=>			\@config::genres,
+			-entrywidth=>		16,
 		)
 		-> grid
 		(
-			-row=>7,
-			-column=>2,
-			-sticky=>'nw',
-			-columnspan=>3
+			-row=>			7,
+			-column=>		2,
+			-sticky=>		'nw',
+			-columnspan=>	3
 		);
 
 		$frame1->Label(-text=>'Year: ')
 		->grid
 		(
-			-row=>8,
-			-column=>1
+			-row=>		8,
+			-column=>	1
 		);
 
 		$frame1->Entry
 		(
-			-textvariable=>\$tag_hash{year},
-			-width=>30
+			-textvariable=>	\$tag_hash{year},
+			-width=>		30
 		)
 		->grid
 		(
-			-row=>8,
-			-column=>2,
-			-sticky=>'nw',
-			-columnspan=>3
+			-row=>			8,
+			-column=>		2,
+			-sticky=>		'nw',
+			-columnspan=>	3
 		);
 
 		$frame1->Label(-text=>'comment: ')
 		->grid
 		(
-			-row=>9,
-			-column=>1
+			-row=>		9,
+			-column=>	1
 		);
 
 		$frame1->Entry
 		(
-			-textvariable=>\$tag_hash{comment},
-			-width=>30
+			-textvariable=>	\$tag_hash{comment},
+			-width=>		30
 		)
 		->grid
 		(
-			-row=>9,
-			-column=>2,
-			-sticky=>'nw',
-			-columnspan=>3
+			-row=>			9,
+			-column=>		2,
+			-sticky=>		'nw',
+			-columnspan=>	3
 		);
 	}
-	my $but_reset = $button_frame -> Button
+	my $but_reset = $button_frame->Button
 	(
-		-text=>'Reset',
-		-activebackground=>'white',
-		-command => sub
+		-text=>				'Reset',
+		-activebackground=>	'white',
+		-command=> 
+		sub
 		{
 			$newfile	= $file_name;
 			$new_fn		= $old_fn;
@@ -358,18 +361,19 @@ sub edit
         )
 	-> grid
 	(
-		-row=> 4,
-		-column=> 1,
-		-columnspan=> 1
+		-row=>			4,
+		-column=>		1,
+		-columnspan=>	1
 	);
 
 	if ($TAGS)
 	{
-		$button_frame -> Button
+		$button_frame->Button
 		(
-			-text=>'Guess Tag',
-			-activebackground=>'white',
-			-command=> sub
+			-text=>				'Guess Tag',
+			-activebackground=>	'white',
+			-command=> 
+			sub
 			{
 				($tag_hash{artist}, $tag_hash{track}, $tag_hash{title}, $tag_hash{album}) = &mp3::guess_tags($path);
 				print "Guess Tag\n";
@@ -377,17 +381,18 @@ sub edit
 		)
 		-> grid
 		(
-			-row=> 4,
-			-column=> 2,
-			-columnspan=> 1
+			-row=>			4,
+			-column=>		2,
+			-columnspan=>	1
 		);
 	}
 
-	my $but_apply = $button_frame -> Button
+	my $but_apply = $button_frame->Button
 	(
-		-text=>'Apply',
-		-activebackground=>'white',
-		-command=> sub
+		-text=>				'Apply',
+		-activebackground=>	'white',
+		-command=> 
+		sub
 		{
 			if($TAGS)
 			{
@@ -404,28 +409,29 @@ sub edit
 			$file_name = $newfile;
 		}
 	)
-	-> grid
+	->grid
 	(
-		-row=> 4,
-		-column=> 3,
-		-columnspan=> 1
+		-row=>			4,
+		-column=>		3,
+		-columnspan=>	1
 	);
 
-	my $but_close = $button_frame -> Button
+	my $but_close = $button_frame->Button
 	(
-		-text=>'Close',
-		-activebackground=>'white',
-		-command => sub
+		-text=>				'Close',
+		-activebackground=>	'white',
+		-command=>
+		sub
 		{
 			destroy $w;
 			&dir::ls_dir;
 		}
 	)
-	-> grid
+	->grid
 	(
-		-row=>4,
-		-column=>4,
-		-columnspan=>1
+		-row=>			4,
+		-column=>		4,
+		-columnspan=>	1
 	);
 
 	$w->update();

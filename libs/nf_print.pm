@@ -44,8 +44,8 @@ sub p
 		(
 			$hlpos,
 			0,
-			-itemtype=>'imagetext',
-			-image=>$config::folderimage
+			-itemtype=>	'imagetext',
+			-image=>	$config::folderimage
 		);
 
 		$dir_hlist::hlist->itemCreate($hlpos, 1, -text => '..');
@@ -90,8 +90,8 @@ sub p
 		(
 			$hlpos,
 			$count++,
-			-itemtype=>'imagetext',
-			-image=>$config::folderimage
+			-itemtype=>	'imagetext',
+			-image=>	$config::folderimage
 		);
 	}
 	else
@@ -100,8 +100,8 @@ sub p
 		(
 			$hlpos,
 			$count++,
-			-itemtype=>'imagetext',
-			-image=>$config::fileimage
+			-itemtype=>	'imagetext',
+			-image=>	$config::fileimage
 		);
 	}
 

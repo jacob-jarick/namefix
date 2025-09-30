@@ -295,19 +295,19 @@ sub clr_no_save
 {
 	# clear options that are never saved
 
-	$config::hash{replace}{value}		= 0;
-	$config::hash{INS_START}{value}		= 0;
-	$config::end_a						= 0;
-	$config::ins_str_old         		= '';
-	$config::ins_str         			= '';
-	$config::ins_front_str				= '';
-	$config::ins_end_str				= '';
+	$config::hash{replace}{value}			= 0;
+	$config::hash{INS_START}{value}			= 0;
+	$config::end_a							= 0;
+	$config::ins_str_old					= '';
+	$config::ins_str						= '';
+	$config::ins_front_str					= '';
+	$config::ins_end_str					= '';
 
-	$config::id3_gen_str 				= 'Metal';
-	$config::id3_art_str				= '';
-	$config::id3_alb_str				= '';
-	$config::id3_com_str				= '';
-	$config::id3_year_str 				= '';
+	$config::id3_gen_str					= 'Metal';
+	$config::id3_art_str					= '';
+	$config::id3_alb_str					= '';
+	$config::id3_com_str					= '';
+	$config::id3_year_str					= '';
 
 	$config::hash{AUDIO_SET_ARTIST}{value}	= 0;
 	$config::hash{AUDIO_SET_ALBUM}{value}	= 0;

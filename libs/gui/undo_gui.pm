@@ -7,55 +7,56 @@ sub display
 	my $row		= 0;
 	my $col		= 0;
 
-        my $top = $main::mw -> Toplevel();
-        $top -> title('Undo GUI');
+	my $top = $main::mw->Toplevel();
+	$top->title('Undo GUI');
 
-        my $hlist = $top -> Scrolled
-        (
+	my $hlist = $top->Scrolled
+	(
 		"HList",
-		-scrollbars=>'osoe',
-		-header => 1,
-		-columns=>3,
-		-selectbackground => 'Cyan',
-		-width=>80,
+		-scrollbars=>		'osoe',
+		-header=>			1,
+		-columns=>			3,
+		-selectbackground=> 'Cyan',
+		-width=>			80,
 
 	)
-        -> grid
+	->grid
 	(
-        	-row => $row++,
-        	-column => 1,
-        	-columnspan => 2
+        	-row=>			$row++,
+        	-column=>		1,
+        	-columnspan=>	2
         );
 
-        $top -> Button
-	(
-        	-text=>'Perform Undo',
-        	-activebackground => 'white',
-        	-command => sub
-		{
+        $top->Button
+		(
+        	-text=>				'Perform Undo',
+        	-activebackground=>	'white',
+        	-command=>
+			sub
+			{
         		&undo::undo_rename;
         		&dir::ls_dir;
         		destroy $top;
         	}
         )
-        -> grid
-	(
-        	-row => $row,
-        	-column => 1,
-        	-columnspan => 1
+        ->grid
+		(
+        	-row=>			$row,
+        	-column=>		1,
+        	-columnspan=>	1
         );
 
-        $top -> Button
-	(
-        	-text=>'Close',
-        	-activebackground => 'white',
-        	-command => sub { destroy $top; }
+        $top->Button
+		(
+        	-text=>				'Close',
+        	-activebackground=>	'white',
+        	-command=>			sub { destroy $top; }
         )
-        -> grid
-	(
-        	-row => $row++,
-        	-column => 2,
-        	-columnspan => 1
+        ->grid
+		(
+        	-row=>			$row++,
+        	-column=>		2,
+        	-columnspan=>	1
         );
 
 	$hlist->header('create', 0, -text =>'Current Filename');
