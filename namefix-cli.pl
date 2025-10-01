@@ -48,7 +48,6 @@ our $html_file		= "$config::home/.namefix.pl/namefix_html_output_hack.html";
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
-
 $config::CLI = 1;	# set cli mode flag
 
 &config::load_hash                  if -f	$config::hash_tsv;

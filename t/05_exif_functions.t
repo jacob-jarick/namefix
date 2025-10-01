@@ -38,6 +38,11 @@ ok( 'test.jpg' =~ /\.($config::hash{file_ext_2_proc}{value})$/i, 'JPEG extension
 #
 # CLI options to test:  
 # --exif-show - show all available EXIF data (recently fixed!)
+
+# example command:
+# note: need to add single file option
+# perl namefix-cli.pl  --exif-show .\testdata\images\
+
 # --exif-rm - remove all EXIF data
 # --exif-rm-tags=STRING - remove specific EXIF tags
 

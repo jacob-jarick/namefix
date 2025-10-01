@@ -236,7 +236,7 @@ my $text_exif =
 EXIF Data Options:
 
 	--exif-show		Show all available EXIF data
-	--exif-rm		Remove all EXIF data
+	--exif-rm		Remove all EXIF data (WIP)
 	--exif-rm-tags=STRING	Remove specific EXIF tags, CSV separated
 				default jpg,tiff
 
