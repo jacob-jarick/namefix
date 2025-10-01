@@ -45,12 +45,30 @@ our $log_file		= "$config::home/.namefix.pl/namefix-cli.pl.$config::version.log"
 our $html_file		= "$config::home/.namefix.pl/namefix_html_output_hack.html";
 
 #--------------------------------------------------------------------------------------------------------------
+# check for debug flag early
+#--------------------------------------------------------------------------------------------------------------
+
+my $debug_arg = undef;
+for (my $i = 0; $i <= $#ARGV; $i++)
+{
+	if($ARGV[$i] =~ /^--debug=(\d+)$/)
+	{
+		$config::hash{'debug'}{'value'} = $1;
+		$debug_arg = $1;
+		last;
+	}
+}
+
+#--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
 $config::CLI = 1;	# set cli mode flag
 
 &config::load_hash                  if -f	$config::hash_tsv;
+
+$config::hash{debug}{value} = $debug_arg if defined $debug_arg;
+
 &misc::null_file($main::log_file)	if      $config::hash{zero_log}{value};
 
 &misc::plog(2, "**** namefix.pl $config::version start *************************************************");
@@ -69,35 +87,31 @@ my $text = '';
 
 if(!-f $config::hash_tsv)
 {
-	&cli_print::print("No config file found, Creating.", "<MSG>");
+	&misc::plog(1, "No config file found, Creating.");
 	&config::save_hash;
 }
 
 if(!-f $config::casing_file)
 {
-	&cli_print::print("No Special Word Casing file found, Creating.", "<MSG>");
+	&misc::plog(1, "No Special Word Casing file found, Creating.");
 	&misc::save_file($config::casing_file, join("\n", @config::word_casing_arr));
 }
 
 if(!-f $config::killwords_file)
 {
-	&cli_print::print("No Kill Words file found, Creating.", "<MSG>");
+	&misc::plog(1, "No Kill Words file found, Creating.");
 	&misc::save_file($config::killwords_file, join("\n", @config::kill_words_arr));
 }
 
 if(!-f $config::killpat_file)
 {
-	&cli_print::print("No Kill Patterns file found, Creating.", "<MSG>");
+	&misc::plog(1, "No Kill Patterns file found, Creating.");
 	&misc::save_file($config::killpat_file, join("\n", @config::kill_patterns_arr));
 }
 
 #-------------------------------------------------------------------------------------------------------------
 # Startup options
 #-------------------------------------------------------------------------------------------------------------
-
-&config::load_hash;
-
-# if $config::dir is a file, $config::filter_string=basename($config::dir) and $config::dir=dirname($config::dir)
 
 # Check if last argument looks like a directory/file (not an option)
 if (scalar @ARGV > 0 && (-f $ARGV[$#ARGV] || -d $ARGV[$#ARGV]))
@@ -581,9 +595,11 @@ for my $arg(@ARGV)
 	# DEBUG
 	#####################
 
-	elsif($arg =~ /--debug=(.*)/)
+	elsif($arg =~ /^--debug=(\d+)$/)
 	{
-		$config::hash{'debug'}{'value'} = $1;
+		# $config::hash{'debug'}{'value'} = $1;
+		# do nothing, this was handled at start
+		# this is just to avoid the unknown option error
 	}
 
 	elsif($arg eq '--debug-stdout')

@@ -172,7 +172,6 @@ our $id3_gen_str	= '';
 our $id3_year_str	= '';
 our $id3_com_str	= '';
 
-
 #############################################################################################
 # MISC TAB
 
@@ -356,7 +355,6 @@ $hash{zero_log}			{value}	= 1;
 
 # ==============================================================================
 # files and arrays
-
 
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";

@@ -108,7 +108,7 @@ sub fix
 	# currently it just prints and returns
 	# printing is probably ugly
 
-	if($config::CLI && $config::hash{exif_show}{value} && -f $file && $file =~ /\.(jpg|jpeg)$/i)
+	if($config::CLI && $config::hash{exif_show}{value} && grep { lc($file) =~ /\.\Q$_\E$/i } @config::exif_exts)
 	{
 		my $exif_tags_ref = &jpegexif::list_exif_tags($file);
 

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 5;
 use FindBin qw($Bin);
 
 #=============================================================================
@@ -12,6 +12,20 @@ use FindBin qw($Bin);
 
 # Test that CLI script exists and is executable
 ok( -f "$Bin/../namefix-cli.pl", 'namefix-cli.pl exists and CLI integration possible' );
+
+# Test debug level control - ensure --debug=0 suppresses startup messages
+{
+    my $output = qx{cd "$Bin/.." && perl namefix-cli.pl --debug=0 --exif-show testdata/images/DSCN0021_original.jpg 2>&1};
+    unlike( $output, qr/\*\*\*\* namefix\.pl.*start/, '--debug=0 suppresses startup banner' );
+    like( $output, qr/=== EXIF Data for/, '--debug=0 still shows EXIF data' );
+}
+
+# Test debug level control - ensure --debug=2 shows startup messages  
+{
+    my $output = qx{cd "$Bin/.." && perl namefix-cli.pl --debug=2 --exif-show testdata/images/DSCN0021_original.jpg 2>&1};
+    like( $output, qr/\*\*\*\* namefix\.pl.*start/, '--debug=2 shows startup banner' );
+    like( $output, qr/=== EXIF Data for/, '--debug=2 still shows EXIF data' );
+}
 
 # TODO: Add comprehensive CLI integration tests:
 #
@@ -40,5 +54,7 @@ ok( -f "$Bin/../namefix-cli.pl", 'namefix-cli.pl exists and CLI integration poss
 # - Verify CLI options properly set config hash values
 # - Verify CLI calls fixname functions correctly
 # - Verify CLI handles file vs directory arguments
+
+# perl namefix-cli.pl --debug=0 --exif-show testdata/images/DSCN0021_original.jpg
 
 exit;
