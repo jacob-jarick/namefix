@@ -97,27 +97,27 @@ if(!-f $config::killpat_file)
 
 &config::load_hash;
 
-$config::dir = $ARGV[$#ARGV];
+# if $config::dir is a file, $config::filter_string=basename($config::dir) and $config::dir=dirname($config::dir)
 
-if (!defined $config::dir)
+# Check if last argument looks like a directory/file (not an option)
+if (scalar @ARGV > 0 && (-f $ARGV[$#ARGV] || -d $ARGV[$#ARGV]))
 {
-	$config::dir = cwd;
-}
-
-if(-d $config::dir)
-{
-	chdir $config::dir;
-	$config::dir = cwd();
-
-	if(!-d $config::dir)
+	if(-f $ARGV[$#ARGV])
 	{
-		&misc::plog(0, "main: $config::dir is not a directory, cowardly refusing to process it");
-		exit 0;
+		$config::hash{filter}{value}				= 1;
+		$config::hash{filter_ignore_case}{value}	= 0;
+		$config::filter_string						= basename($ARGV[$#ARGV]);
+		$config::dir								= dirname($ARGV[$#ARGV]);
+
+		&misc::plog(2, "running on single file '$config::filter_string'");
 	}
 	else
 	{
-		pop @ARGV;
+		$config::dir = $ARGV[$#ARGV];
 	}
+	
+	pop @ARGV;
+	chdir $config::dir;
 }
 else
 {

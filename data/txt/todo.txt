@@ -1,6 +1,6 @@
-========
-- Bugs -
-========
+==========
+=- Bugs -=
+==========
 
 * None currently known or reported
 
@@ -15,7 +15,7 @@ High:
 
 Medium:
 
-* jpeg and other picture tag support.
+* jpeg and other picture tag support (WIP).
 
 * JPEG metadata stripping for privacy (remove GPS, camera info, EXIF data)
   - Use Image::ExifTool library (avoid Tk::JPEG dependencies)
@@ -32,7 +32,7 @@ Low:
 =- CLI Todo -=
 ==============
 
-* Single file processing
+* DONE - Single file processing
 
 ==================
 =- Known Issues -=
