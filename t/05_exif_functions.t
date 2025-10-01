@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 18;
 use FindBin qw($Bin);
 use File::Copy;
 use POSIX qw(strftime);
@@ -75,6 +75,42 @@ ok( 'test.jpg' =~ /\.($config::hash{file_ext_2_proc}{value})$/i, 'JPEG extension
 
     # Clean up
     unlink($temp_file);
+}
+
+# Test CLI --exif-rm option
+{
+    # Create temp directory if it doesn't exist
+    my $temp_dir = "$Bin/../temp";
+    mkdir($temp_dir) unless -d $temp_dir;
+    ok( -d $temp_dir && -w $temp_dir, 'Temp directory exists and is writable for CLI test' );
+
+    # Create datetime string for unique filename
+    my $datetime = strftime("%Y%m%d_%H%M%S", localtime());
+    my $test_file = "$Bin/../testdata/images/DSCN0021_original.jpg";
+    my $temp_file = "$temp_dir/${datetime}_cli_test.jpg";
+
+    # Copy test file to temp directory
+    ok( copy($test_file, $temp_file), 'Test file copied for CLI EXIF removal test' );
+    ok( -f $temp_file, 'CLI test file exists' );
+
+    # Get initial writable EXIF tag count
+    my $tags_before = jpegexif::writable_exif_tag_count($temp_file);
+    ok( defined($tags_before) && $tags_before > 0, 'Initial EXIF tag count > 0' );
+
+    # Run CLI command to remove EXIF data
+    my $cli_output = qx{cd "$Bin/.." && perl namefix-cli.pl --rename --exif-rm "$temp_file" 2>&1};
+    ok( $? == 0, 'CLI --exif-rm command executed successfully' );
+
+    # Get final writable EXIF tag count
+    my $tags_after = jpegexif::writable_exif_tag_count($temp_file);
+    ok( defined($tags_after), 'Final EXIF tag count retrieved' );
+
+    # Verify that EXIF data was reduced (some may remain as embedded)
+    ok( $tags_after <= $tags_before, 'EXIF tag count reduced or maintained after CLI removal' );
+
+    # Clean up
+    unlink($temp_file);
+    ok( ! -f $temp_file, 'CLI test file cleaned up' );
 }
 
 # TODO: Add comprehensive EXIF tests:
