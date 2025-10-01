@@ -184,14 +184,17 @@ $hash{lc_all}				{value}	= 0;
 $hash{intr_char}			{save}	= 'extended';
 $hash{intr_char}			{value}	= 0;
 
+$hash{c7bit}				{save}	= 'extended';
+$hash{c7bit}				{value}	= 0;
+
 $hash{sp_char}				{save}	= 'extended';
 $hash{sp_char}				{value}	= 0;
 
-$hash{rm_digits}			{save}		= 'extended'; #	RM ^Digits
-$hash{rm_digits}			{value}		= 0;
+$hash{rm_digits}			{save}	= 'extended'; #	RM ^Digits
+$hash{rm_digits}			{value}	= 0;
 
-$hash{digits}				{save}		= 'extended';
-$hash{digits}				{value}		= 0;
+$hash{digits}				{save}	= 'extended';
+$hash{digits}				{value}	= 0;
 
 $hash{unscene}				{save}	= 'extended';
 $hash{unscene}				{value}	= 0;

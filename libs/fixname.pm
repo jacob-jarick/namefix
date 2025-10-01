@@ -513,6 +513,11 @@ sub run_fixname_subs
 	$temp = $newfile;
 	$newfile = &fn_intr_char(1, $newfile);	
 	&misc::plog(3, "fn_intr_char: '$temp' -> '$newfile'") if $temp ne $newfile;
+
+	# 7bit ASCII conversion
+	$temp = $newfile;
+	$newfile = &to_7bit_ascii($newfile);
+	&misc::plog(3, "to_7bit_ascii: '$temp' -> '$newfile'") if $temp ne $newfile;
 	
     # Apply casing
 	$temp = $newfile;
@@ -1236,7 +1241,7 @@ sub fn_intr_char
 
 	# Lowercase variants
 	$file_new =~ s/à/a/g;
-	$file_new =~ s/á/a/g;	# mems 1st addition to int support
+	#$file_new =~ s/á/a/g;	# mems 1st addition to int support - removed, non germanic
 	$file_new =~ s/â/a/g;
 	$file_new =~ s/å/aa/g;
 	$file_new =~ s/æ/ae/g;

@@ -1317,6 +1317,24 @@ $balloon->attach
 	-msg=> "Converts International characters to their English equivalent"
 );
 
+my $c7_chk = $tab5->Checkbutton
+(
+	-text=>				"7bit ASCII",
+	-variable=>			\$config::hash{c7bit}{value},
+	-activeforeground=>	'blue'
+)
+->grid
+(
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'nw'
+);
+$balloon->attach
+(
+	$c7_chk,
+	-msg=> "Converts characters to 7bit ASCII equivalent\n\nNote: This may produce weird results so use with caution"
+);
+
 my $b_chk = $tab5->Checkbutton
 (
 	-text=>				"RM Chars",

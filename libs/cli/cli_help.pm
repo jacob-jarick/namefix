@@ -108,6 +108,8 @@ my $txt_misc =
 i	--int			convert international characters to
 				english equivalent
 
+7	--7bit			convert all characters to 7bit ascii
+
 s	--scene			Scenify Season and Episode Numbers
 	--sc
 

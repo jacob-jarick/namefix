@@ -1,123 +1,100 @@
-4.1.4 - Windows deployment improvements and build optimisation
+commit 3d44bdcc513d0b08c6ed39fd4f08c89d44db7b4c
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 06:34:44 2025 +0800
 
-* Fixed Windows PP deployment JPEG display issue with robust 3-tier fallback system:
-  - Tier 1: Attempt Tk::JPEG module (preferred)
-  - Tier 2: Fallback to PPM file conversion if JPEG module fails
-  - Tier 3: Text description if image unavailable
-  Applied to both jpgtest utility and about dialog
+    fixed fn_case for international characters, added to_7bit_ascii func (not exposed yet), formatting fixes
 
-* Optimised build system for Windows executables:
-  - Removed data bundling from executables (NSIS installer provides data files)
-  - Reduced GUI executable size from ~130MB to 6.69MB  
-  - Reduced CLI executable size to 5.71MB
-  - Added PAR archive builds (GUI: 1.16MB, CLI: 244KB)
-  - Improved build script with silent operations and clean output
-  - Fixed batch script PAR build hanging issues
+commit 640d27057efee44aa4381def88d5007326d00d44
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 03:10:22 2025 +0800
 
-* Updated NSIS installer:
-  - Changed output filename from namefix.pl_install.exe to namefix-installer.exe
-  - Modern naming convention alignment
+    added basic RM EXIF functionality to CLI & GUI
 
-* Documentation improvements:
-  - Corrected spelling and grammar in about.txt (Australian English)
-  - Updated thanks.txt to clarify sole maintainer status
-  - Proper crediting of past contributors
+commit 9d122d915f0e1d6db8e60f361a388766e19c2dec
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 02:37:36 2025 +0800
 
-* Build infrastructure enhancements:
-  - Reliable timestamp generation for builds
-  - Consistent executable naming convention
-  - Error handling and validation in build process
+    Update 05_exif_functions.t
 
-4.1.3 - ie refresh in progress
+commit 75e6612211509731c8c2a8a2b23352b847c5c55c
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 02:35:16 2025 +0800
 
-* fixed front append option
+    exif rm added
 
-* fixed regex option for remove
+commit 6872a613fe66acd5ad67576bdb3d40898ecaad3e
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 01:26:29 2025 +0800
 
-* fixed dots to spaces function (was droppping file extensions).
+    update single file handling
 
-4.1.2 - ie refresh in progress
+commit d7a701c9a20d2eb114040f8939644e7dc83167b2
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 1 18:51:20 2025 +0800
 
-* enumerate fixed and added a new option: string
-  string allows you to wrap the enumerated digit in a start and end string of your choosing.
-  3 new cli options added
-  --enum-add-strings			enables padding enum digit like so: <front><digit><end>
-  --enum-string-(front|start)=<front>	sets enum-add-strings, sets front to <front>
-  --enum-string-(end|stop)=<end>	sets enum-add-strings, sets end to <end>
+    exif and debug func fix for CLI
 
-* added clear button to MP3 tab to clear that tabs settings
+commit e5b7b16ebf47f4a34c5c479879e1b65e7bcce7c5
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 1 16:46:21 2025 +0800
 
-* ogg's get their id3 tags written
+    exif work
 
-* new option in misc "pad N to NN" eg:
-  Artist - 1 - track.ogg
-  to
-  Artist - 01 - track.ogg
+commit 0f73b79bebecd716b5ba12eae4c39e50ae8391c1
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 1 12:07:21 2025 +0800
 
-* clear button works again and also clears log window
+    CLI can now operate on a single file
 
-* guess tags now correctly guesses tags AFTER all tag modifications
+commit 84799034e0bd13e310a701d043f234c61a654c1d
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 1 11:37:19 2025 +0800
 
-*  only show needed amont of columns (correctly this time).
+    minor
 
-* fixname::fix - added quit errors to catch undef filenames and '' as filenames
+commit 4516a19fd60aef7dcb12d0e5bdadfbeb0db7cc6b
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 1 02:05:37 2025 +0800
 
-* ls_dir now only shows necessary headers + massive cleanup
+    Update namefix-linux.tar.gz
 
-* massive overhaul of nf_print::p
-  only shows files & dirs
+commit 002ace67a0452a6bed1da2076cdf115ba121ca54
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 1 02:04:56 2025 +0800
 
-* drastic overhaul of mp3 library.
-  updated to use new methods of writing tags, as my old method is now depreciated
-  new methods enabled writing to ogg files and other audio formats.
-  information for mp3 (audio files) tags are stored in a hash whenever possible
+    4.1.8
+    
+    tests, fixes,,, stuff
 
-*  rm_tags now removed both id3v1 and id3v2
+commit eeae59a52013027674dbf6cbb1f601e9f44349f3
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Sep 30 17:55:04 2025 +0800
 
-* id3 tags supported on the following file types: mp3, mp2, ogg, mpg, mpeg, mp4, aiff, flac, ape, ram, mpc
-  WIP - currently ogg's don't get their id3 tags written
+    config overhaul, all values are now LC, backwards compatible with old configs
 
-* make_test_dir.pl updated. now sets mimetypes for music files (allows testing of mp3 tags)
+commit e9e2e026c21f9154011efbcc240d33906c85c644
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Sep 30 16:57:03 2025 +0800
 
-* rc_menu
-  delete can now delete a directory - shows dir contents in dialog
+    tests... long overdue
 
-* config
-  all configurable options shifted to TSV $HOME/.namefix.pl/config_hash.tsv
+commit eb166ea34ea4971b610a8777ac28f3e32401c706
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Sep 30 16:46:23 2025 +0800
 
-* filter regex
-  now users quotemeta
+    fixed --int  option
+    
+    characters had been corrupted in an old save, fixed
+    added tests to stop regressions
 
-* fn_sp_word now uses quotemeta
+commit f3fc2b7e075109d858409f5b515f1d1093f020b9
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Sep 30 16:38:03 2025 +0800
 
-* all libraries updated to proper library format
+    Update 02_fixname.t
 
-* bookmarks.pm no longer uses self generating code.
+commit 49706020d70c10b3251927df052c64424a3d0d3e
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Sep 30 16:31:15 2025 +0800
 
-* mass libraries updated to proper libs
-
-4.1.1 - ie refresh in progress
-
-* about.pm is a proper lib now
-
-* .msi & .exe's updated
-
-* nsis installer script updated so it doesn't include .git
-
-* Hot Keys Added:
-  ESC = Stop doing whatever your doing
-  F2  = Manual Rename
-  F5  = Refresh current dir listing
-  F6  = Preview current changes (if any)
-
-* make_test_dir.pl updated - creates fake music files in fake album directories
-* added cool progress bar.
-
-* updating NSIS - probably quite broken on stuff like:
-  ENV path,
-  registry entry to ad namefix.pl to right click.
-
-* adding right click Apply Preview to hlist
-* update about dialog to refer to github: https://github.com/jacob-jarick/namefix
-* created make_test_dir.pl for generating files I can test with.
-* turned on strict and warnings for namefix.pl - redirected warnings for Jcombox
+    CLI fix

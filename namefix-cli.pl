@@ -442,6 +442,11 @@ for my $arg(@ARGV)
 		$config::hash{intr_char}{value} = 1;
 	}
 
+	elsif($arg eq '--7bit')
+	{
+		$config::hash{c7bit}{value} = 1;
+	}
+
 	elsif($arg eq '--scene' || $arg eq '--sc')
 	{
 		$config::hash{scene}{value} = 1;
@@ -779,6 +784,9 @@ sub proc_short_opts
 		elsif($short_opt eq "s") { $config::hash{scene}{value}					= 1; }
 		elsif($short_opt eq "u") { $config::hash{unscene}{value}				= 1; }
 		elsif($short_opt eq "x") { $config::hash{filter_regex}{value}			= 0; }
+
+		elsif($short_opt eq "7") { $config::hash{c7bit}{value}					= 1; }
+		elsif($short_opt eq "i") { $config::hash{intr_char}{value}				= 1; }
 
 		elsif($short_opt eq "0") { $config::hash{pad_digits_w_zero}{value}		= 1; }
 		elsif($short_opt eq "A") { $config::hash{ignore_file_type}{value}		= 1; }
