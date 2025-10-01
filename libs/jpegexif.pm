@@ -7,7 +7,7 @@ use warnings;
 
 require Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT = qw(has_exif_data list_exif_tags remove_exif_data is_exif_available get_exif_error);
+our @EXPORT = qw(has_exif_data list_exif_tags remove_exif_data is_exif_available get_exif_error file_supports_exif writable_exif_tag_count);
 
 # Module availability flag
 our $exif_available;
@@ -78,7 +78,7 @@ sub list_exif_tags
         FileSize FileName Directory FileModifyDate FileAccessDate FileCreateDate
         FilePermissions MIMEType FileType FileTypeExtension ExifByteOrder
         ImageWidth ImageHeight EncodingProcess BitsPerSample ColorComponents
-        YCbCrSubSampling
+        YCbCrSubSampling Megapixels ExifToolVersion ImageSize
     );
     my %excluded = map { $_ => 1 } @excluded_tags;
     
@@ -91,6 +91,24 @@ sub list_exif_tags
     }
     
     return \%tags_found;
+}
+
+sub writable_exif_tag_count
+{
+	my $filepath = shift;
+	
+	return 0 unless $exif_available;
+
+	my $tags_ref = list_exif_tags($filepath);
+	return 0 unless $tags_ref;
+
+	# plog each tag 
+	for my $tag (keys %$tags_ref)
+	{
+		&misc::plog(3, "Writable EXIF tag: $tag => $tags_ref->{$tag}");
+	}
+
+	return scalar keys %$tags_ref;
 }
 
 sub remove_exif_data 
@@ -125,8 +143,20 @@ sub get_last_error
     return '' unless $exif_available;
 
     my $exifTool = Image::ExifTool->new();
-	
+
     return $exifTool->GetValue('Error') || '';
 }
+
+sub file_supports_exif
+{
+	my $file = shift;
+
+	if(grep { lc($file) =~ /\.\Q$_\E$/i } @config::exif_exts)
+	{
+		return 1;
+	}
+
+	return 0;
+}	
 
 1;  

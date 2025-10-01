@@ -78,6 +78,7 @@ our $hlist_file_new		= '';
 
 # misc vars
 our $tags_rm			= 0;	# counter for number of tags removed
+our $exif_rm			= 0;	# counter for number of exif data removed
 our @find_arr			= ();
 our $tmpfilelist 		= '';
 our $last_recr_dir 		= '';

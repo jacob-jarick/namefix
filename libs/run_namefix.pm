@@ -108,6 +108,7 @@ sub run
 	&misc::plog(2, "$config::change files $t_s been modified");
 	&misc::plog(2, "$config::id3_change mp3s tags $t_s been updated.")							if($config::hash{id3_mode}{value});
 	&misc::plog(2, "$config::tags_rm mp3 tags $t_s been removed")								if($config::tags_rm);
+	&misc::plog(2, "$config::exif_rm image files exif data $t_s been removed")					if($config::exif_rm);
 	&misc::plog(0, "unable to rename $config::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($config::SUGGEST_FSFIX != 0);
 	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")		if($config::FOUND_TMP);
 

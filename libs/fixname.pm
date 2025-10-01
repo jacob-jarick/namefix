@@ -108,7 +108,7 @@ sub fix
 	# currently it just prints and returns
 	# printing is probably ugly
 
-	if($config::CLI && $config::hash{exif_show}{value} && grep { lc($file) =~ /\.\Q$_\E$/i } @config::exif_exts)
+	if($config::CLI && $config::hash{exif_show}{value} && &jpegexif::file_supports_exif($file))
 	{
 		my $exif_tags_ref = &jpegexif::list_exif_tags($file);
 
@@ -125,6 +125,33 @@ sub fix
 		else
 		{
 			print "No EXIF data found for $file\n";
+		}
+	}
+
+	# EXIF data removal
+
+	if($config::hash{exif_rm_all}{value} && &jpegexif::file_supports_exif($file))
+	{
+		my $writable_tag_count = &jpegexif::writable_exif_tag_count($file);		
+		if($writable_tag_count > 0)
+		{
+			&misc::plog(2, "'$file' has $writable_tag_count writable EXIF tags");
+
+			if(!$config::PREVIEW)
+			{
+				jpegexif::remove_exif_data($file);
+				$config::exif_rm++;
+				&misc::plog(2, "'$file' removed exif data");
+			}
+			else
+			{
+				&misc::plog(2, "'$file' would remove exif data (preview mode)");
+			}			
+		}
+		else
+		{
+			&misc::plog(2, "'$file' has no EXIF data, skipping removal");
+			return;
 		}
 	}
 

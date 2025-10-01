@@ -598,6 +598,10 @@ for my $arg(@ARGV)
 	{
 		$config::hash{exif_show}{value} = 1;
 	}
+	elsif($arg eq '--exif-rm')
+	{
+		$config::hash{exif_rm_all}{value} = 1;
+	}
 
 	#####################
 	# DEBUG
