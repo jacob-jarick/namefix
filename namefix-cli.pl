@@ -118,12 +118,20 @@ if (scalar @ARGV > 0 && (-f $ARGV[$#ARGV] || -d $ARGV[$#ARGV]))
 {
 	if(-f $ARGV[$#ARGV])
 	{
+		# we will force full string match if a single file is given
+		$config::hash{filter_regex}{value} 			= 1;	
+
+		# set filter so we only process this file
 		$config::hash{filter}{value}				= 1;
 		$config::hash{filter_ignore_case}{value}	= 0;
-		$config::filter_string						= basename($ARGV[$#ARGV]);
-		$config::dir								= dirname($ARGV[$#ARGV]);
 
-		&misc::plog(2, "running on single file '$config::filter_string'");
+		my $basename			= basename($ARGV[$#ARGV]);
+
+		$config::filter_string	= "^" . (quotemeta $basename) . '$';
+		$config::dir			= dirname($ARGV[$#ARGV]);
+
+		&misc::plog(2, "filter_string set to '$config::filter_string'");
+		&misc::plog(2, "running on single file '$ARGV[$#ARGV]'");
 	}
 	else
 	{
