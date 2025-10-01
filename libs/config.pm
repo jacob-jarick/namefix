@@ -16,7 +16,7 @@ our $dir				= cwd;
 our $cwd				= cwd;
 our $hlist_cwd			= cwd;
 
-our $version 			= '4.1.8';
+our $version 			= '4.1.10';
 our $folderimage 		= '';
 our $fileimage   		= '';
 

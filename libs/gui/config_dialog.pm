@@ -331,13 +331,55 @@ sub edit_prefs
 	);
 
 	# ----------------------------------------------------------------------------------------------------------
+	# EXIF tab
+
+	$n = 1;
+
+	my $tab_exif = $book->add
+	(
+		"Sheet 3",
+		-label=> "EXIF"
+	);
+
+	$tab_exif->Label
+	(
+		-justify=>	"left",
+		-text=>		"EXIF Options"
+	)
+	-> grid
+	(
+		-row=>		$n++,
+		-column=>	1,
+		-sticky=>	"nw"
+	);
+
+	$tab_exif->Checkbutton
+	(
+		-text=>				"RM EXIF Tags",
+		-variable=>			\$config::hash{exif_rm_all}{value},
+		-activeforeground=>	"blue"
+	)
+	->grid
+	(
+		-row=>		$n++,
+		-column=>	1,
+		-sticky=>	"nw",
+	);
+
+	$main::balloon->attach
+	(
+		$tab_exif->children->[-1],
+		-msg=> "Remove all EXIF metadata tags from image files.\nThis will strip camera information, GPS data, and other metadata."
+	);
+
+	# ----------------------------------------------------------------------------------------------------------
 	# Debug tab
 
 	$n = 1;
 
 	my $tab_debug = $book->add
 	(
-		"Sheet 3",
+		"Sheet 4",
 		-label=> "Debug"
 	);
 

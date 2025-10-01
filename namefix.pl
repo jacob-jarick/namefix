@@ -100,7 +100,6 @@ if (defined $ARGV[0] && $ARGV[0] eq '--gui-test')
 
 $config::dir = $ARGV[0] if defined $ARGV[0];
 
-
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
@@ -314,6 +313,15 @@ $dtf -> place
 	-rely=>		0,
 	-width=>	$dtfw,
 	-height=>	$dtfh
+);
+
+our $tab_exif = $dtf->add
+(
+	-caption=>		'EXIF',
+	-label=>		'EXIF',
+	-raisecolor=>	'yellow',
+	-tabcolor=>		'orange',
+	-width=>		300
 );
 
 our $tab7 = $dtf->add
@@ -1969,6 +1977,54 @@ $balloon->attach
 $tab7->Label
 (
 	-text=>"\n\n\n\n\n\n\n\n\n\n"
+)
+->grid
+(
+	-row=>		$row++,
+	-column=>	1
+);
+
+#--------------------------------------------------------------------------------------------------------------
+# EXIF Tab
+#--------------------------------------------------------------------------------------------------------------
+
+$row = 1;
+
+$tab_exif->Label
+(
+	-text=>	"EXIF Options:\n",
+	-font=>	'Arial 10 bold',
+)
+->grid
+(
+	-row=>			$row++,
+	-column=>		1,
+	-columnspan=>	1,
+	-sticky=>		'nw'
+);
+
+my $exif_rm_chk = $tab_exif->Checkbutton
+(
+	-text=>				"RM EXIF Tags",
+	-variable=>			\$config::hash{exif_rm_all}{value},
+	-activeforeground=>	'blue'
+)
+->grid
+(
+	-row=>			$row++,
+	-column=>		1,
+	-sticky=>		'nw'
+);
+
+$balloon->attach
+(
+	$exif_rm_chk,
+	-msg=> "Remove all EXIF metadata tags from image files.\nThis will strip camera information, GPS data, and other metadata."
+);
+
+$tab_exif->Label
+(
+	-text=>"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 )
 ->grid
 (
