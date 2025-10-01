@@ -9,7 +9,7 @@ use warnings;
 
 sub edit
 {
-	my $path 		= shift;
+	my $path = shift;
 
 	&main::quit("edit: \$path isn't defined.") if ! defined $path;
 	&main::quit("edit: \$path '$path' isn't a dir or file.") if !-f $path && !-d $path;
@@ -341,6 +341,7 @@ sub edit
 			-columnspan=>	3
 		);
 	}
+
 	my $but_reset = $button_frame->Button
 	(
 		-text=>				'Reset',
@@ -358,8 +359,8 @@ sub edit
 				%tag_hash = %$ref;
 			}
 		}
-        )
-	-> grid
+	)
+	->grid
 	(
 		-row=>			4,
 		-column=>		1,
@@ -379,7 +380,7 @@ sub edit
 				print "Guess Tag\n";
 			}
 		)
-		-> grid
+		->grid
 		(
 			-row=>			4,
 			-column=>		2,

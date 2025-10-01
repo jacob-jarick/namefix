@@ -40,8 +40,9 @@ sub match
 		&misc::plog(4, "sub match: string \"$string\" matched filter \"$filt\"");
 		return 1;
 	}
+	
 	&misc::plog(4, "sub match: string \"$string\" failed matched filter \"$filt\"");
-        return 0;
+	return 0;
 }
 
 1;

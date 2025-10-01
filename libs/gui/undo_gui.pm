@@ -22,42 +22,42 @@ sub display
 	)
 	->grid
 	(
-        	-row=>			$row++,
-        	-column=>		1,
-        	-columnspan=>	2
-        );
+		-row=>			$row++,
+		-column=>		1,
+		-columnspan=>	2
+	);
 
-        $top->Button
-		(
-        	-text=>				'Perform Undo',
-        	-activebackground=>	'white',
-        	-command=>
-			sub
-			{
-        		&undo::undo_rename;
-        		&dir::ls_dir;
-        		destroy $top;
-        	}
-        )
-        ->grid
-		(
-        	-row=>			$row,
-        	-column=>		1,
-        	-columnspan=>	1
-        );
+	$top->Button
+	(
+		-text=>				'Perform Undo',
+		-activebackground=>	'white',
+		-command=>
+		sub
+		{
+			&undo::undo_rename;
+			&dir::ls_dir;
+			destroy $top;
+		}
+	)
+	->grid
+	(
+		-row=>			$row,
+		-column=>		1,
+		-columnspan=>	1
+	);
 
-        $top->Button
-		(
-        	-text=>				'Close',
-        	-activebackground=>	'white',
-        	-command=>			sub { destroy $top; }
-        )
-        ->grid
-		(
-        	-row=>			$row++,
-        	-column=>		2,
-        	-columnspan=>	1
-        );
+	$top->Button
+	(
+		-text=>				'Close',
+		-activebackground=>	'white',
+		-command=>			sub { destroy $top; }
+	)
+	->grid
+	(
+		-row=>			$row++,
+		-column=>		2,
+		-columnspan=>	1
+	);
 
 	$hlist->header('create', 0, -text =>'Current Filename');
 	$hlist->header('create', 1, -text =>'->');

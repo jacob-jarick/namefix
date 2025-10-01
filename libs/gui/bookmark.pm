@@ -130,7 +130,7 @@ sub list_bookmarks
 
 	%bmhash = ();
 
-	$bookmarks -> separator();
+	$bookmarks->separator();
 
 	if(!-f $config::bookmark_file)
 	{
@@ -150,13 +150,14 @@ sub list_bookmarks
 		# path swap \ with /
 		$bpath =~ s/\\/\//g if $bpath =~ /\\/;
 
-		$bookmarks -> checkbutton
+		$bookmarks->checkbutton
 		(
-			-label		=> $bname,
-  			-onvalue	=> $bpath,
-  			-offvalue	=> $bpath,
-			-variable	=> \$bookmark_dir,
-			-command	=> sub
+			-label=>	$bname,
+  			-onvalue=>	$bpath,
+  			-offvalue=>	$bpath,
+			-variable=>	\$bookmark_dir,
+			-command=> 
+			sub
 			{
 				chdir $bookmark_dir;
 				$config::dir = cwd;
@@ -170,18 +171,16 @@ sub list_bookmarks
 	return 1;
 }
 
-
 #--------------------------------------------------------------------------------------------------------------
 # Edit Bookmarks.
 #--------------------------------------------------------------------------------------------------------------
 
 sub edit_bookmark_list
 {
-	my $dtext =	'';
-	$dtext = 	&misc::readjf($config::bookmark_file) if(-f $config::bookmark_file);
+	my $dtext =	&misc::readjf($config::bookmark_file) if(-f $config::bookmark_file);
 
-	my $top 	= $main::mw -> Toplevel();
-	$top-> 		title("Edit Bookmark List");
+	my $top = $main::mw->Toplevel();
+	$top->title("Edit Bookmark List");
 
 	$top->
 		Label(-text=>'Format: <Bookmark Name><TAB><TAB><url>')

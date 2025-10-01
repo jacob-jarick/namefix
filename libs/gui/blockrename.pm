@@ -22,12 +22,12 @@ sub gui
 {
 	$dir		= cwd;
 	$BR_DONE	= 0;
-        my $br_window	= $main::mw -> Toplevel();
+	my $br_window	= $main::mw -> Toplevel();
 	my $balloon	= $br_window->Balloon();
 
 	&misc::plog(3, "display blockrename gui");
 
-        $br_window->title('Block Rename');
+	$br_window->title('Block Rename');
 
 	my $txt_frame = $br_window->Frame()
 	->pack
@@ -46,14 +46,14 @@ sub gui
 	# Text box 1 -  before filenames
 	# Editing is allowed in this textbox so you can easily remove 1 file from the list.
 
-        $list_box = $txt_frame -> Scrolled
-        (
-        	'Text',
-                -scrollbars=>	'osoe',
-        	-font=>		$config::dialog_font,
-		-wrap=>		'none',
-        )
-        ->grid
+	$list_box = $txt_frame -> Scrolled
+	(
+		'Text',
+		-scrollbars=>	'osoe',
+		-font=>			$config::dialog_font,
+		-wrap=>			'none',
+	)	
+	->grid
 	(
 		-in=>		$txt_frame,
 		-row=>		1,
@@ -61,20 +61,20 @@ sub gui
 		-sticky=>	'nesw',
 	);
 
-        $list_box->menu(undef);
+	$list_box->menu(undef);
 
 	# Text box 2
 	# this text box is the after filenames
 	# this is where the user usually copy and pastes a list of filenames into.
 
-        $rename_box = $txt_frame -> Scrolled
-        (
-        	'Text',
-                -scrollbars=>	'osoe',
-        	-font=>		$config::dialog_font,
-		-wrap=>		'none',
-        )
-        ->grid
+	$rename_box = $txt_frame -> Scrolled
+	(
+		'Text',
+		-scrollbars=>	'osoe',
+		-font=>			$config::dialog_font,
+		-wrap=>			'none',
+	)
+	->grid
 	(
 		-in=>		$txt_frame,
 		-row=>		1,
@@ -89,34 +89,35 @@ sub gui
 	$txt_frame->gridColumnconfigure	(2, -weight=>1, -minsize =>50 );
 
 	my $button_sub_frame = $button_frame -> Frame()
-        -> grid
-        (
-        	-row=>		4,
-        	-column=>	1,
-        	-columnspan=>	2,
-        	-sticky=>	'ne'
-        );
+	-> grid
+	(
+		-row=>			4,
+		-column=>		1,
+		-columnspan=>	2,
+		-sticky=>		'ne'
+	);
 
 	# Cleanup button
 
-        $button_sub_frame -> Button
-        (
-        	-text=>			'Cleanup',
-        	-activebackground=>	'white',
-        	-command=>		sub { &br_cleanup; }
-        )
-        -> pack(-side=>'left');
+	$button_sub_frame -> Button
+	(
+		-text=>				'Cleanup',
+		-activebackground=>	'white',
+		-command=>			sub { &br_cleanup; }
+	)
+	-> pack(-side=>'left');
 
 	# Clear button - clears text in right hand box
 	# useful for pasting filenames from clipboard.
 
-        my $clear = $button_sub_frame->Button
-        (
-        	-text=>			'Clear',
-        	-activebackground=>	'white',
-        	-command=>		sub { $rename_box->delete('0.0','end'); }
-        )
-        -> pack(-side => 'left');
+	my $clear = $button_sub_frame->Button
+	(
+		-text=>				'Clear',
+		-activebackground=>	'white',
+		-command=>			sub { $rename_box->delete('0.0','end'); }
+	)
+	->pack(-side=>'left');
+
 	$balloon->attach($clear, -msg => "Clears Text In Right hand text box");
 
 	# Filter button - enables use of mainwindows filter
@@ -140,7 +141,7 @@ sub gui
 		},
 		-activeforeground=>'blue',
 	)
-        -> pack(-side=>'left');
+	->pack(-side=>'left');
 
 	# Preview button - displays a window with preview of results
 
@@ -150,40 +151,41 @@ sub gui
 		-variable=>		\$config::PREVIEW,
 		-activeforeground=>	'blue'
 	)
-        -> pack(-side => 'left');
+	->pack(-side => 'left');
+
 	$balloon->attach($preview, -msg => "Preview changes that will be made.\n\nNote: This option always re-enables after a run for safety.");
 
-        $button_sub_frame->Button
-        (
-        	-text=>			'STOP !',
-        	-activebackground=>	'red',
-        	-command=>		sub {&config::halt;}
-        )
-        -> pack(-side => 'left');
+	$button_sub_frame->Button
+	(
+		-text=>				'STOP !',
+		-activebackground=>	'red',
+		-command=>			sub {&config::halt;}
+	)
+	->pack(-side => 'left');
 
 	# LIST button
 
-        my $list = $button_sub_frame->Button
-        (
-        	-text=>			'LIST',
-        	-activebackground=>	'orange',
-        	-command=>		\&txt_reset
-        )
-        -> pack(-side => 'left');
+	my $list = $button_sub_frame->Button
+	(
+		-text=>				'LIST',
+		-activebackground=>	'orange',
+		-command=>			\&txt_reset
+	)
+	-> pack(-side => 'left');
 
 	$balloon->attach($list, -msg => "List Directory / Reset Text");
 
-	$button_sub_frame->Label(-text=>'  ')-> pack(-side => 'left');
+	$button_sub_frame->Label(-text=>'  ')->pack(-side => 'left');
 
 	# RUN button
 
-        $button_sub_frame->Button
-        (
-        	-text=>			'RUN',
-        	-activebackground=>	'green',
-        	-command=>
-        	sub
-        	{
+	$button_sub_frame->Button
+	(
+		-text=>				'RUN',
+		-activebackground=>	'green',
+		-command=>
+		sub
+		{
 			if(!$config::PREVIEW)
 			{
 				$BR_DONE = 1;
@@ -197,30 +199,30 @@ sub gui
 
 				&br_preview::preview(\@list1, \@list2);
 			}
-        	}
-        )
-        -> pack(-side => 'left');
+		}
+	)
+	-> pack(-side => 'left');
 
 	$button_sub_frame->Label(-text=>'    ')-> pack(-side=>'left');
 
 	# Close button
 
-        $button_sub_frame -> Button
-        (
-        	-text=>			'Close',
-        	-activebackground=>	'white',
-        	-command=>
-        	sub
-        	{
+	$button_sub_frame -> Button
+	(
+		-text=>			'Close',
+		-activebackground=>	'white',
+		-command=>
+		sub
+		{
 			if($BR_DONE)
 			{
 				$BR_DONE = 0;
-        			&dir::ls_dir;
+				&dir::ls_dir;
 			}
-        		destroy $br_window;
-        	}
-        )
-        -> pack(-side=>'left');
+			destroy $br_window;
+		}
+	)
+	->pack(-side=>'left');
 	&txt_reset;
 }
 
@@ -243,13 +245,13 @@ sub br_cleanup
 		$c++;
 		next if $new_file eq '' || $file eq '';	# avoid blanks
 
-		$new_file = &txt_cleanup($new_file);				# strip cleanup any crap trailing filename
+		$new_file = &txt_cleanup($new_file);						# strip cleanup any crap trailing filename
 		$new_file = &fixname::run_fixname_subs($file, $new_file);	# apply fixname routines ($file is needed, else some funcs mangle extensions)
 		&misc::plog(4, "br_cleanup: '$file' -> '$new_file'") if $file ne $new_file;
 	}
 
 	$dtext = join ("\n", @list);
-        $rename_box->insert('end', $dtext);
+	$rename_box->insert('end', $dtext);
 }
 
 sub txt_cleanup
@@ -265,13 +267,13 @@ sub txt_reset
 {
 	&misc::plog(3, "sub txt_reset");
 	&run_namefix::prep_globals;
-        my $dtext = join ("\n", &br_readdir($dir));
-        &misc::plog(4, "sub txt_reset: dtext: $dtext");
+	my $dtext = join ("\n", &br_readdir($dir));
+	&misc::plog(4, "sub txt_reset: dtext: $dtext");
 
-	$list_box->	delete('0.0','end');
+	$list_box->		delete('0.0','end');
 	$rename_box->	delete('0.0','end');
-        $list_box->	insert('end', "$dtext");
-        $rename_box->	insert('end', "$dtext");
+	$list_box->		insert('end', "$dtext");
+	$rename_box->	insert('end', "$dtext");
 }
 
 sub br
@@ -293,8 +295,8 @@ sub br
 	$config::RUN 	= 1;
 
 	my $result_text	= '';
-	my @new_l 	= split(/\n/, $rename_box->	get('1.0', 'end'));
-	my @old_l 	= split(/\n/, $list_box->	get('1.0', 'end'));
+	my @new_l 		= split(/\n/, $rename_box->	get('1.0', 'end'));
+	my @old_l 		= split(/\n/, $list_box->	get('1.0', 'end'));
 	my @new_a 		= ();
 	my @new_b 		= ();
 
@@ -370,28 +372,28 @@ sub br
 	return 1;
 }
 
-
 sub br_readdir
 {
-        my @dir_contents	= ();
-        my @dir_clean		= ();
+	my @dir_contents	= ();
+	my @dir_clean		= ();
 
 	&misc::plog(3, "br_readdir: '$dir'");
 
 	opendir(DIR, $dir) or &main::quit("sub br_readdir: can't open directory '$dir', $!");
 	@dir_contents = CORE::readdir(DIR);
-       	closedir DIR;
+	closedir DIR;
 
-        for my $file(@dir_contents)
-        {
-        	next if $file eq '.' || $file eq '..' || $file eq '';
-                next if !$config::hash{proc_dirs}	{value} && -d $file;
-                next if !$config::hash{ignore_file_type}{value} && $file !~ /\.($config::hash{file_ext_2_proc}{value})$/i;
-		next if  $config::hash{filter}		{value} && !&filter::match($file);
+	for my $file(@dir_contents)
+	{
+		next if $file eq '.' || $file eq '..' || $file eq '';
 
-                push @dir_clean, $file;
-        }
-        return &misc::ci_sort(@dir_clean);
+		next if !$config::hash{proc_dirs}		{value} && -d $file;
+		next if !$config::hash{ignore_file_type}{value} && $file !~ /\.($config::hash{file_ext_2_proc}{value})$/i;
+		next if  $config::hash{filter}			{value} && !&filter::match($file);
+
+		push @dir_clean, $file;
+	}
+	return &misc::ci_sort(@dir_clean);
 }
 
 

@@ -54,6 +54,7 @@ sub preview
 		push @new_a, $of;
 		push @new_b, $nf;
 	}
+
 	&br_show_lists('BR Preview', \@new_a, \@new_b);
 	return 1;
 }
@@ -65,6 +66,7 @@ sub preview
 sub br_show_lists
 {
 	&misc::plog(3, "sub br_preview_list");
+
 	my $title	= shift;
 	my $aref	= shift;
 	my $bref	= shift;
@@ -78,32 +80,32 @@ sub br_show_lists
 	# -----------------------
 	# start drawing gui
 
-        my $top = $main::mw -> Toplevel();
+        my $top = $main::mw->Toplevel();
         $top->title($title);
 
-        my $hlist = $top->Scrolled
-        (
+	my $hlist = $top->Scrolled
+	(
 		'HList',
 		-scrollbars=>		'osoe',
-		-header=>		1,
-		-columns=>		3,
-		-selectbackground=>	'Cyan',
-		-width=>		80,
+		-header=>			1,
+		-columns=>			3,
+		-selectbackground=>'Cyan',
+		-width=>			80,
 	)
-        ->pack
+	->pack
 	(
-		-side=>'top',
-		-fill=>'both',
-		-expand=>1,
-        );
+		-side=>		'top',
+		-fill=>		'both',
+		-expand=>	1,
+	);
 
-        $top->Button
+	$top->Button
 	(
-        	-text=>			'Close',
-        	-activebackground=>	'white',
-        	-command=>		sub { destroy $top; }
-        )
-        ->pack(-side=>'bottom');
+		-text=>				'Close',
+		-activebackground=>	'white',
+		-command=>			sub { destroy $top; }
+	)
+	->pack(-side=>'bottom');
 
 	# --------------------------------
 	# Gui drawn, add contents

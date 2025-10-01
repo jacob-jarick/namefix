@@ -1063,9 +1063,9 @@ sub fn_pre_clean
 
 sub fn_post_clean
 {
-	my $FILE = shift;
-	my $f = shift;
-	my $file_new = shift;
+	my $FILE		= shift;
+	my $f			= shift;
+	my $file_new	= shift;
 
 	$file_new = $f if !$file_new;
 
@@ -1267,6 +1267,136 @@ sub fn_intr_char
 	return $file_new;
 }
 
+sub to_7bit_ascii
+{
+	my $file_new = shift;
+
+	# emdash and endash to regular dash
+	$file_new =~ s/[—–]/-/g;
+	$file_new =~ s/[“”]/"/g;  # Smart quotes to regular quotes
+	$file_new =~ s/[‘’]/'/g;  # Smart quotes to regular apostrophe
+	$file_new =~ s/[´`]/'/g;  # Accent to regular apostrophe
+	$file_new =~ s/·/./g;     # Middle dot to regular dot
+	$file_new =~ s/…/.../g;   # Ellipsis to three dots
+	$file_new =~ s/[«»]/"/g;  # Guillemets to quotes
+	$file_new =~ s/[‹›]/'/g;  # Single guillemets to apostrophe
+	$file_new =~ s/[†‡]/+/g;  # Daggers to plus
+	$file_new =~ s/[°]/o/g;   # Degree symbol to o
+	$file_new =~ s/[¡]/!/g;   # Inverted exclamation
+	$file_new =~ s/[¿]/?/g;   # Inverted question mark
+
+	# Currency symbols
+	$file_new =~ s/[¢]/c/g;   # Cent
+	$file_new =~ s/[£]/L/g;   # Pound
+	$file_new =~ s/[¥]/Y/g;   # Yen
+	$file_new =~ s/[€]/E/g;   # Euro
+
+	# Mathematical symbols
+	$file_new =~ s/[×]/x/g;   # Multiplication
+	$file_new =~ s/[÷]/\//g;  # Division
+	$file_new =~ s/[±]/+-/g;  # Plus-minus
+	$file_new =~ s/[²]/2/g;   # Superscript 2
+	$file_new =~ s/[³]/3/g;   # Superscript 3
+	$file_new =~ s/[¹]/1/g;   # Superscript 1
+	$file_new =~ s/[¼]/1\/4/g; # One quarter
+	$file_new =~ s/[½]/1\/2/g; # One half
+	$file_new =~ s/[¾]/3\/4/g; # Three quarters
+
+	# A with diacritics
+	$file_new =~ s/[ÀÁÂÃÄÅĀĂĄǺǻ]/A/g;
+	$file_new =~ s/[àáâãäåāăąǻ]/a/g;
+	$file_new =~ s/[Æ]/AE/g;
+	$file_new =~ s/[æ]/ae/g;
+
+	# C with diacritics
+	$file_new =~ s/[ÇĆĈĊČ]/C/g;
+	$file_new =~ s/[çćĉċč]/c/g;
+
+	# D with diacritics
+	$file_new =~ s/[ÐĎĐ]/D/g;
+	$file_new =~ s/[ðďđ]/d/g;
+
+	# E with diacritics
+	$file_new =~ s/[ÈÉÊËĒĔĖĘĚ]/E/g;
+	$file_new =~ s/[èéêëēĕėęě]/e/g;
+
+	# G with diacritics
+	$file_new =~ s/[ĜĞĠĢ]/G/g;
+	$file_new =~ s/[ĝğġģ]/g/g;
+
+	# H with diacritics
+	$file_new =~ s/[ĤĦ]/H/g;
+	$file_new =~ s/[ĥħ]/h/g;
+
+	# I with diacritics
+	$file_new =~ s/[ÌÍÎÏĨĪĬĮİ]/I/g;
+	$file_new =~ s/[ìíîïĩīĭįı]/i/g;
+
+	# J with diacritics
+	$file_new =~ s/[Ĵ]/J/g;
+	$file_new =~ s/[ĵ]/j/g;
+
+	# K with diacritics
+	$file_new =~ s/[Ķ]/K/g;
+	$file_new =~ s/[ķ]/k/g;
+
+	# L with diacritics
+	$file_new =~ s/[ĹĻĽĿŁ]/L/g;
+	$file_new =~ s/[ĺļľŀł]/l/g;
+
+	# N with diacritics
+	$file_new =~ s/[ÑŃŅŇŊ]/N/g;
+	$file_new =~ s/[ñńņňŋ]/n/g;
+
+	# O with diacritics
+	$file_new =~ s/[ÒÓÔÕÖØŌŎŐ]/O/g;
+	$file_new =~ s/[òóôõöøōŏő]/o/g;
+	$file_new =~ s/[Œ]/OE/g;
+	$file_new =~ s/[œ]/oe/g;
+
+	# R with diacritics
+	$file_new =~ s/[ŔŖŘ]/R/g;
+	$file_new =~ s/[ŕŗř]/r/g;
+
+	# S with diacritics
+	$file_new =~ s/[ŚŜŞŠ]/S/g;
+	$file_new =~ s/[śŝşš]/s/g;
+	$file_new =~ s/[ß]/ss/g;  # German eszett
+
+	# T with diacritics
+	$file_new =~ s/[ŢŤŦ]/T/g;
+	$file_new =~ s/[ţťŧ]/t/g;
+
+	# U with diacritics
+	$file_new =~ s/[ÙÚÛÜŨŪŬŮŰŲ]/U/g;
+	$file_new =~ s/[ùúûüũūŭůűų]/u/g;
+
+	# W with diacritics
+	$file_new =~ s/[Ŵ]/W/g;
+	$file_new =~ s/[ŵ]/w/g;
+
+	# Y with diacritics
+	$file_new =~ s/[ÝŶŸ]/Y/g;
+	$file_new =~ s/[ýÿŷ]/y/g;
+
+	# Z with diacritics
+	$file_new =~ s/[ŹŻŽ]/Z/g;
+	$file_new =~ s/[źżž]/z/g;
+
+	# Special Nordic/Germanic characters
+	$file_new =~ s/[Þ]/Th/g; # Thorn
+	$file_new =~ s/[þ]/th/g; # Thorn lowercase
+
+	# Remove all UTF-8 combining diacritical marks (zalgo-style accents)
+	# This removes combining characters like t̵̛̯̰̤̳͒̀̎̔͌̓̔̍̈́͐̚ḛ̶͑̀͌̄̀͝š̸̛͙͉̺̻̫ť̴̻̈̐̑͋́̌͆͋̑̕͠͠ → test
+	$file_new =~ s/\p{M}//g;  # Remove all combining marks (diacriticals)
+
+	# Remove any remaining non-ASCII characters (fallback)
+	$file_new =~ s/[^\x00-\x7F]//g;
+
+	return $file_new;
+}
+
 sub fn_case
 {
 	my $FILE = shift;
@@ -1278,7 +1408,7 @@ sub fn_case
 
 	return $file_new if !$config::hash{case}{value};
 
-	$file_new =~ s/(^| |\.|_|\(|-)([A-Za-z������������������������������])(([A-Za-z������������������������������]|\'|\�|\�|\�)*)/$1.uc($2).lc($3)/eg;
+	$file_new =~ s/(^| |\.|_|\(|-)([A-Za-zÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ])(([A-Za-zÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ]|\'|\')*)/$1.uc($2).lc($3)/eg;
 
 	return $file_new;
 }

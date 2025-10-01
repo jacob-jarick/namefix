@@ -83,7 +83,8 @@ our @find_arr			= ();
 our $tmpfilelist 		= '';
 our $last_recr_dir 		= '';
 
-# writable_extensions - stolen from mp3::tag and tidied
+our $hash_tsv			= &misc::get_home."/.namefix.pl/config_hash.tsv";
+
 our @id3v2_exts 		= ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
 our $id3_ext_regex 		= join('|', @id3v2_exts);
 
@@ -94,8 +95,6 @@ our @exif_exts =
 	'orf', 'pef', 'png', 'raf', 'raw', 'rw2', 'sr2', 'srf', 'tif', 'tiff', 
 	'x3f'
 );
-
-our $hash_tsv			= &misc::get_home."/.namefix.pl/config_hash.tsv";
 
 #############################################################################################
 # MAIN TAB

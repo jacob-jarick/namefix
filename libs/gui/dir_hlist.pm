@@ -143,11 +143,12 @@ sub draw_list
 	$hlist = $main::frm_right2 -> Scrolled
     (
 		'HList',
-		-scrollbars		=> 'osoe',
-		-header			=> 1,
-		-columns		=> $columns,
-		-selectbackground	=> 'Cyan',
-		-browsecmd => sub
+		-scrollbars=>		'osoe',
+		-header=>			1,
+		-columns=>			$columns,
+		-selectbackground=>	'Cyan',
+		-browsecmd=> 
+		sub
 		{
 			# when user clicks on an entry update global variables
 			$hlist_selection	= shift;
@@ -164,9 +165,9 @@ sub draw_list
 	)
 	->pack
 	(
-        -side=>'bottom',
-		-expand=>1,
-		-fill=>'both'
+        -side=>		'bottom',
+		-expand=>	1,
+		-fill=>		'both'
 	);
 
 	# listing/ rename / preview - add '<VALUE>' column headers
@@ -203,11 +204,12 @@ sub draw_list
 
     $rc_menu = $hlist->Menu(-tearoff=>0);
 
-    $rc_menu -> command
+    $rc_menu->command
     (
-        -label=>'Properties',
-        -underline=> 1,
-        -command=> sub
+        -label=>		'Properties',
+        -underline=>	1,
+        -command=>
+		sub
         {
             my $path = $info{$hlist_selection}{path};
             print "Properties path='$path'\n";
@@ -216,11 +218,12 @@ sub draw_list
         }
 	);
 
-    $rc_menu -> command
+    $rc_menu->command
     (
-		-label=>'Apply Preview',
-		-underline=> 1,
-		-command=> sub
+		-label=>		'Apply Preview',
+		-underline=>	1,
+		-command=> 
+		sub
 		{
 			&misc::plog (2, "Apply Preview: filename:\t'$info{$hlist_selection}{filename}', new filename:\t'$info{$hlist_selection}{new_filename}'");
 
@@ -247,21 +250,19 @@ sub draw_list
         }
 	);
 
-    $rc_menu -> command
+    $rc_menu->command
     (
-		-label=>'Manual Rename',
-		-underline=> 1,
-		-command=> sub { &manual::edit( $info{$hlist_selection}{path} ); }
+		-label=>		'Manual Rename',
+		-underline=>	1,
+		-command=>		sub { &manual::edit( $info{$hlist_selection}{path} ); }
 	);
 
-    $rc_menu -> command
+    $rc_menu->command
     (
-		-label=>'Delete',
-		-underline=> 1,
-		-command=> sub
-		{ &dialog::show_del_dialog( $info{$hlist_selection}{path} ); }
+		-label=>		'Delete',
+		-underline=>	1,
+		-command=>		sub { &dialog::show_del_dialog( $info{$hlist_selection}{path} ); }
 	);
-
 
     $hlist->bind('<Any-ButtonPress-3>', \&show_rc_menu);
     $hlist->bind('<Any-ButtonPress-1>',[\&hide_rc_menu, $rc_menu]);

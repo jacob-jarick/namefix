@@ -87,11 +87,13 @@ chmod +x namefix-gui.par namefix-cli.par
 
 ## Media File Support  
 - **MP3 Tag Integration**: Guess tags from filenames, manipulate ID3 data
+- **EXIF Data Management**: View and remove EXIF metadata from image files
 - **Multi-Format**: JPEG, MP3, MPC, MPG, AVI, WMV, OGG, MKV, and more
 - **Filesystem Awareness**: Handle case-insensitive filesystems (FAT32/NTFS)
 
 ## Power User Features
 - **Block Renaming** (GUI Only): Visual bulk renaming with source/destination panels
+- **EXIF Tab** (GUI Only): Remove EXIF metadata from images with checkbox interface
 - **Recursive Processing**: Handle entire directory trees
 - **Directory Renaming**: Rename folders as well as files  
 - **Custom Filters**: Process only files matching specific patterns
@@ -137,6 +139,10 @@ namefix-cli.pl --scene --pad-num --clean --rename /path/to/TV_Shows/
 
 # MP3 tag manipulation
 namefix-cli.pl --id3-guess --id3-art="Various Artists" --rename /path/to/music/
+
+# EXIF data operations
+namefix-cli.pl --exif-show /path/to/photos/                                    # Display EXIF metadata
+namefix-cli.pl --exif-rm --rename /path/to/photos/                             # Remove EXIF data from images
 
 # Enumeration Options - Multiple styles available
 namefix-cli.pl --enum --enum-style=0 --enum-zero-pad=3 --rename /path/to/Photos/     # Numbers only (001, 002, 003...)
@@ -222,6 +228,8 @@ The block renaming feature provides a unique visual interface for complex bulk o
 ## Current Status
 - ✅ Stable 4.1.6 release with 60+ CLI options
 - ✅ Full GUI feature parity (except block renaming)
+- ✅ EXIF metadata support for image processing
+- ✅ Comprehensive automated testing suite
 - ✅ PAR executable distribution
 - ✅ Cross-platform compatibility
 

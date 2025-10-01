@@ -99,7 +99,7 @@ sub rm
 
 sub set_font
 {
-	my $name	= shift;
+	my $name = shift;
 
 	confess "set_font: \$name '$name' not found in \$hash" if ! defined $hash{$name};
 
@@ -179,7 +179,7 @@ sub display
 
 	my $frame_top = $main->Frame
 	(
-		-height => 10,
+		-height=>	10,
 	)->pack
 	(
 		-side=> 	'top',
@@ -257,6 +257,7 @@ sub display
 			-sticky=>	'nw',
 			-padx=>		2
 		);
+		
 		$row++;
 	}
 	$frame_top -> Button

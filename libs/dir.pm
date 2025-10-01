@@ -125,10 +125,11 @@ sub ls_dir_print
 
 	my $file = shift;
 
-        &main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
-        &main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
+	&main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
+	&main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
 
-        return if $file eq '.';
+	return if $file eq '.';
+
 	if($file eq '..')
 	{
 		&nf_print::p('..');
@@ -175,8 +176,8 @@ sub dialog
 
 	my $dd_dir = $main::mw->chooseDirectory
 	(
-		-initialdir=>$config::dir,
-		-title=>"Choose a directory"
+		-initialdir=>	$config::dir,
+		-title=>		"Choose a directory"
 	);
 
 	if($dd_dir)

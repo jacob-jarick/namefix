@@ -21,67 +21,69 @@ sub draw
 
 	my $file = $mbar -> cascade
 	(
-	        -label=>'File',
-	        -underline=>0,
-	        -tearoff => 0
+		-label=>		'File',
+		-underline=>	0,
+		-tearoff=>		0
 	);
 
-	$file -> command
+	$file->command
 	(
-	        -label =>'Preferences',
-	        -underline => 1,
-	        -command => sub { &config_dialog::edit_prefs; }
-	);
-	$file -> command
-	(
-	        -label =>'Styles',
-	        -underline => 1,
-	        -command => sub { &style::display; }
-	);
-	$file -> command
-	(
-	        -label =>'Block Rename',
-	        -underline => 1,
-	        -command =>\&blockrename::gui
+		-label=>		'Preferences',
+		-underline=>	1,
+		-command=>		sub { &config_dialog::edit_prefs; }
 	);
 
-	$file -> command
+	$file->command
 	(
-	        -label =>'Undo GUI',
-	        -underline => 1,
-	        -command =>\&undo_gui::display
+		-label=>		'Styles',
+		-underline=>	1,
+		-command=>		sub { &style::display; }
 	);
 
-	$file -> command
+	$file->command
 	(
-	        -label =>'Exit',
-	        -underline => 1,
-	        -command => sub { exit; }
+		-label=>		'Block Rename',
+		-underline=>	1,
+		-command=>		\&blockrename::gui
 	);
 
-	my $settings = $mbar -> cascade
+	$file->command
 	(
-	        -label=>'Edit Lists',
-	        -underline=>0,
-	        -tearoff => 0
+		-label=>		'Undo GUI',
+		-underline=>	1,
+		-command=>		\&undo_gui::display
 	);
 
-	$settings -> command
+	$file->command
 	(
-	        -label=>'Specific Casing List',
-	        -command=>\&edit_lists::cas_list
+		-label=>		'Exit',
+		-underline=>	1,
+		-command=>		sub { exit; }
 	);
 
-	$settings -> command
+	my $settings = $mbar->cascade
 	(
-	        -label=>'Remove Word List',
-	        -command=>\&edit_lists::word_list
+		-label=>		'Edit Lists',
+		-underline=>	0,
+		-tearoff =>		0
 	);
 
-	$settings -> command
+	$settings->command
 	(
-	        -label=>'Remove Pattern List',
-	        -command=>\&edit_lists::pat_list
+		-label=>	'Specific Casing List',
+		-command=>	\&edit_lists::cas_list
+	);
+
+	$settings->command
+	(
+		-label=>	'Remove Word List',
+		-command=>	\&edit_lists::word_list
+	);
+
+	$settings->command
+	(
+		-label=>	'Remove Pattern List',
+		-command=>	\&edit_lists::pat_list
 	);
 
  	&bookmark::draw_menu;     # creates bookmark menu, still wip

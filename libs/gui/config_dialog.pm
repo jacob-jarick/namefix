@@ -16,8 +16,8 @@ sub edit_prefs
 
 	my $top = $main::mw->Toplevel
 	(
-		-padx=> 5,
-		-pady=> 5
+		-padx=>	5,
+		-pady=>	5
 	);
 
 	$top->title("Edit Preferences");
@@ -65,8 +65,8 @@ sub edit_prefs
 
 	my $label6 = $tab1->Label
 	(
-		-justify=>"left",
-		-text=>"Space Delimter: "
+		-justify=>	"left",
+		-text=>		"Space Delimter: "
 	)
 	->grid
 	(
@@ -86,6 +86,7 @@ sub edit_prefs
 		-column=>	2,
 		-sticky=>	"nw"
 	);
+
 	$main::balloon->attach
 	(
 		$e_ent,
@@ -126,6 +127,7 @@ sub edit_prefs
 		-column=>	2,
 		-sticky=>	"nw"
 	);
+
 	$main::balloon->attach
 	(
 		$mfnl_ent,
@@ -208,7 +210,7 @@ sub edit_prefs
 		-label=>"Advanced"
 	);
 
-	$tab7 -> Label
+	$tab7->Label
 	(
 		-justify=>	"left",
 		-text=>		"Advance system options for namefix.pl:\n"
@@ -331,55 +333,13 @@ sub edit_prefs
 	);
 
 	# ----------------------------------------------------------------------------------------------------------
-	# EXIF tab
-
-	$n = 1;
-
-	my $tab_exif = $book->add
-	(
-		"Sheet 3",
-		-label=> "EXIF"
-	);
-
-	$tab_exif->Label
-	(
-		-justify=>	"left",
-		-text=>		"EXIF Options"
-	)
-	-> grid
-	(
-		-row=>		$n++,
-		-column=>	1,
-		-sticky=>	"nw"
-	);
-
-	$tab_exif->Checkbutton
-	(
-		-text=>				"RM EXIF Tags",
-		-variable=>			\$config::hash{exif_rm_all}{value},
-		-activeforeground=>	"blue"
-	)
-	->grid
-	(
-		-row=>		$n++,
-		-column=>	1,
-		-sticky=>	"nw",
-	);
-
-	$main::balloon->attach
-	(
-		$tab_exif->children->[-1],
-		-msg=> "Remove all EXIF metadata tags from image files.\nThis will strip camera information, GPS data, and other metadata."
-	);
-
-	# ----------------------------------------------------------------------------------------------------------
 	# Debug tab
 
 	$n = 1;
 
 	my $tab_debug = $book->add
 	(
-		"Sheet 4",
+		"Sheet 3",
 		-label=> "Debug"
 	);
 
@@ -504,6 +464,8 @@ sub edit_prefs
 #--------------------------------------------------------------------------------------------------------------
 # Save Fonts Config File
 #--------------------------------------------------------------------------------------------------------------
+
+# TODO: do away with self executing code
 
 sub save_fonts
 {
