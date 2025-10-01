@@ -104,11 +104,10 @@ sub fix
 	#------------------------------------------------------------------------------
 	# EXIF data processing
 
-	# TODO create an array of extensions with EXIF data
-
-	# I plan to make this CLI only as its not really needed in gui mode
+	# CLI only as its not really needed in gui mode
 	# currently it just prints and returns
 	# printing is probably ugly
+
 	if($config::CLI && $config::hash{exif_show}{value} && -f $file && $file =~ /\.(jpg|jpeg)$/i)
 	{
 		my $exif_tags_ref = &jpegexif::list_exif_tags($file);
@@ -119,7 +118,7 @@ sub fix
 			# loop through tags and print them
 			for my $tag (sort keys %$exif_tags_ref)
 			{
-				print "$tag: $exif_tags_ref->{$tag}\n";
+				print "\t$tag: $exif_tags_ref->{$tag}\n";
 			}
 			print "=== End EXIF Data ===\n\n";
 		}
@@ -127,8 +126,6 @@ sub fix
 		{
 			print "No EXIF data found for $file\n";
 		}
-
-		return;
 	}
 
 	#------------------------------------------------------------------------------
