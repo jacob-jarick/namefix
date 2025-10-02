@@ -1,38 +1,15 @@
-==========
-=- Bugs -=
-==========
+==================
+=- TODO         -=
+==================
 
-* None currently known or reported
-
-==============
-=- GUI Todo -=
-==============
-
-High:
+Feature Additions:
 
 * generate filename from id3 tags
-* DONE - make filter and directory text box resize with the main window.
 
-Medium:
+Code Todo: 
 
-* jpeg and other picture tag support (WIP).
-
-* JPEG metadata stripping for privacy (remove GPS, camera info, EXIF data)
-  - Use Image::ExifTool library (avoid Tk::JPEG dependencies)
-  - CLI options: --strip-exif, --strip-gps, --strip-privacy
-  - GUI: checkbox option in misc tab with granular controls
-  - Risk: Additional library dependency for Windows PP deployment
-  - Consider external tool integration (exiftool.exe) as alternative
-
-Low:
-
-* multi level undo - dismissed, not really a scalable idea for file renaming.
-
-==============
-=- CLI Todo -=
-==============
-
-* DONE - Single file processing
+* id3 unit tests
+* split globals to their own file (currently poluting config.pm)
 
 ==================
 =- Known Issues -=
@@ -43,3 +20,4 @@ Low:
 
 * Unicode characters are supported, but some weirdness may occur on some
   systems depending on systems unicode support & codepages supported.
+  edit: this should be finally a non issue with modern OS's

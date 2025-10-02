@@ -12,15 +12,17 @@ our %hash				= ();
 
 require misc;
 
+# TODO: move to globals.pm ? from here to line 83 are all candidates to move
+
 our $dir				= cwd;
 our $cwd				= cwd;
 our $hlist_cwd			= cwd;
 
-our $version 			= '4.1.12';
+our $version 			= '4.1.13';
 our $folderimage 		= '';
 our $fileimage   		= '';
 
-our $g_font				= '';
+our $g_font				= '';	# unused ?
 our $home				= &misc::get_home;
 
 # File locations
@@ -188,9 +190,9 @@ our @exif_exts =
 # -----------------------------------------------------------------------------
 # FILTER BAR
 
-&config_init_value('filter', 0, 0, 'bool', 'extended');
-&config_init_value('filter_ignore_case', 0, 0, 'bool', 'extended');
-&config_init_value('filter_string', '', '', 'str', 'no');
+&config_init_value('filter',				0,		0,	'bool',	'extended');
+&config_init_value('filter_ignore_case',	0,		0,	'bool',	'extended');
+&config_init_value('filter_string',			'',		'',	'str',	'no');
 
 # -----------------------------------------------------------------------------
 # bottom menu bar
@@ -254,7 +256,6 @@ else
 	'base'
 );
 
-
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - DEBUG TAB
 
@@ -268,6 +269,8 @@ else
 #######################################################################################################################
 # files and arrays
 #######################################################################################################################
+
+# TODO: move this section to globals.pm ?
 
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
@@ -290,7 +293,6 @@ our @kill_patterns_arr	= ();
 our $genres_file		= "$Bin/data/txt/genres.txt";
 our @genres				= ();
 @genres					= misc::readf_clean($genres_file)			if -f $genres_file;
-
 
 #######################################################################################################################
 # functions
