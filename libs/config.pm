@@ -222,20 +222,6 @@ $hash{end_a}				{default}	= 0;
 $hash{end_a}				{value}		= 0;
 $hash{end_a}				{type}		= 'bool';
 
-# Legacy variable for GUI compatibility (maps to $hash{end_a}{value})
-our $end_a				= 0;
-
-# GUI accessor variables that sync with hash (for -textvariable compatibility)
-our $ins_str_old		= '';	# maps to $hash{ins_str_old}{value}
-our $ins_str			= '';	# maps to $hash{ins_str}{value}
-our $ins_front_str		= '';	# maps to $hash{ins_front_str}{value}
-our $ins_end_str		= '';	# maps to $hash{ins_end_str}{value}
-our $id3_art_str		= '';	# maps to $hash{id3_art_str}{value}
-our $id3_alb_str		= '';	# maps to $hash{id3_alb_str}{value}
-our $id3_gen_str		= '';	# maps to $hash{id3_gen_str}{value}
-our $id3_year_str		= '';	# maps to $hash{id3_year_str}{value}
-our $id3_com_str		= '';	# maps to $hash{id3_com_str}{value}
-
 
 
 #############################################################################################
@@ -379,9 +365,6 @@ $hash{enum_add}			{default}	= 0;
 $hash{enum_add}			{value}		= 0;
 $hash{enum_add}			{type}		= 'bool';
 
-our $enum_start_str		= '';
-our $enum_end_str		= '';
-
 $hash{enum_pad}			{save}		= 'extended';
 $hash{enum_pad}			{default}	= 0;
 $hash{enum_pad}			{value}		= 0;
@@ -391,6 +374,16 @@ $hash{enum_pad_zeros}	{save}		= 'extended';
 $hash{enum_pad_zeros}	{default}	= 4;
 $hash{enum_pad_zeros}	{value}		= 4;
 $hash{enum_pad_zeros}	{type}		= 'int';
+
+$hash{enum_start_str}	{save}		= 'no';
+$hash{enum_start_str}	{default}	= '';
+$hash{enum_start_str}	{value}		= '';
+$hash{enum_start_str}	{type}		= 'str';
+
+$hash{enum_end_str}		{save}		= 'no';
+$hash{enum_end_str}		{default}	= '';
+$hash{enum_end_str}		{value}		= '';
+$hash{enum_end_str}		{type}		= 'str';
 
 #############################################################################################
 # TRUNCATE TAB
@@ -754,39 +747,6 @@ sub clr_no_save
 			$hash{$k}{value} = $hash{$k}{default};
 		}
 	}
-	
-	# Sync legacy GUI variables
-	sync_gui_vars();
-}
-
-# Sync GUI accessor variables with hash values
-sub sync_gui_vars
-{
-	$end_a = $hash{end_a}{value};
-	$ins_str_old = $hash{ins_str_old}{value};
-	$ins_str = $hash{ins_str}{value};
-	$ins_front_str = $hash{ins_front_str}{value};
-	$ins_end_str = $hash{ins_end_str}{value};
-	$id3_art_str = $hash{id3_art_str}{value};
-	$id3_alb_str = $hash{id3_alb_str}{value};
-	$id3_gen_str = $hash{id3_gen_str}{value};
-	$id3_year_str = $hash{id3_year_str}{value};
-	$id3_com_str = $hash{id3_com_str}{value};
-}
-
-# Sync hash values from GUI accessor variables (call this before processing)
-sub sync_from_gui_vars
-{
-	$hash{end_a}{value} = $end_a;
-	$hash{ins_str_old}{value} = $ins_str_old;
-	$hash{ins_str}{value} = $ins_str;
-	$hash{ins_front_str}{value} = $ins_front_str;
-	$hash{ins_end_str}{value} = $ins_end_str;
-	$hash{id3_art_str}{value} = $id3_art_str;
-	$hash{id3_alb_str}{value} = $id3_alb_str;
-	$hash{id3_gen_str}{value} = $id3_gen_str;
-	$hash{id3_year_str}{value} = $id3_year_str;
-	$hash{id3_com_str}{value} = $id3_com_str;
 }
 
 1;

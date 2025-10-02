@@ -418,13 +418,13 @@ for my $arg(@ARGV)
 	elsif($arg =~ /--enum-string-(front|start)=(.*)/)
 	{
  		$config::hash{enum_add}{value} = 1;
-		$config::enum_start_str = $2;
+		$config::hash{enum_start_str}{value} = $2;
 	}
 
 	elsif($arg =~ /--enum-string-(end|stop)=(.*)/)
 	{
  		$config::hash{enum_add}{value} = 1;
-		$config::enum_end_str = $2;
+		$config::hash{enum_end_str}{value} = $2;
 	}
 
 	elsif($arg =~ /--enum-zero-pad=(.*)/)

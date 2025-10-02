@@ -756,7 +756,7 @@ $balloon->attach
 	-msg => "Remove user entered words\n\nNote 1:\tTo remove multiple words, separate with |\n\nExample:\tone|two|three\n\nNote 2:\tTo remove | simply escape it like so \\|\nNote 3:\tPerl regexps are available\n\tEnable under File, Preferences, Advance, Enable regexps."
 );
 
-my $R_ent1 = $frm_left->Entry(-textvariable=>\$config::ins_str_old)
+my $R_ent1 = $frm_left->Entry(-textvariable=>\$config::hash{ins_str_old}{value})
 -> grid
 (
 	-row=>		$row++,
@@ -772,7 +772,7 @@ $frm_left->Label(-text=>"Replace With:")
 	-column=>	1,
 	-sticky=>	'nw'
 );
-my $R_ent2 = $frm_left->Entry(-textvariable=>\$config::ins_str)
+my $R_ent2 = $frm_left->Entry(-textvariable=>\$config::hash{ins_str}{value})
 ->grid
 (
 	-row=>		$row++,
@@ -795,7 +795,7 @@ my $f_chk = $frm_left->Checkbutton
 );
 $balloon->attach($f_chk, -msg=> "Append string (of characters) to front of filename");
 
-my $f_ent = $frm_left->Entry(-textvariable=>\$config::ins_front_str)
+my $f_ent = $frm_left->Entry(-textvariable=>\$config::hash{ins_front_str}{value})
 ->grid
 (
 	-row=>		$row++,
@@ -806,7 +806,7 @@ my $f_ent = $frm_left->Entry(-textvariable=>\$config::ins_front_str)
 my $e_chk = $frm_left->Checkbutton
 (
 	-text=>				"End Append:",
-	-variable=>			\$config::end_a,
+	-variable=>			\$config::hash{end_a}{value},
 	-activeforeground=>	'blue'
 )
 -> grid
@@ -816,7 +816,7 @@ my $e_chk = $frm_left->Checkbutton
 	-sticky=>	'nw'
 );
 $balloon->attach($e_chk, -msg=> "Append string to end of filename but before the file extension");
-my $e_ent = $frm_left->Entry(-textvariable=>\$config::ins_end_str)
+my $e_ent = $frm_left->Entry(-textvariable=>\$config::hash{ins_end_str}{value})
 -> grid
 (
 	-row=>		$row++,
@@ -1025,7 +1025,7 @@ $balloon->attach
 
 my $id3_art_ent = $tab2->Entry
 (
-	-textvariable=>\$config::id3_art_str
+	-textvariable=>\$config::hash{id3_art_str}{value}
 )
 ->grid
 (
@@ -1061,7 +1061,7 @@ $balloon->attach
 	-msg=> "Set all mp3 album tags to user entered string."
 );
 
-my $id3_alb_ent = $tab2->Entry(-textvariable=>\$config::id3_alb_str)
+my $id3_alb_ent = $tab2->Entry(-textvariable=>\$config::hash{id3_alb_str}{value})
 ->grid
 (
  	-row=>		$row++,
@@ -1101,7 +1101,7 @@ my $genre_combo = $tab2->JComboBox
  	-mode=>			'readonly',
 	-relief=>		'groove',
 	-background=>	'white',
-	-textvariable=>	\$config::id3_gen_str,
+	-textvariable=>	\$config::hash{id3_gen_str}{value},
 	-choices=>		\@config::genres,
 	-entrywidth=>	16
 )
@@ -1143,7 +1143,7 @@ $balloon->attach
 
 my $id3_year_ent = $tab2 -> Entry
 (
-	-textvariable=>\$config::id3_year_str
+	-textvariable=>\$config::hash{id3_year_str}{value}
 )
 -> grid
 (
@@ -1181,7 +1181,7 @@ $balloon->attach
 
 my $id3_com_ent = $tab2->Entry
 (
-	-textvariable=>\$config::id3_com_str
+	-textvariable=>\$config::hash{id3_com_str}{value}
 )
 ->grid
 (
@@ -1216,11 +1216,11 @@ my $clr_id3_button = $tab2->Button
 		$config::hash{audio_set_year}		{value} = 0;
 		$config::hash{audio_set_comment}	{value} = 0;
 
-		$config::id3_art_str		= '';
-		$config::id3_alb_str		= '';
-		$config::id3_gen_str		= '';
-		$config::id3_year_str		= '';
-		$config::id3_com_str		= '';
+		$config::hash{id3_art_str}		{value} = '';
+		$config::hash{id3_alb_str}		{value} = '';
+		$config::hash{id3_gen_str}		{value} = '';
+		$config::hash{id3_year_str}		{value} = '';
+		$config::hash{id3_com_str}		{value} = '';
 
 		&misc::plog(2, 'cleared id3 options');
 	}
@@ -1701,7 +1701,7 @@ $tab6->Label
 );
 my $entry_enum_start_str = $tab6->Entry
 (
-	-textvariable=>\$config::enum_start_str
+	-textvariable=>\$config::hash{enum_start_str}{value}
 )
 ->grid
 (
@@ -1721,7 +1721,7 @@ $tab6->Label(-text=>'End String:')
 );
 my $entry_enum_end_str = $tab6->Entry
 (
-	-textvariable=>\$config::enum_end_str
+	-textvariable=>\$config::hash{enum_end_str}{value}
 )
 ->grid
 (

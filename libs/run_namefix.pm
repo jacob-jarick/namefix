@@ -28,8 +28,8 @@ sub prep_globals
 	$config::last_recr_dir 	= '';
 
 	# escape replace word if regexp is disabled
-	$config::ins_str_old_escaped = $config::ins_str_old;
-	$config::ins_str_old_escaped = quotemeta $config::ins_str_old		if($config::hash{filter_regex}{value} == 1);
+	$config::ins_str_old_escaped = $config::hash{ins_str_old}{value};
+	$config::ins_str_old_escaped = quotemeta $config::hash{ins_str_old}{value}		if($config::hash{filter_regex}{value} == 1);
 
 	# update killword list if file exists
 	@config::kill_words_arr = misc::readsf("$config::killwords_file")	if(-f $config::killwords_file);

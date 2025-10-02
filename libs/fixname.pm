@@ -197,31 +197,31 @@ sub fix
 
 	if($config::hash{audio_set_artist}{value} && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{artist} = $config::id3_art_str;
+		$tags_h_new{artist} = $config::hash{id3_art_str}{value};
 		$tag	= 1;
 	}
 
 	if($config::hash{audio_set_album}{value} && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{album} = $config::id3_alb_str;
+		$tags_h_new{album} = $config::hash{id3_alb_str}{value};
 		$tag	= 1;
 	}
 
 	if($config::hash{audio_set_genre}{value} && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{genre} = $config::id3_gen_str;
+		$tags_h_new{genre} = $config::hash{id3_gen_str}{value};
 		$tag	= 1;
 	}
 
 	if($config::hash{audio_set_year}{value} && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{year} = $config::id3_year_str;
+		$tags_h_new{year} = $config::hash{id3_year_str}{value};
 		$tag	= 1;
 	}
 
 	if($config::hash{audio_set_comment}{value} && $IS_AUDIO_FILE)
 	{
-		$tags_h_new{comment} = $config::id3_com_str;
+		$tags_h_new{comment} = $config::hash{id3_com_str}{value};
 		$tag	= 1;
 	}
 
@@ -653,13 +653,13 @@ sub fn_replace
 
 	return $file_new if !$config::hash{replace}{value};
 
-	my $rm = $config::ins_str_old;
+	my $rm = $config::hash{ins_str_old}{value};
 	if(!$config::hash{remove_regex}{value})
 	{
-		$rm = quotemeta $config::ins_str_old;
+		$rm = quotemeta $config::hash{ins_str_old}{value};
 	}
 
-	$file_new =~ s/($rm)/$config::ins_str/ig;
+	$file_new =~ s/($rm)/$config::hash{ins_str}{value}/ig;
 
 	return $file_new;
 }
@@ -920,7 +920,7 @@ sub fn_enum
 	my $enum_str = $enum_count;
 	if($config::hash{enum_add}{value})
 	{
-		$enum_str = $config::enum_start_str.$enum_count.$config::enum_end_str;
+		$enum_str = $config::hash{enum_start_str}{value}.$enum_count.$config::hash{enum_end_str}{value};
 	}
 
 	my $ext = '';
@@ -1114,7 +1114,7 @@ sub fn_front_a
 
 	return $file_new if !$config::hash{ins_start}{value};
 
-	$file_new = $config::ins_front_str.$file_new;
+	$file_new = $config::hash{ins_front_str}{value}.$file_new;
 
 	return $file_new;
 }
@@ -1125,9 +1125,9 @@ sub fn_end_a
 	&main::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_end_a \$file_new eq ''\n")	    if $file_new eq '';
 
-	return $file_new if $config::end_a;
+	return $file_new if $config::hash{end_a}{value};
 
-	$file_new =~ s/(.*)(\..*?$)/$1$config::ins_end_str$2/g;
+	$file_new =~ s/(.*)(\..*?$)/$1$config::hash{ins_end_str}{value}$2/g;
 
 	return $file_new;
 }
