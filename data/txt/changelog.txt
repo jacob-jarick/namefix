@@ -1,3 +1,15 @@
+commit 61d55df986895d259bb25f6b80503704148094c3
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 17:20:45 2025 +0800
+
+    4.1.12 - clear log option added to gui file menu
+
+commit 1cdb4a4a34ab19f8c6db9fc1a4d71782af58d603
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 08:02:33 2025 +0800
+
+    4.1.11
+
 commit 8c4b0ec94b8dda57a074da5563b33cd5e0fc9de8
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Thu Oct 2 07:09:36 2025 +0800
@@ -86,15 +98,3 @@ Date:   Tue Sep 30 16:57:03 2025 +0800
 
 commit eb166ea34ea4971b610a8777ac28f3e32401c706
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Sep 30 16:46:23 2025 +0800
-
-    fixed --int  option
-    
-    characters had been corrupted in an old save, fixed
-    added tests to stop regressions
-
-commit f3fc2b7e075109d858409f5b515f1d1093f020b9
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Sep 30 16:38:03 2025 +0800
-
-    Update 02_fixname.t
