@@ -91,7 +91,7 @@ sub hlist_cd
 
 	if(-d $wd && chdir $wd)
 	{
-		$config::dir = cwd();
+		$globals::dir = cwd();
 		&dir::ls_dir;
 		&misc::plog(3, "cd: '$wd'");
 		return;
@@ -106,11 +106,11 @@ sub hlist_cd
 
 sub fn_update_delay
 {
-	$config::update_delay--;
-	if(!$config::update_delay || !$globals::LISTING)
+	$globals::update_delay--;
+	if(!$globals::update_delay || !$globals::LISTING)
 	{
 		$main::mw->update();
-		$config::update_delay = $config::delay;
+		$globals::update_delay = $globals::delay;
 	}
 }
 
@@ -158,7 +158,7 @@ sub draw_list
 		{
             # user has double clicked
  			$target_dir	= $info{$hlist_selection}{parent};
-			$target_dir	= $info{$hlist_selection}{path} if -d $info{$hlist_selection}{path} && $config::hlist_file ne '..';
+			$target_dir	= $info{$hlist_selection}{path} if -d $info{$hlist_selection}{path} && $globals::hlist_file ne '..';
 
 			&hlist_cd($target_dir);
 		}
@@ -241,7 +241,7 @@ sub draw_list
 				$hlist->itemConfigure
 				(
 					$hlist_selection,
-					$config::hlist_file_row,
+					$globals::hlist_file_row,
 					-text => $file_new
 				);
 				# Update info hash with new filename

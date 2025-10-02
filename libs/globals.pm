@@ -22,7 +22,7 @@ our $dir				= cwd;
 our $cwd				= cwd;
 our $hlist_cwd			= cwd;
 
-our $version 			= '4.1.13';
+our $version 			= '4.1.14';
 our $folderimage 		= '';
 our $fileimage   		= '';
 

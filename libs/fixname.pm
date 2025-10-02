@@ -46,12 +46,12 @@ sub fix
     my $file_ext		    = '';
     my $tmpfile		        = '';
 
-	$IS_AUDIO_FILE = 1 if $file =~ /\.$config::id3_ext_regex$/i;
+	$IS_AUDIO_FILE = 1 if $file =~ /\.$globals::id3_ext_regex$/i;
 
 	if($config::hash{id3_mode}{value} && !-f $file)
 	{
 		&misc::plog(0, "sub fixname: \"$dir/$file\" does not exist");
-		&misc::plog(0, "sub fixname: current directory = \"$config::dir\"");
+		&misc::plog(0, "sub fixname: current directory = \"$globals::dir\"");
 		return;
 	}
 
@@ -140,7 +140,7 @@ sub fix
 			if(!$globals::PREVIEW)
 			{
 				jpegexif::remove_exif_data($file);
-				$config::exif_rm++;
+				$globals::exif_rm_count++;
 				&misc::plog(2, "'$file' removed exif data");
 			}
 			else
@@ -234,7 +234,7 @@ sub fix
         }
         else
 		{
-            $config::tags_rm++;
+            $globals::tags_rm_count++;
         }
         $tag = 1;
     }
@@ -325,7 +325,7 @@ sub fix
 		}
 		else
 		{
-			$config::change++; # increment change for preview count
+			$globals::change++; # increment change for preview count
 		}
 	}
 
@@ -386,7 +386,7 @@ sub fn_rename
 		if( -e $tmpfile && !$config::hash{overwrite}{value})
 		{
 			$globals::FOUND_TMP++;
-			$config::tmpfilelist .= "$tmpfile\n";
+			$globals::tmpfilelist .= "$tmpfile\n";
 			&misc::plog(0, "fn_rename: \"$tmpfile\" <- FOUND_TMP");
 			return 0;
 		}
@@ -414,7 +414,7 @@ sub fn_rename
 		rename $file, $newfile;
 		&undo::add($file, "$dir/$newfile");
 	}
-	$config::change++;
+	$globals::change++;
 	return 1;
 }
 
@@ -625,7 +625,7 @@ sub fn_kill_cwords
 	{
 		if(-d $file)	# if directory process as normal
 		{
-			for my $a(@config::kill_words_arr)
+			for my $a(@globals::kill_words_arr)
 			{
 				$a = quotemeta $a;
 				$file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1$3/ig;
@@ -633,7 +633,7 @@ sub fn_kill_cwords
 		}
 		else		# if its a file, be careful not to remove the extension, hence why we don't match on $
 		{
-			for my $a(@config::kill_words_arr)
+			for my $a(@globals::kill_words_arr)
 			{
 				$a = quotemeta $a;
 				$file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1$3/ig;
@@ -672,7 +672,7 @@ sub fn_kill_sp_patterns
 
 	return $file_new if !$config::hash{kill_sp_patterns}{value};
 
-	for my $pattern (@config::kill_patterns_arr)
+	for my $pattern (@globals::kill_patterns_arr)
 	{
 		$file_new =~ s/$pattern//ig;
 	}
@@ -800,7 +800,7 @@ sub fn_sp_word
 	&main::quit("fn_sp_word \$file_new eq ''\n")	if $FILE && $file_new eq '';
 
 	return $file_new if !$config::hash{word_special_casing}{value};
-	foreach my $word(@config::word_casing_arr)
+	foreach my $word(@globals::word_casing_arr)
 	{
 		my $w = quotemeta $word;
 		if(-f $file)	# is file and not a directory

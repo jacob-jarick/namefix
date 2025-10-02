@@ -151,7 +151,7 @@ sub file_supports_exif
 {
 	my $file = shift;
 
-	if(grep { lc($file) =~ /\.\Q$_\E$/i } @config::exif_exts)
+	if(grep { lc($file) =~ /\.\Q$_\E$/i } @globals::exif_exts)
 	{
 		return 1;
 	}

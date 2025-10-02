@@ -98,7 +98,7 @@ if (defined $ARGV[0] && $ARGV[0] eq '--gui-test')
 	$gui_test = 1;
 }
 
-$config::dir = $ARGV[0] if defined $ARGV[0];
+$globals::dir = $ARGV[0] if defined $ARGV[0];
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
@@ -122,13 +122,13 @@ else
 
 &misc::null_file($main::log_file)	if $config::hash{zero_log}{value};
 
-if (-f $config::hash_tsv)
+if (-f $globals::hash_tsv)
 {
 	&config::load_hash;
 }
 else
 {
-	print "didnt find config file: $config::hash_tsv\n";
+	print "didnt find config file: $globals::hash_tsv\n";
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -141,8 +141,8 @@ my $col	= 1;
 our $mw = new MainWindow; # Main Window
 $mw->title("namefix.pl $globals::version by Jacob Jarick");
 
-$config::folderimage 	= $main::mw->Getimage('folder');
-$config::fileimage   	= $main::mw->Getimage('file');
+$globals::folderimage 	= $main::mw->Getimage('folder');
+$globals::fileimage   	= $main::mw->Getimage('file');
 
 # If --gui-test, set a timer to auto-quit after 5 seconds
 if ($gui_test) 
@@ -165,10 +165,10 @@ $mw->bind('<KeyPress>' => sub
 	if($Tk::event->K eq 'F2')
 	{
 		$globals::PREVIEW = 1;
-		if(defined $config::hlist_file && defined $config::hlist_cwd)
+		if(defined $globals::hlist_file && defined $globals::hlist_cwd)
 		{
-			print "Manual Rename '$config::hlist_file' \n";
-			&manual::edit($config::hlist_file, $config::hlist_cwd);
+			print "Manual Rename '$globals::hlist_file' \n";
+			&manual::edit($globals::hlist_file, $globals::hlist_cwd);
 		}
 	}
 	if($Tk::event->K eq 'F5')
@@ -393,7 +393,7 @@ my $open_but = $frm_bottom -> Button
 	-padx=>		2
 );
 
-my $cwd_ent = $frm_bottom->Entry(-textvariable=>\$config::dir, -width=>0)
+my $cwd_ent = $frm_bottom->Entry(-textvariable=>\$globals::dir, -width=>0)
 -> grid
 (
 	-row=>		1,
@@ -401,7 +401,7 @@ my $cwd_ent = $frm_bottom->Entry(-textvariable=>\$config::dir, -width=>0)
 	-sticky=>	'ew',
 	-padx=>		2
 );
-$balloon->attach($cwd_ent, -msg => \$config::dir);
+$balloon->attach($cwd_ent, -msg => \$globals::dir);
 
 $frm_bottom -> Label()
 -> grid
@@ -1102,7 +1102,7 @@ my $genre_combo = $tab2->JComboBox
 	-relief=>		'groove',
 	-background=>	'white',
 	-textvariable=>	\$config::hash{id3_gen_str}{value},
-	-choices=>		\@config::genres,
+	-choices=>		\@globals::genres,
 	-entrywidth=>	16
 )
 -> grid
@@ -1113,7 +1113,7 @@ my $genre_combo = $tab2->JComboBox
 );
 
 
-# print Dumper(\@config::genres);
+# print Dumper(\@globals::genres);
 
 my $id3_year_chk = $tab2->Checkbutton
 (

@@ -69,9 +69,9 @@ sub display
 	for my $c (0 .. $#config::undo_cur)
 	{
 		$hlist->add($c);
-		$hlist->itemCreate($c, 0, -text => $config::undo_cur[$c]);
+		$hlist->itemCreate($c, 0, -text => $globals::undo_cur[$c]);
 		$hlist->itemCreate($c, 1, -text => ' -> ');
-		$hlist->itemCreate($c, 2, -text => $config::undo_pre[$c]);
+		$hlist->itemCreate($c, 2, -text => $globals::undo_pre[$c]);
 		$c++;
 	}
 	return 1;

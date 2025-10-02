@@ -52,7 +52,7 @@ sub edit
 		$EXT		= 1;
 	}
 
-	$TAGS = &misc::is_in_array(lc $old_ext, \@config::id3v2_exts) if $config::hash{id3_mode}{value};
+	$TAGS = &misc::is_in_array(lc $old_ext, \@globals::id3v2_exts) if $config::hash{id3_mode}{value};
 
 	my $newfile = $file_name;
 
@@ -290,7 +290,7 @@ sub edit
 			-mode=>				'readonly',
 			-relief=>			'groove',
 			-textvariable=>		\$tag_hash{genre},
-			-choices=>			\@config::genres,
+			-choices=>			\@globals::genres,
 			-entrywidth=>		16,
 		)
 		-> grid

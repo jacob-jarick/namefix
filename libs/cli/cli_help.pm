@@ -66,13 +66,13 @@ x	--regexp		Enable regexp in --remove option
 	--ae=STRING
 
 C	--case-sp		Use special Casing list:
-				$config::casing_file
+				$globals::casing_file
 
 K	--rm-words		Remove Custom Words list
-				$config::killwords_file
+				$globals::killwords_file
 
 P	--rm-pat		Remove Custom regexp patterns, ie urls
-				$config::killpat_file
+				$globals::killpat_file
 
 F	--fs-fix		Work around case insensitive filesystems
 				eg microsofts fat32
@@ -153,7 +153,7 @@ my $txt_advance =
 
 	--save-options		Save current options as default
 	--save-opt		config file is located at:
-	--save-config		$config::hash_tsv
+	--save-config		$globals::hash_tsv
 
 	--recr			Recursive mode
 				Warning: Use with caution

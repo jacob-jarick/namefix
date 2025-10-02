@@ -65,7 +65,7 @@ for (my $i = 0; $i <= $#ARGV; $i++)
 
 $globals::CLI = 1;	# set cli mode flag
 
-&config::load_hash                  if -f	$config::hash_tsv;
+&config::load_hash                  if -f	$globals::hash_tsv;
 
 &config::set_value('debug', $debug_arg) if defined $debug_arg;
 
@@ -85,28 +85,28 @@ my $text = '';
 # 1st run check
 #-------------------------------------------------------------------------------------------------------------
 
-if(!-f $config::hash_tsv)
+if(!-f $globals::hash_tsv)
 {
 	&misc::plog(1, "No config file found, Creating.");
 	&config::save_hash;
 }
 
-if(!-f $config::casing_file)
+if(!-f $globals::casing_file)
 {
 	&misc::plog(1, "No Special Word Casing file found, Creating.");
-	&misc::save_file($config::casing_file, join("\n", @config::word_casing_arr));
+	&misc::save_file($globals::casing_file, join("\n", @globals::word_casing_arr));
 }
 
-if(!-f $config::killwords_file)
+if(!-f $globals::killwords_file)
 {
 	&misc::plog(1, "No Kill Words file found, Creating.");
-	&misc::save_file($config::killwords_file, join("\n", @config::kill_words_arr));
+	&misc::save_file($globals::killwords_file, join("\n", @globals::kill_words_arr));
 }
 
-if(!-f $config::killpat_file)
+if(!-f $globals::killpat_file)
 {
 	&misc::plog(1, "No Kill Patterns file found, Creating.");
-	&misc::save_file($config::killpat_file, join("\n", @config::kill_patterns_arr));
+	&misc::save_file($globals::killpat_file, join("\n", @globals::kill_patterns_arr));
 }
 
 #-------------------------------------------------------------------------------------------------------------
@@ -129,22 +129,22 @@ if (scalar @ARGV > 0 && (-f $ARGV[$#ARGV] || -d $ARGV[$#ARGV]))
 
 		&config::set_value('filter_string', "^" . (quotemeta $basename) . '$');
 
-		$config::dir = dirname($ARGV[$#ARGV]);
+		$globals::dir = dirname($ARGV[$#ARGV]);
 
 		&misc::plog(2, "filter_string set to '$config::hash{filter_string}{value}'");
 		&misc::plog(2, "running on single file '$ARGV[$#ARGV]'");
 	}
 	else
 	{
-		$config::dir = $ARGV[$#ARGV];
+		$globals::dir = $ARGV[$#ARGV];
 	}
 	
 	pop @ARGV;
-	chdir $config::dir;
+	chdir $globals::dir;
 }
 else
 {
-	$config::dir = cwd;
+	$globals::dir = cwd;
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -637,7 +637,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--changelog')
 	{
-		$text = join("", &misc::readf($config::changelog));
+		$text = join("", &misc::readf($globals::changelog));
 		print "$text\n\n";
 		exit;
 	}
@@ -651,21 +651,21 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--todo')
 	{
-		$text = join("", &misc::readf($config::todo));
+		$text = join("", &misc::readf($globals::todo));
 		print "$text\n\n";
 		exit;
 	}
 
 	elsif($arg eq '--thanks')
 	{
-		$text = join("", &misc::readf($config::thanks));
+		$text = join("", &misc::readf($globals::thanks));
 		print "$text\n\n";
 		exit;
 	}
 
 	elsif($arg eq '--links')
 	{
-		$text = join("", &misc::readf($config::links));
+		$text = join("", &misc::readf($globals::links));
 		print "$text\n\n";
 		exit;
 	}
@@ -677,25 +677,25 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--ed-config')
 	{
-		system("$config::hash{editor}{value} $config::hash_tsv");
+		system("$config::hash{editor}{value} $globals::hash_tsv");
 		exit;
 	}
 
 	elsif($arg eq '--ed-spcase')
 	{
-		system("$config::hash{editor}{value} $config::casing_file");
+		system("$config::hash{editor}{value} $globals::casing_file");
 		exit;
 	}
 
 	elsif($arg eq '--ed-rmwords')
 	{
-		system("$config::hash{editor}{value} $config::killwords_file");
+		system("$config::hash{editor}{value} $globals::killwords_file");
 		exit;
 	}
 
 	elsif($arg eq '--ed-rmpat')
 	{
-		system("$config::hash{editor}{value} $config::killpat_file");
+		system("$config::hash{editor}{value} $globals::killpat_file");
 		exit;
 	}
 
@@ -729,12 +729,12 @@ for my $arg(@ARGV)
 if(!$globals::PREVIEW && !$globals::UNDO)
 {
 	&undo::clear;
-	$config::undo_dir = $config::dir;
-	&misc::save_file($config::undo_dir_file, $config::dir);
+	$globals::undo_dir = $globals::dir;
+	&misc::save_file($globals::undo_dir_file, $globals::dir);
 }
 
 # set main dir, run fixname.....
-print "*** Processing dir: $config::dir\n";
+print "*** Processing dir: $globals::dir\n";
 
 &misc::null_file($html_file);	# clear html file
 
@@ -743,10 +743,10 @@ print "*** Processing dir: $config::dir\n";
 
 if($globals::UNDO)
 {
-	@config::undo_pre	= &misc::readf($config::undo_pre_file);
-	@config::undo_cur	= &misc::readf($config::undo_cur_file);
-	@tmp				= &misc::readf($config::undo_dir_file);
-	$config::undo_dir	= $tmp[0];
+	@config::undo_pre	= &misc::readf($globals::undo_pre_file);
+	@config::undo_cur	= &misc::readf($globals::undo_cur_file);
+	@tmp				= &misc::readf($globals::undo_dir_file);
+	$globals::undo_dir	= $tmp[0];
 	&undo::undo_rename;
 }
 else

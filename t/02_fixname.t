@@ -413,7 +413,7 @@ sub reset_test_config {
     {
         &reset_test_config();
         $config::hash{word_special_casing}{value} = 1;
-        @config::word_casing_arr = ('The', 'Of', 'And', 'A', 'An');
+        @globals::word_casing_arr = ('The', 'Of', 'And', 'A', 'An');
         
         my $result = &fixname::fn_sp_word(1, $test_file1, 'the lord of the rings.avi');
         is( $result, 'The lord Of The rings.avi', 'fn_sp_word: special casing for common words' );
@@ -423,7 +423,7 @@ sub reset_test_config {
     {
         &reset_test_config();
         $config::hash{kill_cwords}{value} = 1;
-        @config::kill_words_arr = ('bad', 'ugly', 'terrible');
+        @globals::kill_words_arr = ('bad', 'ugly', 'terrible');
         
         my $result = &fixname::fn_kill_cwords($test_file1, 'this bad ugly movie terrible.avi');
         is( $result, 'this   movie .avi', 'fn_kill_cwords: remove words from kill list' );
@@ -433,7 +433,7 @@ sub reset_test_config {
     {
         &reset_test_config();
         $config::hash{kill_sp_patterns}{value} = 1;
-        @config::kill_patterns_arr = ('\[.*?\]', '\(.*?\)');
+        @globals::kill_patterns_arr = ('\[.*?\]', '\(.*?\)');
         
         my $result = &fixname::fn_kill_sp_patterns('Movie [2023] (Director Cut).avi');
         is( $result, 'Movie  .avi', 'fn_kill_sp_patterns: remove bracketed content' );

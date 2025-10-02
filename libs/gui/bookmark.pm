@@ -25,7 +25,7 @@ sub bm_add
 		$name =~ s/(.*)(\\|\/)(.*?$)/$3/;	# set name to directory
 	}
 
-	&misc::file_append($config::bookmark_file, "$name\t\t$dir\n");
+	&misc::file_append($globals::bookmark_file, "$name\t\t$dir\n");
 	&menu::draw;
 }
 
@@ -50,7 +50,7 @@ sub draw_menu
 	$bookmarks -> command
 	(
 		-label=>	"Bookmark current Directory",
-		-command=>	sub { &bm_add($config::dir, $config::dir); }
+		-command=>	sub { &bm_add($globals::dir, $globals::dir); }
 	);
 
 	# menu command - edit bookmarks
@@ -86,19 +86,19 @@ sub draw_menu
 	$main::help -> command
 	(
 		-label=>	'Changelog',
-		-command=> 	sub {&dialog::show('Changelog',	join('', &misc::readf($config::changelog))); }
+		-command=> 	sub {&dialog::show('Changelog',	join('', &misc::readf($globals::changelog))); }
 	);
 
 	$main::help -> command
 	(
 		-label=>	'Todo List',
-		-command=> 	sub { &dialog::show('Todo',		join('', &misc::readf($config::todo))); }
+		-command=> 	sub { &dialog::show('Todo',		join('', &misc::readf($globals::todo))); }
 	);
 
 	$main::help -> command
 	(
 		-label=>	'Credits/ Thanks',
-		-command=> 	sub { &dialog::show('Thanks',	join('', &misc::readf($config::thanks))); }
+		-command=> 	sub { &dialog::show('Thanks',	join('', &misc::readf($globals::thanks))); }
 	);
 
 	$main::help -> separator();
@@ -109,7 +109,7 @@ sub draw_menu
 		-command=> 	
 		sub
 		{
-			my $links_txt = join('', &misc::readf($config::links));
+			my $links_txt = join('', &misc::readf($globals::links));
 			&dialog::show('Link', $links_txt);
 		}
 	);
@@ -132,14 +132,14 @@ sub list_bookmarks
 
 	$bookmarks->separator();
 
-	if(!-f $config::bookmark_file)
+	if(!-f $globals::bookmark_file)
 	{
-		&misc::plog(2, "bookmark::bm_list_bookmarks bookmarks file not found, creating emptyfile $config::bookmark_file");
-		&misc::null_file($config::bookmark_file);
+		&misc::plog(2, "bookmark::bm_list_bookmarks bookmarks file not found, creating emptyfile $globals::bookmark_file");
+		&misc::null_file($globals::bookmark_file);
 		return;
 	}
 
-	for my $line(&misc::readf($config::bookmark_file))
+	for my $line(&misc::readf($globals::bookmark_file))
 	{
 		$line =~ s/\t+/\t/g;
 
@@ -160,9 +160,9 @@ sub list_bookmarks
 			sub
 			{
 				chdir $bookmark_dir;
-				$config::dir = cwd;
+				$globals::dir = cwd;
 
-				&misc::plog(3, "bookmark: cd '$config::dir'");
+				&misc::plog(3, "bookmark: cd '$globals::dir'");
 
 				&dir::ls_dir;
 			}
@@ -177,7 +177,7 @@ sub list_bookmarks
 
 sub edit_bookmark_list
 {
-	my $dtext =	&misc::readjf($config::bookmark_file) if(-f $config::bookmark_file);
+	my $dtext =	&misc::readjf($globals::bookmark_file) if(-f $globals::bookmark_file);
 
 	my $top = $main::mw->Toplevel();
 	$top->title("Edit Bookmark List");
@@ -212,7 +212,7 @@ sub edit_bookmark_list
 		-command => 			
 		sub
 		{
-			&misc::save_file($config::bookmark_file, $txt -> get('0.0', 'end') );
+			&misc::save_file($globals::bookmark_file, $txt -> get('0.0', 'end') );
 			&menu::draw;
 		}
 	)

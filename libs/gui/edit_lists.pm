@@ -14,12 +14,12 @@ sub cas_list
 {
 	my $dtext = "";
 
-	if(-f $config::casing_file)
+	if(-f $globals::casing_file)
 	{
-		$dtext = &misc::readjf("$config::casing_file");
+		$dtext = &misc::readjf("$globals::casing_file");
 	} else
 	{
-		$dtext = join("\n", @config::word_casing_arr);
+		$dtext = join("\n", @globals::word_casing_arr);
 	}
 
 	my $top = $main::mw->Toplevel();
@@ -54,7 +54,7 @@ sub cas_list
 		-command=>
 		sub 
 		{
-			&misc::save_file("$config::casing_file", $txt->get('0.0', 'end'));
+			&misc::save_file("$globals::casing_file", $txt->get('0.0', 'end'));
 		}
 	)
 	->grid
@@ -88,13 +88,13 @@ sub word_list
 {
 	my $dtext = "";
 
-	if(-f $config::killwords_file)
+	if(-f $globals::killwords_file)
 	{
-		$dtext = &misc::readsjf("$config::killwords_file");
+		$dtext = &misc::readsjf("$globals::killwords_file");
 	}
 	else
 	{
-		$dtext = join("\n", sort @config::kill_words_arr);
+		$dtext = join("\n", sort @globals::kill_words_arr);
 	}
 
 	my $top = $main::mw->Toplevel();
@@ -125,7 +125,7 @@ sub word_list
 		-command=> 
 		sub 
 		{ 
-			&misc::save_file("$config::killwords_file", $txt->get('0.0', 'end')); 
+			&misc::save_file("$globals::killwords_file", $txt->get('0.0', 'end')); 
 		}
 	)
 	->grid
@@ -159,13 +159,13 @@ sub pat_list
 {
 	my $dtext = "";
 
-	if(-f $config::killpat_file)
+	if(-f $globals::killpat_file)
 	{
-		$dtext = &misc::readsjf($config::killpat_file);
+		$dtext = &misc::readsjf($globals::killpat_file);
 	}
 	else
 	{
-		$dtext = join("\n", sort @config::kill_patterns_arr);
+		$dtext = join("\n", sort @globals::kill_patterns_arr);
 	}
 
 	my $top = $main::mw->Toplevel();
@@ -196,7 +196,7 @@ sub pat_list
 		-command=>
 		sub 
 		{
-			&misc::save_file( "$config::killpat_file", $txt->get('0.0', 'end') ); 
+			&misc::save_file( "$globals::killpat_file", $txt->get('0.0', 'end') ); 
 		}
 	)
 	->grid

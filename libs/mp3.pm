@@ -61,7 +61,7 @@ sub get_tags
     $tag_hash{year}		= '';	# year
     $tag_hash{comment}	= '';	# comment
 
-    return \%tag_hash	if $filepath !~ /\.$config::id3_ext_regex$/i;
+    return \%tag_hash	if $filepath !~ /\.$globals::id3_ext_regex$/i;
 
 	&main::quit("get_tags '$filepath' not found") if !-f $filepath;
 
@@ -96,13 +96,13 @@ sub rm_tags
 	if(exists $audio_tags->{ID3v1})
 	{
         $audio_tags->{ID3v1}->remove_tag();
-        $config::tags_rm++;
+        $globals::tags_rm_count++;
     }
 
     if(exists $audio_tags->{ID3v2})
 	{
         $audio_tags->{ID3v2}->remove_tag();
-        $config::tags_rm++;
+        $globals::tags_rm_count++;
     }
 
     return;
@@ -116,7 +116,7 @@ sub write_tags
 	&main::quit("mp3::write_tags: \$filepath eq ''") 			if $filepath eq '';
 	&main::quit("mp3::write_tags: file '$filepath' not found")	if !-f $filepath;
 
-	&main::quit("mp3::write_tags: \$filepath  '$filepath' is not an audio file\n") if $filepath !~ /\.$config::id3_ext_regex$/i;
+	&main::quit("mp3::write_tags: \$filepath  '$filepath' is not an audio file\n") if $filepath !~ /\.$globals::id3_ext_regex$/i;
 
 	my $ref = shift;
 	my %tag_hash = %$ref;
@@ -167,9 +167,9 @@ sub guess_tags
     my $alb = "";
     my $com = "";
 
-    my $exts = join('|', @config::id3v2_exts);
+    my $exts = join('|', @globals::id3v2_exts);
 
-	if($filename =~ /^(\d+)( - |\. )(.*?)( - )(.*?)\.($config::id3_ext_regex)$/i)
+	if($filename =~ /^(\d+)( - |\. )(.*?)( - )(.*?)\.($globals::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: track - artist - title");
 		$tra = $1;
@@ -177,14 +177,14 @@ sub guess_tags
 		$tit = $5;
 	}
 
-	elsif($filename =~ /^(\d+)( - |\. )(.*?)\.($config::id3_ext_regex)$/i)
+	elsif($filename =~ /^(\d+)( - |\. )(.*?)\.($globals::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: track - title");
 		$tra = $1;
 		$tit = $3;
 	}
 
-	elsif($filename =~ /^(.*?)( - )(.*?)( - )(\d+)( - )(.*)\.($config::id3_ext_regex)$/i)
+	elsif($filename =~ /^(.*?)( - )(.*?)( - )(\d+)( - )(.*)\.($globals::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: artist - ablum - track - title");
 		$art = $1;
@@ -194,7 +194,7 @@ sub guess_tags
 	}
 
 	# mems prefered format
-	elsif($filename =~ /^(.*?)( - )(\d+)( - )(.*)\.($config::id3_ext_regex)$/i)
+	elsif($filename =~ /^(.*?)( - )(\d+)( - )(.*)\.($globals::id3_ext_regex)$/i)
 	{
 		&misc::plog(4, "sub guess_tags: artist - track - title");
 		$art = $1;
@@ -203,7 +203,7 @@ sub guess_tags
 		$alb = "";	# get this later
 	}
 
-	elsif($filename =~ /^(.*?)( - )(.*)\.($config::id3_ext_regex)$/)
+	elsif($filename =~ /^(.*?)( - )(.*)\.($globals::id3_ext_regex)$/)
 	{
 		&misc::plog(4, "sub guess_tags: artist - title");
 		$art = $1;

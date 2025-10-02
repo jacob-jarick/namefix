@@ -45,7 +45,7 @@ sub p
 			$hlpos,
 			0,
 			-itemtype=>	'imagetext',
-			-image=>	$config::folderimage
+			-image=>	$globals::folderimage
 		);
 
 		$dir_hlist::hlist->itemCreate($hlpos, 1, -text => '..');
@@ -91,7 +91,7 @@ sub p
 			$hlpos,
 			$count++,
 			-itemtype=>	'imagetext',
-			-image=>	$config::folderimage
+			-image=>	$globals::folderimage
 		);
 	}
 	else
@@ -101,11 +101,11 @@ sub p
 			$hlpos,
 			$count++,
 			-itemtype=>	'imagetext',
-			-image=>	$config::fileimage
+			-image=>	$globals::fileimage
 		);
 	}
 
-	$config::hlist_file_row = $count;
+	$globals::hlist_file_row = $count;
 
 	my $file1_clean	= $file_name;
 	$file1_clean	= $path if $config::hash{recursive}{value} && -d $path;
@@ -133,7 +133,7 @@ sub p
 
 	my $file2_clean				= $file2;
 	$file2_clean				=~ s/^.*\///;
-	$config::hlist_newfile_row	= $count;
+	$globals::hlist_newfile_row	= $count;
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $arrow);
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file2_clean);

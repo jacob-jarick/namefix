@@ -11,7 +11,7 @@ use warnings;
 
 sub show_about
 {
-	my $help_text = join('', &misc::readf($config::about));
+	my $help_text = join('', &misc::readf($globals::about));
 
 	my $row = 1;
         my $top = $main::mw -> Toplevel();
@@ -32,7 +32,7 @@ sub show_about
 			$image = $main::mw->Photo
 			(
 				-format=>	'jpeg',
-				-file=>		$config::mempic
+				-file=>		$globals::mempic
 			);
 		};
 		if (!$@ && $image) 
@@ -48,7 +48,7 @@ sub show_about
 	# Tier 2: Try PPM fallback if JPEG failed or unavailable
 	if (!$image) 
 	{
-		my $ppm_path = $config::mempic;
+		my $ppm_path = $globals::mempic;
 		$ppm_path =~ s/\.jpg$/.ppm/i;
 		
 		eval 

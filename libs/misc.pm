@@ -187,11 +187,14 @@ sub file_append
 
 sub readf
 {
+	# get caller
+	my ($package, $filename, $line, $subroutine) = caller(1);
+
     my $file = shift;
 
     if(!-f $file)
     {
-        print "misc::readf WARNING: file '$file' not found\n";
+		&misc::plog(0, "$subroutine called from $filename line $line: file '$file' not found");
         return ();
     }
 

@@ -13,10 +13,10 @@ sub clear
 	@config::undo_cur		= ();
 	@config::undo_pre		= ();
 
-	&misc::null_file($config::undo_cur_file);
-	&misc::null_file($config::undo_pre_file);
-	&misc::save_file($config::undo_dir_file, cwd);
-	$config::undo_dir = $config::dir = cwd;
+	&misc::null_file($globals::undo_cur_file);
+	&misc::null_file($globals::undo_pre_file);
+	&misc::save_file($globals::undo_dir_file, cwd);
+	$globals::undo_dir = $globals::dir = cwd;
 }
 
 sub add
@@ -27,8 +27,8 @@ sub add
 	push @config::undo_pre, $f1;
 	push @config::undo_cur, $f2;
 
-	&misc::file_append($config::undo_pre_file, "$f1\n");
-	&misc::file_append($config::undo_cur_file, "$f2\n");
+	&misc::file_append($globals::undo_pre_file, "$f1\n");
+	&misc::file_append($globals::undo_cur_file, "$f2\n");
 }
 
 sub undo_rename
@@ -58,8 +58,8 @@ sub undo_rename
 
 	for my $c (0 .. $#config::undo_cur)
 	{
-		my $cur = $config::undo_cur[$c];
-		my $pre = $config::undo_pre[$c];
+		my $cur = $globals::undo_cur[$c];
+		my $pre = $globals::undo_pre[$c];
 		if($globals::STOP)
 		{
 			&misc::plog(0, "undo_rename: STOPPED");
@@ -91,7 +91,7 @@ sub undo_rename
 		&fixname::fn_rename($cur, $pre);
 		&nf_print::p($cur, $pre);
 	}
-	chdir $config::dir;
+	chdir $globals::dir;
 	$globals::RUN = 0;
 	return 1;
 }

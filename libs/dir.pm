@@ -31,10 +31,10 @@ sub ls_dir
 	$globals::STOP			= 0;
 	$config::percent_done	= 0;
 
-	$config::dir			= cwd;
+	$globals::dir			= cwd;
 
 	my @file_list			= ();
-	my @dirlist				= &dir_filtered($config::dir);
+	my @dirlist				= &dir_filtered($globals::dir);
 
 	&dir_hlist::draw_list;
 
@@ -42,8 +42,8 @@ sub ls_dir
 
 	if($config::hash{recursive}{value})
 	{
-		@config::find_arr = ();
-		find(\&run_namefix::find_fix, $config::dir);
+		@globals::find_arr = ();
+		find(\&run_namefix::find_fix, $globals::dir);
 		&ls_dir_find_fix;
 		$globals::LISTING = 0;
 		return;
@@ -97,14 +97,14 @@ sub ls_dir_find_fix
 {
 	# this sub should recieve an array of files from find_fix
 
-	my @list	= @config::find_arr;
+	my @list	= @globals::find_arr;
 	my $file	= '';
 
 	$config::percent_done = 0;
-	my $total = scalar @config::find_arr;
+	my $total = scalar @globals::find_arr;
 	my $count = 1;
 
-	for my $file(@config::find_arr)
+	for my $file(@globals::find_arr)
 	{
 		$config::percent_done = int(($count++/$total) * 100);
 
@@ -156,7 +156,7 @@ sub ls_dir_print
 		}
 		else
 		{
-			$full_path = "$config::dir/$file";  # Just a filename, construct full path
+			$full_path = "$globals::dir/$file";  # Just a filename, construct full path
 		}
 		
 		my $ref = &mp3::get_tags($full_path);
@@ -172,23 +172,23 @@ sub ls_dir_print
 
 sub dialog
 {
-	my $old_dir = $config::dir;
+	my $old_dir = $globals::dir;
 
 	my $dd_dir = $main::mw->chooseDirectory
 	(
-		-initialdir=>	$config::dir,
+		-initialdir=>	$globals::dir,
 		-title=>		"Choose a directory"
 	);
 
 	if($dd_dir)
 	{
-		$config::dir = $dd_dir;
-		chdir $config::dir;
+		$globals::dir = $dd_dir;
+		chdir $globals::dir;
 		&ls_dir;
 	}
 	else
 	{
-		$config::dir = $old_dir;
+		$globals::dir = $old_dir;
 	}
 }
 

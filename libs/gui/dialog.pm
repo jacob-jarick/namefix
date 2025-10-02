@@ -187,7 +187,7 @@ sub show_properties_hlist
 		}
 
 		# If it's an audio file, show ID3 tags
-		if($ff =~ /\.$config::id3_ext_regex$/i)
+		if($ff =~ /\.$globals::id3_ext_regex$/i)
 		{
 			my $id3_tags = mp3::get_tags($ff);
 			
@@ -290,7 +290,7 @@ sub show_del_dialog
         find(\&run_namefix::find_fix, $ff);
         $txt->insert('end', "\nWarning Deleting Directory - ARE YOU SURE ?\nDirectory Tree:\n\n");
 
-        for my $f3(@config::find_arr)
+        for my $f3(@globals::find_arr)
         {
             $txt->insert('end', "$f3\n");
         }
@@ -310,7 +310,7 @@ sub show_del_dialog
 			if(-d $ff)
 			{
 				my @tmp = ();
-				for my $f3(@config::find_arr)
+				for my $f3(@globals::find_arr)
 				{
 					if(-f $f3)
 					{

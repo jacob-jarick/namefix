@@ -19,26 +19,26 @@ sub prep_globals
 	# reset misc vars
 	$globals::STOP			= 0;
 	$config::id3_change		= 0;
-	$config::change 		= 0;
+	$globals::change 		= 0;
 	$globals::SUGGEST_FSFIX 	= 0;
 	$globals::FOUND_TMP 		= 0;
-	$config::tags_rm		= 0;
+	$globals::tags_rm_count		= 0;
 	$config::percent_done	= 0;
 	$fixname::enum_count	= 0;
-	$config::last_recr_dir 	= '';
+	$globals::last_recr_dir 	= '';
 
 	# escape replace word if regexp is disabled
 	$config::ins_str_old_escaped = $config::hash{ins_str_old}{value};
 	$config::ins_str_old_escaped = quotemeta $config::hash{ins_str_old}{value}		if($config::hash{filter_regex}{value} == 1);
 
 	# update killword list if file exists
-	@config::kill_words_arr = misc::readsf("$config::killwords_file")	if(-f $config::killwords_file);
+	@globals::kill_words_arr = misc::readsf("$globals::killwords_file")	if(-f $globals::killwords_file);
 
 	# update kill pattern array if file exists
-	@config::kill_patterns_arr = &misc::readf($config::killpat_file)	if(-f $config::killpat_file);
+	@globals::kill_patterns_arr = &misc::readf($globals::killpat_file)	if(-f $globals::killpat_file);
 
 	# update casing list if file exists
-	@config::word_casing_arr = &misc::readf($config::casing_file)		if(-f $config::casing_file);
+	@globals::word_casing_arr = &misc::readf($globals::casing_file)		if(-f $globals::casing_file);
 }
 
 sub run
@@ -60,8 +60,8 @@ sub run
 	my $t_s 			= '';	# tmp string
 
 	$config::orig_dir	= cwd;
-	chdir $config::dir;
-	$config::dir		= cwd;
+	chdir $globals::dir;
+	$globals::dir		= cwd;
 	&undo::clear;
 	$fix_name::last_dir	= '';
 	prep_globals;
@@ -74,7 +74,7 @@ sub run
 
 	if(!$config::hash{recursive}{value})
 	{
-		my @dirlist = &dir::dir_filtered($config::dir);
+		my @dirlist = &dir::dir_filtered($globals::dir);
 
 		my $count = 1;
 		my $total = scalar @dirlist;
@@ -95,8 +95,8 @@ sub run
 	if($config::hash{recursive}{value})
 	{
 		&misc::plog(4, "sub run::namefix: recursive mode");
-		@config::find_arr = ();
-		find(\&find_fix, "$config::dir");
+		@globals::find_arr = ();
+		find(\&find_fix, "$globals::dir");
 		&find_fix_process;
 	}
 
@@ -105,18 +105,18 @@ sub run
 	$t_s = "have";
 	$t_s = "would have" if ($globals::PREVIEW);
 
-	&misc::plog(2, "$config::change files $t_s been modified");
+	&misc::plog(2, "$globals::change files $t_s been modified");
 	&misc::plog(2, "$config::id3_change mp3s tags $t_s been updated.")							if($config::hash{id3_mode}{value});
-	&misc::plog(2, "$config::tags_rm mp3 tags $t_s been removed")								if($config::tags_rm);
-	&misc::plog(2, "$config::exif_rm image files exif data $t_s been removed")					if($config::exif_rm);
+	&misc::plog(2, "$globals::tags_rm_count mp3 tags $t_s been removed")								if($globals::tags_rm_count);
+	&misc::plog(2, "$globals::exif_rm_count image files exif data $t_s been removed")					if($globals::exif_rm_count);
 	&misc::plog(0, "unable to rename $globals::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($globals::SUGGEST_FSFIX != 0);
-	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")		if($globals::FOUND_TMP);
+	&misc::plog(0, "tmp file found. check the following files.\n$globals::tmpfilelist\n")		if($globals::FOUND_TMP);
 
 	# cleanup
 
 	$globals::PREVIEW = 1;	# return to test mode for safety :)
 	$globals::RUN = 0;		# finished renaming - turn off run flag
-	chdir $config::dir;		# return to users working dir
+	chdir $globals::dir;		# return to users working dir
 }
 
 sub find_fix
@@ -126,7 +126,7 @@ sub find_fix
 
 	my $path = "$d/$file";
 
-	push @config::find_arr, $path;
+	push @globals::find_arr, $path;
 	return 1;
 }
 
@@ -135,11 +135,11 @@ sub find_fix_process
 	# this sub should recieve an array of files from find_fix
 	my $dir		= '';
 	my $count	= 1;
-	my $total	= scalar @config::find_arr;
+	my $total	= scalar @globals::find_arr;
 
 	$config::percent_done = 0;
 
-	for my $file(@config::find_arr)
+	for my $file(@globals::find_arr)
 	{
 		$config::percent_done = int(($count++ / $total) * 100);
 		&fixname::fix($file);
