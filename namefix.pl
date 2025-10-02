@@ -806,7 +806,7 @@ my $f_ent = $frm_left->Entry(-textvariable=>\$config::hash{ins_front_str}{value}
 my $e_chk = $frm_left->Checkbutton
 (
 	-text=>				"End Append:",
-	-variable=>			\$config::hash{end_a}{value},
+	-variable=>			\$config::hash{ins_end}{value},
 	-activeforeground=>	'blue'
 )
 -> grid

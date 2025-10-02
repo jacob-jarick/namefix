@@ -83,106 +83,107 @@ our @exif_exts =
 
 # -----------------------------------------------------------------------------
 
-&config_init_value('exit_on_error', 0, 0, 'bool', 'base');
-&config_init_value('debug', 0, 0, 'int', 'base');
-&config_init_value('log_stdout', 0, 0, 'bool', 'base');
-&config_init_value('error_stdout', 1, 1, 'bool', 'base');
-&config_init_value('error_notify', 1, 1, 'bool', 'base');
-&config_init_value('zero_log', 1, 1, 'bool', 'base');
+&config_init_value('exit_on_error',		0, 0, 'bool', 'base');
+&config_init_value('debug',				0, 0, 'int', 'base');
+&config_init_value('log_stdout',		0, 0, 'bool', 'base');
+&config_init_value('error_stdout',		1, 1, 'bool', 'base');
+&config_init_value('error_notify',		1, 1, 'bool', 'base');
+&config_init_value('zero_log',			1, 1, 'bool', 'base');
 
 # -----------------------------------------------------------------------------
 # MAIN TAB
 
-&config_init_value('cleanup_general', 0, 0, 'bool', 'extended');
-&config_init_value('case', 0, 0, 'bool', 'extended');
-&config_init_value('word_special_casing', 0, 0, 'bool', 'extended');
-&config_init_value('spaces', 0, 0, 'bool', 'extended');
-&config_init_value('dot2space', 0, 0, 'bool', 'extended');
-&config_init_value('kill_cwords', 0, 0, 'bool', 'extended');
-&config_init_value('kill_sp_patterns', 0, 0, 'bool', 'extended');
-&config_init_value('replace', 0, 0, 'bool', 'no');
-&config_init_value('ins_end', 0, 0, 'bool', 'no');
-&config_init_value('ins_start', 0, 0, 'bool', 'no');
-
+&config_init_value('cleanup_general',		0, 0, 'bool', 'extended');
+&config_init_value('case',					0, 0, 'bool', 'extended');
+&config_init_value('word_special_casing',	0, 0, 'bool', 'extended');
+&config_init_value('spaces',				0, 0, 'bool', 'extended');
+&config_init_value('dot2space',				0, 0, 'bool', 'extended');
+&config_init_value('kill_cwords',			0, 0, 'bool', 'extended');
+&config_init_value('kill_sp_patterns',		0, 0, 'bool', 'extended');
+&config_init_value('replace',				0, 0, 'bool', 'no');
+&config_init_value('ins_end',				0, 0, 'bool', 'no');
+&config_init_value('ins_start',				0, 0, 'bool', 'no');
 
 # String variables for remove/replace/append operations (never saved)
 
-&config_init_value('ins_str_old', '', '', 'str', 'no');
-&config_init_value('ins_str', '', '', 'str', 'no');
-&config_init_value('ins_front_str', '', '', 'str', 'no');
-&config_init_value('ins_end_str', '', '', 'str', 'no');
+&config_init_value('ins_str_old',	'', '', 'str', 'no');
+&config_init_value('ins_str',		'', '', 'str', 'no');
+&config_init_value('ins_front_str',	'', '', 'str', 'no');
+&config_init_value('ins_end_str',	'', '', 'str', 'no');
 
 # ID3 tag string variables (never saved)
 
-&config_init_value('id3_art_str', '', '', 'str', 'no');
-&config_init_value('id3_alb_str', '', '', 'str', 'no');
-&config_init_value('id3_tra_str', '', '', 'str', 'no');
-&config_init_value('id3_tit_str', '', '', 'str', 'no');
-&config_init_value('id3_gen_str', 'Metal', 'Metal', 'str', 'no');
-&config_init_value('id3_year_str', '', '', 'str', 'no');
-&config_init_value('id3_com_str', '', '', 'str', 'no');
+# its metal just to select a genre so combo box isnt blank
+&config_init_value('id3_gen_str',	'Metal',	'Metal',	'str', 'no');	
+# the rest of these are blank
+&config_init_value('id3_art_str',	'',			'',			'str', 'no');
+&config_init_value('id3_alb_str',	'',			'',			'str', 'no');
+&config_init_value('id3_tra_str',	'',			'',			'str', 'no');
+&config_init_value('id3_tit_str',	'',			'',			'str', 'no');
+&config_init_value('id3_year_str',	'',			'',			'str', 'no');
+&config_init_value('id3_com_str',	'',			'',			'str', 'no');
 
 # -----------------------------------------------------------------------------
 # Legacy GUI variable - kept for compatibility but also in hash
 # TODO these should no longer be referenced, check and remove
 
-&config_init_value('end_a', 0, 0, 'bool', 'no');
+&config_init_value('end_a', 0, 0, 'bool', 'no'); # shouldnt this be ins_end
 
 # -----------------------------------------------------------------------------
 # MP3 TAB
 
-&config_init_value('id3_mode', 0, 0, 'bool', 'extended');
-&config_init_value('id3_guess_tag', 0, 0, 'bool', 'extended');
-&config_init_value('id3_force', 0, 0, 'bool', 'extended');
-&config_init_value('id3_tags_rm', 0, 0, 'bool', 'no');
-&config_init_value('id3_set_artist', 0, 0, 'bool', 'no');
-&config_init_value('id3_set_album', 0, 0, 'bool', 'no');
-&config_init_value('id3_set_genre', 0, 0, 'bool', 'no');
-&config_init_value('id3_set_year', 0, 0, 'bool', 'no');
-&config_init_value('id3_set_comment', 0, 0, 'bool', 'no');
+&config_init_value('id3_mode',			0, 0, 'bool', 'extended');
+&config_init_value('id3_guess_tag',		0, 0, 'bool', 'extended');
+&config_init_value('id3_force',			0, 0, 'bool', 'extended');
+&config_init_value('id3_tags_rm',		0, 0, 'bool', 'no');
+&config_init_value('id3_set_artist',	0, 0, 'bool', 'no');
+&config_init_value('id3_set_album',		0, 0, 'bool', 'no');
+&config_init_value('id3_set_genre',		0, 0, 'bool', 'no');
+&config_init_value('id3_set_year',		0, 0, 'bool', 'no');
+&config_init_value('id3_set_comment',	0, 0, 'bool', 'no');
 
 # -----------------------------------------------------------------------------
 # MISC TAB
 
-&config_init_value('uc_all', 0, 0, 'bool', 'extended');
-&config_init_value('lc_all', 0, 0, 'bool', 'extended');
-&config_init_value('intr_char', 0, 0, 'bool', 'extended');
-&config_init_value('c7bit', 0, 0, 'bool', 'extended');
-&config_init_value('sp_char', 0, 0, 'bool', 'extended');
-&config_init_value('rm_digits', 0, 0, 'bool', 'extended');	# RM ^Digits
-&config_init_value('digits', 0, 0, 'bool', 'extended');
-&config_init_value('unscene', 0, 0, 'bool', 'extended');
-&config_init_value('scene', 0, 0, 'bool', 'extended');
-&config_init_value('pad_N_to_NN', 0, 0, 'bool', 'extended');
-&config_init_value('pad_dash', 0, 0, 'bool', 'extended');
-&config_init_value('pad_digits', 0, 0, 'bool', 'extended');
+&config_init_value('uc_all',			0, 0, 'bool', 'extended');
+&config_init_value('lc_all',			0, 0, 'bool', 'extended');
+&config_init_value('intr_char',			0, 0, 'bool', 'extended');
+&config_init_value('c7bit',				0, 0, 'bool', 'extended');
+&config_init_value('sp_char',			0, 0, 'bool', 'extended');
+&config_init_value('rm_digits',			0, 0, 'bool', 'extended');	# RM ^Digits
+&config_init_value('digits',			0, 0, 'bool', 'extended');
+&config_init_value('unscene',			0, 0, 'bool', 'extended');
+&config_init_value('scene',				0, 0, 'bool', 'extended');
+&config_init_value('pad_N_to_NN',		0, 0, 'bool', 'extended');
+&config_init_value('pad_dash',			0, 0, 'bool', 'extended');
+&config_init_value('pad_digits',		0, 0, 'bool', 'extended');
 &config_init_value('pad_digits_w_zero', 0, 0, 'bool', 'extended');
-&config_init_value('split_dddd', 0, 0, 'bool', 'extended');
+&config_init_value('split_dddd',		0, 0, 'bool', 'extended');
 
 # -----------------------------------------------------------------------------
 # ENUMURATE TAB
 
-&config_init_value('enum', 0, 0, 'bool', 'extended');
-&config_init_value('enum_opt', 0, 0, 'bool', 'extended');
-&config_init_value('enum_add', 0, 0, 'bool', 'extended');
-&config_init_value('enum_pad', 0, 0, 'bool', 'extended');
-&config_init_value('enum_pad_zeros', 4, 4, 'int', 'extended');
-&config_init_value('enum_start_str', '', '', 'str', 'no');
-&config_init_value('enum_end_str', '', '', 'str', 'no');
+&config_init_value('enum',				0,	0,	'bool',	'extended');
+&config_init_value('enum_opt',			0,	0,	'bool',	'extended');
+&config_init_value('enum_add',			0,	0,	'bool',	'extended');
+&config_init_value('enum_pad',			0,	0,	'bool',	'extended');
+&config_init_value('enum_pad_zeros',	4,	4,	'int',	'extended');
+&config_init_value('enum_start_str',	'',	'',	'str',	'no');
+&config_init_value('enum_end_str',		'',	'',	'str',	'no');
 
 # -----------------------------------------------------------------------------
 # TRUNCATE TAB
 
-&config_init_value('truncate', 0, 0, 'bool', 'extended');
-&config_init_value('truncate_to', 256, 256, 'int', 'extended');
-&config_init_value('truncate_style', 0, 0, 'int', 'extended');
-&config_init_value('trunc_char', '', '', 'str', 'extended');
+&config_init_value('truncate',			0,		0,		'bool',	'extended');
+&config_init_value('truncate_to',		256,	256,	'int',	'extended');
+&config_init_value('truncate_style',	0,		0,		'int',	'extended');
+&config_init_value('trunc_char',		'',		'',		'str',	'extended');
 
 # -----------------------------------------------------------------------------
 # EXIF TAB
 
-&config_init_value('exif_show', 0, 0, 'bool', 'extended');
-&config_init_value('exif_rm_all', 0, 0, 'bool', 'extended');
+&config_init_value('exif_show',		0, 0, 'bool', 'extended');
+&config_init_value('exif_rm_all',	0, 0, 'bool', 'extended');
 
 # -----------------------------------------------------------------------------
 # FILTER BAR
@@ -194,29 +195,30 @@ our @exif_exts =
 # -----------------------------------------------------------------------------
 # bottom menu bar
 
-&config_init_value('recursive', 0, 0, 'bool', 'base');
-&config_init_value('ignore_file_type', 0, 0, 'bool', 'extended');
-&config_init_value('proc_dirs', 0, 0, 'bool', 'extended');
+&config_init_value('recursive',			0,	0,	'bool',	'base');
+&config_init_value('ignore_file_type',	0,	0,	'bool',	'extended');
+&config_init_value('proc_dirs',			0,	0,	'bool',	'extended');
 
 # -----------------------------------------------------------------------------
 # CLI ONLY OPTIONS
 
-&config_init_value('html_hack', 0, 0, 'bool', 'base');
-&config_init_value('browser', 'elinks', 'elinks', 'str', 'base');
-&config_init_value('editor', 'vim', 'vim', 'str', 'base');
+&config_init_value('html_hack',			0,			0,			'bool',	'base');
+&config_init_value('browser',			'elinks',	'elinks',	'str',	'base');
+&config_init_value('editor',			'vim', 		'vim',		'str',	'base');
 
-# Additional CLI-only options from help that weren't in GUI
+# This two options are not in the GUI but needed for CLI
+# in the GUI the sub is triggered by a button
 
-&config_init_value('undo', 0, 0, 'bool', 'base');
-&config_init_value('save_options', 0, 0, 'bool', 'base');
+&config_init_value('undo',			0, 0, 'bool', 'base');
+&config_init_value('save_options',	0, 0, 'bool', 'base');
 
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - MAIN TAB
 
-&config_init_value('space_character', ' ', ' ', 'str', 'base');
-&config_init_value('max_fn_length', 256, 256, 'int', 'base');
-&config_init_value('save_window_size', 0, 0, 'bool', 'base');
-&config_init_value('window_g', '', '', 'str', 'geometry');
+&config_init_value('space_character',	' ',	' ',	'str',	'base');
+&config_init_value('max_fn_length',		256,	256,	'int',	'base');
+&config_init_value('save_window_size',	0,		0,		'bool',	'base');
+&config_init_value('window_g',			'',		'',		'str',	'geometry');
 
 our $save_extended			= 0;	# save main window options
 
@@ -234,7 +236,9 @@ else
 	&config_init_value('fat32fix', 1, 1, 'bool', 'base');
 }
 
-&config_init_value('filter_regex', 0, 0, 'bool', 'base');
+&config_init_value('filter_regex',	0, 0, 'bool', 'base');
+&config_init_value('overwrite',		0, 0, 'bool', 'base');
+&config_init_value('remove_regex',	0, 0, 'bool', 'base');
 
 # file_ext_2_proc - long default string  
 
@@ -250,22 +254,15 @@ else
 	'base'
 );
 
-&config_init_value('overwrite', 0, 0, 'bool', 'base');
-
-&config_init_value('remove_regex', 0, 0, 'bool', 'base');
 
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - DEBUG TAB
 
-&config_init_value('debug', 2, 2, 'int', 'base');
-
-&config_init_value('log_stdout', 0, 0, 'bool', 'base');
-
-&config_init_value('error_stdout', 0, 0, 'bool', 'base');
-
-&config_init_value('error_notify', 0, 0, 'bool', 'base');
-
-&config_init_value('zero_log', 1, 1, 'bool', 'base');
+&config_init_value('debug', 		2, 2, 'int',	'base');
+&config_init_value('log_stdout',	0, 0, 'bool',	'base');
+&config_init_value('error_stdout',	0, 0, 'bool',	'base');
+&config_init_value('error_notify',	0, 0, 'bool',	'base');
+&config_init_value('zero_log',		1, 1, 'bool',	'base');
 
 
 #######################################################################################################################
