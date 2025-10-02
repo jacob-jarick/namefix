@@ -21,7 +21,7 @@ our $enum_count = 0;
 
 sub fix
 {
-	return 0 if $config::STOP == 1;
+	return 0 if $globals::STOP == 1;
 
     # -----------------------------------------
 	# Vars
@@ -90,7 +90,7 @@ sub fix
 	{
 		$last_dir = $dir;
 
-		if ($config::CLI) 
+		if ($globals::CLI) 
 		{
 			print "\n=== Processing Directory: $dir ===\n";
 		}
@@ -108,7 +108,7 @@ sub fix
 	# currently it just prints and returns
 	# printing is probably ugly
 
-	if($config::CLI && $config::hash{exif_show}{value} && &jpegexif::file_supports_exif($file))
+	if($globals::CLI && $config::hash{exif_show}{value} && &jpegexif::file_supports_exif($file))
 	{
 		my $exif_tags_ref = &jpegexif::list_exif_tags($file);
 
@@ -137,7 +137,7 @@ sub fix
 		{
 			&misc::plog(2, "'$file' has $writable_tag_count writable EXIF tags");
 
-			if(!$config::PREVIEW)
+			if(!$globals::PREVIEW)
 			{
 				jpegexif::remove_exif_data($file);
 				$config::exif_rm++;
@@ -228,7 +228,7 @@ sub fix
 	# rm mp3 id3v2 tags
     if($IS_AUDIO_FILE && $config::hash{id3_tags_rm}{value})
 	{
-        if(!$config::PREVIEW)
+        if(!$globals::PREVIEW)
 		{
             &mp3::rm_tags($file);
         }
@@ -305,7 +305,7 @@ sub fix
 		if($TAGS_CHANGED)
 		{	
 			&misc::plog(3, "'$path' update ID3 tags");	
-			if(!$config::PREVIEW)
+			if(!$globals::PREVIEW)
 			{
 				&mp3::write_tags("$path", \%tags_h_new);
 			}
@@ -315,7 +315,7 @@ sub fix
 
 	if($file ne $newfile)
 	{
-		if(!$config::PREVIEW)
+		if(!$globals::PREVIEW)
 		{
 			if(!&fn_rename($file, $newfile) )
 			{
@@ -329,7 +329,7 @@ sub fix
 		}
 	}
 
-	if ($config::CLI) 
+	if ($globals::CLI) 
 	{
 		# CLI output: simple before -> after format
 		if ($file ne $newfile) 
@@ -363,7 +363,7 @@ sub fix
 
 sub fn_rename
 {
-	return 0 if $config::STOP;
+	return 0 if $globals::STOP;
 
 	my $file	= shift;
 	my $newfile	= shift;
@@ -385,7 +385,7 @@ sub fn_rename
 	{
 		if( -e $tmpfile && !$config::hash{overwrite}{value})
 		{
-			$config::FOUND_TMP++;
+			$globals::FOUND_TMP++;
 			$config::tmpfilelist .= "$tmpfile\n";
 			&misc::plog(0, "fn_rename: \"$tmpfile\" <- FOUND_TMP");
 			return 0;
@@ -407,7 +407,7 @@ sub fn_rename
 	{
 		if(-e $newfile && !$config::hash{overwrite}{value})
 		{
-			$config::SUGGEST_FSFIX++;
+			$globals::SUGGEST_FSFIX++;
 			&misc::plog(0, "fn_rename: '$newfile' refusing to rename, file exists");
 			return 0;
 		}
@@ -1125,7 +1125,7 @@ sub fn_end_a
 	&main::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
 	&main::quit("fn_end_a \$file_new eq ''\n")	    if $file_new eq '';
 
-	return $file_new if $config::hash{end_a}{value};
+	return $file_new if $config::hash{ins_end}{value};
 
 	$file_new =~ s/(.*)(\..*?$)/$1$config::hash{ins_end_str}{value}$2/g;
 

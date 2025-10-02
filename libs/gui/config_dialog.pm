@@ -473,7 +473,7 @@ sub save_fonts
 
 	print FILE
 
-	"# namefix.pl $config::version fonts configuration file\n",
+	"# namefix.pl $globals::version fonts configuration file\n",
 	"# manually edit the fonts below if your sizes are screwed up in the dialog windows\n",
 	"\n",
 	"\$dialog_font 		= \"$config::dialog_font\"; 		\n",

@@ -17,7 +17,7 @@ use config;
 use fixname;
 
 # Set CLI mode to avoid GUI dependencies
-$config::CLI = 1;
+$globals::CLI = 1;
 
 #=============================================================================
 # Main Tab Functions - Core namefix functionality 

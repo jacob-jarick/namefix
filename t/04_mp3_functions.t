@@ -17,7 +17,7 @@ use config;
 use mp3;
 
 # Set CLI mode to avoid GUI dependencies
-$config::CLI = 1;
+$globals::CLI = 1;
 
 #=============================================================================
 # MP3/ID3 Tag Functions  

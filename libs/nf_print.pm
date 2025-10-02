@@ -16,7 +16,7 @@ my $arrow = ' -> ';
 
 sub p
 {
-	&main::quit("CLI should not use p") if($config::CLI);
+	&main::quit("CLI should not use p") if($globals::CLI);
 
 	my $file1	= shift;
 	my $file2	= shift;

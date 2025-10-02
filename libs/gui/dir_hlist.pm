@@ -107,7 +107,7 @@ sub hlist_cd
 sub fn_update_delay
 {
 	$config::update_delay--;
-	if(!$config::update_delay || !$config::LISTING)
+	if(!$config::update_delay || !$globals::LISTING)
 	{
 		$main::mw->update();
 		$config::update_delay = $config::delay;
@@ -132,12 +132,12 @@ sub draw_list
 	if($config::hash{id3_mode}{value})
 	{
 		$columns	= 9;			# listing
-		$columns	= 18 if  $config::RUN;	# preview / rename
+		$columns	= 18 if  $globals::RUN;	# preview / rename
 	}
 	else
 	{
 		$columns	= 2;			# listing
-		$columns	= 4 if  $config::RUN;	# preview / rename
+		$columns	= 4 if  $globals::RUN;	# preview / rename
 	}
 
 	$hlist = $main::frm_right2 -> Scrolled
@@ -183,7 +183,7 @@ sub draw_list
 	}
 
 	# rename / preview - add 'New <VALUE>' column headers
-	if($config::RUN)
+	if($globals::RUN)
 	{
 		$hlist->header('create', $count++, -text => '#');
 		$hlist->header('create', $count++, -text => 'New Filename');

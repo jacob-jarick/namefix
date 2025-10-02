@@ -88,7 +88,7 @@ use undo_gui;
 # define any remaining vars - usually vars that require libs loaded
 #--------------------------------------------------------------------------------------------------------------
 
-our $log_file = "$config::home/.namefix.pl/namefix.pl.$config::version.log";
+our $log_file = "$globals::home/.namefix.pl/namefix.pl.$globals::version.log";
 
 # --- CLI/GUI test option ---
 my $gui_test = 0;
@@ -104,7 +104,7 @@ $config::dir = $ARGV[0] if defined $ARGV[0];
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
-&misc::plog(2, "**** namefix.pl $config::version start *************************************************");
+&misc::plog(2, "**** namefix.pl $globals::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
 if(lc $^O eq 'mswin32')
@@ -139,7 +139,7 @@ my $row	= 1;
 my $col	= 1;
 
 our $mw = new MainWindow; # Main Window
-$mw->title("namefix.pl $config::version by Jacob Jarick");
+$mw->title("namefix.pl $globals::version by Jacob Jarick");
 
 $config::folderimage 	= $main::mw->Getimage('folder');
 $config::fileimage   	= $main::mw->Getimage('file');
@@ -164,7 +164,7 @@ $mw->bind('<KeyPress>' => sub
 {
 	if($Tk::event->K eq 'F2')
 	{
-		$config::PREVIEW = 1;
+		$globals::PREVIEW = 1;
 		if(defined $config::hlist_file && defined $config::hlist_cwd)
 		{
 			print "Manual Rename '$config::hlist_file' \n";
@@ -174,13 +174,13 @@ $mw->bind('<KeyPress>' => sub
 	if($Tk::event->K eq 'F5')
 	{
 		print "refresh\n";
-		$config::PREVIEW = 1;
+		$globals::PREVIEW = 1;
 		&dir::ls_dir;
 	}
 	if($Tk::event->K eq 'F6')
 	{
 		print "preview\n";
-		$config::PREVIEW = 1;
+		$globals::PREVIEW = 1;
 		&run_namefix::run;
 	}
 	# Escape
@@ -475,7 +475,7 @@ $frm_bottom -> Label(-text=>' ')
 my $tm_chk = $frm_bottom -> Checkbutton
 (
 	-text=>				'Preview',
-	-variable=>			\$config::PREVIEW,
+	-variable=>			\$globals::PREVIEW,
 	-activeforeground=>	'blue'
 )
 -> grid
@@ -505,10 +505,10 @@ $frm_bottom -> Button
 	-command=>
 	sub
 	{
-		if($config::STOP)	# stub
+		if($globals::STOP)	# stub
 		{
 			&misc::plog(2, "namefix.pl: STOP flag already enabled, turning off LISTING flag as well");
-			$config::LISTING = 0;
+			$globals::LISTING = 0;
 		}
 		&config::halt;
 		&misc::plog(0, "namefix.pl: Stop button pressed");
@@ -2098,7 +2098,7 @@ if($config::hash{window_g}{value} ne "")
 
 &misc::plog(2, "Perl version: $^V");
 &misc::plog(2, "Tk version: $Tk::VERSION");
-&misc::plog(2, "namefix version: $config::version");
+&misc::plog(2, "namefix version: $globals::version");
 &misc::plog(2, "Running on $^O");
 
 # $log_file

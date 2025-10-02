@@ -41,8 +41,8 @@ use config;
 #--------------------------------------------------------------------------------------------------------------
 
 # files
-our $log_file		= "$config::home/.namefix.pl/namefix-cli.pl.$config::version.log";
-our $html_file		= "$config::home/.namefix.pl/namefix_html_output_hack.html";
+our $log_file		= "$globals::home/.namefix.pl/namefix-cli.pl.$globals::version.log";
+our $html_file		= "$globals::home/.namefix.pl/namefix_html_output_hack.html";
 
 #--------------------------------------------------------------------------------------------------------------
 # check for debug flag early
@@ -63,7 +63,7 @@ for (my $i = 0; $i <= $#ARGV; $i++)
 # load config file if it exists
 #--------------------------------------------------------------------------------------------------------------
 
-$config::CLI = 1;	# set cli mode flag
+$globals::CLI = 1;	# set cli mode flag
 
 &config::load_hash                  if -f	$config::hash_tsv;
 
@@ -71,7 +71,7 @@ $config::CLI = 1;	# set cli mode flag
 
 &misc::null_file($main::log_file)	if      $config::hash{zero_log}{value};
 
-&misc::plog(2, "**** namefix.pl $config::version start *************************************************");
+&misc::plog(2, "**** namefix.pl $globals::version start *************************************************");
 &misc::plog(4, "main: \$Bin = \"$Bin\"");
 
 #--------------------------------------------------------------------------------------------------------------
@@ -257,7 +257,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--rename' || $arg eq '--ren')
 	{
-		$config::PREVIEW = 0;
+		$globals::PREVIEW = 0;
 	}
 
 	elsif($arg eq '--case')
@@ -334,7 +334,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--undo')
 	{
-		$config::UNDO = 1;
+		$globals::UNDO = 1;
 	}
 
 	elsif($arg eq '--recr')
@@ -726,7 +726,7 @@ for my $arg(@ARGV)
 # Main
 #--------------------------------------------------------------------------------------------------------------
 
-if(!$config::PREVIEW && !$config::UNDO)
+if(!$globals::PREVIEW && !$globals::UNDO)
 {
 	&undo::clear;
 	$config::undo_dir = $config::dir;
@@ -741,7 +741,7 @@ print "*** Processing dir: $config::dir\n";
 &htmlh::html("<table border=1>");
 &htmlh::html("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
 
-if($config::UNDO)
+if($globals::UNDO)
 {
 	@config::undo_pre	= &misc::readf($config::undo_pre_file);
 	@config::undo_cur	= &misc::readf($config::undo_cur_file);
@@ -782,7 +782,7 @@ sub proc_short_opts
 		}
 
 		elsif($short_opt eq "-") { next; }
-		elsif($short_opt eq "!") { $config::PREVIEW							= 0; }
+		elsif($short_opt eq "!") { $globals::PREVIEW							= 0; }
 
 		elsif($short_opt eq "c") { &config::set_value('case',				1); }
 		elsif($short_opt eq "g") { &config::set_value('cleanup_general',	1); }

@@ -17,11 +17,11 @@ use Carp;
 sub prep_globals
 {
 	# reset misc vars
-	$config::STOP			= 0;
+	$globals::STOP			= 0;
 	$config::id3_change		= 0;
 	$config::change 		= 0;
-	$config::SUGGEST_FSFIX 	= 0;
-	$config::FOUND_TMP 		= 0;
+	$globals::SUGGEST_FSFIX 	= 0;
+	$globals::FOUND_TMP 		= 0;
 	$config::tags_rm		= 0;
 	$config::percent_done	= 0;
 	$fixname::enum_count	= 0;
@@ -43,19 +43,19 @@ sub prep_globals
 
 sub run
 {
-	if($config::LISTING)
+	if($globals::LISTING)
 	{
 		&misc::plog(0, "sub run::namefix: error, a listing is currently being performed - aborting rename");
 		return 0;
 	}
-	elsif($config::RUN)
+	elsif($globals::RUN)
 	{
 		&misc::plog(0, "sub run::namefix: error, a rename is currently being performed - aborting rename");
 		return 0;
 	}
 
-	$config::RUN		= 1;
-	&dir_hlist::draw_list if !$config::CLI;
+	$globals::RUN		= 1;
+	&dir_hlist::draw_list if !$globals::CLI;
 
 	my $t_s 			= '';	# tmp string
 
@@ -66,7 +66,7 @@ sub run
 	$fix_name::last_dir	= '';
 	prep_globals;
 
-	if(!$config::CLI)
+	if(!$globals::CLI)
 	{
 		&dir_hlist::hlist_clear;
 		nf_print::p('..');
@@ -103,19 +103,19 @@ sub run
 	# print info
 
 	$t_s = "have";
-	$t_s = "would have" if ($config::PREVIEW);
+	$t_s = "would have" if ($globals::PREVIEW);
 
 	&misc::plog(2, "$config::change files $t_s been modified");
 	&misc::plog(2, "$config::id3_change mp3s tags $t_s been updated.")							if($config::hash{id3_mode}{value});
 	&misc::plog(2, "$config::tags_rm mp3 tags $t_s been removed")								if($config::tags_rm);
 	&misc::plog(2, "$config::exif_rm image files exif data $t_s been removed")					if($config::exif_rm);
-	&misc::plog(0, "unable to rename $config::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($config::SUGGEST_FSFIX != 0);
-	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")		if($config::FOUND_TMP);
+	&misc::plog(0, "unable to rename $globals::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($globals::SUGGEST_FSFIX != 0);
+	&misc::plog(0, "tmp file found. check the following files.\n$config::tmpfilelist\n")		if($globals::FOUND_TMP);
 
 	# cleanup
 
-	$config::PREVIEW = 1;	# return to test mode for safety :)
-	$config::RUN = 0;		# finished renaming - turn off run flag
+	$globals::PREVIEW = 1;	# return to test mode for safety :)
+	$globals::RUN = 0;		# finished renaming - turn off run flag
 	chdir $config::dir;		# return to users working dir
 }
 

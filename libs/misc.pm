@@ -73,7 +73,7 @@ sub plog
 
 	# CLI mode
 
-	if($config::CLI)
+	if($globals::CLI)
 	{
 		if($level == 0)
 		{
@@ -99,7 +99,7 @@ sub plog
 		close(FILE);
 		
 		# Add to GUI log with styling if not in CLI mode
-		if(!$config::CLI) 
+		if(!$globals::CLI) 
         {
 			&log::add($level, "$text\n");
 		}
@@ -113,7 +113,7 @@ sub plog
 	if($level == 0 && $config::hash{error_notify}{value})
 	{
 		# Add error to GUI log with styling if not in CLI mode
-		if(!$config::CLI) 
+		if(!$globals::CLI) 
         {
 			&log::add($level, "$text\n");
 		}

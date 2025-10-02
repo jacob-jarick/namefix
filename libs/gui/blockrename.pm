@@ -148,7 +148,7 @@ sub gui
 	my $preview = $button_sub_frame->Checkbutton
 	(
 		-text=>			'Preview',
-		-variable=>		\$config::PREVIEW,
+		-variable=>		\$globals::PREVIEW,
 		-activeforeground=>	'blue'
 	)
 	->pack(-side => 'left');
@@ -186,11 +186,11 @@ sub gui
 		-command=>
 		sub
 		{
-			if(!$config::PREVIEW)
+			if(!$globals::PREVIEW)
 			{
 				$BR_DONE = 1;
 				&br();
-				$config::PREVIEW = 1;
+				$globals::PREVIEW = 1;
 			}
 			else
 			{
@@ -285,14 +285,14 @@ sub br
 		&misc::plog(0, "sub br: error, a listing is currently being performed - aborting rename");
 		return 0;
 	}
-	elsif($config::RUN)
+	elsif($globals::RUN)
 	{
 		&misc::plog(0, "sub br: error, a rename is currently being performed - aborting rename");
 		return 0;
 	}
 
-	$config::STOP 	= 0;
-	$config::RUN 	= 1;
+	$globals::STOP 	= 0;
+	$globals::RUN 	= 1;
 
 	my $result_text	= '';
 	my @new_l 		= split(/\n/, $rename_box->	get('1.0', 'end'));
@@ -319,7 +319,7 @@ sub br
 		if(!-f $file_old)
 		{
 			&misc::plog(0, "sub br: ERROR: old file '$file_old' does not exist");
-			$config::RUN = 1;
+			$globals::RUN = 1;
 			return 0;
 		}
 	}
@@ -327,15 +327,15 @@ sub br
 	if($#old_l != $#new_l)
 	{
 		&misc::plog(0, "sub br: ERROR: length of new and old list does not match");	# prevent possible user cockup
-		$config::RUN = 0;
+		$globals::RUN = 0;
 		return 0;
 	}
 
 	for my $c(0 .. $#old_l)	# check for changes - then rename
 	{
-		if($config::STOP)
+		if($globals::STOP)
 		{
-			$config::RUN = 0;
+			$globals::RUN = 0;
 			return 0;
 		}
 
@@ -368,7 +368,7 @@ sub br
 	&br_show_lists("Block Rename Results", \@new_a, \@new_b);
 	&txt_reset;
 
-	$config::RUN = 0;
+	$globals::RUN = 0;
 	return 1;
 }
 

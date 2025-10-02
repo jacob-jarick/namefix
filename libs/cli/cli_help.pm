@@ -12,7 +12,7 @@ sub show
 	my $mode = shift;
 	if(!$mode) { $mode = "long"; }
 
-	my $txt_header="namefix.pl $config::version
+	my $txt_header="namefix.pl $globals::version
 
 namefix-cli.pl -<shortoptions> <target>
 namefix-cli.pl --<longoption1> --<longoption2> --<longoption3=value> <target>

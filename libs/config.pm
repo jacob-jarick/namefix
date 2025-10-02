@@ -18,16 +18,15 @@ require globals;
 
 # Easy win, pick a single update references from $config:: to $globals::
 
-*version			= \$globals::version;
-*home				= \$globals::home;
-*CLI				= \$globals::CLI;
-*PREVIEW			= \$globals::PREVIEW;
-*LISTING			= \$globals::LISTING;
-*RUN				= \$globals::RUN;
-*STOP				= \$globals::STOP;
-*UNDO				= \$globals::UNDO;
-*FOUND_TMP			= \$globals::FOUND_TMP;
-*SUGGEST_FSFIX		= \$globals::SUGGEST_FSFIX;
+# *home				= \$globals::home;
+# *CLI				= \$globals::CLI;
+# *PREVIEW			= \$globals::PREVIEW;
+# *LISTING			= \$globals::LISTING;
+# *RUN				= \$globals::RUN;
+# *STOP				= \$globals::STOP;
+# *UNDO				= \$globals::UNDO;
+# *FOUND_TMP			= \$globals::FOUND_TMP;
+# *SUGGEST_FSFIX		= \$globals::SUGGEST_FSFIX;
 *dir				= \$globals::dir;
 *cwd				= \$globals::cwd;
 *hlist_cwd			= \$globals::hlist_cwd;

@@ -27,8 +27,8 @@ sub ls_dir
 		return;
 	}
 
-	$config::LISTING		= 1;
-	$config::STOP			= 0;
+	$globals::LISTING		= 1;
+	$globals::STOP			= 0;
 	$config::percent_done	= 0;
 
 	$config::dir			= cwd;
@@ -45,7 +45,7 @@ sub ls_dir
 		@config::find_arr = ();
 		find(\&run_namefix::find_fix, $config::dir);
 		&ls_dir_find_fix;
-		$config::LISTING = 0;
+		$globals::LISTING = 0;
 		return;
 	}
 
@@ -55,9 +55,9 @@ sub ls_dir
 
 	for my $f (@dirlist)
 	{
-		if($config::STOP)
+		if($globals::STOP)
 		{
-			$config::LISTING = 0;
+			$globals::LISTING = 0;
 			return;
 		}
 
@@ -78,14 +78,14 @@ sub ls_dir
 		$count++;
 		$config::percent_done = int(($count / $total) * 100);
 
-		if($config::STOP)
+		if($globals::STOP)
 		{
-			$config::LISTING = 0;
+			$globals::LISTING = 0;
 			return;
 		}
 		&ls_dir_print($f);		# then print the file array after all dirs have been printed
 	}
-	$config::LISTING = 0;
+	$globals::LISTING = 0;
 	return;
 }
 
@@ -121,7 +121,7 @@ sub ls_dir_find_fix
 
 sub ls_dir_print
 {
-	return 0 if $config::STOP;
+	return 0 if $globals::STOP;
 
 	my $file = shift;
 
@@ -227,7 +227,7 @@ sub dir_filtered
 	for my $file (@dirlist)
 	{
 		# $file is dir automatically fail filter
-		next if !$config::LISTING && !$config::hash{proc_dirs}{value} && -d $file;
+		next if !$globals::LISTING && !$config::hash{proc_dirs}{value} && -d $file;
 		next if $config::hash{filter}{value} && !&filter::match($file);
 
 		push @d, $file;
