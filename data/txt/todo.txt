@@ -9,7 +9,6 @@ Feature Additions:
 Code Todo: 
 
 * id3 unit tests
-* split globals to their own file (currently poluting config.pm)
 
 ==================
 =- Known Issues -=

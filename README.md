@@ -124,64 +124,79 @@ perl namefix.pl /path/to/media/files
 ### Basic Cleanup
 ```bash
 # General cleanup (recommended starting point)
-namefix-cli.pl --clean --rename /path/to/files
+namefix-cli.pl --clean --process /path/to/files
 
 # Fix case and convert underscores to spaces
-namefix-cli.pl --case --spaces --rename /path/to/music/
+namefix-cli.pl --case --spaces --process /path/to/music/
 
 # Remove unwanted strings  
-namefix-cli.pl --remove="[HDTV]" --clean --rename /path/to/videos/
+namefix-cli.pl --remove="[HDTV]" --clean --process /path/to/videos/
 ```
 
 ### Advanced Operations  
 ```bash
 # Scene naming with custom patterns
-namefix-cli.pl --scene --pad-num --clean --rename /path/to/TV_Shows/
+namefix-cli.pl --scene --pad-num --clean --process /path/to/TV_Shows/
 
 # MP3 tag manipulation
-namefix-cli.pl --id3-guess --id3-art="Various Artists" --rename /path/to/music/
+namefix-cli.pl --id3-guess --id3-art="Various Artists" --process /path/to/music/
 
 # EXIF data operations
 namefix-cli.pl --exif-show /path/to/photos/                                    # Display EXIF metadata
-namefix-cli.pl --exif-rm --rename /path/to/photos/                             # Remove EXIF data from images
+namefix-cli.pl --exif-rm --process /path/to/photos/                            # Remove EXIF data from images
 
 # Enumeration Options - Multiple styles available
-namefix-cli.pl --enum --enum-style=0 --enum-zero-pad=3 --rename /path/to/Photos/     # Numbers only (001, 002, 003...)
-namefix-cli.pl --enum --enum-style=1 --enum-zero-pad=2 --rename /path/to/Files/      # Insert at start (01 - filename)
-namefix-cli.pl --enum --enum-style=2 --rename /path/to/Documents/                    # Insert at end (filename - 1)
+namefix-cli.pl --enum --enum-style=0 --enum-zero-pad=3 --process /path/to/Photos/     # Numbers only (001, 002, 003...)
+namefix-cli.pl --enum --enum-style=1 --enum-zero-pad=2 --process /path/to/Files/      # Insert at start (01 - filename)
+namefix-cli.pl --enum --enum-style=2 --process /path/to/Documents/                    # Insert at end (filename - 1)
 
 # Recursive processing with multiple options
-namefix-cli.pl --recr --clean --case --spaces --rename /path/to/MediaLibrary/
+namefix-cli.pl --recr --clean --case --spaces --process /path/to/MediaLibrary/
 ```
 
 ### Power User Features
 ```bash
 # Custom regex patterns with special casing
-namefix-cli.pl --regexp --remove="(19|20)\d{2}" --case-sp --rename /path/to/Movies/
+namefix-cli.pl --remove-use-regex --remove="(19|20)\d{2}" --case-sp --process /path/to/Movies/
 
 # Truncate Options - Multiple patterns available  
-namefix-cli.pl --trunc=50 --trunc-pat=0 --rename /path/to/Documents/           # Truncate from start (default)
-namefix-cli.pl --trunc=50 --trunc-pat=1 --trunc-ins="..." --rename /path/to/   # Truncate from middle with insertion
-namefix-cli.pl --trunc=50 --trunc-pat=2 --rename /path/to/Files/               # Truncate from end
+namefix-cli.pl --trunc=50 --trunc-pat=0 --process /path/to/Documents/           # Truncate from start (default)
+namefix-cli.pl --trunc=50 --trunc-pat=1 --trunc-ins="..." --process /path/to/   # Truncate from middle with insertion
+namefix-cli.pl --trunc=50 --trunc-pat=2 --process /path/to/Files/               # Truncate from end
 
 # Digit Processing Options
-namefix-cli.pl --rm-starting-digits --clean --rename /path/to/Files/           # Remove digits from start
-namefix-cli.pl --rm-all-digits --rename /path/to/Documents/                    # Remove all digits (keep extension)
-namefix-cli.pl --pad-num --clean --rename /path/to/Music/                      # Pad track numbers with hyphens
-namefix-cli.pl --pad-num-w0 --rename /path/to/TV/                              # Zero-pad season/episode (2x12 → 02x12)
-namefix-cli.pl --pad-nnnn-wx --rename /path/to/Shows/                          # Format episode numbers (0104 → 01x04)
+namefix-cli.pl --rm-starting-digits --clean --process /path/to/Files/           # Remove digits from start
+namefix-cli.pl --rm-all-digits --process /path/to/Documents/                    # Remove all digits (keep extension)
+namefix-cli.pl --pad-num --clean --process /path/to/Music/                      # Pad track numbers with hyphens
+namefix-cli.pl --pad-num-w0 --process /path/to/TV/                              # Zero-pad season/episode (2x12 → 02x12)
+namefix-cli.pl --pad-nnnn-wx --process /path/to/Shows/                          # Format episode numbers (0104 → 01x04)
 
 # Character & Case Processing
-namefix-cli.pl --int --clean --rename /path/to/International/                  # Convert international chars to English
-namefix-cli.pl --7bit --clean --rename /path/to/Files/                         # Convert all characters to 7-bit ASCII
-namefix-cli.pl --rm-nc --spaces --case --rename /path/to/Downloads/            # Remove nasty characters
-namefix-cli.pl --uc --rename /path/to/UPPERCASE/                               # Convert to uppercase
-namefix-cli.pl --lc --clean --rename /path/to/lowercase/                       # Convert to lowercase
+namefix-cli.pl --int --clean --process /path/to/International/                  # Convert international chars to English
+namefix-cli.pl --7bit --clean --process /path/to/Files/                         # Convert all characters to 7-bit ASCII
+namefix-cli.pl --rm-nc --spaces --case --process /path/to/Downloads/            # Remove nasty characters
+namefix-cli.pl --uc --process /path/to/UPPERCASE/                               # Convert to uppercase
+namefix-cli.pl --lc --clean --process /path/to/lowercase/                       # Convert to lowercase
 
 # Advanced Filtering & Processing
-namefix-cli.pl --all-files --filt="vacation" --clean --rename /path/to/Files/  # Process all files containing "vacation"
-namefix-cli.pl --filt-regexp --filt="IMG_\d+" --enum --rename /path/to/Photos/ # Regex filtering with enumeration
-namefix-cli.pl --media-types="mp4|mkv|avi" --clean --rename /path/to/Videos/   # Process only specific video types
+namefix-cli.pl --all-files --filt="vacation" --clean --process /path/to/Files/  # Process all files containing "vacation"
+namefix-cli.pl --filt-regexp --filt="IMG_\d+" --enum --process /path/to/Photos/ # Regex filtering with enumeration
+namefix-cli.pl --media-types="mp4|mkv|avi" --clean --process /path/to/Videos/   # Process only specific video types
+```
+
+## Migration Notes (Deprecated Options)
+
+For backward compatibility, these legacy options still work but show deprecation warnings:
+
+```bash
+# Legacy (deprecated but functional):
+namefix-cli.pl --rename /path/to/files     # Shows deprecation warning
+namefix-cli.pl --ren /path/to/files        # Shows deprecation warning  
+namefix-cli.pl --regexp --remove="test"    # Shows deprecation warning
+
+# Modern equivalents (recommended):
+namefix-cli.pl --process /path/to/files    # New preferred option
+namefix-cli.pl --remove-use-regex --remove="test"  # New regex option
 ```
 
 ---
@@ -195,6 +210,12 @@ namefix-cli.pl --media-types="mp4|mkv|avi" --clean --rename /path/to/Videos/   #
 ---
 
 # Architecture & Technical Details
+
+## Recent Improvements (v4.1.14)
+- **Modular Architecture**: Separated global variables into `globals.pm` for cleaner code organization
+- **Improved CLI**: Deprecated legacy options (`--rename`, `--ren`, `--regexp`) with clear migration paths
+- **Enhanced Testing**: Comprehensive test suite covering all filename processing functions
+- **Backward Compatibility**: All deprecated options still work with informative deprecation warnings
 
 ## Components
 - **namefix.pl** - Main GUI application (Perl/Tk)

@@ -658,7 +658,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--about')
 	{
-		$text = join("", &misc::readf($config::about));
+		$text = join("", &misc::readf($globals::about));
 		print "$text\n\n";
 		exit;
 	}
