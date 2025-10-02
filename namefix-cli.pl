@@ -276,10 +276,10 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--regexp')
 	{
-		 $config::hash{filter_regex}{value} = 0;
+		 $config::hash{remove_regex}{value} = 1;
 	}
 
-  	elsif($arg =~ /---remove=(.*)/ || $arg =~ /--rm=(.*)/)
+  	elsif($arg =~ /--remove=(.*)/ || $arg =~ /--rm=(.*)/)
  	{
  		$config::hash{replace}{value} = 1;
 		$config::ins_str_old = $1;
@@ -301,9 +301,9 @@ for my $arg(@ARGV)
 		$config::ins_front_str = $1;
 	}
 
-	elsif($arg =~ /--end-front=(.*)/ || $arg =~ /--ea=(.*)/ )
+	elsif($arg =~ /--append-end=(.*)/ || $arg =~ /--ae=(.*)/ )
 	{
-		$config::end_a = 1;
+		$config::hash{ins_end}{value} = 1;
 		$config::ins_end_str = $1;
 	}
 	elsif($arg eq '--rm-words')
@@ -379,9 +379,9 @@ for my $arg(@ARGV)
 	# Truncate options
 	######################
 
-	elsif($arg =~ /-trunc=(.*)/)
+	elsif($arg =~ /--trunc=(.*)/)
 	{
-		$config::hash{truncate}{truncate}{value} = 1;
+		$config::hash{truncate}{value} = 1;
 		$config::hash{truncate_to}{value} = $1;
 
 	}
@@ -705,7 +705,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--save-options' || $arg eq '--save-opt' || $arg eq '--save-config')
 	{
-		&config::save;
+		&config::save_hash;
 		&cli_print::print("Options Saved, exiting", "<MSG>");
 		exit;
 	}
