@@ -11,77 +11,71 @@ use FindBin qw($Bin);
 our %hash				= ();
 
 require misc;
+require globals;
 
-# TODO: move to globals.pm ? from here to line 83 are all candidates to move
-
-our $dir				= cwd;
-our $cwd				= cwd;
-our $hlist_cwd			= cwd;
-
-our $version 			= '4.1.13';
-our $folderimage 		= '';
-our $fileimage   		= '';
-
-our $g_font				= '';	# unused ?
-our $home				= &misc::get_home;
-
-# File locations
-our $thanks				= "$Bin/data/txt/thanks.txt";
-our $todo				= "$Bin/data/txt/todo.txt";
-our $about				= "$Bin/data/txt/about.txt";
-our $links				= "$Bin/data/txt/links.txt";
-our $changelog			= "$Bin/data/txt/changelog.txt";
-our $mempic				= "$Bin/data/mem.jpg";
-our $fonts_file			= "$home/.namefix.pl/fonts.ini";
-our $bookmark_file		= "$home/.namefix.pl/bookmarks.txt";
-our $undo_cur_file		= "$home/.namefix.pl/undo.current.filenames.txt";
-our $undo_pre_file		= "$home/.namefix.pl/undo.previous.filenames.txt";
-our $undo_dir_file		= "$home/.namefix.pl/undo.dir.txt";
-
-# system internal FLAGS
-our $CLI				= 0;
-our $FOUND_TMP	 		= 0;
-our $LISTING			= 0;
-our $PREVIEW			= 1;
-our $RUN				= 0;
-our $STOP				= 0;
-our $MR_DONE			= 0;	# a manual rename has occured
-our $UNDO				= 0;
-our $SUGGEST_FSFIX		= 0;	# suggest using fsfix var
-
-# undo VARS
-our @undo_cur			= ();	# undo array - current filenames
-our @undo_pre			= ();	# undo array - previous filenames
-our $undo_dir			= '';	# directory to perform undo in
-
-# hlist vars
-our $hlist_newfile_row	= 0;
-our $hlist_file_row		= 1;
-our $change 			= 0;
-our $delay				= 3;		# delay
-our $update_delay		= $delay;	# initial value
-our $hlist_file			= '';
-our $hlist_file_new		= '';
-
-# misc vars
-our $tags_rm			= 0;	# counter for number of tags removed
-our $exif_rm			= 0;	# counter for number of exif data removed
-our @find_arr			= ();
-our $tmpfilelist 		= '';
-our $last_recr_dir 		= '';
-
-our $hash_tsv			= &misc::get_home."/.namefix.pl/config_hash.tsv";
-
-our @id3v2_exts 		= ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
-our $id3_ext_regex 		= join('|', @id3v2_exts);
-
-our @exif_exts = 
-(
-	'3fr', 'arw', 'bmp', 'cr2', 'cr3', 'crw', 'dcr', 'dng', 'erf', 'gif', 
-	'heic', 'heif', 'jpeg', 'jpg', 'kdc', 'mef', 'mos', 'mrw', 'nef', 'nrw', 
-	'orf', 'pef', 'png', 'raf', 'raw', 'rw2', 'sr2', 'srf', 'tif', 'tiff', 
-	'x3f'
-);
+# Global variables moved to globals.pm for better separation of concerns
+# Backward compatibility aliases using typeglob aliasing
+*version			= \$globals::version;
+*home				= \$globals::home;
+*CLI				= \$globals::CLI;
+*PREVIEW			= \$globals::PREVIEW;
+*LISTING			= \$globals::LISTING;
+*RUN				= \$globals::RUN;
+*STOP				= \$globals::STOP;
+*UNDO				= \$globals::UNDO;
+*MR_DONE			= \$globals::MR_DONE;
+*FOUND_TMP			= \$globals::FOUND_TMP;
+*SUGGEST_FSFIX		= \$globals::SUGGEST_FSFIX;
+*dir				= \$globals::dir;
+*cwd				= \$globals::cwd;
+*hlist_cwd			= \$globals::hlist_cwd;
+*undo_cur			= \@globals::undo_cur;
+*undo_pre			= \@globals::undo_pre;
+*undo_dir			= \$globals::undo_dir;
+*undo_cur_file		= \$globals::undo_cur_file;
+*undo_pre_file		= \$globals::undo_pre_file;
+*undo_dir_file		= \$globals::undo_dir_file;
+*hash_tsv			= \$globals::hash_tsv;
+*kill_words_arr		= \@globals::kill_words_arr;
+*word_casing_arr	= \@globals::word_casing_arr;
+*kill_patterns_arr	= \@globals::kill_patterns_arr;
+*genres				= \@globals::genres;
+*id3v2_exts			= \@globals::id3v2_exts;
+*id3_ext_regex		= \$globals::id3_ext_regex;
+*exif_exts			= \@globals::exif_exts;
+# File paths
+*thanks				= \$globals::thanks;
+*todo				= \$globals::todo;
+*about				= \$globals::about;
+*links				= \$globals::links;
+*changelog			= \$globals::changelog;
+*mempic				= \$globals::mempic;
+*fonts_file			= \$globals::fonts_file;
+*bookmark_file		= \$globals::bookmark_file;
+# More state variables
+*folderimage		= \$globals::folderimage;
+*fileimage			= \$globals::fileimage;
+*g_font				= \$globals::g_font;
+*hlist_newfile_row	= \$globals::hlist_newfile_row;
+*hlist_file_row		= \$globals::hlist_file_row;
+*change				= \$globals::change;
+*delay				= \$globals::delay;
+*update_delay		= \$globals::update_delay;
+*hlist_file			= \$globals::hlist_file;
+*hlist_file_new		= \$globals::hlist_file_new;
+*tags_rm			= \$globals::tags_rm;
+*exif_rm			= \$globals::exif_rm;
+*find_arr			= \@globals::find_arr;
+*tmpfilelist		= \$globals::tmpfilelist;
+*last_recr_dir		= \$globals::last_recr_dir;
+# File configuration variables
+*killwords_file		= \$globals::killwords_file;
+*killwords_defaults	= \$globals::killwords_defaults;
+*casing_file		= \$globals::casing_file;
+*casing_defaults	= \$globals::casing_defaults;
+*killpat_file		= \$globals::killpat_file;
+*killpat_defaults	= \$globals::killpat_defaults;
+*genres_file		= \$globals::genres_file;
 
 # -----------------------------------------------------------------------------
 
@@ -267,32 +261,8 @@ else
 
 
 #######################################################################################################################
-# files and arrays
+# File and array initialization moved to globals.pm
 #######################################################################################################################
-
-# TODO: move this section to globals.pm ?
-
-our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
-our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
-our @kill_words_arr		= ();
-@kill_words_arr			= &misc::readf_clean($killwords_defaults)	if -f $killwords_defaults;
-@kill_words_arr			= &misc::readf_clean($killwords_file)		if -f $killwords_file;
-
-our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
-our $casing_defaults   	= "$Bin/data/defaults/special_casing.txt";
-our @word_casing_arr	= ();
-@word_casing_arr		= misc::readf_clean($casing_defaults)		if -f $casing_defaults;
-@word_casing_arr		= misc::readf_clean($casing_file)			if -f $casing_file;
-
-our $killpat_file   	= "$home/.namefix.pl/killpatterns.txt";
-our $killpat_defaults  	= "$Bin/data/defaults/killpatterns.txt";
-our @kill_patterns_arr	= ();
-@kill_patterns_arr		= &misc::readf_clean($killpat_defaults)		if -f $killpat_defaults;
-@kill_patterns_arr		= &misc::readf_clean($killpat_file)			if -f $killpat_file;
-
-our $genres_file		= "$Bin/data/txt/genres.txt";
-our @genres				= ();
-@genres					= misc::readf_clean($genres_file)			if -f $genres_file;
 
 #######################################################################################################################
 # functions
@@ -318,22 +288,22 @@ sub save_hash
 {
 	my $dry_run = shift || 0;  # Optional dry run parameter
 	
-	&misc::plog(3, "config::save_hash $hash_tsv") unless $dry_run;
-	&misc::null_file($hash_tsv) unless $dry_run;
+	&misc::plog(3, "config::save_hash $globals::hash_tsv") unless $dry_run;
+	&misc::null_file($globals::hash_tsv) unless $dry_run;
 
 	# Capture window geometry if in GUI mode and checkbox is checked
-	$hash{window_g}{value} = $main::mw->geometry if !$CLI && $hash{save_window_size}{value} && !$dry_run;
+	$hash{window_g}{value} = $main::mw->geometry if !$globals::CLI && $hash{save_window_size}{value} && !$dry_run;
 
 	# Conditional save categories based on checkbox states
 	my @types = ('base');  # Always save base settings
 	push @types, 'extended' if $save_extended;  # Save extended settings if checkbox checked
-	push @types, 'geometry' if !$CLI && $hash{save_window_size}{value};  # Save geometry if GUI mode and checkbox checked
+	push @types, 'geometry' if !$globals::CLI && $hash{save_window_size}{value};  # Save geometry if GUI mode and checkbox checked
 
 	return @types if $dry_run;  # Return categories for testing
 
 	for my $t (@types)
 	{
-		&misc::file_append($hash_tsv, "\n######## $t ########\n\n");
+		&misc::file_append($globals::hash_tsv, "\n######## $t ########\n\n");
 
 		for my $k(sort { lc $a cmp lc $b } keys %hash)
 		{
@@ -362,13 +332,13 @@ sub save_hash_helper
 	&main::quit("config::save_hash \$hash{$k}{value} is undef". Dumper($hash{$k})) if(!defined $hash{$k}{value});
 	# Always save keys in lowercase
 	my $k_lower = lc($k);
-	&misc::file_append($hash_tsv, "$k_lower\t\t".$hash{$k}{value}."\n");
+	&misc::file_append($globals::hash_tsv, "$k_lower\t\t".$hash{$k}{value}."\n");
 }
 
 sub load_hash
 {
-	&misc::plog(3, "config::save_hash $hash_tsv");
-	my @tmp = &misc::readf($hash_tsv);
+	&misc::plog(3, "config::save_hash $globals::hash_tsv");
+	my @tmp = &misc::readf($globals::hash_tsv);
 	my %h = ();
 	for my $line(@tmp)
 	{
@@ -431,28 +401,28 @@ sub load_hash
 
 sub halt
 {
-	$LISTING	= 0;	# set LISTING
-	$PREVIEW	= 1;	# revert to preview mode
-	$RUN		= 0;	# turn RUN off
-	$STOP		= 1;	# set STOP
+	$globals::LISTING	= 0;	# set LISTING
+	$globals::PREVIEW	= 1;	# revert to preview mode
+	$globals::RUN		= 0;	# turn RUN off
+	$globals::STOP		= 1;	# set STOP
 }
 
 # return 1 if we are doing something
 sub busy
 {
-	return 1 if $LISTING;
-# 	return 1 if $PREVIEW;
-	return 1 if $RUN;
-	return 0 if $STOP;
+	return 1 if $globals::LISTING;
+# 	return 1 if $globals::PREVIEW;
+	return 1 if $globals::RUN;
+	return 0 if $globals::STOP;
 }
 
 # return 1 if we are doing something
 sub mode
 {
-	return 'stop'		if $STOP;
-	return 'list' 		if $LISTING;
- 	return 'preview'	if $PREVIEW;
-	return 'rename'		if $RUN;
+	return 'stop'		if $globals::STOP;
+	return 'list' 		if $globals::LISTING;
+ 	return 'preview'	if $globals::PREVIEW;
+	return 'rename'		if $globals::RUN;
 }
 
 #--------------------------------------------------------------------------------------------------------------

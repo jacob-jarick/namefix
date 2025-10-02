@@ -16,10 +16,11 @@ sub quit
 use lib "$Bin/../libs";
 
 use config;
+use globals;
 use fixname;
 
 # Set CLI mode to avoid GUI dependencies
-$config::CLI = 1;
+$globals::CLI = 1;
 
 # Create temporary directory for tests
 my $temp_dir = "$Bin/../temp/fixname";
@@ -35,7 +36,7 @@ ok( -d $temp_dir && -w $temp_dir, 'Test temp directory created and writable' );
 # Reset config before each test group
 sub reset_test_config {
     &config::reset_config();
-    $config::CLI = 1;
+    $globals::CLI = 1;
 }
 
 #=============================================================================
