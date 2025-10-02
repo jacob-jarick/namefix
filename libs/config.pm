@@ -20,30 +20,8 @@ our $version 			= '4.1.12';
 our $folderimage 		= '';
 our $fileimage   		= '';
 
-$hash{debug}			{save}		= 'base';
-$hash{debug}			{default}	= 0;
-$hash{debug}			{value}		= 0;
-$hash{debug}			{type}		= 'int';
 
-$hash{log_stdout}		{save}		= 'base';
-$hash{log_stdout}		{default}	= 0;
-$hash{log_stdout}		{value}		= 0;
-$hash{log_stdout}		{type}		= 'bool';
 
-$hash{error_stdout}		{save}		= 'base';
-$hash{error_stdout}		{default}	= 1;
-$hash{error_stdout}		{value}		= 1;
-$hash{error_stdout}		{type}		= 'bool';
-
-$hash{error_notify}		{save}		= 'base';
-$hash{error_notify}		{default}	= 1;
-$hash{error_notify}		{value}		= 1;
-$hash{error_notify}		{type}		= 'bool';
-
-$hash{zero_log}			{save}		= 'base';
-$hash{zero_log}			{default}	= 1;
-$hash{zero_log}			{value}		= 1;
-$hash{zero_log}			{type}		= 'bool';
 
 our $g_font				= '';
 our $home				= &misc::get_home;
@@ -106,100 +84,63 @@ our @exif_exts =
 	'x3f'
 );
 
-#############################################################################################
+# -----------------------------------------------------------------------------
+
+&config_init_value('exit_on_error', 0, 0, 'bool', 'base');
+
+&config_init_value('debug', 0, 0, 'int', 'base');
+
+&config_init_value('log_stdout', 0, 0, 'bool', 'base');
+
+&config_init_value('error_stdout', 1, 1, 'bool', 'base');
+
+&config_init_value('error_notify', 1, 1, 'bool', 'base');
+&config_init_value('zero_log', 1, 1, 'bool', 'base');
+# -----------------------------------------------------------------------------
 # MAIN TAB
 
-$hash{cleanup_general}		{save}		= 'extended';
-$hash{cleanup_general}		{default}	= 0;
-$hash{cleanup_general}		{value}		= 0;
-$hash{cleanup_general}		{type}		= 'bool';
+&config_init_value('cleanup_general', 0, 0, 'bool', 'extended');
 
-$hash{case}					{save}		= 'extended';
-$hash{case}					{default}	= 0;
-$hash{case}					{value}		= 0;
-$hash{case}					{type}		= 'bool';
+&config_init_value('case', 0, 0, 'bool', 'extended');
+&config_init_value('word_special_casing', 0, 0, 'bool', 'extended');
 
-$hash{word_special_casing}	{save}		= 'extended';
-$hash{word_special_casing}	{default}	= 0;
-$hash{word_special_casing}	{value}		= 0;
-$hash{word_special_casing}	{type}		= 'bool';
+&config_init_value('spaces', 0, 0, 'bool', 'extended');
 
-$hash{spaces}				{save}		= 'extended';
-$hash{spaces}				{default}	= 0;
-$hash{spaces}				{value}		= 0;
-$hash{spaces}				{type}		= 'bool';
+&config_init_value('dot2space', 0, 0, 'bool', 'extended');
 
-$hash{dot2space}			{save}		= 'extended';
-$hash{dot2space}			{default}	= 0;
-$hash{dot2space}			{value}		= 0;
-$hash{dot2space}			{type}		= 'bool';
+&config_init_value('kill_cwords', 0, 0, 'bool', 'extended');
 
-$hash{kill_cwords}			{save}		= 'extended';
-$hash{kill_cwords}			{default}	= 0;
-$hash{kill_cwords}			{value}		= 0;
-$hash{kill_cwords}			{type}		= 'bool';
+&config_init_value('kill_sp_patterns', 0, 0, 'bool', 'extended');
 
-$hash{kill_sp_patterns}		{save}		= 'extended';
-$hash{kill_sp_patterns}		{default}	= 0;
-$hash{kill_sp_patterns}		{value}		= 0;
-$hash{kill_sp_patterns}		{type}		= 'bool';
+&config_init_value('replace', 0, 0, 'bool', 'no');
 
-$hash{replace}				{save}		= 'no';
-$hash{replace}				{default}	= 0;
-$hash{replace}				{value}		= 0;
-$hash{replace}				{type}		= 'bool';
+&config_init_value('ins_end', 0, 0, 'bool', 'no');
 
-$hash{ins_end}				{save}		= 'no';
-$hash{ins_end}				{default}	= 0;
-$hash{ins_end}				{value}		= 0;
-$hash{ins_end}				{type}		= 'bool';
+&config_init_value('ins_start', 0, 0, 'bool', 'no');
 
-$hash{ins_start}			{save}		= 'no';
-$hash{ins_start}			{default}	= 0;
-$hash{ins_start}			{value}		= 0;
-$hash{ins_start}			{type}		= 'bool';
 
 # String variables for remove/replace/append operations (never saved)
-$hash{ins_str_old}			{save}		= 'no';
-$hash{ins_str_old}			{default}	= '';
-$hash{ins_str_old}			{value}		= '';
-$hash{ins_str_old}			{type}		= 'str';
 
-$hash{ins_str}				{save}		= 'no';
-$hash{ins_str}				{default}	= '';
-$hash{ins_str}				{value}		= '';
-$hash{ins_str}				{type}		= 'str';
+&config_init_value('ins_str_old', '', '', 'str', 'no');
 
-$hash{ins_front_str}		{save}		= 'no';
-$hash{ins_front_str}		{default}	= '';
-$hash{ins_front_str}		{value}		= '';
-$hash{ins_front_str}		{type}		= 'str';
+&config_init_value('ins_str', '', '', 'str', 'no');
 
-$hash{ins_end_str}			{save}		= 'no';
-$hash{ins_end_str}			{default}	= '';
-$hash{ins_end_str}			{value}		= '';
-$hash{ins_end_str}			{type}		= 'str';
+&config_init_value('ins_front_str', '', '', 'str', 'no');
+
+&config_init_value('ins_end_str', '', '', 'str', 'no');
 
 # ID3 tag string variables (never saved)
-$hash{id3_art_str}			{save}		= 'no';
-$hash{id3_art_str}			{default}	= '';
-$hash{id3_art_str}			{value}		= '';
-$hash{id3_art_str}			{type}		= 'str';
 
-$hash{id3_alb_str}			{save}		= 'no';
-$hash{id3_alb_str}			{default}	= '';
-$hash{id3_alb_str}			{value}		= '';
-$hash{id3_alb_str}			{type}		= 'str';
+&config_init_value('id3_art_str', '', '', 'str', 'no');
 
-$hash{id3_tra_str}			{save}		= 'no';
-$hash{id3_tra_str}			{default}	= '';
-$hash{id3_tra_str}			{value}		= '';
-$hash{id3_tra_str}			{type}		= 'str';
+&config_init_value('id3_alb_str', '', '', 'str', 'no');
 
-$hash{id3_tit_str}			{save}		= 'no';
-$hash{id3_tit_str}			{default}	= '';
-$hash{id3_tit_str}			{value}		= '';
-$hash{id3_tit_str}			{type}		= 'str';
+&config_init_value('id3_tra_str', '', '', 'str', 'no');
+
+&config_init_value('id3_tit_str', '', '', 'str', 'no');
+
+&config_init_value('id3_gen_str', '', '', 'str', 'no');
+
 
 $hash{id3_gen_str}			{save}		= 'no';
 $hash{id3_gen_str}			{default}	= 'Metal';
@@ -216,15 +157,16 @@ $hash{id3_com_str}			{default}	= '';
 $hash{id3_com_str}			{value}		= '';
 $hash{id3_com_str}			{type}		= 'str';
 
+# -----------------------------------------------------------------------------
 # Legacy GUI variable - kept for compatibility but also in hash
+# TODO these should no longer be referenced, check and remove
+
 $hash{end_a}				{save}		= 'no';
 $hash{end_a}				{default}	= 0;
 $hash{end_a}				{value}		= 0;
 $hash{end_a}				{type}		= 'bool';
 
-
-
-#############################################################################################
+# -----------------------------------------------------------------------------
 # MP3 TAB
 
 $hash{id3_mode}				{save}		= 'extended';
@@ -272,9 +214,7 @@ $hash{id3_set_comment}	{default}	= 0;
 $hash{id3_set_comment}	{value}		= 0;
 $hash{id3_set_comment}	{type}		= 'bool';
 
-# (ID3 tag strings now defined in hash above with save='no')
-
-#############################################################################################
+# -----------------------------------------------------------------------------
 # MISC TAB
 
 $hash{uc_all}				{save}		= 'extended';
@@ -347,7 +287,7 @@ $hash{split_dddd}			{default}	= 0;
 $hash{split_dddd}			{value}		= 0;
 $hash{split_dddd}			{type}		= 'bool';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # ENUMURATE TAB
 
 $hash{enum}				{save}		= 'extended';
@@ -385,7 +325,7 @@ $hash{enum_end_str}		{default}	= '';
 $hash{enum_end_str}		{value}		= '';
 $hash{enum_end_str}		{type}		= 'str';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # TRUNCATE TAB
 
 $hash{truncate}			{save}		= 'extended';
@@ -408,7 +348,7 @@ $hash{trunc_char}		{default}	= '';
 $hash{trunc_char}		{value}		= '';
 $hash{trunc_char}		{type}		= 'str';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # EXIF TAB
 
 $hash{exif_show}		{save}		= 'extended';
@@ -421,7 +361,7 @@ $hash{exif_rm_all}		{default}	= 0;
 $hash{exif_rm_all}		{value}		= 0;
 $hash{exif_rm_all}		{type}		= 'bool';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # FILTER BAR
 
 $hash{filter}				{save}		= 'extended';
@@ -434,9 +374,12 @@ $hash{filter_ignore_case}	{default}	= 0;
 $hash{filter_ignore_case}	{value}		= 0;
 $hash{filter_ignore_case}	{type}		= 'bool';
 
-our $filter_string	= '';
+$hash{filter_string}		{save}		= 'no';
+$hash{filter_string}		{default}	= '';
+$hash{filter_string}		{value}		= '';
+$hash{filter_string}		{type}		= 'str';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # bottom menu bar
 
 $hash{recursive}		{save}			= 'base';
@@ -454,7 +397,7 @@ $hash{proc_dirs}		{default}		= 0;
 $hash{proc_dirs}		{value}			= 0;
 $hash{proc_dirs}		{type}			= 'bool';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # CLI ONLY OPTIONS
 
 $hash{html_hack}		{save}		= 'base';
@@ -483,7 +426,7 @@ $hash{save_options}		{default}	= 0;
 $hash{save_options}		{value}		= 0;
 $hash{save_options}		{type}		= 'bool';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # CONFIG DIALOG - MAIN TAB
 
 $hash{space_character}		{save}		= 'base';
@@ -508,7 +451,7 @@ $hash{window_g}				{type}		= 'str';
 
 our $save_extended			= 0;	# save main window options
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # CONFIG DIALOG - ADVANCED TAB
 
 $hash{fat32fix}				{save}		= 'base';
@@ -537,7 +480,7 @@ $hash{remove_regex}			{default}	= 0;
 $hash{remove_regex}			{value}		= 0;
 $hash{remove_regex}			{type}		= 'bool';
 
-#############################################################################################
+# -----------------------------------------------------------------------------
 # CONFIG DIALOG - DEBUG TAB
 
 $hash{debug}			{save}		= 'base';
@@ -566,28 +509,9 @@ $hash{zero_log}			{value}		= 1;
 $hash{zero_log}			{type}		= 'bool';
 
 
-# reset config to defaults
-
-sub reset_config
-{
-	for my $k(keys %hash)
-	{
-		if(! defined $hash{$k}{default})
-		{
-			print Dumper(\%hash);
-			&main::quit("reset_config \$hash{$k}{default} is undef\n");
-		}
-
-		$hash{$k}{value} = $hash{$k}{default};
-	}
-}
-
-#############################################################################################
-# DONE - MENU CLI and DIALOG options - DONE
-#############################################################################################
-
-# ==============================================================================
+#######################################################################################################################
 # files and arrays
+#######################################################################################################################
 
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
@@ -611,6 +535,26 @@ our $genres_file		= "$Bin/data/txt/genres.txt";
 our @genres				= ();
 @genres					= misc::readf_clean($genres_file)			if -f $genres_file;
 
+
+#######################################################################################################################
+# functions
+#######################################################################################################################
+
+# reset config to defaults
+
+sub reset_config
+{
+	for my $k(keys %hash)
+	{
+		if(! defined $hash{$k}{default})
+		{
+			print Dumper(\%hash);
+			&main::quit("reset_config \$hash{$k}{default} is undef\n");
+		}
+
+		$hash{$k}{value} = $hash{$k}{default};
+	}
+}
 
 sub save_hash
 {
@@ -790,23 +734,91 @@ sub clr_id3_options
 	}
 
 		&misc::plog(2, 'cleared id3 options');
+}
 
-	# $config::hash{id3_tags_rm}		{value} = 0;
-	# $config::hash{id3_force}		{value} = 0;
+sub set_value
+{
+	my ($key, $value) = @_;
 
-	# $config::hash{id3_set_artist}	{value} = 0;
-	# $config::hash{id3_set_album}	{value} = 0;
-	# $config::hash{id3_set_genre}	{value} = 0;
-	# $config::hash{id3_set_year}		{value} = 0;
-	# $config::hash{id3_set_comment}	{value} = 0;
+	if(!defined $key)
+	{
+		&misc::plog(0, "config::set_value key is undef");
+	}
+	if(!defined $value)
+	{
+		&misc::plog(0, "config::set_value value is undef");
+	}
+	if(!defined $hash{$key})
+	{
+		&misc::plog(0, "config::set_value key '$key' not found in config hash");
+	}
 
-	# $config::hash{id3_guess_tag}	{value} = 0;
+	if($hash{$key}{type} eq 'bool')
+	{
+		if ($value =~ /^(1|true|on|yes)$/i)
+		{
+			$hash{$key}{value} = 1;
 
-	# $config::hash{id3_art_str}		{value} = '';
-	# $config::hash{id3_alb_str}		{value} = '';
-	# $config::hash{id3_gen_str}		{value} = '';
-	# $config::hash{id3_year_str}		{value} = '';
-	# $config::hash{id3_com_str}		{value} = '';
+			return;
+		}
+		elsif ($value =~ /^(0|false|off|no)$/i)
+		{
+			$hash{$key}{value} = 0;
+
+			return;
+		}
+		&misc::plog(0, "config::set_value $key invalid bool value '$value'");
+		&main::quit("config::set_value $key invalid bool value '$value'");
+
+		return; # should never get here
+	}
+
+	# int
+	if($hash{$key}{type} eq 'int')
+	{
+		if($value !~ /^-?\d+$/)
+		{
+			&misc::plog(0, "config::set_value $key invalid int value '$value'");
+			&main::quit("config::set_value $key invalid int value '$value'");
+		}
+		$hash{$key}{value} = int($value);
+
+		return;
+	}
+
+	# str - no checks
+	if($hash{$key}{type} eq 'str')
+	{
+		# no checks
+		$hash{$key}{value} = $value;
+
+		return;
+	}	
+
+	# unknown type
+
+	&misc::plog(0, "config::set_value $key unknown type '".$hash{$key}{type}."'");
+	&main::quit("config::set_value $key unknown type '".$hash{$key}{type}."'");
+
+	return; # should never get here
+}
+
+# deliberately no checks. used only by this library to reduce code duplication
+
+# example: &config_init_value('exit_on_error', 0, 0, 'bool', 'base');
+
+# ordering logic
+# key 
+# values (value and default) 
+# descriptors (type and save)
+
+sub config_init_value
+{
+	$hash{shift}			= {};
+	$hash{$key}{value}		= shift; 
+	$hash{$key}{default}	= shift;
+	$hash{$key}{type}		= shift;
+	$hash{$key}{save}		= shift;
 }
 
 1;

@@ -18,7 +18,7 @@ sub ci_sort
 # plog - print log
 
 # Notes:
-# plug cannot call any namefix subs avoids recursion errors
+# do not have plog call subroutines in that will call plog - avoids recursion errors
 
 sub plog
 {
@@ -72,9 +72,9 @@ sub plog
 	$text = "[$date_time] [$subroutine] [$level_text] $text";
 
 	# CLI mode
+
 	if($config::CLI)
 	{
-		# CLI will (for now) always spit out & log errors
 		if($level == 0)
 		{
 			open(FILE, ">>$main::log_file");
@@ -83,11 +83,14 @@ sub plog
 
 			print "$text\n";
 
+			exit if $config::hash{exit_on_error}{value} == 1;
+
 			return 1;
 		}
 	}
 
 	# GUI mode
+	# everything below is GUI mode
 
 	if($level <= $config::hash{debug}{value})
 	{
@@ -116,6 +119,8 @@ sub plog
 		}
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
+
+	exit if $config::hash{exit_on_error}{value} == 1;
 
 	return 1;
 }

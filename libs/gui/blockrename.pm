@@ -128,9 +128,9 @@ sub gui
 		-command=>
 		sub
 		{
-			if($config::hash{filter}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
+			if($config::hash{filter}{value} && $config::hash{filter_string}{value} eq '')	# don't enable filter on an empty string
 			{
-				&misc::plog(1, "sub blockrename: tried to enable filtering with an empty filter");
+				&misc::plog(1, "tried to enable filtering with an empty filter");
 				$config::hash{filter}{value} = 0;
 			}
 			else
