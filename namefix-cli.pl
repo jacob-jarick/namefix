@@ -282,7 +282,7 @@ for my $arg(@ARGV)
   	elsif($arg =~ /--remove=(.*)/ || $arg =~ /--rm=(.*)/)
  	{
  		$config::hash{replace}{value} = 1;
-		$config::ins_str_old = $1;
+		$config::hash{ins_str_old}{value} = $1;
  	}
 
 	elsif($arg =~ /--replace=(.*)/ || $arg =~ /--rp=(.*)/)
@@ -292,19 +292,19 @@ for my $arg(@ARGV)
 			&misc::plog(0, "main: option replace present but remove option not");
 			exit;
 		}
-		$config::ins_str = $1;
+		$config::hash{ins_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--append-front=(.*)/ || $arg =~ /--af=(.*)/ )
 	{
 		$config::hash{ins_start}{value} = 1;
-		$config::ins_front_str = $1;
+		$config::hash{ins_front_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--append-end=(.*)/ || $arg =~ /--ae=(.*)/ )
 	{
 		$config::hash{ins_end}{value} = 1;
-		$config::ins_end_str = $1;
+		$config::hash{ins_end_str}{value} = $1;
 	}
 	elsif($arg eq '--rm-words')
 	{
@@ -552,47 +552,47 @@ for my $arg(@ARGV)
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{audio_set_artist}{value} = 1;
-		$config::id3_art_str = $1;
+		$config::hash{id3_art_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-tit=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::id3_tit_str = $1;
+		$config::hash{id3_tit_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-tra=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::id3_tra_str = $1;
+		$config::hash{id3_tra_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-alb=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{audio_set_album}{value} = 1;
-		$config::id3_alb_str = $1;
+		$config::hash{id3_alb_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-gen=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{audio_set_genre}{value} = 1;
-		$config::id3_gen_str = $1;
+		$config::hash{id3_gen_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-yer=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{audio_set_year}{value} = 1;
-		$config::id3_year_str = $1;
+		$config::hash{id3_year_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-com=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
 		$config::hash{audio_set_comment}{value} = 1;
-		$config::id3_com_str = $1;
+		$config::hash{id3_com_str}{value} = $1;
 	}
 
 	#####################

@@ -144,28 +144,99 @@ $hash{kill_sp_patterns}		{default}	= 0;
 $hash{kill_sp_patterns}		{value}		= 0;
 $hash{kill_sp_patterns}		{type}		= 'bool';
 
-$hash{replace}				{save}		= 'extended';
+$hash{replace}				{save}		= 'no';
 $hash{replace}				{default}	= 0;
 $hash{replace}				{value}		= 0;
 $hash{replace}				{type}		= 'bool';
 
-$hash{ins_end}				{save}		= 'extended';
+$hash{ins_end}				{save}		= 'no';
 $hash{ins_end}				{default}	= 0;
 $hash{ins_end}				{value}		= 0;
 $hash{ins_end}				{type}		= 'bool';
 
-$hash{ins_start}			{save}		= 'extended';
+$hash{ins_start}			{save}		= 'no';
 $hash{ins_start}			{default}	= 0;
 $hash{ins_start}			{value}		= 0;
 $hash{ins_start}			{type}		= 'bool';
 
-our $ins_front_str	= '';
-our $ins_end_str	= '';
-our $ins_str_old	= '';
-our $ins_str		= '';
+# String variables for remove/replace/append operations (never saved)
+$hash{ins_str_old}			{save}		= 'no';
+$hash{ins_str_old}			{default}	= '';
+$hash{ins_str_old}			{value}		= '';
+$hash{ins_str_old}			{type}		= 'str';
 
-# Legacy variable for GUI compatibility 
-our $end_a			= 0;	# maps to $hash{ins_end}{value}
+$hash{ins_str}				{save}		= 'no';
+$hash{ins_str}				{default}	= '';
+$hash{ins_str}				{value}		= '';
+$hash{ins_str}				{type}		= 'str';
+
+$hash{ins_front_str}		{save}		= 'no';
+$hash{ins_front_str}		{default}	= '';
+$hash{ins_front_str}		{value}		= '';
+$hash{ins_front_str}		{type}		= 'str';
+
+$hash{ins_end_str}			{save}		= 'no';
+$hash{ins_end_str}			{default}	= '';
+$hash{ins_end_str}			{value}		= '';
+$hash{ins_end_str}			{type}		= 'str';
+
+# ID3 tag string variables (never saved)
+$hash{id3_art_str}			{save}		= 'no';
+$hash{id3_art_str}			{default}	= '';
+$hash{id3_art_str}			{value}		= '';
+$hash{id3_art_str}			{type}		= 'str';
+
+$hash{id3_alb_str}			{save}		= 'no';
+$hash{id3_alb_str}			{default}	= '';
+$hash{id3_alb_str}			{value}		= '';
+$hash{id3_alb_str}			{type}		= 'str';
+
+$hash{id3_tra_str}			{save}		= 'no';
+$hash{id3_tra_str}			{default}	= '';
+$hash{id3_tra_str}			{value}		= '';
+$hash{id3_tra_str}			{type}		= 'str';
+
+$hash{id3_tit_str}			{save}		= 'no';
+$hash{id3_tit_str}			{default}	= '';
+$hash{id3_tit_str}			{value}		= '';
+$hash{id3_tit_str}			{type}		= 'str';
+
+$hash{id3_gen_str}			{save}		= 'no';
+$hash{id3_gen_str}			{default}	= 'Metal';
+$hash{id3_gen_str}			{value}		= 'Metal';
+$hash{id3_gen_str}			{type}		= 'str';
+
+$hash{id3_year_str}			{save}		= 'no';
+$hash{id3_year_str}			{default}	= '';
+$hash{id3_year_str}			{value}		= '';
+$hash{id3_year_str}			{type}		= 'str';
+
+$hash{id3_com_str}			{save}		= 'no';
+$hash{id3_com_str}			{default}	= '';
+$hash{id3_com_str}			{value}		= '';
+$hash{id3_com_str}			{type}		= 'str';
+
+# Legacy GUI variable - kept for compatibility but also in hash
+$hash{end_a}				{save}		= 'no';
+$hash{end_a}				{default}	= 0;
+$hash{end_a}				{value}		= 0;
+$hash{end_a}				{type}		= 'bool';
+
+# Legacy variable for GUI compatibility (maps to $hash{end_a}{value})
+our $end_a				= 0;
+
+# GUI accessor variables that sync with hash (for -textvariable compatibility)
+our $ins_str_old		= '';	# maps to $hash{ins_str_old}{value}
+our $ins_str			= '';	# maps to $hash{ins_str}{value}
+our $ins_front_str		= '';	# maps to $hash{ins_front_str}{value}
+our $ins_end_str		= '';	# maps to $hash{ins_end_str}{value}
+our $id3_art_str		= '';	# maps to $hash{id3_art_str}{value}
+our $id3_alb_str		= '';	# maps to $hash{id3_alb_str}{value}
+our $id3_gen_str		= '';	# maps to $hash{id3_gen_str}{value}
+our $id3_year_str		= '';	# maps to $hash{id3_year_str}{value}
+our $id3_com_str		= '';	# maps to $hash{id3_com_str}{value}
+
+
 
 #############################################################################################
 # MP3 TAB
@@ -185,44 +256,37 @@ $hash{audio_force}			{default}	= 0;
 $hash{audio_force}			{value}		= 0;
 $hash{audio_force}			{type}		= 'bool';
 
-$hash{rm_audio_tags}		{save}		= 'extended';
+$hash{rm_audio_tags}		{save}		= 'no';
 $hash{rm_audio_tags}		{default}	= 0;
 $hash{rm_audio_tags}		{value}		= 0;
 $hash{rm_audio_tags}		{type}		= 'bool';
 
-$hash{audio_set_artist}		{save}		= 'extended';
+$hash{audio_set_artist}		{save}		= 'no';
 $hash{audio_set_artist}		{default}	= 0;
 $hash{audio_set_artist}		{value}		= 0;
 $hash{audio_set_artist}		{type}		= 'bool';
 
-$hash{audio_set_album}		{save}		= 'extended';
+$hash{audio_set_album}		{save}		= 'no';
 $hash{audio_set_album}		{default}	= 0;
 $hash{audio_set_album}		{value}		= 0;
 $hash{audio_set_album}		{type}		= 'bool';
 
-$hash{audio_set_genre}		{save}		= 'extended';
+$hash{audio_set_genre}		{save}		= 'no';
 $hash{audio_set_genre}		{default}	= 0;
 $hash{audio_set_genre}		{value}		= 0;
 $hash{audio_set_genre}		{type}		= 'bool';
 
-$hash{audio_set_year}		{save}		= 'extended';
+$hash{audio_set_year}		{save}		= 'no';
 $hash{audio_set_year}		{default}	= 0;
 $hash{audio_set_year}		{value}		= 0;
 $hash{audio_set_year}		{type}		= 'bool';
 
-$hash{audio_set_comment}	{save}		= 'extended';
+$hash{audio_set_comment}	{save}		= 'no';
 $hash{audio_set_comment}	{default}	= 0;
 $hash{audio_set_comment}	{value}		= 0;
 $hash{audio_set_comment}	{type}		= 'bool';
 
-# id3 tag txt
-our $id3_alb_str	= '';
-our $id3_art_str	= '';
-our $id3_tra_str	= '';	# track (CLI --id3-tra)
-our $id3_tit_str	= '';	# title (CLI --id3-tit) 
-our $id3_gen_str	= '';
-our $id3_year_str	= '';
-our $id3_com_str	= '';
+# (ID3 tag strings now defined in hash above with save='no')
 
 #############################################################################################
 # MISC TAB
@@ -671,4 +735,59 @@ sub mode
 	return 'rename'		if $RUN;
 }
 
+#--------------------------------------------------------------------------------------------------------------
+# clear options
+#--------------------------------------------------------------------------------------------------------------
+
+sub clr_no_save
+{
+	# Clear all options that have save = 'no' by resetting them to their defaults
+	for my $k (keys %hash)
+	{
+		if (defined $hash{$k}{save} && $hash{$k}{save} eq 'no')
+		{
+			if (!defined $hash{$k}{default})
+			{
+				print Dumper(\%hash);
+				&main::quit("clr_no_save: \$hash{$k}{default} is undef\n");
+			}
+			$hash{$k}{value} = $hash{$k}{default};
+		}
+	}
+	
+	# Sync legacy GUI variables
+	sync_gui_vars();
+}
+
+# Sync GUI accessor variables with hash values
+sub sync_gui_vars
+{
+	$end_a = $hash{end_a}{value};
+	$ins_str_old = $hash{ins_str_old}{value};
+	$ins_str = $hash{ins_str}{value};
+	$ins_front_str = $hash{ins_front_str}{value};
+	$ins_end_str = $hash{ins_end_str}{value};
+	$id3_art_str = $hash{id3_art_str}{value};
+	$id3_alb_str = $hash{id3_alb_str}{value};
+	$id3_gen_str = $hash{id3_gen_str}{value};
+	$id3_year_str = $hash{id3_year_str}{value};
+	$id3_com_str = $hash{id3_com_str}{value};
+}
+
+# Sync hash values from GUI accessor variables (call this before processing)
+sub sync_from_gui_vars
+{
+	$hash{end_a}{value} = $end_a;
+	$hash{ins_str_old}{value} = $ins_str_old;
+	$hash{ins_str}{value} = $ins_str;
+	$hash{ins_front_str}{value} = $ins_front_str;
+	$hash{ins_end_str}{value} = $ins_end_str;
+	$hash{id3_art_str}{value} = $id3_art_str;
+	$hash{id3_alb_str}{value} = $id3_alb_str;
+	$hash{id3_gen_str}{value} = $id3_gen_str;
+	$hash{id3_year_str}{value} = $id3_year_str;
+	$hash{id3_com_str}{value} = $id3_com_str;
+}
+
 1;
+

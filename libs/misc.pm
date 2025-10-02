@@ -288,36 +288,6 @@ sub readjf
 }
 
 #--------------------------------------------------------------------------------------------------------------
-# clear options
-#--------------------------------------------------------------------------------------------------------------
-
-sub clr_no_save
-{
-	# clear options that are never saved
-
-	$config::hash{replace}{value}			= 0;
-	$config::hash{ins_start}{value}			= 0;
-	$config::end_a							= 0;
-	$config::ins_str_old					= '';
-	$config::ins_str						= '';
-	$config::ins_front_str					= '';
-	$config::ins_end_str					= '';
-
-	$config::id3_gen_str					= 'Metal';
-	$config::id3_art_str					= '';
-	$config::id3_alb_str					= '';
-	$config::id3_com_str					= '';
-	$config::id3_year_str					= '';
-
-	$config::hash{audio_set_artist}{value}	= 0;
-	$config::hash{audio_set_album}{value}	= 0;
-	$config::hash{audio_set_comment}{value}	= 0;
-	$config::hash{audio_set_genre}{value} 	= 0;
-    $config::hash{audio_set_year}{value} 	= 0;
-	$config::hash{rm_audio_tags}{value}		= 0;
-}
-
-#--------------------------------------------------------------------------------------------------------------
 # Escape strings for use in regexp - wrote my own cos uri is fucked.
 #--------------------------------------------------------------------------------------------------------------
 

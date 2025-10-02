@@ -831,7 +831,7 @@ my $clr_but = $frm_left -> Button
 	-command=>
 	sub
 	{
-		&misc::clr_no_save;
+		&config::clr_no_save;
 		&log::clear;
 		&misc::plog(2, 'clear');
 	}
