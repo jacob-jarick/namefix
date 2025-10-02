@@ -533,25 +533,25 @@ for my $arg(@ARGV)
 	elsif($arg eq '--id3-overwrite')
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{audio_force}{value} = 1;
+		$config::hash{id3_force}{value} = 1;
 	}
 
 	elsif($arg eq '--id3-rm-v1')
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{rm_audio_tags}{value} = 1;
+		$config::hash{id3_tags_rm}{value} = 1;
 	}
 
 	elsif($arg eq '--id3-rm-v2')
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{rm_audio_tags}{value} = 1;
+		$config::hash{id3_tags_rm}{value} = 1;
 	}
 
 	elsif($arg =~ /--id3-art=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{audio_set_artist}{value} = 1;
+		$config::hash{id3_set_artist}{value} = 1;
 		$config::hash{id3_art_str}{value} = $1;
 	}
 
@@ -570,28 +570,28 @@ for my $arg(@ARGV)
 	elsif($arg =~ /--id3-alb=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{audio_set_album}{value} = 1;
+		$config::hash{id3_set_album}{value} = 1;
 		$config::hash{id3_alb_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-gen=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{audio_set_genre}{value} = 1;
+		$config::hash{id3_set_genre}{value} = 1;
 		$config::hash{id3_gen_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-yer=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{audio_set_year}{value} = 1;
+		$config::hash{id3_set_year}{value} = 1;
 		$config::hash{id3_year_str}{value} = $1;
 	}
 
 	elsif($arg =~ /--id3-com=(.*)/)
 	{
 		$config::hash{id3_mode}{value} = 1;
-		$config::hash{audio_set_comment}{value} = 1;
+		$config::hash{id3_set_comment}{value} = 1;
 		$config::hash{id3_com_str}{value} = $1;
 	}
 

@@ -237,40 +237,40 @@ $hash{id3_guess_tag}		{default}	= 0;
 $hash{id3_guess_tag}		{value}		= 0;
 $hash{id3_guess_tag}		{type}		= 'bool';
 
-$hash{audio_force}			{save}		= 'extended';
-$hash{audio_force}			{default}	= 0;
-$hash{audio_force}			{value}		= 0;
-$hash{audio_force}			{type}		= 'bool';
+$hash{id3_force}			{save}		= 'extended';
+$hash{id3_force}			{default}	= 0;
+$hash{id3_force}			{value}		= 0;
+$hash{id3_force}			{type}		= 'bool';
 
-$hash{rm_audio_tags}		{save}		= 'no';
-$hash{rm_audio_tags}		{default}	= 0;
-$hash{rm_audio_tags}		{value}		= 0;
-$hash{rm_audio_tags}		{type}		= 'bool';
+$hash{id3_tags_rm}		{save}		= 'no';
+$hash{id3_tags_rm}		{default}	= 0;
+$hash{id3_tags_rm}		{value}		= 0;
+$hash{id3_tags_rm}		{type}		= 'bool';
 
-$hash{audio_set_artist}		{save}		= 'no';
-$hash{audio_set_artist}		{default}	= 0;
-$hash{audio_set_artist}		{value}		= 0;
-$hash{audio_set_artist}		{type}		= 'bool';
+$hash{id3_set_artist}		{save}		= 'no';
+$hash{id3_set_artist}		{default}	= 0;
+$hash{id3_set_artist}		{value}		= 0;
+$hash{id3_set_artist}		{type}		= 'bool';
 
-$hash{audio_set_album}		{save}		= 'no';
-$hash{audio_set_album}		{default}	= 0;
-$hash{audio_set_album}		{value}		= 0;
-$hash{audio_set_album}		{type}		= 'bool';
+$hash{id3_set_album}		{save}		= 'no';
+$hash{id3_set_album}		{default}	= 0;
+$hash{id3_set_album}		{value}		= 0;
+$hash{id3_set_album}		{type}		= 'bool';
 
-$hash{audio_set_genre}		{save}		= 'no';
-$hash{audio_set_genre}		{default}	= 0;
-$hash{audio_set_genre}		{value}		= 0;
-$hash{audio_set_genre}		{type}		= 'bool';
+$hash{id3_set_genre}		{save}		= 'no';
+$hash{id3_set_genre}		{default}	= 0;
+$hash{id3_set_genre}		{value}		= 0;
+$hash{id3_set_genre}		{type}		= 'bool';
 
-$hash{audio_set_year}		{save}		= 'no';
-$hash{audio_set_year}		{default}	= 0;
-$hash{audio_set_year}		{value}		= 0;
-$hash{audio_set_year}		{type}		= 'bool';
+$hash{id3_set_year}		{save}		= 'no';
+$hash{id3_set_year}		{default}	= 0;
+$hash{id3_set_year}		{value}		= 0;
+$hash{id3_set_year}		{type}		= 'bool';
 
-$hash{audio_set_comment}	{save}		= 'no';
-$hash{audio_set_comment}	{default}	= 0;
-$hash{audio_set_comment}	{value}		= 0;
-$hash{audio_set_comment}	{type}		= 'bool';
+$hash{id3_set_comment}	{save}		= 'no';
+$hash{id3_set_comment}	{default}	= 0;
+$hash{id3_set_comment}	{value}		= 0;
+$hash{id3_set_comment}	{type}		= 'bool';
 
 # (ID3 tag strings now defined in hash above with save='no')
 
@@ -680,13 +680,38 @@ sub load_hash
 		# Convert key to lowercase for backward compatibility with old config files
 		my $k_lower = lc($k);
 		
-		# Check both original case and lowercase versions for compatibility
-		if (!defined $hash{$k} && !defined $hash{$k_lower}) {
-			&main::quit("load_hash: unknown value '$k' in config hash.tsv");
+		# Migration table for renamed variables
+		my %migration_map = (
+			'audio_force' => 'id3_force',
+			'rm_audio_tags' => 'id3_tags_rm', 
+			'audio_set_artist' => 'id3_set_artist',
+			'audio_set_album' => 'id3_set_album',
+			'audio_set_genre' => 'id3_set_genre',
+			'audio_set_year' => 'id3_set_year',
+			'audio_set_comment' => 'id3_set_comment'
+		);
+		
+		# Check for migration
+		my $target_key = $k;
+		if (exists $migration_map{$k_lower}) {
+			$target_key = $migration_map{$k_lower};
+			&misc::plog(1, "config: migrating old config key '$k' to '$target_key'");
 		}
-
-		# Use lowercase key for storage
-		my $target_key = defined $hash{$k_lower} ? $k_lower : $k;
+		
+		# Check if target key exists (original, lowercase, or migrated)
+		if (!defined $hash{$target_key} && !defined $hash{$k_lower} && !defined $hash{$k}) {
+			&misc::plog(1, "config: skipping unknown config key '$k' (deprecated or removed)");
+			next;
+		}
+		
+		# Use the best available key
+		if (defined $hash{$target_key}) {
+			# Migration target exists
+		} elsif (defined $hash{$k_lower}) {
+			$target_key = $k_lower;
+		} else {
+			$target_key = $k;
+		}
 		$h{$target_key} = $v;
 	}
 
@@ -747,6 +772,41 @@ sub clr_no_save
 			$hash{$k}{value} = $hash{$k}{default};
 		}
 	}
+}
+
+sub clr_id3_options
+{
+	for my $k (keys %config::hash)
+	{
+		if ($k =~ /^id3_/)
+		{
+			if (!defined $config::hash{$k}{default})
+			{
+				print Dumper(\%config::hash);
+				&main::quit("clr_id3_options: \$config::hash{$k}{default} is undef\n");
+			}
+			$config::hash{$k}{value} = $config::hash{$k}{default};
+		}
+	}
+
+		&misc::plog(2, 'cleared id3 options');
+
+	# $config::hash{id3_tags_rm}		{value} = 0;
+	# $config::hash{id3_force}		{value} = 0;
+
+	# $config::hash{id3_set_artist}	{value} = 0;
+	# $config::hash{id3_set_album}	{value} = 0;
+	# $config::hash{id3_set_genre}	{value} = 0;
+	# $config::hash{id3_set_year}		{value} = 0;
+	# $config::hash{id3_set_comment}	{value} = 0;
+
+	# $config::hash{id3_guess_tag}	{value} = 0;
+
+	# $config::hash{id3_art_str}		{value} = '';
+	# $config::hash{id3_alb_str}		{value} = '';
+	# $config::hash{id3_gen_str}		{value} = '';
+	# $config::hash{id3_year_str}		{value} = '';
+	# $config::hash{id3_com_str}		{value} = '';
 }
 
 1;

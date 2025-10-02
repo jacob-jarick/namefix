@@ -195,38 +195,38 @@ sub fix
 
 	# set user entered audio tags overrides if any
 
-	if($config::hash{audio_set_artist}{value} && $IS_AUDIO_FILE)
+	if($config::hash{id3_set_artist}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{artist} = $config::hash{id3_art_str}{value};
 		$tag	= 1;
 	}
 
-	if($config::hash{audio_set_album}{value} && $IS_AUDIO_FILE)
+	if($config::hash{id3_set_album}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{album} = $config::hash{id3_alb_str}{value};
 		$tag	= 1;
 	}
 
-	if($config::hash{audio_set_genre}{value} && $IS_AUDIO_FILE)
+	if($config::hash{id3_set_genre}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{genre} = $config::hash{id3_gen_str}{value};
 		$tag	= 1;
 	}
 
-	if($config::hash{audio_set_year}{value} && $IS_AUDIO_FILE)
+	if($config::hash{id3_set_year}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{year} = $config::hash{id3_year_str}{value};
 		$tag	= 1;
 	}
 
-	if($config::hash{audio_set_comment}{value} && $IS_AUDIO_FILE)
+	if($config::hash{id3_set_comment}{value} && $IS_AUDIO_FILE)
 	{
 		$tags_h_new{comment} = $config::hash{id3_com_str}{value};
 		$tag	= 1;
 	}
 
 	# rm mp3 id3v2 tags
-    if($IS_AUDIO_FILE && $config::hash{rm_audio_tags}{value})
+    if($IS_AUDIO_FILE && $config::hash{id3_tags_rm}{value})
 	{
         if(!$config::PREVIEW)
 		{

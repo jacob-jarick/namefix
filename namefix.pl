@@ -876,13 +876,13 @@ my $id3_mode_chk = $tab2->Checkbutton
         if($config::hash{id3_mode}{value} == 0)
         {
             $config::hash{id3_guess_tag}{value}     = 0; 
-            $config::hash{audio_force}{value}       = 0;
-            $config::hash{rm_audio_tags}{value}     = 0;
-            $config::hash{audio_set_artist}{value}  = 0;
-            $config::hash{audio_set_album}{value}   = 0;  
-            $config::hash{audio_set_genre}{value}   = 0;
-            $config::hash{audio_set_year}{value}    = 0;
-            $config::hash{audio_set_comment}{value} = 0;
+            $config::hash{id3_force}{value}       = 0;
+            $config::hash{id3_tags_rm}{value}     = 0;
+            $config::hash{id3_set_artist}{value}  = 0;
+            $config::hash{id3_set_album}{value}   = 0;  
+            $config::hash{id3_set_genre}{value}   = 0;
+            $config::hash{id3_set_year}{value}    = 0;
+            $config::hash{id3_set_comment}{value} = 0;
         }
     }
 )
@@ -934,12 +934,12 @@ $balloon->attach
 my $AUDIO_FORCE_chk = $tab2->Checkbutton
 (
 	-text=>             "Overwrite",
-	-variable=>         \$config::hash{audio_force}{value},
+	-variable=>         \$config::hash{id3_force}{value},
 	-activeforeground=> 'blue',
     -command=>		    
 	sub 
     {
-        if($config::hash{audio_force}{value} == 1)
+        if($config::hash{id3_force}{value} == 1)
         {
             $config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
         }        
@@ -968,12 +968,12 @@ $tab2->Label(-text=>" ")
 my $rm_id3v2 = $tab2->Checkbutton
 (
 	-text=>             "RM id3 tags",
-	-variable=>         \$config::hash{rm_audio_tags}{value},
+	-variable=>         \$config::hash{id3_tags_rm}{value},
 	-activeforeground=> 'blue',
     -command=>			
 	sub 
 	{
-		if($config::hash{rm_audio_tags}{value} == 1)
+		if($config::hash{id3_tags_rm}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
@@ -997,12 +997,12 @@ $tab2->Label(-text=>" ")
 my $id3_art_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Artist as:",
-	-variable=>			\$config::hash{audio_set_artist}{value},
+	-variable=>			\$config::hash{id3_set_artist}{value},
 	-activeforeground=>	'blue',
     -command=>		    
 	sub 
     {
-        if($config::hash{audio_set_artist}{value} == 1)
+        if($config::hash{id3_set_artist}{value} == 1)
         {
             $config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
         }        
@@ -1037,12 +1037,12 @@ my $id3_art_ent = $tab2->Entry
 my $id3_alb_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Album as:",
-	-variable=>			\$config::hash{audio_set_album}{value},
+	-variable=>			\$config::hash{id3_set_album}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{audio_set_album}{value} == 1)
+		if($config::hash{id3_set_album}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
@@ -1073,12 +1073,12 @@ my $id3_alb_ent = $tab2->Entry(-textvariable=>\$config::hash{id3_alb_str}{value}
 my $id3_genre_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Genre as:",
-	-variable=>			\$config::hash{audio_set_genre}{value},
+	-variable=>			\$config::hash{id3_set_genre}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{audio_set_genre}{value} == 1)
+		if($config::hash{id3_set_genre}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
@@ -1118,12 +1118,12 @@ my $genre_combo = $tab2->JComboBox
 my $id3_year_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Year as:",
-	-variable=>			\$config::hash{audio_set_year}{value},
+	-variable=>			\$config::hash{id3_set_year}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{audio_set_year}{value} == 1)
+		if($config::hash{id3_set_year}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
@@ -1155,12 +1155,12 @@ my $id3_year_ent = $tab2 -> Entry
 my $id3_com_chk = $tab2->Checkbutton
 (
 	-text=>				"Set Comment as:",
-	-variable=>			\$config::hash{audio_set_comment}{value},
+	-variable=>			\$config::hash{id3_set_comment}{value},
 	-activeforeground=>	'blue',
 	-command=>
 	sub 
 	{
-		if($config::hash{audio_set_comment}{value} == 1)
+		if($config::hash{id3_set_comment}{value} == 1)
 		{
 			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
 		}        
@@ -1204,26 +1204,7 @@ my $clr_id3_button = $tab2->Button
 (
 	-text=>				"Clear",
 	-activebackground=>	"cyan",
-	-command=>			sub
-	{
-		$config::hash{id3_guess_tag}		{value} = 0;
-
-		$config::hash{rm_audio_tags}		{value} = 0;
-		$config::hash{audio_force}			{value} = 0;
-		$config::hash{audio_set_artist}		{value} = 0;
-		$config::hash{audio_set_album}		{value} = 0;
-		$config::hash{audio_set_genre}		{value} = 0;
-		$config::hash{audio_set_year}		{value} = 0;
-		$config::hash{audio_set_comment}	{value} = 0;
-
-		$config::hash{id3_art_str}		{value} = '';
-		$config::hash{id3_alb_str}		{value} = '';
-		$config::hash{id3_gen_str}		{value} = '';
-		$config::hash{id3_year_str}		{value} = '';
-		$config::hash{id3_com_str}		{value} = '';
-
-		&misc::plog(2, 'cleared id3 options');
-	}
+	-command=>			\&config::clr_id3_options
 )
 ->grid
 (
