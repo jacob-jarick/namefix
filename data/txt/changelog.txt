@@ -1,3 +1,9 @@
+commit 8c4b0ec94b8dda57a074da5563b33cd5e0fc9de8
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 2 07:09:36 2025 +0800
+
+    added --7bit option, fixed int char corruptions, removed 1 char from --int (my addition no one probably wanted)
+
 commit 3d44bdcc513d0b08c6ed39fd4f08c89d44db7b4c
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Thu Oct 2 06:34:44 2025 +0800
@@ -92,9 +98,3 @@ Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Tue Sep 30 16:38:03 2025 +0800
 
     Update 02_fixname.t
-
-commit 49706020d70c10b3251927df052c64424a3d0d3e
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Sep 30 16:31:15 2025 +0800
-
-    CLI fix

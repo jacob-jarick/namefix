@@ -75,6 +75,7 @@ chmod +x namefix-gui.par namefix-cli.par
 - **Case Conversion**: Upper/lower case, smart capitalization
 - **Space Handling**: Convert underscores, dots, normalize spacing
 - **Character Cleanup**: Remove/convert international characters, nasty characters
+- **7-bit ASCII Conversion**: Convert all extended UTF-8 characters to ASCII equivalents
 - **Custom Replacements**: Remove/replace strings with regex support
 - **Truncation**: Multiple patterns - from start (default), middle with custom insertion, or end
 
@@ -172,6 +173,7 @@ namefix-cli.pl --pad-nnnn-wx --rename /path/to/Shows/                          #
 
 # Character & Case Processing
 namefix-cli.pl --int --clean --rename /path/to/International/                  # Convert international chars to English
+namefix-cli.pl --7bit --clean --rename /path/to/Files/                         # Convert all characters to 7-bit ASCII
 namefix-cli.pl --rm-nc --spaces --case --rename /path/to/Downloads/            # Remove nasty characters
 namefix-cli.pl --uc --rename /path/to/UPPERCASE/                               # Convert to uppercase
 namefix-cli.pl --lc --clean --rename /path/to/lowercase/                       # Convert to lowercase
