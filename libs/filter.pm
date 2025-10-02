@@ -12,10 +12,10 @@ use warnings;
 
 sub match
 {
-	return 1 if $config::filter_string eq '';
+	return 1 if $config::hash{'filter_string'}{value} eq '';
 
 	my $string	= shift;
-	my $filt	= $config::filter_string;
+	my $filt	= $config::hash{'filter_string'}{value};
 
 	&misc::plog(3, "sub match: \"$string\"");
 
@@ -28,7 +28,7 @@ sub match
 	if(!$config::hash{filter_regex}{value})
 	{
 		&misc::plog(4, "sub match: regexp disabled, using escaped string");
-		$filt = quotemeta $config::filter_string;
+		$filt = quotemeta $config::hash{'filter_string'}{value};
 	}
 
 	if

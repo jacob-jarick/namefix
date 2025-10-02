@@ -2038,7 +2038,7 @@ $f_frame->Checkbutton
 	-command=> 			
 	sub
 	{
-		if($config::hash{filter}{value} && $config::filter_string eq '')	# don't enable filter on an empty string
+		if($config::hash{filter}{value} && $config::hash{filter_string}{value} eq '')	# don't enable filter on an empty string
 		{
 			&misc::plog(1, "namefix: tried to enable filtering with an empty filter");
 			$config::hash{filter}{value} = 0;
@@ -2059,7 +2059,7 @@ $f_frame->Label(-text=>" ")->pack(-side=>'left',);
 
 $f_frame->Entry
 (
-	-textvariable=>	\$config::filter_string,
+	-textvariable=>	\$config::hash{filter_string}{value},
 	-width=>		50
 )
 ->pack(-side=>'left', -expand=>1, -fill=>'x');

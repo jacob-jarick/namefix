@@ -20,6 +20,7 @@ use jpegexif;
 
 # Set CLI mode to avoid GUI dependencies
 $config::CLI = 1;
+$config::hash{'debug'}{'value'} = 0;
 
 #=============================================================================
 # EXIF Data Functions
@@ -98,7 +99,10 @@ ok( 'test.jpg' =~ /\.($config::hash{file_ext_2_proc}{value})$/i, 'JPEG extension
     ok( defined($tags_before) && $tags_before > 0, 'Initial EXIF tag count > 0' );
 
     # Run CLI command to remove EXIF data
-    my $cli_output = qx{cd "$Bin/.." && perl namefix-cli.pl --rename --exif-rm "$temp_file" 2>&1};
+    my $cli_cmd = "perl namefix-cli.pl --rename --exif-rm \"$temp_file\"";
+    my $cli_output = qx{cd "$Bin/.." && $cli_cmd 2>&1};
+    print "testing: $cli_cmd\n";
+    print "output: $cli_output\n" if $cli_output;
     ok( $? == 0, 'CLI --exif-rm command executed successfully' );
 
     # Get final writable EXIF tag count

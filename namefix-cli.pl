@@ -128,9 +128,10 @@ if (scalar @ARGV > 0 && (-f $ARGV[$#ARGV] || -d $ARGV[$#ARGV]))
 		my $basename			= basename($ARGV[$#ARGV]);
 
 		&config::set_value('filter_string', "^" . (quotemeta $basename) . '$');
-		&config::set_value('dir', dirname($ARGV[$#ARGV]));
 
-		&misc::plog(2, "filter_string set to '$config::filter_string'");
+		$config::dir = dirname($ARGV[$#ARGV]);
+
+		&misc::plog(2, "filter_string set to '$config::hash{filter_string}{value}'");
 		&misc::plog(2, "running on single file '$ARGV[$#ARGV]'");
 	}
 	else
@@ -358,7 +359,7 @@ for my $arg(@ARGV)
 
 	elsif($arg =~ /--filt=(.*)/)
 	{
-		$config::filter_string = $1;
+		$config::hash{filter_string}{value} = $1;
 	}
 
 	elsif($arg eq '--filt-regexp')
