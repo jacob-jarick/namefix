@@ -50,7 +50,7 @@ c	--case			Fix case
 p	--spaces		Convert _ and \" \" to set space delimiter
 				current space delimiter: \"$config::hash{space_character}{value}\"
 o	--dots			Dots \".\" to Space Delimiter
-x	--regexp		Enable regexp in remove option
+x	--regexp		Enable regexp in --remove option
 
 	--remove=STRING		Remove STRING from filename
 	--rm=STRING
