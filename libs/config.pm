@@ -15,6 +15,9 @@ require globals;
 
 # Global variables moved to globals.pm for better separation of concerns
 # Backward compatibility aliases using typeglob aliasing
+
+# Easy win, pick a single update references from $config:: to $globals::
+
 *version			= \$globals::version;
 *home				= \$globals::home;
 *CLI				= \$globals::CLI;
@@ -23,7 +26,6 @@ require globals;
 *RUN				= \$globals::RUN;
 *STOP				= \$globals::STOP;
 *UNDO				= \$globals::UNDO;
-*MR_DONE			= \$globals::MR_DONE;
 *FOUND_TMP			= \$globals::FOUND_TMP;
 *SUGGEST_FSFIX		= \$globals::SUGGEST_FSFIX;
 *dir				= \$globals::dir;
@@ -55,14 +57,13 @@ require globals;
 # More state variables
 *folderimage		= \$globals::folderimage;
 *fileimage			= \$globals::fileimage;
-*g_font				= \$globals::g_font;
 *hlist_newfile_row	= \$globals::hlist_newfile_row;
 *hlist_file_row		= \$globals::hlist_file_row;
 *change				= \$globals::change;
 *delay				= \$globals::delay;
 *update_delay		= \$globals::update_delay;
 *hlist_file			= \$globals::hlist_file;
-*hlist_file_new		= \$globals::hlist_file_new;
+# *hlist_file_new		= \$globals::hlist_file_new;
 *tags_rm			= \$globals::tags_rm;
 *exif_rm			= \$globals::exif_rm;
 *find_arr			= \@globals::find_arr;
@@ -70,12 +71,12 @@ require globals;
 *last_recr_dir		= \$globals::last_recr_dir;
 # File configuration variables
 *killwords_file		= \$globals::killwords_file;
-*killwords_defaults	= \$globals::killwords_defaults;
+# *killwords_defaults	= \$globals::killwords_defaults;
 *casing_file		= \$globals::casing_file;
-*casing_defaults	= \$globals::casing_defaults;
+# *casing_defaults	= \$globals::casing_defaults;
 *killpat_file		= \$globals::killpat_file;
-*killpat_defaults	= \$globals::killpat_defaults;
-*genres_file		= \$globals::genres_file;
+# *killpat_defaults	= \$globals::killpat_defaults;
+# *genres_file		= \$globals::genres_file;
 
 # -----------------------------------------------------------------------------
 
