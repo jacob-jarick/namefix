@@ -32,7 +32,7 @@ sub draw
 		-underline=>	1,
 		-command=>		sub { &config_dialog::edit_prefs; }
 	);
-
+	
 	$file->command
 	(
 		-label=>		'Styles',
@@ -52,6 +52,18 @@ sub draw
 		-label=>		'Undo GUI',
 		-underline=>	1,
 		-command=>		\&undo_gui::display
+	);
+
+	$file->command
+	(
+		-label=>		'Clear Log',
+		-underline=>	1,
+		-command=>		
+		sub 
+		{ 
+			&misc::null_file($main::log_file); 
+			&log::clear; 
+		}
 	);
 
 	$file->command

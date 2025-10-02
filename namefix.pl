@@ -134,6 +134,7 @@ else
 #--------------------------------------------------------------------------------------------------------------
 # Begin Gui
 #--------------------------------------------------------------------------------------------------------------
+
 my $row	= 1;
 my $col	= 1;
 
@@ -154,7 +155,7 @@ if ($gui_test)
 		sub 
 		{
         	print "[GUI TEST] Timer expired, quitting...\n";
-        	quit("GUI test timer");
+        	&main::quit("GUI test timer");
     	}
 	);
 }
@@ -261,14 +262,6 @@ $log_box->Contents();
 our $log_file_pos;
 $log_file_pos = -s $main::log_file	if -f $main::log_file; # Get initial size
 $log_file_pos = 0 					if !defined $log_file_pos;
-
-sub tail_log_file
-{
-    $main::mw->after(1000, \&tail_log_file);
-}
-
-# Start the first check
-$main::mw->after(1000, \&tail_log_file);
 
 #--------------------------------------------------------------------------------------------------------------
 # Create dynamic tabbed frames for main gui

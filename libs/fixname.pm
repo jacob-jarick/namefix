@@ -832,8 +832,6 @@ sub fn_dot2space
 		my $ext		= $2;
 		$name		=~ s/\./$config::hash{space_character}{value}/g;
 		$file_new	= "$name.$ext";
-
-# 		&misc::plog(2, "sub fn_dot2space: \$ext = '$ext'\n");
 	}
 	else
 	{
