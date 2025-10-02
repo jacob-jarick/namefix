@@ -6,6 +6,8 @@ require Exporter;
 use warnings;
 use strict;
 
+require globals;
+
 sub show
 {
 
@@ -37,20 +39,26 @@ my $txt_help =
 
 my $txt_main = "Main Options:
 
-!	--rename		perform rename
-	--ren			enable once you are happy with preview.
-				Without this option namefix defaults to
+!	--process		perform rename
+	--rename 		enable once you are happy with preview.
+	--ren			Without this option namefix defaults to
 				preview mode.
+				--rename and --ren are deprecated but
+				kept for backwards compatibility
 
 	--undo			undo last rename
 
 g	--clean			general cleanup (recommend)
 
 c	--case			Fix case
+
 p	--spaces		Convert _ and \" \" to set space delimiter
 				current space delimiter: \"$config::hash{space_character}{value}\"
+
 o	--dots			Dots \".\" to Space Delimiter
-x	--regexp		Enable regexp in --remove option
+
+x	--remove-use-regex	Enable regexp in --remove option
+	--regexp		deprecated, use --remove-use-regex
 
 	--remove=STRING		Remove STRING from filename
 	--rm=STRING

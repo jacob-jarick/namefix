@@ -255,9 +255,18 @@ for my $arg(@ARGV)
 		&config::set_value('cleanup_general', 1);
 	}
 
-	elsif($arg eq '--rename' || $arg eq '--ren')
+	elsif($arg eq '--rename' || $arg eq '--ren' || $arg eq '--process' )
 	{
 		$globals::PREVIEW = 0;
+
+		if($arg eq '--ren')
+		{
+			&misc::plog(1, "main: --ren is deprecated, use --rename or --process"); 
+		}	
+		if($arg eq '--rename')
+		{
+			&misc::plog(1, "main: --rename is deprecated, use --process");
+		}
 	}
 
 	elsif($arg eq '--case')
@@ -275,9 +284,14 @@ for my $arg(@ARGV)
 		&config::set_value('dot2space', 1);
 	}
 
-	elsif($arg eq '--regexp')
+	elsif($arg eq '--regexp' || $arg eq '--remove-use-regex')
 	{
-		 &config::set_value('remove_regex', 1);
+		&config::set_value('remove_regex', 1);
+
+		if($arg eq '--regexp')
+		{
+			&misc::plog(1, "main: --regexp is deprecated, use --remove-use-regex"); 
+		}
 	}
 
   	elsif($arg =~ /--remove=(.*)/ || $arg =~ /--rm=(.*)/)
