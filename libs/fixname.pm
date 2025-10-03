@@ -225,6 +225,20 @@ sub fix
 		$tag	= 1;
 	}
 
+	# set title tag if specified via CLI --id3-tit
+	if(defined $config::hash{id3_tit_str}{value} && $config::hash{id3_tit_str}{value} ne '' && $IS_AUDIO_FILE)
+	{
+		$tags_h_new{title} = $config::hash{id3_tit_str}{value};
+		$tag	= 1;
+	}
+
+	# set track tag if specified via CLI --id3-tra  
+	if(defined $config::hash{id3_tra_str}{value} && $config::hash{id3_tra_str}{value} ne '' && $IS_AUDIO_FILE)
+	{
+		$tags_h_new{track} = $config::hash{id3_tra_str}{value};
+		$tag	= 1;
+	}
+
 	# rm mp3 id3v2 tags
     if($IS_AUDIO_FILE && $config::hash{id3_tags_rm}{value})
 	{
