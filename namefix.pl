@@ -109,15 +109,15 @@ $globals::dir = $ARGV[0] if defined $ARGV[0];
 
 if(lc $^O eq 'mswin32')
 {
-        $config::dialog_font		= 'ansi 8 bold';
-        $config::dialog_title_font	= 'ansi 12 bold';
-        $config::edit_pat_font		= 'ansi 16 bold';
+	$config::dialog_font		= 'ansi 8 bold';
+	$config::dialog_title_font	= 'ansi 12 bold';
+	$config::edit_pat_font		= 'ansi 16 bold';
 }
 else
 {
-        $config::dialog_font		= 'ansi 10';
-        $config::dialog_title_font	= 'ansi 16 bold';
-        $config::edit_pat_font		= 'ansi 18 bold';
+	$config::dialog_font		= 'ansi 10';
+	$config::dialog_title_font	= 'ansi 16 bold';
+	$config::edit_pat_font		= 'ansi 18 bold';
 }
 
 &misc::null_file($main::log_file)	if $config::hash{zero_log}{value};
@@ -268,7 +268,7 @@ $log_file_pos = 0 					if !defined $log_file_pos;
 #--------------------------------------------------------------------------------------------------------------
 
 my $dtfw = 200;
-my $dtfh = 460;
+my $dtfh = 520;
 
 my $frame4dtf = $mw->Frame
 (
@@ -844,6 +844,13 @@ my $clr_but = $frm_left -> Button
 );
 $balloon->attach($clr_but, -msg=> "Reset All options.");
 
+$frm_left->Label(-text=>"\n\n\n\n\n")
+->grid
+(
+	-row=>		$row++,
+	-column=>	1
+);
+
 #--------------------------------------------------------------------------------------------------------------
 # id3v2 tab options
 #--------------------------------------------------------------------------------------------------------------
@@ -956,6 +963,60 @@ $balloon->attach
 (
 	$AUDIO_FORCE_chk,
 	-msg=> "Overwrite pre-existing tags when using above option."
+);
+
+$tab2->Label(-text=>" ")
+->grid
+(
+	-row=>		$row++,
+	-column=>	1
+);
+
+my $id3_set_fn_chk = $tab2->Checkbutton
+(
+	-text=>				"Set FN from ID3",
+	-variable=>			\$config::hash{id3_fn_from_tag}{value},
+	-activeforeground=>	'blue',
+	-command=>
+	sub 
+	{
+		if($config::hash{id3_fn_from_tag}{value} == 1)
+		{
+			$config::hash{id3_mode}{value} = 1; # enable id3 mode if guessing tags
+		}        
+	}
+)
+->grid
+(
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'nw'
+);
+$balloon->attach
+(
+	$id3_set_fn_chk,
+	-msg=> "Set all mp3 filename from id3 tags."
+);
+
+my $id3_fn_style_combo = $tab2->JComboBox
+(
+ 	-mode=>			'readonly',
+	-relief=>		'groove',
+	-background=>	'white',
+	-textvariable=>	\$config::hash{id3_fn_style}{value},
+	-choices=>		[0, 1, 2, 3],
+	-entrywidth=>	16
+)
+-> grid
+(
+	-row=>		$row++,
+	-column=>	1,
+	-sticky=>	'nw'
+);
+$balloon->attach
+(
+	$id3_fn_style_combo,
+	-msg=> "0 = Artist - Title\n1 = Artist - Track - Title\n2 = Artist - Album - Title\n3 = Artist - Album - Track - Title"
 );
 
 $tab2->Label(-text=>" ")
@@ -1538,7 +1599,7 @@ $balloon->attach
 
 $tab5->Label
 (
-	-text=>""
+	-text=>"\n\n\n"
 )
 ->grid
 (
@@ -1968,7 +2029,7 @@ $balloon->attach
 
 $tab7->Label
 (
-	-text=>"\n\n\n\n\n\n\n\n\n\n"
+	-text=>"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 )
 ->grid
 (
@@ -2016,7 +2077,7 @@ $balloon->attach
 
 $tab_exif->Label
 (
-	-text=>"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	-text=>"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 )
 ->grid
 (
