@@ -1,100 +1,100 @@
-commit 61d55df986895d259bb25f6b80503704148094c3
+commit 2809381c554761e7e9ce3df1fe9eba94b1083429
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 17:20:45 2025 +0800
+Date:   Mon Oct 6 05:06:31 2025 +0800
 
-    4.1.12 - clear log option added to gui file menu
+    4.1.15
 
-commit 1cdb4a4a34ab19f8c6db9fc1a4d71782af58d603
+commit 201b2989b0e53bbac7029908f2ab80b6cfbad99e
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 08:02:33 2025 +0800
+Date:   Mon Oct 6 04:47:38 2025 +0800
 
-    4.1.11
+    id3 tests
 
-commit 8c4b0ec94b8dda57a074da5563b33cd5e0fc9de8
+commit d3928446d18b04e291223ca788bd58c42b2b5620
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 07:09:36 2025 +0800
+Date:   Mon Oct 6 04:29:46 2025 +0800
 
-    added --7bit option, fixed int char corruptions, removed 1 char from --int (my addition no one probably wanted)
+    id3 option added... testing still
 
-commit 3d44bdcc513d0b08c6ed39fd4f08c89d44db7b4c
+commit 173d669e282470fb8ddf16f38047e12a89e015c4
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 06:34:44 2025 +0800
+Date:   Mon Oct 6 04:15:31 2025 +0800
 
-    fixed fn_case for international characters, added to_7bit_ascii func (not exposed yet), formatting fixes
+    id3
 
-commit 640d27057efee44aa4381def88d5007326d00d44
+commit 7924cf39f11af47e38c7a271b7c9cb0501dd23e9
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 03:10:22 2025 +0800
+Date:   Sun Oct 5 12:48:24 2025 +0800
 
-    added basic RM EXIF functionality to CLI & GUI
+    binaries updated
 
-commit 9d122d915f0e1d6db8e60f361a388766e19c2dec
+commit c7f095cf5383dda805acf8de96a8a23613667580
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 02:37:36 2025 +0800
+Date:   Sun Oct 5 12:46:30 2025 +0800
 
-    Update 05_exif_functions.t
+    fix exit on error logic for GUI
 
-commit 75e6612211509731c8c2a8a2b23352b847c5c55c
+commit 952dec0d8a79b25f424dd9590d658d954cf3c1e8
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 02:35:16 2025 +0800
+Date:   Sun Oct 5 12:25:32 2025 +0800
 
-    exif rm added
+    WIP
 
-commit 6872a613fe66acd5ad67576bdb3d40898ecaad3e
+commit 4c85e9cbd7b9264ff04dfe60b5c19afc5f48c3e8
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 2 01:26:29 2025 +0800
+Date:   Sat Oct 4 00:29:53 2025 +0800
 
-    update single file handling
+    id3 tagging
 
-commit d7a701c9a20d2eb114040f8939644e7dc83167b2
+commit 72e6dec5d6c722ca387abfa341d4bc15f6f27c20
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 1 18:51:20 2025 +0800
+Date:   Fri Oct 3 07:42:35 2025 +0800
 
-    exif and debug func fix for CLI
+    4.1.14
 
-commit e5b7b16ebf47f4a34c5c479879e1b65e7bcce7c5
+commit 936c6e17e6512494bfa95f40cda4cfe7bd6c265c
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 1 16:46:21 2025 +0800
+Date:   Fri Oct 3 07:29:59 2025 +0800
 
-    exif work
+    update CLI opts
 
-commit 0f73b79bebecd716b5ba12eae4c39e50ae8391c1
+commit f8089022765edbbc26d0adc24fbfba91c5796db0
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 1 12:07:21 2025 +0800
+Date:   Fri Oct 3 07:14:54 2025 +0800
 
-    CLI can now operate on a single file
+    4.1.14 - migrated globals from config.pm to globals.pm
 
-commit 84799034e0bd13e310a701d043f234c61a654c1d
+commit 5f1815cccd3415ecb06f21926334ef6fdd0a9f34
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 1 11:37:19 2025 +0800
+Date:   Fri Oct 3 06:53:55 2025 +0800
 
-    minor
+    globals migration
 
-commit 4516a19fd60aef7dcb12d0e5bdadfbeb0db7cc6b
+commit fc7c71b149f0923daea245c745aa7363f94fd5cd
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 1 02:05:37 2025 +0800
+Date:   Fri Oct 3 04:57:05 2025 +0800
 
-    Update namefix-linux.tar.gz
+    4.1.13
 
-commit 002ace67a0452a6bed1da2076cdf115ba121ca54
+commit 919e9f1aff6b672691ce24464ef1a988ecdff263
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 1 02:04:56 2025 +0800
+Date:   Fri Oct 3 04:55:19 2025 +0800
 
-    4.1.8
-    
-    tests, fixes,,, stuff
+    alias fixes
 
-commit eeae59a52013027674dbf6cbb1f601e9f44349f3
+commit fef07c692cd3f33eb1c03bac3a78e3760bc9980e
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Sep 30 17:55:04 2025 +0800
+Date:   Fri Oct 3 04:46:20 2025 +0800
 
-    config overhaul, all values are now LC, backwards compatible with old configs
+    clean up config.pm move globals to their own file. using aliases currently
 
-commit e9e2e026c21f9154011efbcc240d33906c85c644
+commit cfead0278f0b70259d07b6d650b44e1868b53bec
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Sep 30 16:57:03 2025 +0800
+Date:   Fri Oct 3 04:35:37 2025 +0800
 
-    tests... long overdue
+    tests
 
-commit eb166ea34ea4971b610a8777ac28f3e32401c706
+commit 6e4e6d3029275e5f17b6038d026ad1a1e0d56672
 Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 3 04:09:04 2025 +0800
+
