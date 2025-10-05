@@ -218,7 +218,8 @@ sub fix
 		}
 
 		my $fn_from_tags = '';	# always start blank
-		my $fn_ext = &fn_get_file_ext($file);
+		my $fn_ext = $file;
+		$fn_ext =~ s/^(.*)(\.)(.{3,4})$/$3/e;
 		my $id3_fn_gen_error_count = 0;
 
 		# validate tags
@@ -238,7 +239,7 @@ sub fix
 		}
 
 		# ALBUM
-		if($tags_h{album} eq '' && $config::hash{id3_fn_style}{value} > 1)
+		if($tags_h{album} eq '' && ($config::hash{id3_fn_style}{value} == 2 || $config::hash{id3_fn_style}{value} == 3))
 		{
 			$id3_fn_gen_error_count++;
 			&misc::plog(1, "'$file' id3 has no album set, skipping filename generation. Style $config::hash{id3_fn_style}{value} requires album");

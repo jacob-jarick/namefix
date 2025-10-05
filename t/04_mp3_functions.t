@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 35;
+use Test::More tests => 47;
 use FindBin qw($Bin);
 use File::Copy;
 use File::Path qw(make_path remove_tree);
@@ -299,6 +299,151 @@ ok( -f $test_mp3, 'Test MP3 copied to temp directory' );
     like( $output, qr/Processing|would have|modified/, 'ID3v2 removal output received' );
     
     unlink($test_file);
+}
+
+#=============================================================================
+# ID3 Filename From Tag Tests
+# Test --id3-fn-from-tag with all 4 style options (0-3)
+#=============================================================================
+
+# Test Style 0: Artist - Title.mp3
+{
+    my $test_file = "$temp_dir/test_fn_style0.mp3";
+    copy($source_mp3, $test_file);
+    
+    # Set known tag values first
+    my $cmd1 = qq{perl namefix-cli.pl --id3-art="ARTIST" --id3-tit="TITLE" --id3-tra="01" --id3-gen="METAL" --id3-alb="ALBUM" --id3-overwrite --process "$test_file"};
+    qx($cmd1 2>&1);
+    
+    # Now test filename generation with style 0
+    my $cmd2 = qq{perl namefix-cli.pl --id3-fn-from-tag --id3-fn-style=0 --process "$test_file"};
+    my $output = qx($cmd2 2>&1);
+    my $exit_code = $? >> 8;
+    
+    ok( $exit_code == 0, 'CLI --id3-fn-from-tag style 0 command executed successfully' );
+    
+    # Check if the expected filename exists (Artist - Title.mp3)
+    my $expected_file = "$temp_dir/ARTIST - TITLE.mp3";
+    ok( -f $expected_file, 'Style 0: Artist - Title.mp3 filename generated correctly' );
+    
+    unlink($test_file) if -f $test_file;
+    unlink($expected_file) if -f $expected_file;
+}
+
+# Test Style 1: Artist - Track - Title.mp3
+{
+    my $test_file = "$temp_dir/test_fn_style1.mp3";
+    copy($source_mp3, $test_file);
+    
+    # Set known tag values first
+    my $cmd1 = qq{perl namefix-cli.pl --id3-art="ARTIST" --id3-tit="TITLE" --id3-tra="01" --id3-gen="METAL" --id3-alb="ALBUM" --id3-overwrite --process "$test_file"};
+    qx($cmd1 2>&1);
+    
+    # Now test filename generation with style 1
+    my $cmd2 = qq{perl namefix-cli.pl --id3-fn-from-tag --id3-fn-style=1 --process "$test_file"};
+    my $output = qx($cmd2 2>&1);
+    my $exit_code = $? >> 8;
+    
+    ok( $exit_code == 0, 'CLI --id3-fn-from-tag style 1 command executed successfully' );
+    
+    # Check if the expected filename exists (Artist - Track - Title.mp3)
+    my $expected_file = "$temp_dir/ARTIST - 01 - TITLE.mp3";
+    ok( -f $expected_file, 'Style 1: Artist - Track - Title.mp3 filename generated correctly' );
+    
+    unlink($test_file) if -f $test_file;
+    unlink($expected_file) if -f $expected_file;
+}
+
+# Test Style 2: Artist - Album - Title.mp3
+{
+    my $test_file = "$temp_dir/test_fn_style2.mp3";
+    copy($source_mp3, $test_file);
+    
+    # Set known tag values first
+    my $cmd1 = qq{perl namefix-cli.pl --id3-art="ARTIST" --id3-tit="TITLE" --id3-tra="01" --id3-gen="METAL" --id3-alb="ALBUM" --id3-overwrite --process "$test_file"};
+    qx($cmd1 2>&1);
+    
+    # Now test filename generation with style 2
+    my $cmd2 = qq{perl namefix-cli.pl --id3-fn-from-tag --id3-fn-style=2 --process "$test_file"};
+    my $output = qx($cmd2 2>&1);
+    my $exit_code = $? >> 8;
+    
+    ok( $exit_code == 0, 'CLI --id3-fn-from-tag style 2 command executed successfully' );
+    
+    # Check if the expected filename exists (Artist - Album - Title.mp3)
+    my $expected_file = "$temp_dir/ARTIST - ALBUM - TITLE.mp3";
+    ok( -f $expected_file, 'Style 2: Artist - Album - Title.mp3 filename generated correctly' );
+    
+    unlink($test_file) if -f $test_file;
+    unlink($expected_file) if -f $expected_file;
+}
+
+# Test Style 3: Artist - Album - Track - Title.mp3
+{
+    my $test_file = "$temp_dir/test_fn_style3.mp3";
+    copy($source_mp3, $test_file);
+    
+    # Set known tag values first
+    my $cmd1 = qq{perl namefix-cli.pl --id3-art="ARTIST" --id3-tit="TITLE" --id3-tra="01" --id3-gen="METAL" --id3-alb="ALBUM" --id3-overwrite --process "$test_file"};
+    qx($cmd1 2>&1);
+    
+    # Now test filename generation with style 3
+    my $cmd2 = qq{perl namefix-cli.pl --id3-fn-from-tag --id3-fn-style=3 --process "$test_file"};
+    my $output = qx($cmd2 2>&1);
+    my $exit_code = $? >> 8;
+    
+    ok( $exit_code == 0, 'CLI --id3-fn-from-tag style 3 command executed successfully' );
+    
+    # Check if the expected filename exists (Artist - Album - Track - Title.mp3)
+    my $expected_file = "$temp_dir/ARTIST - ALBUM - 01 - TITLE.mp3";
+    ok( -f $expected_file, 'Style 3: Artist - Album - Track - Title.mp3 filename generated correctly' );
+    
+    unlink($test_file) if -f $test_file;
+    unlink($expected_file) if -f $expected_file;
+}
+
+# Test default style (should be 0) when --id3-fn-style is not specified
+{
+    my $test_file = "$temp_dir/test_fn_default.mp3";
+    copy($source_mp3, $test_file);
+    
+    # Set known tag values first
+    my $cmd1 = qq{perl namefix-cli.pl --id3-art="DEFAULT_ARTIST" --id3-tit="DEFAULT_TITLE" --id3-overwrite --process "$test_file"};
+    qx($cmd1 2>&1);
+    
+    # Now test filename generation without specifying style (should default to 0)
+    my $cmd2 = qq{perl namefix-cli.pl --id3-fn-from-tag --process "$test_file"};
+    my $output = qx($cmd2 2>&1);
+    my $exit_code = $? >> 8;
+    
+    ok( $exit_code == 0, 'CLI --id3-fn-from-tag default style command executed successfully' );
+    
+    # Check if the expected filename exists (should be style 0: Artist - Title.mp3)
+    my $expected_file = "$temp_dir/DEFAULT_ARTIST - DEFAULT_TITLE.mp3";
+    ok( -f $expected_file, 'Default style: Artist - Title.mp3 filename generated correctly (defaults to style 0)' );
+    
+    unlink($test_file) if -f $test_file;
+    unlink($expected_file) if -f $expected_file;
+}
+
+# Test error handling when tags are missing
+{
+    my $test_file = "$temp_dir/test_fn_missing_tags.mp3";
+    copy($source_mp3, $test_file);
+    
+    # Clear any existing tags first
+    my $cmd1 = qq{perl namefix-cli.pl --id3-rm-v1 --id3-rm-v2 --process "$test_file"};
+    qx($cmd1 2>&1);
+    
+    # Now try filename generation with missing tags
+    my $cmd2 = qq{perl namefix-cli.pl --id3-fn-from-tag --id3-fn-style=0 --process "$test_file"};
+    my $output = qx($cmd2 2>&1);
+    my $exit_code = $? >> 8;
+    
+    ok( $exit_code == 0, 'CLI --id3-fn-from-tag with missing tags executed without fatal error' );
+    like( $output, qr/Processing|would have|modified|missing|empty/, 'Missing tags handled gracefully with appropriate output' );
+    
+    unlink($test_file) if -f $test_file;
 }
 
 #=============================================================================
