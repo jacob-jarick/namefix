@@ -33,6 +33,7 @@ my $txt_help =
 	--help-doc		Document and Config options
 	--help-debug		Debug Options
 	--help-hacks		Hack options
+	--help-deprecated	Deprecated options
 	--help-all		All help (Long list of options)
 
 ";
@@ -40,11 +41,9 @@ my $txt_help =
 my $txt_main = "Main Options:
 
 !	--process		perform rename
-	--rename 		enable once you are happy with preview.
-	--ren			Without this option namefix defaults to
+				enable once you are happy with preview.
+				Without this option namefix defaults to
 				preview mode.
-				--rename and --ren are deprecated but
-				kept for backwards compatibility
 
 	--undo			undo last rename
 
@@ -240,9 +239,30 @@ my $txt_mp3 =
 	--id3-yer=STRING	Set id3 year tag to STRING
 	--id3-com=STRING	Set id3 comment tag to STRING
 
+	# the below id3 options have not been implemented yet
+
+	--id3-fn-from-tag	Generate filename from id3 tags
+				if all needed tags are present
+
+	--id3-fn-style=INT	Specify the filename generation style (0-3)
+				0 = Artist - Title
+				1 = Artist - Track - Title
+				2 = Artist - Album - Title
+				3 = Artist - Album - Track - Title
+
 ";
 
-my $text_exif =
+my $txt_deprecated = "
+Deprecated Options
+These options have been renamed but are kept for backwards compatibility
+
+	OLD NAME	NEW NAME
+
+	--rename	--process
+	--ren		--process
+";
+
+my $txt_exif =
 "
 EXIF Data Options:
 
@@ -275,7 +295,9 @@ EXIF Data Options:
 	$txt_docs.
 	$txt_debug.
 	$txt_mp3.
-	$text_exif;
+	$txt_exif.
+	$txt_deprecated
+	;
 
 	if($mode eq "help")
 	{
@@ -327,7 +349,11 @@ EXIF Data Options:
 	}
 	elsif($mode eq "exif")
 	{
-		print $text_exif;
+		print $txt_exif;
+	}
+	elsif($mode eq "deprecated")
+	{
+		print $txt_deprecated;
 	}
 
 	else

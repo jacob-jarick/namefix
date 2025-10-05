@@ -55,6 +55,9 @@ require globals;
 &config_init_value('id3_year_str',	'',			'',			'str', 'no');
 &config_init_value('id3_com_str',	'',			'',			'str', 'no');
 
+&config_init_value('id3_fn_from_tag',	0, 0, 'bool',	'no'); # --id3-fn-from-tag
+&config_init_value('id3_fn_style', 		0, 0, 'int',	'no'); # --id3-fn-style
+
 # -----------------------------------------------------------------------------
 # Legacy GUI variable - kept for compatibility but also in hash
 # TODO these should no longer be referenced, check and remove

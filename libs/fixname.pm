@@ -185,6 +185,104 @@ sub fix
 
 	#------------------------------------------------------------------------------
 
+	if($config::hash{id3_fn_from_tag}{value} && $IS_AUDIO_FILE)
+	{
+		my $ref		= &mp3::get_tags($path);
+		%tags_h		= %$ref;
+
+		# allow artist override
+		if($config::hash{id3_set_artist}{value} && defined $config::hash{id3_art_str}{value} && $config::hash{id3_art_str}{value} ne '')
+		{
+			$tags_h{artist} = $config::hash{id3_art_str}{value};
+		}
+
+		# allow title override
+		if($config::hash{id3_set_title}{value} && defined $config::hash{id3_tit_str}{value} && $config::hash{id3_tit_str}{value} ne '')
+		{
+			$tags_h{title} = $config::hash{id3_tit_str}{value};
+		}
+
+		# allow album override
+		if($config::hash{id3_set_album}{value} && defined $config::hash{id3_alb_str}{value} && $config::hash{id3_alb_str}{value} ne '')
+		{
+			$tags_h{album} = $config::hash{id3_alb_str}{value};
+		}
+
+		# allow track override
+		if($config::hash{id3_set_track}{value} && defined $config::hash{id3_tra_str}{value} && $config::hash{id3_tra_str}{value} ne '')
+		{
+			$tags_h{track} = $config::hash{id3_tra_str}{value};
+		}
+
+		my $fn_from_tags = '';	# always start blank
+		my $fn_ext = &fn_get_file_ext($file);
+		my $id3_fn_gen_error_count = 0;
+
+		# validate tags
+
+		# ARTIST
+		if($tags_h{artist} eq '')
+		{
+			$id3_fn_gen_error_count++;
+			&misc::plog(1, "'$file' id3 has no artist set, skipping filename generation");
+		}
+
+		# TITLE
+		if($tags_h{title} eq '')
+		{
+			$id3_fn_gen_error_count++;
+			&misc::plog(1, "'$file' id3 has no title set, skipping filename generation");
+		}
+
+		# ALBUM
+		if($tags_h{album} eq '' && $config::hash{id3_fn_style}{value} > 1)
+		{
+			$id3_fn_gen_error_count++;
+			&misc::plog(1, "'$file' id3 has no album set, skipping filename generation. Style $config::hash{id3_fn_style}{value} requires album");
+		}
+
+		# TRACK
+		if
+		(
+			$tags_h{track} eq '' && 
+			( $config::hash{id3_fn_style}{value} == 1 || $config::hash{id3_fn_style}{value} == 3)
+		)
+		{
+			$id3_fn_gen_error_count++;
+			&misc::plog(1, "'$file' id3 has no track set, skipping filename generation. Style $config::hash{id3_fn_style}{value} requires track");
+		}
+
+		# generate filename if no errors
+		if(!$id3_fn_gen_error_count)
+		{
+			if($config::hash{id3_fn_style}{value} == 0)
+			{
+				$fn_from_tags = "$tags_h{artist} - $tags_h{title}.$fn_ext";
+			}
+			elsif($config::hash{id3_fn_style}{value} == 1)
+			{
+				$fn_from_tags = "$tags_h{artist} - $tags_h{track} - $tags_h{title}.$fn_ext";
+			}
+			elsif($config::hash{id3_fn_style}{value} == 2)
+			{
+				$fn_from_tags = "$tags_h{artist} - $tags_h{album} - $tags_h{title}.$fn_ext";
+			}
+			elsif($config::hash{id3_fn_style}{value} == 3)
+			{
+				$fn_from_tags = "$tags_h{artist} - $tags_h{album} - $tags_h{track} - $tags_h{title}.$fn_ext";
+			}
+			else
+			{
+				&main::quit("ERROR id3_fn_style '$config::hash{id3_fn_style}{value}' is invalid");
+			}
+
+			$newfile = $fn_from_tags;
+			&misc::plog(2, "'$file' generated new filename from id3 tags: '$newfile'");
+		}
+	}
+
+	#------------------------------------------------------------------------------
+
 	$newfile = run_fixname_subs($file, $newfile);
 
 	# End of cleanups

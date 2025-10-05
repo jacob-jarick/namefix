@@ -240,6 +240,12 @@ for my $arg(@ARGV)
 		exit 0;
 	}	
 
+	elsif($arg eq '--help-deprecated')
+	{
+		&cli_help::show('deprecated');
+		exit 0;
+	}		
+
 	elsif($arg eq '--help-all')
 	{
 		&cli_help::show('all');
@@ -610,6 +616,23 @@ for my $arg(@ARGV)
 		&config::set_value('id3_set_comment', 1);
 		&config::set_value('id3_com_str', $1);
 	}
+
+	elsif($arg eq '--id3-fn-from-tag')
+	{
+		&config::set_value('id3_guess_tag', 0);		# disable conflicting option
+
+		&config::set_value('id3-fn-from-tag', 1);	# enable main option
+	}
+
+	elsif($arg =~ /--id3-fn-style=(\d+)/)
+	{
+		if($1 > 3)
+		{
+			&quit("main: --id3-fn-style value must be between 1 and 3");
+		}
+
+		&config::set_value('id3-fn-style', $1);
+	}	
 
 	#####################
 	# EXIF
