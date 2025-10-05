@@ -223,7 +223,13 @@ sub reset_config
 sub save_hash
 {
 	&misc::plog(3, "saving config to file $globals::hash_tsv");
-	&misc::null_file($globals::hash_tsv);
+	
+	# Try to create/clear the config file
+	if (!&misc::null_file($globals::hash_tsv)) 
+	{
+		&misc::plog(0, "Failed to initialize config file for writing");
+		return 0;
+	}
 
 	# Capture window geometry if in GUI mode and checkbox is checked
 	$hash{window_g}{value} = $main::mw->geometry if !$globals::CLI && $hash{save_window_size}{value};
@@ -237,7 +243,11 @@ sub save_hash
 
 	for my $save_type (@types)
 	{
-		&misc::file_append($globals::hash_tsv, "\n######## $save_type ########\n\n");
+		if (!&misc::file_append($globals::hash_tsv, "\n######## $save_type ########\n\n")) 
+		{
+			&misc::plog(0, "Failed to write config section header for $save_type");
+			return 0;
+		}
 
 		for my $k(sort { lc $a cmp lc $b } keys %hash)
 		{
@@ -254,10 +264,15 @@ sub save_hash
 			}
 
 			next if $hash{$k}{save} ne $save_type;
-			save_hash_helper($k);
+			if (!save_hash_helper($k)) 
+			{
+				&misc::plog(0, "Failed to save config key: $k");
+				return 0;
+			}
 		}
 	}
 	&misc::plog(3, "config saved OK");
+	return 1;
 }
 
 sub save_hash_helper
@@ -270,10 +285,16 @@ sub save_hash_helper
 	&misc::plog(1, "non lowercase config key '$k' found in hash") if($k ne $k_lower && defined $hash{$k}) ;
 
 	# unlikely to happen but just in case checks
-	&main::quit("config::save_hash key '$k' not found in hash". Dumper($hash{$k})) if(!defined $hash{$k});
-	&main::quit("config::save_hash \$hash{$k}{value} is undef". Dumper($hash{$k})) if(!defined $hash{$k}{value});
+	if(!defined $hash{$k}) {
+		&misc::plog(0, "config::save_hash key '$k' not found in hash");
+		return 0;
+	}
+	if(!defined $hash{$k}{value}) {
+		&misc::plog(0, "config::save_hash \$hash{$k}{value} is undef");
+		return 0;
+	}
 	
-	&misc::file_append($globals::hash_tsv, "$k_lower\t\t".$hash{$k}{value}."\n");
+	return &misc::file_append($globals::hash_tsv, "$k_lower\t\t".$hash{$k}{value}."\n");
 }
 
 sub load_hash

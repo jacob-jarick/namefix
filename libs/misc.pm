@@ -75,15 +75,13 @@ sub plog
 
 	if($globals::CLI)
 	{
-		if($level == 0)
+		if($level <= $config::hash{debug}{value})
 		{
 			open(FILE, ">>$main::log_file");
 			print FILE "$text\n";
 			close(FILE);
 
-			print "$text\n";
-
-			exit if $config::hash{exit_on_error}{value} == 1;
+			exit if $level == 0 && $config::hash{exit_on_error}{value} == 1;
 
 			return 1;
 		}
@@ -120,7 +118,7 @@ sub plog
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
 
-	exit if $config::hash{exit_on_error}{value} == 1;
+	exit if $level == 0 && $config::hash{exit_on_error}{value} == 1;
 
 	return 1;
 }
@@ -150,9 +148,15 @@ sub get_home
 sub null_file
 {
     my $file = shift;
+    
+    if (!open(FILE, ">$file")) 
+	{
+        &misc::plog(0, "sub null_file, Couldn't open $file to write to. $!");
+        return 0;
+    }
 
-    open(FILE, ">$file") or &main::quit("ERROR: sub null_file, Couldn't open $file to write to. $!");
     close(FILE);
+    return 1;
 }
 
 sub save_file
@@ -176,9 +180,16 @@ sub file_append
 	my $file	= shift;
 	my $string	= shift;
 
-	open(FILE, ">>$file") or &main::quit("ERROR: Couldn't open $file to append to. $!");
+	if (!open(FILE, ">>$file")) 
+	{
+        &misc::plog(0, "Couldn't open $file to append to. $!");
+        return 0;
+    }
+
     print FILE $string;
     close(FILE);
+
+    return 1;
 }
 
 #--------------------------------------------------------------------------------------------------------------
