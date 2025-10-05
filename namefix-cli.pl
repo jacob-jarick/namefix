@@ -585,6 +585,7 @@ for my $arg(@ARGV)
 
 	elsif($arg =~ /--id3-tra=(.*)/)
 	{
+		&quit("main: --id3-tra value must a number or '', you set '$1'") if $1 !~ /^(\d+|)$/;
 		&config::set_value('id3_mode', 1);
 		&config::set_value('id3_tra_str', $1);
 	}
@@ -605,6 +606,8 @@ for my $arg(@ARGV)
 
 	elsif($arg =~ /--id3-yer=(.*)/)
 	{
+		&quit("main: --id3-yer value must 4 digits or '', you set '$1'") if $1 !~ /^(\d{4}|)$/;
+
 		&config::set_value('id3_mode', 1);
 		&config::set_value('id3_set_year', 1);
 		&config::set_value('id3_year_str', $1);
@@ -621,17 +624,17 @@ for my $arg(@ARGV)
 	{
 		&config::set_value('id3_guess_tag', 0);		# disable conflicting option
 
-		&config::set_value('id3-fn-from-tag', 1);	# enable main option
+		&config::set_value('id3_fn_from_tag', 1);	# enable main option
 	}
 
 	elsif($arg =~ /--id3-fn-style=(\d+)/)
 	{
 		if($1 > 3)
 		{
-			&quit("main: --id3-fn-style value must be between 1 and 3");
+			&quit("main: --id3-fn-style value must be between 0 and 3");
 		}
 
-		&config::set_value('id3-fn-style', $1);
+		&config::set_value('id3_fn_style', $1);
 	}	
 
 	#####################

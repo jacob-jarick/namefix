@@ -212,6 +212,9 @@ sub fix
 		if($config::hash{id3_set_track}{value} && defined $config::hash{id3_tra_str}{value} && $config::hash{id3_tra_str}{value} ne '')
 		{
 			$tags_h{track} = $config::hash{id3_tra_str}{value};
+
+			# always zero pad track number
+			$tags_h{track} = sprintf("%02d", $tags_h{track}) if defined $tags_h{track};
 		}
 
 		my $fn_from_tags = '';	# always start blank

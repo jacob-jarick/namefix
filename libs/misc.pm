@@ -81,6 +81,11 @@ sub plog
 			print FILE "$text\n";
 			close(FILE);
 
+			if($config::hash{log_stdout}{value})
+			{
+				print "$text\n";
+			}
+
 			exit if $level == 0 && $config::hash{exit_on_error}{value} == 1;
 
 			return 1;

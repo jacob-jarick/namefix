@@ -22,7 +22,7 @@ ok( -f "$Bin/../namefix-cli.pl", 'namefix-cli.pl exists and CLI integration poss
 
 # Test debug level control - ensure --debug=2 shows startup messages  
 {
-    my $output = qx{cd "$Bin/.." && perl namefix-cli.pl --debug=2 --exif-show testdata/images/DSCN0021_original.jpg 2>&1};
+    my $output = qx{cd "$Bin/.." && perl namefix-cli.pl --debug=2 --debug-stdout --exif-show testdata/images/DSCN0021_original.jpg 2>&1};
     like( $output, qr/\*\*\*\* namefix\.pl.*start/, '--debug=2 shows startup banner' );
     like( $output, qr/=== EXIF Data for/, '--debug=2 still shows EXIF data' );
 }
