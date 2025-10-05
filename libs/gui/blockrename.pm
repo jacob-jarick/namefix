@@ -20,10 +20,10 @@ my $rename_box;
 # create block rename window
 sub gui
 {
-	$dir		= cwd;
-	$BR_DONE	= 0;
+	$dir			= cwd;
+	$BR_DONE		= 0;
 	my $br_window	= $main::mw -> Toplevel();
-	my $balloon	= $br_window->Balloon();
+	my $balloon		= $br_window->Balloon();
 
 	&misc::plog(3, "display blockrename gui");
 
@@ -147,11 +147,11 @@ sub gui
 
 	my $preview = $button_sub_frame->Checkbutton
 	(
-		-text=>			'Preview',
-		-variable=>		\$globals::PREVIEW,
+		-text=>				'Preview',
+		-variable=>			\$globals::PREVIEW,
 		-activeforeground=>	'blue'
 	)
-	->pack(-side => 'left');
+	->pack(-side=> 'left');
 
 	$balloon->attach($preview, -msg => "Preview changes that will be made.\n\nNote: This option always re-enables after a run for safety.");
 
@@ -161,7 +161,7 @@ sub gui
 		-activebackground=>	'red',
 		-command=>			sub {&config::halt;}
 	)
-	->pack(-side => 'left');
+	->pack(-side=> 'left');
 
 	# LIST button
 
@@ -201,9 +201,9 @@ sub gui
 			}
 		}
 	)
-	-> pack(-side => 'left');
+	->pack(-side=> 'left');
 
-	$button_sub_frame->Label(-text=>'    ')-> pack(-side=>'left');
+	$button_sub_frame->Label(-text=>'    ')->pack(-side=>'left');
 
 	# Close button
 
@@ -222,7 +222,7 @@ sub gui
 			destroy $br_window;
 		}
 	)
-	->pack(-side=>'left');
+	->pack(-side=> 'left');
 	&txt_reset;
 }
 

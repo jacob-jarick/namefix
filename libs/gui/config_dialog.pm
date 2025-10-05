@@ -415,6 +415,19 @@ sub edit_prefs
 		-sticky=>	"nw",
 	);
 
+		$tab_debug->Checkbutton
+	(
+		-text=>				"Exit on error",
+		-variable=>			\$config::hash{exit_on_error}{value},
+		-activeforeground=>	"blue"
+	)
+	->grid
+	(
+		-row=>		$n++,
+		-column=>	1,
+		-sticky=>	"nw",
+	);
+
 	$tab_debug->Checkbutton
 	(
 		-text=>				"Zero logfile on start",

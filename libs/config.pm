@@ -222,52 +222,57 @@ sub reset_config
 
 sub save_hash
 {
-	my $dry_run = shift || 0;  # Optional dry run parameter
-	
-	&misc::plog(3, "config::save_hash $globals::hash_tsv") unless $dry_run;
-	&misc::null_file($globals::hash_tsv) unless $dry_run;
+	&misc::plog(3, "saving config to file $globals::hash_tsv");
+	&misc::null_file($globals::hash_tsv);
 
 	# Capture window geometry if in GUI mode and checkbox is checked
-	$hash{window_g}{value} = $main::mw->geometry if !$globals::CLI && $hash{save_window_size}{value} && !$dry_run;
+	$hash{window_g}{value} = $main::mw->geometry if !$globals::CLI && $hash{save_window_size}{value};
 
 	# Conditional save categories based on checkbox states
 	my @types = ('base');  # Always save base settings
 	push @types, 'extended' if $save_extended;  # Save extended settings if checkbox checked
 	push @types, 'geometry' if !$globals::CLI && $hash{save_window_size}{value};  # Save geometry if GUI mode and checkbox checked
 
-	return @types if $dry_run;  # Return categories for testing
+	&misc::plog(3, "config saving types: ". join(", ", @types));
 
-	for my $t (@types)
+	for my $save_type (@types)
 	{
-		&misc::file_append($globals::hash_tsv, "\n######## $t ########\n\n");
+		&misc::file_append($globals::hash_tsv, "\n######## $save_type ########\n\n");
 
 		for my $k(sort { lc $a cmp lc $b } keys %hash)
 		{
 			if(! defined $hash{$k})
 			{
 				print Dumper(\%hash);
-				&main::quit("save_hash \$hash{$k} is undef\n");
+				&main::quit("\$hash{$k} is undef\n");
 			}
 
 			if(! defined $hash{$k}{save})
 			{
 				print Dumper(\%hash);
-				&main::quit("save_hash \$hash{$k}{save} is undef\n");
+				&main::quit("\$hash{$k}{save} is undef\n");
 			}
 
-			next if $hash{$k}{save} ne $t;
+			next if $hash{$k}{save} ne $save_type;
 			save_hash_helper($k);
 		}
 	}
+	&misc::plog(3, "config saved OK");
 }
 
 sub save_hash_helper
 {
 	my $k = shift;
+	my $k_lower = lc($k);
+
+	# there should be no mixed case keys
+	# but if there are warn and save as lowercase
+	&misc::plog(1, "non lowercase config key '$k' found in hash") if($k ne $k_lower && defined $hash{$k}) ;
+
+	# unlikely to happen but just in case checks
 	&main::quit("config::save_hash key '$k' not found in hash". Dumper($hash{$k})) if(!defined $hash{$k});
 	&main::quit("config::save_hash \$hash{$k}{value} is undef". Dumper($hash{$k})) if(!defined $hash{$k}{value});
-	# Always save keys in lowercase
-	my $k_lower = lc($k);
+	
 	&misc::file_append($globals::hash_tsv, "$k_lower\t\t".$hash{$k}{value}."\n");
 }
 

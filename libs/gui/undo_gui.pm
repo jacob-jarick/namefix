@@ -59,9 +59,9 @@ sub display
 		-columnspan=>	1
 	);
 
-	$hlist->header('create', 0, -text =>'Current Filename');
-	$hlist->header('create', 1, -text =>'->');
-	$hlist->header('create', 2, -text =>'Previous Filename');
+	$hlist->header('create', 0, -text=> 'Current Filename');
+	$hlist->header('create', 1, -text=> '->');
+	$hlist->header('create', 2, -text=> 'Previous Filename');
 
 	$top->resizable(0,0);
 
@@ -69,9 +69,9 @@ sub display
 	for my $c (0 .. $#config::undo_cur)
 	{
 		$hlist->add($c);
-		$hlist->itemCreate($c, 0, -text => $globals::undo_cur[$c]);
-		$hlist->itemCreate($c, 1, -text => ' -> ');
-		$hlist->itemCreate($c, 2, -text => $globals::undo_pre[$c]);
+		$hlist->itemCreate($c, 0, -text=> $globals::undo_cur[$c]);
+		$hlist->itemCreate($c, 1, -text=> ' -> ');
+		$hlist->itemCreate($c, 2, -text=> $globals::undo_pre[$c]);
 		$c++;
 	}
 	return 1;

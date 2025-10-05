@@ -2072,7 +2072,7 @@ $f_frame->Checkbutton
 )
 ->pack(-side=>'left');
 
-$f_frame->Checkbutton
+my $re_checkbox = $f_frame->Checkbutton
 (
 	-text=>				"regex",
 	-variable=>			\$config::hash{filter_regex}{value},
@@ -2081,6 +2081,12 @@ $f_frame->Checkbutton
 ->pack
 (
 	-side=> 'left',
+);
+
+$balloon->attach
+(
+	$re_checkbox,
+	-msg=> "Enable regex filtering."
 );
 
 #--------------------------------------------------------------------------------------------------------------
