@@ -362,23 +362,12 @@ sub load_hash
 # Save Config File
 #--------------------------------------------------------------------------------------------------------------
 
-# MEMO: to self, config file is for stuff under prefs dialog only and defaults is for mainwindow vars
-
 sub halt
 {
 	$globals::LISTING	= 0;	# set LISTING
 	$globals::PREVIEW	= 1;	# revert to preview mode
 	$globals::RUN		= 0;	# turn RUN off
 	$globals::STOP		= 1;	# set STOP
-}
-
-# return 1 if we are doing something
-sub busy
-{
-	return 1 if $globals::LISTING;
-# 	return 1 if $globals::PREVIEW;
-	return 1 if $globals::RUN;
-	return 0 if $globals::STOP;
 }
 
 #--------------------------------------------------------------------------------------------------------------

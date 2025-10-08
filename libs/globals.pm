@@ -21,7 +21,7 @@ require misc;
 our $dir				= cwd;
 our $home				= &misc::get_home;
 
-our $version 			= '4.1.16';
+our $version 			= '4.1.17';
 our $folderimage 		= '';
 our $fileimage   		= '';
 
@@ -51,10 +51,12 @@ our $hash_tsv			= "$home/.namefix.pl/config_hash.tsv";
 # system internal FLAGS
 our $CLI				= 0;
 our $FOUND_TMP	 		= 0;
-our $LISTING			= 0;
-our $PREVIEW			= 1;
-our $RUN				= 0;
-our $STOP				= 0;
+
+our $PREVIEW			= 1;	# preview mode - do not actually rename files
+
+our $LISTING			= 0;	# directory listing in progress
+our $RUN				= 0;	# rename or preview in progress
+our $STOP				= 0;	# emergency stop flag
 our $UNDO				= 0;
 our $SUGGEST_FSFIX		= 0;	# suggest using fsfix var
 
@@ -157,11 +159,12 @@ sub mode_check
 
 	return 1 if $globals::STOP		&& $check eq 'stop';
 	return 1 if $globals::LISTING	&& $check eq 'list';
-	return 1 if $globals::PREVIEW	&& $check eq 'preview';
+	# return 1 if $globals::PREVIEW	&& $check eq 'preview';	# PREVIEW is not a mode, it is a flag for to disable rename
 	return 1 if $globals::RUN		&& $check eq 'rename';
 
 	# Check if it's a valid mode but the flag is just false
-	if ($check eq 'stop' || $check eq 'list' || $check eq 'preview' || $check eq 'rename') {
+	if ($check eq 'stop' || $check eq 'list' || $check eq 'rename') 
+	{
 		return 0;  # Valid mode, but flag is false
 	}
 
@@ -174,7 +177,6 @@ sub mode_check
 sub busy
 {
 	return 1 if $globals::LISTING;
-# 	return 1 if $globals::PREVIEW;
 	return 1 if $globals::RUN;
 	return 0 if $globals::STOP;
 }

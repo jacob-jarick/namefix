@@ -766,6 +766,9 @@ for my $arg(@ARGV)
 # Main
 #--------------------------------------------------------------------------------------------------------------
 
+# when below conditions are met, we are doing a rename operation, so we need to setup undo
+# record current dir to undo_dir_file
+# clear undo pre/cur files
 if(!$globals::PREVIEW && !$globals::UNDO)
 {
 	&undo::clear;

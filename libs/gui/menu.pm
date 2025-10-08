@@ -98,7 +98,9 @@ sub draw
 		-command=>	\&edit_lists::pat_list
 	);
 
- 	&bookmark::draw_menu;     # creates bookmark menu, still wip
+ 	&bookmark::draw_menu;
+
+	&menu_help::draw_menu;
 }
 
 

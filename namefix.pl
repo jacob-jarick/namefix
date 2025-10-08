@@ -77,6 +77,7 @@ use about;
 use config_dialog;
 use blockrename;
 use bookmark;
+use menu_help;
 use dialog;
 use edit_lists;
 use manual;

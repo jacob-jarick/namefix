@@ -47,71 +47,17 @@ sub draw_menu
 	);
 
 	# menu command - bookmark cur dir
-	$bookmarks -> command
+	$bookmarks-> command
 	(
 		-label=>	"Bookmark current Directory",
 		-command=>	sub { &bm_add($globals::dir, $globals::dir); }
 	);
 
 	# menu command - edit bookmarks
-	$bookmarks -> command
+	$bookmarks-> command
 	(
 		-label=>	'Edit Bookmarks',
 		-command=>	sub { &edit_bookmark_list; }
-	);
-
-        #create help menu
-        # NOTE: this is here, to stop the bookmarks menu switch places upon updating.
-
-	$main::help = $menu::mbar -> cascade
-	(
-		-label=>		'Help',
-		-underline=>	0,
-		-tearoff=>		0
-	);
-	$main::help -> command
-	(
-		-label=>	'Help',
-		-command=>	sub { &dialog::show('Help', "Help system available via F1 key or command line --help options.\n\nSee README.md for detailed documentation."); }
-	);
-
-	$main::help -> separator();
-
-	$main::help -> command
-	(
-		-label=>	'About',
-		-command=> 	sub { &about::show_about; }
-	);
-
-	$main::help -> command
-	(
-		-label=>	'Changelog',
-		-command=> 	sub {&dialog::show('Changelog',	join('', &misc::readf($globals::changelog))); }
-	);
-
-	$main::help -> command
-	(
-		-label=>	'Todo List',
-		-command=> 	sub { &dialog::show('Todo',		join('', &misc::readf($globals::todo))); }
-	);
-
-	$main::help -> command
-	(
-		-label=>	'Credits/ Thanks',
-		-command=> 	sub { &dialog::show('Thanks',	join('', &misc::readf($globals::thanks))); }
-	);
-
-	$main::help -> separator();
-
-	$main::help -> command
-	(
-		-label=>	'Links',
-		-command=> 	
-		sub
-		{
-			my $links_txt = join('', &misc::readf($globals::links));
-			&dialog::show('Link', $links_txt);
-		}
 	);
 
 	&list_bookmarks;
@@ -182,11 +128,15 @@ sub edit_bookmark_list
 	my $top = $main::mw->Toplevel();
 	$top->title("Edit Bookmark List");
 
-	$top->
-		Label(-text=>'Format: <Bookmark Name><TAB><TAB><url>')
-		->grid(-row => 1, -column => 1, -columnspan => 2);
+	$top->Label(-text=>'Format: <Bookmark Name><TAB><TAB><url>')
+	->grid
+	(
+		-row=>			1,
+		-column=>		1,
+		-columnspan=>	2
+	);
 
-	my $txt = $top -> Scrolled
+	my $txt = $top->Scrolled
 	(
 		'Text',
 		-scrollbars=>	'osoe',
@@ -195,7 +145,7 @@ sub edit_bookmark_list
 		-width=>		80,
 		-height=>		15
 	)
-	-> grid
+	->grid
 	(
 		-row=>			2,
 		-column=>		1,
@@ -205,31 +155,31 @@ sub edit_bookmark_list
 
 	$txt->insert('end', $dtext);
 
-	$top -> Button
+	$top->Button
 	(
 		-text=>					'Save',
 		-activebackground=> 	'white',
-		-command => 			
+		-command=> 			
 		sub
 		{
-			&misc::save_file($globals::bookmark_file, $txt -> get('0.0', 'end') );
+			&misc::save_file($globals::bookmark_file, $txt->get('0.0', 'end'));
 			&menu::draw;
 		}
 	)
-	-> grid
+	->grid
 	(
 		-row=>		4,
 		-column=>	1,
 		-sticky=>	'ne'
 	);
 
-	my $but_close = $top -> Button
+	my $but_close = $top->Button
 	(
 		-text=>				'Close',
 		-activebackground=>	'white',
 		-command => 		sub { destroy $top; }
 	)
-	-> grid
+	->grid
 	(
 		-row=>		4,
 		-column=>	2,
