@@ -137,4 +137,46 @@ sub init_globals
 	@genres				= misc::readf_clean($genres_file)			if -f $genres_file;
 }
 
+# return 1 if we are doing something
+sub mode_check
+{
+	my $check = shift;
+
+	if(! defined $check)
+	{
+		&misc::plog(0, "sub mode_check: error, \$check is undef");
+		return 0;
+	}
+	if($check eq '')
+	{
+		&misc::plog(0, "sub mode_check: error, \$check is blank");
+		return 0;
+	}
+
+	$check = lc $check;
+
+	return 1 if $globals::STOP		&& $check eq 'stop';
+	return 1 if $globals::LISTING	&& $check eq 'list';
+	return 1 if $globals::PREVIEW	&& $check eq 'preview';
+	return 1 if $globals::RUN		&& $check eq 'rename';
+
+	# Check if it's a valid mode but the flag is just false
+	if ($check eq 'stop' || $check eq 'list' || $check eq 'preview' || $check eq 'rename') {
+		return 0;  # Valid mode, but flag is false
+	}
+
+	&misc::plog(0, "sub mode_check: error, unknown check '$check'");
+
+	return 0;
+}
+
+# return 1 if we are doing something
+sub busy
+{
+	return 1 if $globals::LISTING;
+# 	return 1 if $globals::PREVIEW;
+	return 1 if $globals::RUN;
+	return 0 if $globals::STOP;
+}
+
 1;

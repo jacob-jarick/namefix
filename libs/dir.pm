@@ -21,7 +21,7 @@ sub ls_dir
 {
 	&run_namefix::prep_globals;
 
-	if(&config::busy)
+	if(&globals::busy)
 	{
 		&misc::plog(1,"ls_dir: BUSY, aborting new list attempt");
 		return;

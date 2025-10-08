@@ -381,15 +381,6 @@ sub busy
 	return 0 if $globals::STOP;
 }
 
-# return 1 if we are doing something
-sub mode
-{
-	return 'stop'		if $globals::STOP;
-	return 'list' 		if $globals::LISTING;
- 	return 'preview'	if $globals::PREVIEW;
-	return 'rename'		if $globals::RUN;
-}
-
 #--------------------------------------------------------------------------------------------------------------
 # clear options
 #--------------------------------------------------------------------------------------------------------------

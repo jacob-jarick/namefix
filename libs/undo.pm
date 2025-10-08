@@ -47,12 +47,13 @@ sub undo_rename
 	my $c = 0;
 	my $pre = '';
 
-	if(&config::busy)
+	if(&globals::busy)
 	{
 		&misc::plog(0, "undo_rename: aborting, namefix is busy");
 		$globals::RUN = 0;
 		return;
 	}
+	
 	$globals::RUN = 1;
 	&dir_hlist::draw_list;	# blank main hlist
 
