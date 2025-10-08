@@ -10,7 +10,6 @@ use Data::Dumper::Concise;
 our $hlist;
 our $rc_menu;
 
-our $target_dir = '';
 our %info = ();
 
 our $counter = 0;
@@ -152,15 +151,37 @@ sub draw_list
 		{
 			# when user clicks on an entry update global variables
 			$hlist_selection	= shift;
-# 			print "BROWSE: \n" . Dumper($info{$hlist_selection}) . "\n";
+			
+			# Update globals for F2 key binding
+			if (defined $info{$hlist_selection}) 
+			{
+				$globals::hlist_file = $info{$hlist_selection}{path};
+				&misc::plog(4, "hlist single click, user selected '$globals::hlist_file'");
+			}
         },
 		-command=> sub
 		{
             # user has double clicked
- 			$target_dir	= $info{$hlist_selection}{parent};
-			$target_dir	= $info{$hlist_selection}{path} if -d $info{$hlist_selection}{path} && $globals::hlist_file ne '..';
+			$hlist_selection = shift;
 
-			&hlist_cd($target_dir);
+			if(-d $info{$hlist_selection}{path})
+			{
+				&misc::plog(4, "hlist double click, user selected directory '$info{$hlist_selection}{path}'");
+				&hlist_cd($info{$hlist_selection}{path});
+
+				return;
+			}
+			
+			if(-f $info{$hlist_selection}{path})
+			{
+				&misc::plog(1, "hlist double click entry is a file '$info{$hlist_selection}{path}', no action taken");
+
+				return;
+			}
+
+			&misc::plog(1, "hlist double click entry is not a file or dir '$info{$hlist_selection}{path}', no action taken");
+
+			return;
 		}
 	)
 	->pack

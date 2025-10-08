@@ -32,7 +32,7 @@ sub show_about
 			$image = $main::mw->Photo
 			(
 				-format=>	'jpeg',
-				-file=>		$globals::mempic
+				-file=>		$globals::mem_jpg
 			);
 		};
 		if (!$@ && $image) 
@@ -48,15 +48,12 @@ sub show_about
 	# Tier 2: Try PPM fallback if JPEG failed or unavailable
 	if (!$image) 
 	{
-		my $ppm_path = $globals::mempic;
-		$ppm_path =~ s/\.jpg$/.ppm/i;
-		
 		eval 
 		{
 			$image = $main::mw->Photo
 			(
 				-format=>'ppm',
-				-file=>$ppm_path
+				-file=>$globals::mem_ppm
 			);
 		};
 

@@ -19,28 +19,34 @@ require misc;
 #=============================================================================
 
 our $dir				= cwd;
-our $cwd				= cwd;
-our $hlist_cwd			= cwd;
+our $home				= &misc::get_home;
 
-our $version 			= '4.1.15';
+our $version 			= '4.1.16';
 our $folderimage 		= '';
 our $fileimage   		= '';
 
-our $g_font				= '';	# unused ?
-our $home				= &misc::get_home;
-
-# File locations
+# Text files
 our $thanks				= "$Bin/data/txt/thanks.txt";
 our $todo				= "$Bin/data/txt/todo.txt";
 our $about				= "$Bin/data/txt/about.txt";
 our $links				= "$Bin/data/txt/links.txt";
 our $changelog			= "$Bin/data/txt/changelog.txt";
-our $mempic				= "$Bin/data/mem.jpg";
+
+# about image files
+our $mem_jpg			= "$Bin/data/mem.jpg";
+our $mem_ppm			= "$Bin/data/mem.ppm";
+
+# config files
 our $fonts_file			= "$home/.namefix.pl/fonts.ini";
+
 our $bookmark_file		= "$home/.namefix.pl/bookmarks.txt";
+
 our $undo_cur_file		= "$home/.namefix.pl/undo.current.filenames.txt";
 our $undo_pre_file		= "$home/.namefix.pl/undo.previous.filenames.txt";
 our $undo_dir_file		= "$home/.namefix.pl/undo.dir.txt";
+
+our $hash_tsv			= "$home/.namefix.pl/config_hash.tsv";
+
 
 # system internal FLAGS
 our $CLI				= 0;
@@ -73,8 +79,6 @@ our @find_arr			= ();
 our $tmpfilelist 		= '';
 our $last_recr_dir 		= '';
 
-our $hash_tsv			= &misc::get_home."/.namefix.pl/config_hash.tsv";
-
 our @id3v2_exts 		= ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
 our $id3_ext_regex 		= join('|', @id3v2_exts);
 
@@ -94,48 +98,42 @@ our @exif_exts =
 our $killwords_file 	= "$home/.namefix.pl/list_rm_words.txt";
 our $killwords_defaults	= "$Bin/data/defaults/killwords.txt";
 our @kill_words_arr		= ();
-@kill_words_arr			= &misc::readf_clean($killwords_defaults)	if -f $killwords_defaults;
-@kill_words_arr			= &misc::readf_clean($killwords_file)		if -f $killwords_file;
 
 # Word casing
 our $casing_file    	= "$home/.namefix.pl/list_special_word_casing.txt";
 our $casing_defaults   	= "$Bin/data/defaults/special_casing.txt";
 our @word_casing_arr	= ();
-@word_casing_arr		= misc::readf_clean($casing_defaults)		if -f $casing_defaults;
-@word_casing_arr		= misc::readf_clean($casing_file)			if -f $casing_file;
 
 # Kill patterns
 our $killpat_file		= "$home/.namefix.pl/killpatterns.txt";
 our $killpat_defaults	= "$Bin/data/defaults/killpatterns.txt";
 our @kill_patterns_arr	= ();
-@kill_patterns_arr		= &misc::readf_clean($killpat_defaults)		if -f $killpat_defaults;
-@kill_patterns_arr		= &misc::readf_clean($killpat_file)			if -f $killpat_file;
 
 # Genres
 our $genres_file		= "$Bin/data/txt/genres.txt";
 our @genres				= ();
-@genres					= misc::readf_clean($genres_file)			if -f $genres_file;
+
+&init_globals();
 
 #=============================================================================
 # INITIALIZATION FUNCTION
 #=============================================================================
 
-sub init_globals {
-	# Re-initialize all file-based arrays in case files have changed
+sub init_globals 
+{
 	@kill_words_arr		= ();
-	@word_casing_arr	= ();
-	@kill_patterns_arr	= ();
-	@genres				= ();
-	
 	@kill_words_arr		= &misc::readf_clean($killwords_defaults)	if -f $killwords_defaults;
 	@kill_words_arr		= &misc::readf_clean($killwords_file)		if -f $killwords_file;
 	
+	@word_casing_arr	= ();
 	@word_casing_arr	= misc::readf_clean($casing_defaults)		if -f $casing_defaults;
 	@word_casing_arr	= misc::readf_clean($casing_file)			if -f $casing_file;
 	
+	@kill_patterns_arr	= ();
 	@kill_patterns_arr	= &misc::readf_clean($killpat_defaults)		if -f $killpat_defaults;
 	@kill_patterns_arr	= &misc::readf_clean($killpat_file)			if -f $killpat_file;
 	
+	@genres				= ();
 	@genres				= misc::readf_clean($genres_file)			if -f $genres_file;
 }
 

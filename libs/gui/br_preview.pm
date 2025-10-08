@@ -80,8 +80,8 @@ sub br_show_lists
 	# -----------------------
 	# start drawing gui
 
-        my $top = $main::mw->Toplevel();
-        $top->title($title);
+	my $top = $main::mw->Toplevel();
+	$top->title($title);
 
 	my $hlist = $top->Scrolled
 	(
@@ -110,16 +110,16 @@ sub br_show_lists
 	# --------------------------------
 	# Gui drawn, add contents
 
-	$hlist->header('create', 0, -text =>'Old Filename');
-	$hlist->header('create', 1, -text =>'->');
-	$hlist->header('create', 2, -text =>'New Filename');
+	$hlist->header('create', 0, -text=> 'Old Filename');
+	$hlist->header('create', 1, -text=> '->');
+	$hlist->header('create', 2, -text=> 'New Filename');
 
 	for my $c(0..$#new_a)
 	{
 		$hlist->add($c);
-		$hlist->itemCreate($c, 0, -text => $new_a[$c]);
-		$hlist->itemCreate($c, 1, -text => ' -> ');
-		$hlist->itemCreate($c, 2, -text => $new_b[$c]);
+		$hlist->itemCreate($c, 0, -text=> $new_a[$c]);
+		$hlist->itemCreate($c, 1, -text=> ' -> ');
+		$hlist->itemCreate($c, 2, -text=> $new_b[$c]);
 		$c++;
 	}
 }

@@ -165,10 +165,10 @@ $mw->bind('<KeyPress>' => sub
 	if($Tk::event->K eq 'F2')
 	{
 		$globals::PREVIEW = 1;
-		if(defined $globals::hlist_file && defined $globals::hlist_cwd)
+		if(defined $globals::hlist_file)
 		{
 			print "Manual Rename '$globals::hlist_file' \n";
-			&manual::edit($globals::hlist_file, $globals::hlist_cwd);
+			&manual::edit($globals::hlist_file);
 		}
 	}
 	if($Tk::event->K eq 'F5')
