@@ -1,100 +1,100 @@
-commit 2809381c554761e7e9ce3df1fe9eba94b1083429
+commit 1820cdfc09172fc272a4a74710c6c4f9a0672bc2
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Mon Oct 6 05:06:31 2025 +0800
+Date:   Thu Oct 9 21:36:00 2025 +0800
 
-    4.1.15
+    4.1.18
+    
+    better state handling which allows for better user interruption
 
-commit 201b2989b0e53bbac7029908f2ab80b6cfbad99e
+commit 1e896ac42076e194be26264df3faf62ba65a1d95
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Mon Oct 6 04:47:38 2025 +0800
+Date:   Thu Oct 9 21:30:30 2025 +0800
 
-    id3 tests
+    improved logic
 
-commit d3928446d18b04e291223ca788bd58c42b2b5620
+commit 8a47dd53cea036cebedc39ffffd1cc4e1bb4ade6
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Mon Oct 6 04:29:46 2025 +0800
+Date:   Thu Oct 9 21:01:40 2025 +0800
 
-    id3 option added... testing still
+    shifted state funcs to their own file
 
-commit 173d669e282470fb8ddf16f38047e12a89e015c4
+commit e155da8ceba70a25c5eb555787f9cbb72f63ac3c
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Mon Oct 6 04:15:31 2025 +0800
+Date:   Thu Oct 9 20:50:01 2025 +0800
 
-    id3
+    Update run_namefix.pm
 
-commit 7924cf39f11af47e38c7a271b7c9cb0501dd23e9
+commit 56673a9572f65ab4759ecfc1b9a9fbbfdfb4767b
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Sun Oct 5 12:48:24 2025 +0800
+Date:   Thu Oct 9 20:31:55 2025 +0800
 
-    binaries updated
+    state migration
 
-commit c7f095cf5383dda805acf8de96a8a23613667580
+commit dd9c32e6714b947fa7785b098e958467cd021595
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Sun Oct 5 12:46:30 2025 +0800
+Date:   Thu Oct 9 19:58:24 2025 +0800
 
-    fix exit on error logic for GUI
+    Update namefix.pl
 
-commit 952dec0d8a79b25f424dd9590d658d954cf3c1e8
+commit bfd60f7113a7d23e1adb20f1fbf4e9a470b88f9f
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Sun Oct 5 12:25:32 2025 +0800
+Date:   Thu Oct 9 19:57:39 2025 +0800
 
-    WIP
+    update stop button login
 
-commit 4c85e9cbd7b9264ff04dfe60b5c19afc5f48c3e8
+commit d59fa42e7097d788b804f6543dda7b7f51e5428e
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Sat Oct 4 00:29:53 2025 +0800
+Date:   Thu Oct 9 19:54:41 2025 +0800
 
-    id3 tagging
+    remove direct access to $globals::LISTING
 
-commit 72e6dec5d6c722ca387abfa341d4bc15f6f27c20
+commit 650197481cf5662909266ccd591bf044a9ff06d3
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 07:42:35 2025 +0800
+Date:   Thu Oct 9 19:48:11 2025 +0800
 
-    4.1.14
+    migrate state funcs
+    
+    &globals::busy to &globals::state_busy
+    
+    direct access of $globals::LISTING
+    swapped to
+    &globals::state_set('list');
 
-commit 936c6e17e6512494bfa95f40cda4cfe7bd6c265c
+commit 09e7eb56e3d6584caad610940f321f95e257c111
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 07:29:59 2025 +0800
+Date:   Thu Oct 9 19:42:03 2025 +0800
 
-    update CLI opts
+    Update globals.pm
 
-commit f8089022765edbbc26d0adc24fbfba91c5796db0
+commit bad7df3c94990b9e102313d731126b0d13b5d17b
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 07:14:54 2025 +0800
+Date:   Thu Oct 9 19:32:01 2025 +0800
 
-    4.1.14 - migrated globals from config.pm to globals.pm
+    Update globals.pm
 
-commit 5f1815cccd3415ecb06f21926334ef6fdd0a9f34
+commit 924080b77b76913ecaf3818176d7097e7cedaeee
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 06:53:55 2025 +0800
+Date:   Thu Oct 9 19:31:31 2025 +0800
 
-    globals migration
+    new state funcs for GUI
 
-commit fc7c71b149f0923daea245c745aa7363f94fd5cd
+commit b81cab61653cd666a01830ac353a00be14c52e2d
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 04:57:05 2025 +0800
+Date:   Wed Oct 8 21:38:25 2025 +0800
 
-    4.1.13
+    Update config.pm
 
-commit 919e9f1aff6b672691ce24464ef1a988ecdff263
+commit 551603eb79e9a3700483c96bc11e309ba0b8758f
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 04:55:19 2025 +0800
+Date:   Wed Oct 8 17:43:39 2025 +0800
 
-    alias fixes
+    var debug added to help menu
+    
+    cleanup old code
 
-commit fef07c692cd3f33eb1c03bac3a78e3760bc9980e
+commit 06567dd54b85f57e7503647256aca00225d9492d
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 04:46:20 2025 +0800
+Date:   Wed Oct 8 17:10:19 2025 +0800
 
-    clean up config.pm move globals to their own file. using aliases currently
-
-commit cfead0278f0b70259d07b6d650b44e1868b53bec
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 04:35:37 2025 +0800
-
-    tests
-
-commit 6e4e6d3029275e5f17b6038d026ad1a1e0d56672
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 3 04:09:04 2025 +0800
+    update logic for mode_check
 
