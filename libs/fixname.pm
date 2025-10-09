@@ -50,12 +50,13 @@ sub fix
     my $file_ext		    = '';
     my $tmpfile		        = '';
 
-	$IS_AUDIO_FILE = 1 if $file =~ /\.$globals::id3_ext_regex$/i;
+	# Only check for audio file extensions on actual files, not directories
+	$IS_AUDIO_FILE = 1 if -f $file && $file =~ /\.($globals::id3_ext_regex)$/i;
 
-	if($config::hash{id3_mode}{value} && !-f $file)
+	# check file exists
+	if($IS_AUDIO_FILE && $config::hash{id3_mode}{value} && !-f $file)
 	{
-		&misc::plog(0, "sub fixname: \"$dir/$file\" does not exist");
-		&misc::plog(0, "sub fixname: current directory = \"$globals::dir\"");
+		&misc::plog(0, "check file exists error !-f '$file'\n\t\$dir = '$dir'\n\t\$path = '$path'\n\t\$globals::dir = '$globals::dir'\n\tIS_AUDIO_FILE = '$IS_AUDIO_FILE'\n\t\$globals::id3_ext_regex = '$globals::id3_ext_regex'");
 		return;
 	}
 
