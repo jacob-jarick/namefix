@@ -506,13 +506,17 @@ $frm_bottom -> Button
 	-command=>
 	sub
 	{
-		if($globals::STOP)	# stub
+		if($globals::STOP)
 		{
-			&misc::plog(2, "namefix.pl: STOP flag already enabled, turning off LISTING flag as well");
-			&globals::state_set('idle');
+			&misc::plog(1, "STOP already requested, ignoring additional STOP request");
+			# &globals::state_set('idle');
+			# idle should be set by dir::ls_dir or run_namefix::run when they see the STOP flag and finish
 		}
-		&config::halt;
-		&misc::plog(0, "namefix.pl: Stop button pressed");
+		else
+		{
+			&config::halt;
+			&misc::plog(0, "User pressed STOP button");
+		}
 	}
 )
 -> grid
