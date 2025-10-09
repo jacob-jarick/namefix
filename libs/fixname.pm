@@ -100,7 +100,7 @@ sub fix
 		}
 		else 
 		{
-			&nf_print::p(' ', '<BLANK>');
+			&nf_print::blank();
 			&nf_print::p($dir);
 		}
 	}

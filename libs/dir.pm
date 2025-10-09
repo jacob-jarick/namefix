@@ -37,7 +37,7 @@ sub ls_dir
 
 	&dir_hlist::draw_list;
 
-	&ls_dir_print('..');
+	&nf_print::parent_dir();
 
 	if($config::hash{recursive}{value})
 	{
@@ -141,7 +141,7 @@ sub ls_dir_print
 
 	if($file eq '..')
 	{
-		&nf_print::p('..');
+		&nf_print::parent_dir();
 		return;
 	}
 
@@ -149,7 +149,7 @@ sub ls_dir_print
 
 	if(-d $file && $config::hash{recursive}{value})
 	{
-		&nf_print::p(' ', '<BLANK>');
+		&nf_print::blank();
 		&nf_print::p($file);
 		return;
 	}

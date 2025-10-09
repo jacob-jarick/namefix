@@ -46,38 +46,6 @@ sub p
 	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
 
 	# ------------------------------------------------------------------
-	# add blank line and return
-	# special print 1
-
-	if(defined $file2 && $file2 eq '<BLANK>')
-	{
-		$dir_hlist::hlist->add($hlpos);
-		return;
-	}
-
-	# ------------------------------------------------------------------
-	# add up directory and return
-	# special print 2
-
-	if($file1 eq '..')
-	{
-		my $parent_dir = &misc::get_file_parent_dir(cwd);
-
-		&dir_hlist::info_add($hlpos, '..', $parent_dir);
-		$dir_hlist::hlist->add($hlpos);
-		$dir_hlist::hlist->itemCreate
-		(
-			$hlpos,
-			0,
-			-itemtype=>	'imagetext',
-			-image=>	$globals::folderimage
-		);
-
-		$dir_hlist::hlist->itemCreate($hlpos, 1, -text => '..');
-		return;
-	}
-
-	# ------------------------------------------------------------------
 	# these checks need to come after special print 1 and 2
 
 	&main::quit("p: \$target_file is undef")							if ! defined $target_file;
@@ -176,6 +144,36 @@ sub p
 		&main::quit("nf_print::p \$ref2 \$h{$k} is undef") if ! defined $h{$k};
 		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 	}
+}
+
+# print a blank line
+sub blank
+{
+	my $hlpos = $dir_hlist::counter++;	# now we have a ref, incr for next time
+	$dir_hlist::hlist->add($hlpos);
+
+	return;
+}
+
+# print .. (parent dir)
+sub parent_dir
+{
+	my $hlpos = $dir_hlist::counter++;	# now we have a ref, incr for next time
+
+	my $parent_dir = &misc::get_file_parent_dir(cwd);
+
+	&dir_hlist::info_add($hlpos, '..', $parent_dir);
+	$dir_hlist::hlist->add($hlpos);
+	$dir_hlist::hlist->itemCreate
+	(
+		$hlpos,
+		0,
+		-itemtype=>	'imagetext',
+		-image=>	$globals::folderimage
+	);
+
+	$dir_hlist::hlist->itemCreate($hlpos, 1, -text => '..');
+	return;
 }
 
 1;

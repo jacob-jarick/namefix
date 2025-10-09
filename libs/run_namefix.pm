@@ -67,8 +67,8 @@ sub run
 
 	if(!$globals::CLI)
 	{
-		&dir_hlist::hlist_clear;
-		nf_print::p('..');
+		&dir_hlist::hlist_clear();
+		&nf_print::parent_dir();
 	}
 
 	# non recursive mode
