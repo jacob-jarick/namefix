@@ -5,6 +5,7 @@ require Exporter;
 
 use strict;
 use warnings;
+use Carp;
 use File::Spec::Functions;
 use Cwd qw(realpath);
 use File::stat;
@@ -22,12 +23,15 @@ sub ci_sort
 
 sub plog
 {
-	my $level		= shift;
-	my $text		= shift;
+	my $level			= shift;
+	my $text			= shift;
+	my $force_quit		= shift || 0;  # Optional third parameter for force quit
 
-	my $date_time	= localtime();
-	my $subroutine	= 'main'; # get caller - handle packed executables better
-	my $depth		= 1;
+	my $date_time		= localtime();
+	my $subroutine		= 'main'; # get caller - handle packed executables better
+	my $depth			= 1;
+
+	my $exit_on_error	= $force_quit || $config::hash{exit_on_error}{value} == 1;
 
 	# Limit depth to avoid infinite loops
 	while ($depth < 10) 
@@ -86,7 +90,7 @@ sub plog
 				print "$text\n";
 			}
 
-			exit if $level == 0 && $config::hash{exit_on_error}{value} == 1;
+			&quit if $level == 0 && $exit_on_error;
 
 			return 1;
 		}
@@ -123,9 +127,37 @@ sub plog
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
 
-	exit if $level == 0 && $config::hash{exit_on_error}{value} == 1;
+	&quit if $level == 0 && $exit_on_error;
 
 	return 1;
+}
+
+#--------------------------------------------------------------------------------------------------------------
+# Unified quit function - works for both GUI and CLI
+#--------------------------------------------------------------------------------------------------------------
+
+sub quit
+{
+	my $string = shift;
+	
+	# Default message if none provided
+	$string = 'no quit message' if ! defined $string;
+	$string .= "\n" if $string !~ /\n$/;
+
+	print "\n\n====================================================================================\n\n";
+
+	# Use Carp for stack trace (available in both CLI and GUI)
+	Carp::cluck Carp::longmess("quit $string\n");
+	
+	# Try GUI exit first if we're in GUI mode, otherwise use standard exit
+	if (!$globals::CLI && eval { require Tk; 1 }) 
+	{
+		# GUI mode - try Tk::exit if Tk is available
+		eval { Tk::exit(); };
+	}
+	
+	# Fallback to standard exit (works for both CLI and GUI)
+	CORE::exit(1);
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -144,7 +176,7 @@ sub get_home
 
 	if(!-d "$home/.namefix.pl")
 	{
-		mkdir("$home/.namefix.pl", 0755) or &main::quit("Cannot mkdir :$home/.namefix.pl $!\n");
+		mkdir("$home/.namefix.pl", 0755) or &misc::quit("Cannot mkdir :$home/.namefix.pl $!\n");
 	}
 
 	return $home;
@@ -169,13 +201,13 @@ sub save_file
     my $file	= shift;
     my $string	= shift;
 
-    &main::quit("save_file \$file is undef")	if ! defined $file;
-    &main::quit("save_file \$string is undef")	if ! defined $string;
+    &misc::quit("save_file \$file is undef")	if ! defined $file;
+    &misc::quit("save_file \$string is undef")	if ! defined $string;
 
     $string =~ s/^\n//g;		# no blank line @ start of file
     $string =~ s/\n\n+/\n/g;	# no blank lines in file
 
-    open(FILE, ">$file") or &main::quit("ERROR: sub save_file, Couldn't open $file to write to. $!");
+    open(FILE, ">$file") or &misc::quit("ERROR: sub save_file, Couldn't open $file to write to. $!");
     print FILE $string;
     close(FILE);
 }
@@ -214,7 +246,7 @@ sub readf
         return ();
     }
 
-    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    open(FILE, "$file") or &misc::quit("ERROR: Couldn't open $file to read.\n");
     my @file = <FILE>;
     close(FILE);
 
@@ -233,7 +265,7 @@ sub readf_clean
 {
     my $file = shift;
 
-    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    open(FILE, "$file") or &misc::quit("ERROR: Couldn't open $file to read.\n");
     my @file = <FILE>;
     close(FILE);
 
@@ -260,7 +292,7 @@ sub readsf
 {
     my $file = shift;
 
-    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    open(FILE, "$file") or &misc::quit("ERROR: Couldn't open $file to read.\n");
     my @file = <FILE>;
     close(FILE);
 
@@ -281,7 +313,7 @@ sub readsjf
 {
 	my $file = shift;
 
-    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    open(FILE, "$file") or &misc::quit("ERROR: Couldn't open $file to read.\n");
     my @file = <FILE>;
     close(FILE);
 
@@ -300,7 +332,7 @@ sub readjf
 {
     my $file = shift;
 
-    open(FILE, "$file") or &main::quit("ERROR: Couldn't open $file to read.\n");
+    open(FILE, "$file") or &misc::quit("ERROR: Couldn't open $file to read.\n");
     my @file = <FILE>;
     close(FILE);
 
@@ -330,8 +362,8 @@ sub get_file_info
 {
 	my $file	= shift;
 
-	&main::quit("get_file_info: \$file is undef") if ! defined $file;
-	&main::quit("get_file_info: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+	&misc::quit("get_file_info: \$file is undef") if ! defined $file;
+	&misc::quit("get_file_info: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
 
 	my $file_path	= &get_file_path($file);
 	my $file_name	= &get_file_name($file_path);
@@ -344,8 +376,8 @@ sub get_file_path
 {
 	my $file	= shift;
 
-	&main::quit("get_file_path: \$file is undef") if ! defined $file;
-	&main::quit("get_file_path: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+	&misc::quit("get_file_path: \$file is undef") if ! defined $file;
+	&misc::quit("get_file_path: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
 
 	my $file_path	= File::Spec->rel2abs($file);
 	$file_path	=~ s/\\/\//g;
