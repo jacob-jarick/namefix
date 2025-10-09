@@ -506,7 +506,7 @@ $frm_bottom -> Button
 	-command=>
 	sub
 	{
-		if($globals::STOP)
+		if(&globals::state_check('stop'))
 		{
 			&misc::plog(1, "STOP already requested, ignoring additional STOP request");
 			# &globals::state_set('idle');

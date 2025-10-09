@@ -21,7 +21,11 @@ our $enum_count = 0;
 
 sub fix
 {
-	return 0 if $globals::STOP == 1;
+	if(&globals::state_check('stop'))
+	{
+		&plog(1, "STOP flag set, aborting fixname");
+		return 0;
+	}
 
     # -----------------------------------------
 	# Vars
@@ -479,7 +483,11 @@ sub fix
 
 sub fn_rename
 {
-	return 0 if $globals::STOP;
+	if(&globals::state_check('stop'))
+	{
+		&plog(1, "STOP flag set, aborting rename");
+		return 0;
+	}
 
 	my $file	= shift;
 	my $newfile	= shift;

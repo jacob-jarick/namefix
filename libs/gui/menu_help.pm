@@ -22,17 +22,17 @@ sub draw_menu
 
 	$main::help->command
 	(
-		-label=>	'Debug Vars',
+		-label=>	'View States',
 		-command=>	
 		sub 
 		{ 
 			&misc::plog
 			(
 				2, 
-				"Globals\n".
-				"\$globals::LISTING\t\t= $globals::LISTING\n".
-				"\$globals::RUN\t\t= $globals::RUN\n".
-				"\$globals::STOP\t\t= $globals::STOP\n"
+				"States\n".
+				"\tlist:\t\t "	&globals::state_get('list')	."\n".
+				"\trun:\t\t "	&globals::state_get('run')	."\n".
+				"\tstop:\t\t "	&globals::state_get('stop')	."\n"
 			);
 		}
 	);

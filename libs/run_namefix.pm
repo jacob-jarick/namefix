@@ -17,7 +17,6 @@ use Carp;
 sub prep_globals
 {
 	# reset misc vars
-	$globals::STOP			= 0;
 	$config::id3_change		= 0;
 	$globals::change 		= 0;
 	$globals::SUGGEST_FSFIX 	= 0;
@@ -48,13 +47,13 @@ sub run
 		&misc::plog(0, "sub run::namefix: error, a listing is currently being performed - aborting rename");
 		return 0;
 	}
-	elsif($globals::RUN)
+	elsif(&globals::state_busy())
 	{
-		&misc::plog(0, "sub run::namefix: error, a rename is currently being performed - aborting rename");
+		&misc::plog(0, "aborting rename due to state is busy");
 		return 0;
 	}
 
-	$globals::RUN		= 1;
+	&globals::state_set('run');
 	&dir_hlist::draw_list if !$globals::CLI;
 
 	my $t_s 			= '';	# tmp string
@@ -114,9 +113,10 @@ sub run
 
 	# cleanup
 
-	$globals::PREVIEW = 1;	# return to test mode for safety :)
-	$globals::RUN = 0;		# finished renaming - turn off run flag
-	chdir $globals::dir;		# return to users working dir
+	$globals::PREVIEW = 1;			# return to test mode for safety :)
+	chdir $globals::dir;			# return to users working dir
+
+	&globals::state_set('idle');	# finished renaming - turn off run flag
 }
 
 sub find_fix

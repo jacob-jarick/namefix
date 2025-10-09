@@ -28,7 +28,6 @@ sub ls_dir
 	}
 
 	&globals::state_set('list');
-	$globals::STOP			= 0;
 	$config::percent_done	= 0;
 
 	$globals::dir			= cwd;
@@ -55,8 +54,9 @@ sub ls_dir
 
 	for my $f (@dirlist)
 	{
-		if($globals::STOP)
+		if(&globals::state_check('stop'))
 		{
+			&plog(1, "listing stopped by user");
 			&globals::state_set('idle');
 			return;
 		}
@@ -78,8 +78,9 @@ sub ls_dir
 		$count++;
 		$config::percent_done = int(($count / $total) * 100);
 
-		if($globals::STOP)
+		if(&globals::state_check('stop'))
 		{
+			&plog(1, "listing stopped by user");
 			&globals::state_set('idle');
 			return;
 		}
@@ -121,7 +122,13 @@ sub ls_dir_find_fix
 
 sub ls_dir_print
 {
-	return 0 if $globals::STOP;
+
+	if(&globals::state_check('stop'))
+	{
+		&plog(1, "listing stopped by user");
+		&globals::state_set('idle');
+		return;
+	}
 
 	my $file = shift;
 
@@ -227,7 +234,7 @@ sub dir_filtered
 	for my $file (@dirlist)
 	{
 		# $file is dir automatically fail filter
-		next if !$globals::LISTING && !$config::hash{proc_dirs}{value} && -d $file;
+		next if !&globals::state_check('list') && !$config::hash{proc_dirs}{value} && -d $file;
 		next if $config::hash{filter}{value} && !&filter::match($file);
 
 		push @d, $file;
