@@ -509,7 +509,7 @@ $frm_bottom -> Button
 		if($globals::STOP)	# stub
 		{
 			&misc::plog(2, "namefix.pl: STOP flag already enabled, turning off LISTING flag as well");
-			$globals::LISTING = 0;
+			&globals::state_set('idle');
 		}
 		&config::halt;
 		&misc::plog(0, "namefix.pl: Stop button pressed");

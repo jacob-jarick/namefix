@@ -364,9 +364,7 @@ sub load_hash
 
 sub halt
 {
-	$globals::LISTING	= 0;	# listing routine should check STOP flag and exit
-	$globals::RUN		= 0;	# rename or preview routine should check STOP flag and exit
-	$globals::STOP		= 1;	# set STOP, some routines check this flag to exit early
+	&globals::state_set('stop');
 
 	$globals::PREVIEW	= 1;	# revert to preview mode
 }

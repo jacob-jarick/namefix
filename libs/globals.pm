@@ -269,14 +269,9 @@ sub state_set
 
 	if ($state eq 'idle') 
 	{
-		# we dont check for STOP here as we want to be able to set idle from stop
-		# but we do not want to set idle if we are still listing or running
-		if ($globals::LISTING || $globals::RUN) 
-		{
-			&misc::plog(0, "sub state_set: error, cannot set to idle while listing or running");
-			return 0;
-		}
-
+		# Allow transition to idle from any state (completion/cleanup)
+		# This is used when finishing listing, running, or stopping operations
+		
 		$globals::IDLE    = 1;
 
 		$globals::LISTING	= 0;

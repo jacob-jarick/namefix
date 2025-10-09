@@ -23,7 +23,7 @@ sub ls_dir
 
 	if(&globals::state_busy)
 	{
-		&misc::plog(1,"state BUSY, aborting new list attempt");
+		&misc::plog(1,"BUSY, aborting new list attempt");
 		return;
 	}
 
@@ -45,7 +45,7 @@ sub ls_dir
 		@globals::find_arr = ();
 		find(\&run_namefix::find_fix, $globals::dir);
 		&ls_dir_find_fix;
-		$globals::LISTING = 0;
+		&globals::state_set('idle');
 		return;
 	}
 
@@ -57,7 +57,7 @@ sub ls_dir
 	{
 		if($globals::STOP)
 		{
-			$globals::LISTING = 0;
+			&globals::state_set('idle');
 			return;
 		}
 
@@ -80,12 +80,12 @@ sub ls_dir
 
 		if($globals::STOP)
 		{
-			$globals::LISTING = 0;
+			&globals::state_set('idle');
 			return;
 		}
 		&ls_dir_print($f);		# then print the file array after all dirs have been printed
 	}
-	$globals::LISTING = 0;
+	&globals::state_set('idle');
 	return;
 }
 
