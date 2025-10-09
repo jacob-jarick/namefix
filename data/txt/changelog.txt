@@ -1,3 +1,53 @@
+commit 563d184b8bd15e5de6df96a3e5bccc485486b817
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 04:41:57 2025 +0800
+
+    4.1.20
+    
+    finished unified quit for cli & gui
+
+commit ce82048cb1f2fc9913249c898e3f7dccfb385d43
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 04:37:10 2025 +0800
+
+    unifiy quit
+
+commit 439cd176855bd98e2dfa1db3e6c8c5dfa93c39e2
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 04:24:22 2025 +0800
+
+    migrate to unified quit
+
+commit 9b7aaec4801feb76328036a583a2add8e6f9ec71
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 04:21:56 2025 +0800
+
+    unified quit
+
+commit 99ba122ed4351a13417512e71832138fcdcd3d75
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 04:07:54 2025 +0800
+
+    recursive bug in id3 mode fixed
+
+commit de4d5648794b3fcc557d84b153737902503c6e4d
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 03:49:34 2025 +0800
+
+    Update dir.pm
+
+commit 16cafa2f6e3fb589f92b03e3ecfa675b0babfb70
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 03:35:07 2025 +0800
+
+    print cleanup
+
+commit 8d76a791a217e8290952a5512e828f89dbba8bee
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 9 22:34:41 2025 +0800
+
+    4.1.19 build
+
 commit ac5ecfd6f5186883019bb2c02033a231c6ef183a
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Thu Oct 9 22:33:34 2025 +0800
@@ -48,53 +98,3 @@ Date:   Thu Oct 9 20:31:55 2025 +0800
 
 commit dd9c32e6714b947fa7785b098e958467cd021595
 Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 19:58:24 2025 +0800
-
-    Update namefix.pl
-
-commit bfd60f7113a7d23e1adb20f1fbf4e9a470b88f9f
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 19:57:39 2025 +0800
-
-    update stop button login
-
-commit d59fa42e7097d788b804f6543dda7b7f51e5428e
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 19:54:41 2025 +0800
-
-    remove direct access to $globals::LISTING
-
-commit 650197481cf5662909266ccd591bf044a9ff06d3
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 19:48:11 2025 +0800
-
-    migrate state funcs
-    
-    &globals::busy to &globals::state_busy
-    
-    direct access of $globals::LISTING
-    swapped to
-    &globals::state_set('list');
-
-commit 09e7eb56e3d6584caad610940f321f95e257c111
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 19:42:03 2025 +0800
-
-    Update globals.pm
-
-commit bad7df3c94990b9e102313d731126b0d13b5d17b
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 19:32:01 2025 +0800
-
-    Update globals.pm
-
-commit 924080b77b76913ecaf3818176d7097e7cedaeee
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 19:31:31 2025 +0800
-
-    new state funcs for GUI
-
-commit b81cab61653cd666a01830ac353a00be14c52e2d
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 8 21:38:25 2025 +0800
-
