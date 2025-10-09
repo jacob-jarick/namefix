@@ -56,7 +56,10 @@ our $PREVIEW			= 1;	# preview mode - do not actually rename files
 
 our $LISTING			= 0;	# directory listing in progress
 our $RUN				= 0;	# rename or preview in progress
+our $IDLE				= 1;	# default state - not doing anything
+
 our $STOP				= 0;	# emergency stop flag
+
 our $UNDO				= 0;
 our $SUGGEST_FSFIX		= 0;	# suggest using fsfix var
 
@@ -140,6 +143,7 @@ sub init_globals
 }
 
 # return 1 if we are doing something
+# old function to be deprecated use state_busy instead
 sub mode_check
 {
 	my $check = shift;
@@ -173,12 +177,143 @@ sub mode_check
 	return 0;
 }
 
+sub state_get
+{
+	if($globals::STOP)
+	{
+		return 'stop';
+	}
+	elsif($globals::LISTING)
+	{
+		return 'list';
+	}
+	elsif($globals::RUN)
+	{
+		return 'run';
+	}
+	elsif($globals::IDLE)
+	{
+		return 'idle';
+	}
+	else
+	{
+		&misc::plog(0, "Unknown state\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP\n\tIDLE: $globals::IDLE");
+
+		return 'unknown';
+	}
+}
+
 # return 1 if we are doing something
-sub busy
+sub state_busy
 {
 	return 1 if $globals::LISTING;
 	return 1 if $globals::RUN;
-	return 0 if $globals::STOP;
+
+	# if stop flag is set, then we are not idle and still in the process of stopping
+	return 1 if $globals::STOP;	
+
+	return 0 if $globals::IDLE;
+}
+
+# set state
+sub state_set
+{
+	my $state = shift;
+
+	if(! defined $state)
+	{
+		&misc::plog(0, "sub state_set: error, \$state is undef");
+		return 0;
+	}
+	if($state eq '')
+	{
+		&misc::plog(0, "sub state_set: error, \$state is blank");
+		return 0;
+	}
+
+	$state = lc $state;
+
+	if ($state eq 'idle') 
+	{
+		# we dont check for STOP here as we want to be able to set idle from stop
+		# but we do not want to set idle if we are still listing or running
+		if ($globals::LISTING || $globals::RUN) 
+		{
+			&misc::plog(0, "sub state_set: error, cannot set to idle while listing or running");
+			return 0;
+		}
+
+		$globals::IDLE    = 1;
+
+		$globals::LISTING	= 0;
+		$globals::RUN		= 0;
+		$globals::STOP		= 0;
+
+		$globals::PREVIEW	= 1;	# always revert to preview mode when going idle
+
+		return 1;
+	} 
+
+	if ($state eq 'list') 
+	{
+		if (!$globals::IDLE)
+		{
+			&misc::plog(0, "IDLE is not set, cannot set to 'LIST'\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP");
+
+			return 0;
+		}
+
+		$globals::IDLE    = 0;
+		$globals::LISTING = 1;
+		$globals::RUN     = 0;
+		$globals::STOP    = 0;
+
+		return 1;
+	} 
+
+	if ($state eq 'run') 
+	{
+		if (!$globals::IDLE)
+		{
+			&misc::plog(0, "IDLE is not set, cannot set to 'RUN'\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP");
+			return 0;
+		}		
+
+		$globals::IDLE    = 0;
+		$globals::LISTING = 0;
+		$globals::RUN     = 1;
+		$globals::STOP    = 0;
+
+		return 1;
+	} 
+
+	if ($state eq 'stop') 
+	{
+		if ($globals::LISTING)
+		{
+			&misc::plog(1, "Forced STOP while LISTING");
+		}
+		if ($globals::RUN)
+		{
+			&misc::plog(1, "Forced STOP while RUNNING");
+		}
+		if ($globals::IDLE)
+		{
+			&misc::plog(1, "STOP requested while IDLE is set\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP");
+			return 0;
+		}
+
+		$globals::IDLE    	= 0;
+		$globals::LISTING 	= 0;
+		$globals::RUN     	= 0;
+		$globals::STOP    	= 1; # Indicate we are in the process of stopping
+
+		return 1;
+	}
+
+	&misc::plog(0, "sub state_set: error, unknown state '$state'");
+
+	return 0;
 }
 
 1;
