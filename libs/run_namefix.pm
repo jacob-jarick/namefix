@@ -112,8 +112,6 @@ sub run
 	&misc::plog(0, "tmp file found. check the following files.\n$globals::tmpfilelist\n")		if($globals::FOUND_TMP);
 
 	# cleanup
-
-	$globals::PREVIEW = 1;			# return to test mode for safety :)
 	chdir $globals::dir;			# return to users working dir
 
 	&globals::state_set('idle');	# finished renaming - turn off run flag
