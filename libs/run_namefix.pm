@@ -71,6 +71,7 @@ sub run
 		nf_print::p('..');
 	}
 
+	# non recursive mode
 	if(!$config::hash{recursive}{value})
 	{
 		my @dirlist = &dir::dir_filtered($globals::dir);
@@ -80,6 +81,12 @@ sub run
 
 		foreach my $f (@dirlist)
 		{
+			if(&state::check('stop'))
+			{
+				&misc::plog(1, "run stopped by user");
+				last;	# DONT RETURN, let cleanup happen below
+			}
+
 			$config::percent_done = int(($count++ / $total) * 100);
 
 			&main::quit("sub run: \$f is undef\n")					if ! defined $f;
@@ -91,9 +98,10 @@ sub run
 		}
 	}
 
+	# recursive mode
 	if($config::hash{recursive}{value})
 	{
-		&misc::plog(4, "sub run::namefix: recursive mode");
+		&misc::plog(4, "recursive mode");
 		@globals::find_arr = ();
 		find(\&find_fix, "$globals::dir");
 		&find_fix_process;
@@ -106,13 +114,19 @@ sub run
 
 	&misc::plog(2, "$globals::change files $t_s been modified");
 	&misc::plog(2, "$config::id3_change mp3s tags $t_s been updated.")							if($config::hash{id3_mode}{value});
-	&misc::plog(2, "$globals::tags_rm_count mp3 tags $t_s been removed")								if($globals::tags_rm_count);
-	&misc::plog(2, "$globals::exif_rm_count image files exif data $t_s been removed")					if($globals::exif_rm_count);
+	&misc::plog(2, "$globals::tags_rm_count mp3 tags $t_s been removed")						if($globals::tags_rm_count);
+	&misc::plog(2, "$globals::exif_rm_count image files exif data $t_s been removed")			if($globals::exif_rm_count);
 	&misc::plog(0, "unable to rename $globals::SUGGEST_FSFIX files.\nTry enabling \"FS Fix\".")	if($globals::SUGGEST_FSFIX != 0);
 	&misc::plog(0, "tmp file found. check the following files.\n$globals::tmpfilelist\n")		if($globals::FOUND_TMP);
 
+	# above loops (recursive and non-recursive) may have been terminated by user, note here
+	if(&state::check('stop'))
+	{
+		&misc::plog(1, "STOP detected, run terminated by user");
+	}
+
 	# cleanup
-	chdir $globals::dir;			# return to users working dir
+	chdir $globals::dir;	# return to users working dir
 
 	&state::set('idle');	# finished renaming - turn off run flag
 }
@@ -139,6 +153,12 @@ sub find_fix_process
 
 	for my $file(@globals::find_arr)
 	{
+		if(&state::check('stop'))
+		{
+			&misc::plog(1, "recursive run stopped by user");
+			return;
+		}
+
 		$config::percent_done = int(($count++ / $total) * 100);
 		&fixname::fix($file);
 	}

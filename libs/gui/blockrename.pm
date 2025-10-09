@@ -317,15 +317,15 @@ sub br
 		&misc::plog(4, "sub br: checking '$file_old'");
 		if(!-f $file_old)
 		{
-			&misc::plog(0, "sub br: ERROR: old file '$file_old' does not exist");
-			&state::set('run');
+			&misc::plog(0, "block rename old file '$file_old' does not exist");
+			&state::set('idle');
 			return 0;
 		}
 	}
 
 	if($#old_l != $#new_l)
 	{
-		&misc::plog(0, "sub br: ERROR: length of new and old list does not match");	# prevent possible user cockup
+		&misc::plog(0, "block rename, length of new and old list does not match");	# prevent possible user cockup
 		&state::set('idle');
 		return 0;
 	}
@@ -333,22 +333,19 @@ sub br
 	for my $c(0 .. $#old_l)	# check for changes - then rename
 	{
 		if(&state::check('stop'))
-		{
-			
+		{			
 			&misc::plog(1, "block rename stopped by user");
-			
-			&state::set('idle');
-			return 0;
+			last; # do not return, let cleanup happen below
 		}
 
 		my $file_old = $old_l[$c];
 		my $file_new = $new_l[$c];
 
-		&misc::plog(4, "sub br: processing '$file_old' -> '$file_new'");
+		&misc::plog(4, "processing '$file_old' -> '$file_new'");
 
 		if($file_new eq '') # finish when we hit a blank line, else we risk zero'ing the rest of the filenames
 		{
-			&misc::plog(4, "br: \$file_new eq '', assuming end of renaming");
+			&misc::plog(4, "block rename \$file_new eq '', assuming end of renaming");
 			last;
 		}
 
@@ -367,8 +364,15 @@ sub br
 		}
 		&misc::plog(0, "block rename failed !: '$file_old' -> '$file_new'");
 	}
+
+
 	&br_show_lists("Block Rename Results", \@new_a, \@new_b);
 	&txt_reset;
+
+	if(&state::check('stop'))
+	{
+		&misc::plog(1, "block rename stopped by user");
+	}
 
 	&state::set('idle');
 	return 1;
@@ -395,6 +399,7 @@ sub br_readdir
 
 		push @dir_clean, $file;
 	}
+	
 	return &misc::ci_sort(@dir_clean);
 }
 

@@ -50,7 +50,6 @@ sub undo_rename
 	if(&state::busy)
 	{
 		&misc::plog(0, "undo_rename: aborting, namefix is busy");
-		# &state::set('idle');	# other function should set this
 		return;
 	}
 	
@@ -59,14 +58,14 @@ sub undo_rename
 
 	for my $c (0 .. $#config::undo_cur)
 	{
-		my $cur = $globals::undo_cur[$c];
-		my $pre = $globals::undo_pre[$c];
 		if(&state::check('stop'))
 		{
 			&misc::plog(0, "UNDO stopped by user");
-			&state::set('idle');
-			return;
+			last; # do not return, let cleanup happen below
 		}
+
+		my $cur = $globals::undo_cur[$c];
+		my $pre = $globals::undo_pre[$c];
 
 		$cur =~ s/^(.*\/)(.*?)$/$2/;
 		my $dir = $1;
@@ -92,6 +91,12 @@ sub undo_rename
 		&fixname::fn_rename($cur, $pre);
 		&nf_print::p($cur, $pre);
 	}
+
+	if(&state::check('stop'))
+	{
+		&misc::plog(1, "UNDO stopped by user");
+	}
+
 	chdir $globals::dir;
 	&state::set('idle');
 	return 1;

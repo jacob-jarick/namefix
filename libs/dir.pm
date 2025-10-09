@@ -44,6 +44,7 @@ sub ls_dir
 		@globals::find_arr = ();
 		find(\&run_namefix::find_fix, $globals::dir);
 		&ls_dir_find_fix;
+
 		&state::set('idle');
 		return;
 	}
@@ -86,6 +87,7 @@ sub ls_dir
 		}
 		&ls_dir_print($f);		# then print the file array after all dirs have been printed
 	}
+	
 	&state::set('idle');
 	return;
 }
@@ -126,7 +128,7 @@ sub ls_dir_print
 	if(&state::check('stop'))
 	{
 		&plog(1, "listing stopped by user");
-		&state::set('idle');
+		# as this has a return it is up to the calling function to set idle
 		return;
 	}
 

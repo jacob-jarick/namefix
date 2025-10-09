@@ -44,28 +44,14 @@ sub check
 # get current state as string
 sub get
 {
-	if($globals::STOP)
-	{
-		return 'stop';
-	}
-	elsif($globals::LISTING)
-	{
-		return 'list';
-	}
-	elsif($globals::RUN)
-	{
-		return 'run';
-	}
-	elsif($globals::IDLE)
-	{
-		return 'idle';
-	}
-	else
-	{
-		&misc::plog(0, "Unknown state\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP\n\tIDLE: $globals::IDLE");
+	return 'stop'	if $globals::STOP;
+	return 'list'	if $globals::LISTING;
+	return 'run'	if $globals::RUN;
+	return 'idle'	if $globals::IDLE;
 
-		return 'unknown';
-	}
+	&misc::plog(0, "Unknown state\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP\n\tIDLE: $globals::IDLE");
+
+	return 'unknown';
 }
 
 # return 1 if we are doing something
@@ -73,9 +59,7 @@ sub busy
 {
 	return 1 if $globals::LISTING;
 	return 1 if $globals::RUN;
-
-	# if stop flag is set, then we are not idle and still in the process of stopping
-	return 1 if $globals::STOP;	
+	return 1 if $globals::STOP;	# if set then not idle and still in the process of stopping
 
 	return 0 if $globals::IDLE;
 }
