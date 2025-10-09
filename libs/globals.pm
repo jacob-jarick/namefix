@@ -143,7 +143,7 @@ sub init_globals
 }
 
 # return 1 if we are doing something
-# old function to be deprecated use state_get instead
+# old function to be deprecated use state_check instead, new func use run instead of rename when calling
 sub mode_check
 {
 	my $check = shift;
@@ -177,6 +177,39 @@ sub mode_check
 	return 0;
 }
 
+# return 1 if state matches argument
+sub state_check
+{
+	my $check = shift;
+	if(! defined $check)
+	{
+		&misc::plog(0, "sub state_check: error, \$check is undef");
+		return 0;
+	}
+	if($check eq '')
+	{
+		&misc::plog(0, "sub state_check: error, \$check is blank");
+		return 0;
+	}
+
+	return 1 if $globals::LISTING	&& $check eq 'list';
+	return 1 if $globals::RUN		&& $check eq 'run';
+	return 1 if $globals::STOP		&& $check eq 'stop';
+	return 1 if $globals::IDLE		&& $check eq 'idle';
+
+	# Check if it's a valid state but the flag is just false
+	if ($check eq 'stop' || $check eq 'list' || $check eq 'run' || $check eq 'idle') 
+	{
+		return 0;  # Valid state, but flag is false
+	}
+
+	# unknown state, log & exit
+	&misc::plog(0, "Unknown check '$check'");
+	
+	&misc::quit("sub state_check: error, unknown check '$check'");
+}
+
+# get current state as string
 sub state_get
 {
 	if($globals::STOP)
