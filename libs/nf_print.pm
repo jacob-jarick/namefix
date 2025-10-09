@@ -55,7 +55,7 @@ sub p
 
 	my $count		= 0;
 	my $target_file	= $file1;
-	$target_file	= $file2 if &globals::mode_check('rename');
+	$target_file	= $file2 if &globals::state_check('run');
 
 	&main::quit("p: \$target_file is undef")							if ! defined $target_file;
 	&main::quit("p: \$target_file eq '' is not a file or dir")			if $target_file eq '';
@@ -73,7 +73,7 @@ sub p
 		&dir_hlist::info_add($hlpos, $path, $tmp1, $tmp2);
 	}
 
-	if(&globals::mode_check('rename'))
+	if(&globals::state_check('run'))
 	{
 		$file_name = $file1;
 		$file_name =~ s/^.*(\\|\/)//;
@@ -126,10 +126,10 @@ sub p
 	}
 
 	# finish here if list mode	
-	return if &globals::mode_check('list');
+	return if &globals::state_check('list');
 	
 	# stop mode shouldn't get here but just in case
-	return if &globals::mode_check('stop');
+	return if &globals::state_check('stop');
 
 	# ------------------------------------------------------------------------------------------------
 	# Start of rename / preview section

@@ -21,13 +21,13 @@ sub ls_dir
 {
 	&run_namefix::prep_globals;
 
-	if(&globals::busy)
+	if(&globals::state_busy)
 	{
-		&misc::plog(1,"ls_dir: BUSY, aborting new list attempt");
+		&misc::plog(1,"state BUSY, aborting new list attempt");
 		return;
 	}
 
-	$globals::LISTING		= 1;
+	&globals::state_set('list');
 	$globals::STOP			= 0;
 	$config::percent_done	= 0;
 

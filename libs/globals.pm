@@ -143,39 +143,40 @@ sub init_globals
 }
 
 # return 1 if we are doing something
-# old function to be deprecated use state_check instead, new func use run instead of rename when calling
-sub mode_check
-{
-	my $check = shift;
+# DEPRECATED: use state_check instead, new func use run instead of rename when calling
+# TODO: Remove this function once all code is migrated to state_* functions
+# sub mode_check
+# {
+# 	my $check = shift;
 
-	if(! defined $check)
-	{
-		&misc::plog(0, "sub mode_check: error, \$check is undef");
-		return 0;
-	}
-	if($check eq '')
-	{
-		&misc::plog(0, "sub mode_check: error, \$check is blank");
-		return 0;
-	}
+# 	if(! defined $check)
+# 	{
+# 		&misc::plog(0, "sub mode_check: error, \$check is undef");
+# 		return 0;
+# 	}
+# 	if($check eq '')
+# 	{
+# 		&misc::plog(0, "sub mode_check: error, \$check is blank");
+# 		return 0;
+# 	}
 
-	$check = lc $check;
+# 	$check = lc $check;
 
-	return 1 if $globals::STOP		&& $check eq 'stop';
-	return 1 if $globals::LISTING	&& $check eq 'list';
-	# return 1 if $globals::PREVIEW	&& $check eq 'preview';	# PREVIEW is not a mode, it is a flag for to disable rename
-	return 1 if $globals::RUN		&& $check eq 'rename';
+# 	return 1 if $globals::STOP		&& $check eq 'stop';
+# 	return 1 if $globals::LISTING	&& $check eq 'list';
+# 	# return 1 if $globals::PREVIEW	&& $check eq 'preview';	# PREVIEW is not a mode, it is a flag for to disable rename
+# 	return 1 if $globals::RUN		&& $check eq 'rename';
 
-	# Check if it's a valid mode but the flag is just false
-	if ($check eq 'stop' || $check eq 'list' || $check eq 'rename') 
-	{
-		return 0;  # Valid mode, but flag is false
-	}
+# 	# Check if it's a valid mode but the flag is just false
+# 	if ($check eq 'stop' || $check eq 'list' || $check eq 'rename') 
+# 	{
+# 		return 0;  # Valid mode, but flag is false
+# 	}
 
-	&misc::plog(0, "sub mode_check: error, unknown check '$check'");
+# 	&misc::plog(0, "sub mode_check: error, unknown check '$check'");
 
-	return 0;
-}
+# 	return 0;
+# }
 
 # return 1 if state matches argument
 sub state_check
