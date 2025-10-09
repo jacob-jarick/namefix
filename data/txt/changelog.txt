@@ -1,3 +1,19 @@
+commit ac5ecfd6f5186883019bb2c02033a231c6ef183a
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 9 22:33:34 2025 +0800
+
+    4.1.19
+    
+    gui dir cd fix
+    nf_print::p patching to handle edge cases (need to properly overhaul)
+    updated &plog calls to &misc::plog
+
+commit e4aa31650c8229542c80a79fdfa9615151b50f4a
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 9 21:37:15 2025 +0800
+
+    4.1.18 - binaries
+
 commit 1820cdfc09172fc272a4a74710c6c4f9a0672bc2
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Thu Oct 9 21:36:00 2025 +0800
@@ -81,20 +97,4 @@ Date:   Thu Oct 9 19:31:31 2025 +0800
 commit b81cab61653cd666a01830ac353a00be14c52e2d
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Wed Oct 8 21:38:25 2025 +0800
-
-    Update config.pm
-
-commit 551603eb79e9a3700483c96bc11e309ba0b8758f
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 8 17:43:39 2025 +0800
-
-    var debug added to help menu
-    
-    cleanup old code
-
-commit 06567dd54b85f57e7503647256aca00225d9492d
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 8 17:10:19 2025 +0800
-
-    update logic for mode_check
 
