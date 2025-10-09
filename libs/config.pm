@@ -364,7 +364,7 @@ sub load_hash
 
 sub halt
 {
-	&globals::state_set('stop');
+	&state::set('stop');
 
 	$globals::PREVIEW	= 1;	# revert to preview mode
 }

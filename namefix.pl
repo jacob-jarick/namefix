@@ -57,7 +57,9 @@ sub quit
 # mems libs
 #--------------------------------------------------------------------------------------------------------------
 
-# mems libs
+use globals;	# why wasnt this included before ???
+use state;
+
 use misc;
 use config;
 use log;
@@ -84,6 +86,7 @@ use manual;
 use menu;
 use br_preview;
 use undo_gui;
+
 
 #--------------------------------------------------------------------------------------------------------------
 # define any remaining vars - usually vars that require libs loaded
@@ -506,10 +509,10 @@ $frm_bottom -> Button
 	-command=>
 	sub
 	{
-		if(&globals::state_check('stop'))
+		if(&state::check('stop'))
 		{
 			&misc::plog(1, "STOP already requested, ignoring additional STOP request");
-			# &globals::state_set('idle');
+			# &state::set('idle');
 			# TODO: idle should be set by dir::ls_dir or run_namefix::run when they see the STOP flag and finish
 		}
 		else

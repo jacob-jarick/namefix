@@ -21,13 +21,13 @@ sub ls_dir
 {
 	&run_namefix::prep_globals;
 
-	if(&globals::state_busy)
+	if(&state::busy)
 	{
 		&misc::plog(1,"BUSY, aborting new list attempt");
 		return;
 	}
 
-	&globals::state_set('list');
+	&state::set('list');
 	$config::percent_done	= 0;
 
 	$globals::dir			= cwd;
@@ -44,7 +44,7 @@ sub ls_dir
 		@globals::find_arr = ();
 		find(\&run_namefix::find_fix, $globals::dir);
 		&ls_dir_find_fix;
-		&globals::state_set('idle');
+		&state::set('idle');
 		return;
 	}
 
@@ -54,10 +54,10 @@ sub ls_dir
 
 	for my $f (@dirlist)
 	{
-		if(&globals::state_check('stop'))
+		if(&state::check('stop'))
 		{
 			&plog(1, "listing stopped by user");
-			&globals::state_set('idle');
+			&state::set('idle');
 			return;
 		}
 
@@ -78,15 +78,15 @@ sub ls_dir
 		$count++;
 		$config::percent_done = int(($count / $total) * 100);
 
-		if(&globals::state_check('stop'))
+		if(&state::check('stop'))
 		{
 			&plog(1, "listing stopped by user");
-			&globals::state_set('idle');
+			&state::set('idle');
 			return;
 		}
 		&ls_dir_print($f);		# then print the file array after all dirs have been printed
 	}
-	&globals::state_set('idle');
+	&state::set('idle');
 	return;
 }
 
@@ -123,10 +123,10 @@ sub ls_dir_find_fix
 sub ls_dir_print
 {
 
-	if(&globals::state_check('stop'))
+	if(&state::check('stop'))
 	{
 		&plog(1, "listing stopped by user");
-		&globals::state_set('idle');
+		&state::set('idle');
 		return;
 	}
 
@@ -234,7 +234,7 @@ sub dir_filtered
 	for my $file (@dirlist)
 	{
 		# $file is dir automatically fail filter
-		next if !&globals::state_check('list') && !$config::hash{proc_dirs}{value} && -d $file;
+		next if !&state::check('list') && !$config::hash{proc_dirs}{value} && -d $file;
 		next if $config::hash{filter}{value} && !&filter::match($file);
 
 		push @d, $file;

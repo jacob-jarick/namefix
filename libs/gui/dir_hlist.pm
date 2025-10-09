@@ -131,12 +131,12 @@ sub draw_list
 	if($config::hash{id3_mode}{value})
 	{
 		$columns	= 9;			# listing
-		$columns	= 18 if  &globals::state_check('run');	# preview / rename
+		$columns	= 18 if  &state::check('run');	# preview / rename
 	}
 	else
 	{
 		$columns	= 2;			# listing
-		$columns	= 4 if  &globals::state_check('run');	# preview / rename
+		$columns	= 4 if  &state::check('run');	# preview / rename
 	}
 
 	$hlist = $main::frm_right2 -> Scrolled
@@ -204,7 +204,7 @@ sub draw_list
 	}
 
 	# rename / preview - add 'New <VALUE>' column headers
-	if(&globals::state_check('run'))
+	if(&state::check('run'))
 	{
 		$hlist->header('create', $count++, -text => '#');
 		$hlist->header('create', $count++, -text => 'New Filename');

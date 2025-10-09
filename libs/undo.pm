@@ -47,24 +47,24 @@ sub undo_rename
 	my $c = 0;
 	my $pre = '';
 
-	if(&globals::state_busy)
+	if(&state::busy)
 	{
 		&misc::plog(0, "undo_rename: aborting, namefix is busy");
-		# &globals::state_set('idle');	# other function should set this
+		# &state::set('idle');	# other function should set this
 		return;
 	}
 	
-	&globals::state_set('run');
+	&state::set('run');
 	&dir_hlist::draw_list;	# blank main hlist
 
 	for my $c (0 .. $#config::undo_cur)
 	{
 		my $cur = $globals::undo_cur[$c];
 		my $pre = $globals::undo_pre[$c];
-		if(&globals::state_check('stop'))
+		if(&state::check('stop'))
 		{
 			&misc::plog(0, "UNDO stopped by user");
-			&globals::state_set('idle');
+			&state::set('idle');
 			return;
 		}
 
@@ -75,7 +75,7 @@ sub undo_rename
   		if(!-f $cur)
  		{
  			&misc::plog(0, "undo_rename: aborted, '$cur' current file does not exist");
- 			&globals::state_set('idle');
+ 			&state::set('idle');
  			return;
  		}
  		if
@@ -93,7 +93,7 @@ sub undo_rename
 		&nf_print::p($cur, $pre);
 	}
 	chdir $globals::dir;
-	&globals::state_set('idle');
+	&state::set('idle');
 	return 1;
 }
 

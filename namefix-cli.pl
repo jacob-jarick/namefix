@@ -34,7 +34,8 @@ use htmlh;
 use cli_help;
 use cli_print;
 
-use config;
+use globals; # why wasnt this included before ???
+use state;
 
 #--------------------------------------------------------------------------------------------------------------
 # define global vars

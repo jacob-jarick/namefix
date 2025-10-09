@@ -30,9 +30,9 @@ sub draw_menu
 			(
 				2, 
 				"States\n".
-				"\tlist:\t\t "	&globals::state_get('list')	."\n".
-				"\trun:\t\t "	&globals::state_get('run')	."\n".
-				"\tstop:\t\t "	&globals::state_get('stop')	."\n"
+				"\tlist:\t\t "	&state::get('list')	."\n".
+				"\trun:\t\t "	&state::get('run')	."\n".
+				"\tstop:\t\t "	&state::get('stop')	."\n"
 			);
 		}
 	);

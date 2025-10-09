@@ -47,13 +47,13 @@ sub run
 		&misc::plog(0, "sub run::namefix: error, a listing is currently being performed - aborting rename");
 		return 0;
 	}
-	elsif(&globals::state_busy())
+	elsif(&state::busy())
 	{
 		&misc::plog(0, "aborting rename due to state is busy");
 		return 0;
 	}
 
-	&globals::state_set('run');
+	&state::set('run');
 	&dir_hlist::draw_list if !$globals::CLI;
 
 	my $t_s 			= '';	# tmp string
@@ -114,7 +114,7 @@ sub run
 	# cleanup
 	chdir $globals::dir;			# return to users working dir
 
-	&globals::state_set('idle');	# finished renaming - turn off run flag
+	&state::set('idle');	# finished renaming - turn off run flag
 }
 
 sub find_fix

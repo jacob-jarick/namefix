@@ -285,13 +285,13 @@ sub br
 		&misc::plog(0, "sub br: error, a listing is currently being performed - aborting rename");
 		return 0;
 	}
-	elsif(&globals::state_busy())
+	elsif(&state::busy())
 	{
 		&misc::plog(0, "sub br: error, a rename is currently being performed - aborting rename");
 		return 0;
 	}
 
-	&globals::state_set('run');
+	&state::set('run');
 
 	my $result_text	= '';
 	my @new_l 		= split(/\n/, $rename_box->	get('1.0', 'end'));
@@ -318,7 +318,7 @@ sub br
 		if(!-f $file_old)
 		{
 			&misc::plog(0, "sub br: ERROR: old file '$file_old' does not exist");
-			&globals::state_set('run');
+			&state::set('run');
 			return 0;
 		}
 	}
@@ -326,18 +326,18 @@ sub br
 	if($#old_l != $#new_l)
 	{
 		&misc::plog(0, "sub br: ERROR: length of new and old list does not match");	# prevent possible user cockup
-		&globals::state_set('idle');
+		&state::set('idle');
 		return 0;
 	}
 
 	for my $c(0 .. $#old_l)	# check for changes - then rename
 	{
-		if(&globals::state_check('stop'))
+		if(&state::check('stop'))
 		{
 			
 			&misc::plog(1, "block rename stopped by user");
 			
-			&globals::state_set('idle');
+			&state::set('idle');
 			return 0;
 		}
 
@@ -370,7 +370,7 @@ sub br
 	&br_show_lists("Block Rename Results", \@new_a, \@new_b);
 	&txt_reset;
 
-	&globals::state_set('idle');
+	&state::set('idle');
 	return 1;
 }
 
