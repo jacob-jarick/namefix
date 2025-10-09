@@ -143,7 +143,7 @@ sub init_globals
 }
 
 # return 1 if we are doing something
-# old function to be deprecated use state_busy instead
+# old function to be deprecated use state_get instead
 sub mode_check
 {
 	my $check = shift;
