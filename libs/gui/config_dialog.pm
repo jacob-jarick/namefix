@@ -482,7 +482,7 @@ sub edit_prefs
 
 sub save_fonts
 {
-	open(FILE, ">$globals::fonts_file") or &main::quit("ERROR: couldn't open $globals::fonts_file to write to\n$!\n");
+	open(FILE, ">$globals::fonts_file") or &misc::quit("ERROR: couldn't open $globals::fonts_file to write to\n$!\n");
 
 	print FILE
 

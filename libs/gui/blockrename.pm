@@ -385,7 +385,7 @@ sub br_readdir
 
 	&misc::plog(3, "br_readdir: '$dir'");
 
-	opendir(DIR, $dir) or &main::quit("sub br_readdir: can't open directory '$dir', $!");
+	opendir(DIR, $dir) or &misc::quit("sub br_readdir: can't open directory '$dir', $!");
 	@dir_contents = CORE::readdir(DIR);
 	closedir DIR;
 
@@ -399,7 +399,7 @@ sub br_readdir
 
 		push @dir_clean, $file;
 	}
-	
+
 	return &misc::ci_sort(@dir_clean);
 }
 

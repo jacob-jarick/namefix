@@ -134,8 +134,8 @@ sub ls_dir_print
 
 	my $file = shift;
 
-	&main::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
-	&main::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
+	&misc::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
+	&misc::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
 
 	return if $file eq '.';
 
@@ -206,7 +206,7 @@ sub fn_readdir
 	my @dirlist_clean	= ();
 	my @d				= ();
 
-	opendir(DIR, $dir) or &main::quit("can't open dir \"$dir\": $!");
+	opendir(DIR, $dir) or &misc::quit("can't open dir \"$dir\": $!");
 	@dirlist = CORE::readdir(DIR);
 	closedir DIR;
 

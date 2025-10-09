@@ -154,7 +154,7 @@ sub get_home
 
 	if(!-d $app_dir)
 	{
-		mkdir($app_dir, 0755) or &main::quit("Cannot mkdir: '$app_dir' $!\n");
+		mkdir($app_dir, 0755) or &misc::quit("Cannot mkdir: '$app_dir' $!\n");
 	}
 
 	return $app_dir;

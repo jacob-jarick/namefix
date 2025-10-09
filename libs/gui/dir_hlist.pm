@@ -27,10 +27,10 @@ sub info_add
 	my $file	= shift;	# old / current filename
 	my $newfile	= shift;	# new / undef filename
 
-	&main::quit("info_add: \$index is undef")		                if ! defined $index;
-	&main::quit("info_add: \$index '$index' is not an int")	    	if $index !~ /^\d+$/;
-	&main::quit("info_add: \$path is undef")		            	if ! defined $path;
-	&main::quit("info_add: \$path '$path' is not a file or dir")	if !-f $path && !-d $path;
+	&misc::quit("info_add: \$index is undef")		                if ! defined $index;
+	&misc::quit("info_add: \$index '$index' is not an int")	    	if $index !~ /^\d+$/;
+	&misc::quit("info_add: \$path is undef")		            	if ! defined $path;
+	&misc::quit("info_add: \$path '$path' is not a file or dir")	if !-f $path && !-d $path;
 
 	$info{$index}{path}		    = &misc::get_file_path($path);
 	$info{$index}{filename}		= $file;
@@ -218,7 +218,7 @@ sub draw_list
 			}
 		}
 	}
-	&main::quit("draw_list \$count $count > \$columns $columns\n") if($count > $columns);
+	&misc::quit("draw_list \$count $count > \$columns $columns\n") if($count > $columns);
 
 	# ----------------------------------------------------------------------------
 	# Right Click Menu

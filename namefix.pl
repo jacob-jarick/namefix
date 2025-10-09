@@ -160,7 +160,7 @@ if ($gui_test)
 		sub 
 		{
         	print "[GUI TEST] Timer expired, quitting...\n";
-        	&main::quit("GUI test timer");
+        	&misc::quit("GUI test timer");
     	}
 	);
 }
@@ -1090,7 +1090,7 @@ $balloon->attach
 	-msg=> "Set all mp3 artist tags to user entered string."
 );
 
-&main::quit("END found the 0\n") if(defined $config::hash{0});
+&misc::quit("END found the 0\n") if(defined $config::hash{0});
 
 my $id3_art_ent = $tab2->Entry
 (

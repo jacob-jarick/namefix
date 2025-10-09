@@ -19,12 +19,12 @@ sub preview
 	my @new_l = @$ref1;
 	my @old_l = @$ref2;
 
-	&main::quit("preview: \$ref1 is undef")		if ! defined $ref1;
-	&main::quit("preview: \$ref2 is undef")		if ! defined $ref2;
-	&main::quit("preview: \@new_l is undef")	if ! @new_l;
-	&main::quit("preview: \@old_l is undef")	if ! @old_l;
-	&main::quit("preview: scalar \@new_l = 0")	if scalar @new_l == 0;
-	&main::quit("preview: scalar \@old_l = 0")	if scalar @old_l == 0;
+	&misc::quit("preview: \$ref1 is undef")		if ! defined $ref1;
+	&misc::quit("preview: \$ref2 is undef")		if ! defined $ref2;
+	&misc::quit("preview: \@new_l is undef")	if ! @new_l;
+	&misc::quit("preview: \@old_l is undef")	if ! @old_l;
+	&misc::quit("preview: scalar \@new_l = 0")	if scalar @new_l == 0;
+	&misc::quit("preview: scalar \@old_l = 0")	if scalar @old_l == 0;
 
 	if(scalar @new_l != scalar @old_l)
 	{

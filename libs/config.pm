@@ -216,7 +216,7 @@ sub reset_config
 		if(! defined $hash{$k}{default})
 		{
 			print Dumper(\%hash);
-			&main::quit("reset_config \$hash{$k}{default} is undef\n");
+			&misc::quit("reset_config \$hash{$k}{default} is undef\n");
 		}
 
 		$hash{$k}{value} = $hash{$k}{default};
@@ -257,13 +257,13 @@ sub save_hash
 			if(! defined $hash{$k})
 			{
 				print Dumper(\%hash);
-				&main::quit("\$hash{$k} is undef\n");
+				&misc::quit("\$hash{$k} is undef\n");
 			}
 
 			if(! defined $hash{$k}{save})
 			{
 				print Dumper(\%hash);
-				&main::quit("\$hash{$k}{save} is undef\n");
+				&misc::quit("\$hash{$k}{save} is undef\n");
 			}
 
 			next if $hash{$k}{save} ne $save_type;
@@ -383,7 +383,7 @@ sub clr_no_save
 			if (!defined $hash{$k}{default})
 			{
 				print Dumper(\%hash);
-				&main::quit("clr_no_save: \$hash{$k}{default} is undef\n");
+				&misc::quit("clr_no_save: \$hash{$k}{default} is undef\n");
 			}
 			$hash{$k}{value} = $hash{$k}{default};
 		}
@@ -399,7 +399,7 @@ sub clr_id3_options
 			if (!defined $config::hash{$k}{default})
 			{
 				print Dumper(\%config::hash);
-				&main::quit("clr_id3_options: \$config::hash{$k}{default} is undef\n");
+				&misc::quit("clr_id3_options: \$config::hash{$k}{default} is undef\n");
 			}
 			$config::hash{$k}{value} = $config::hash{$k}{default};
 		}
@@ -440,7 +440,7 @@ sub set_value
 			return;
 		}
 		&misc::plog(0, "config::set_value $key invalid bool value '$value'");
-		&main::quit("config::set_value $key invalid bool value '$value'");
+		&misc::quit("config::set_value $key invalid bool value '$value'");
 
 		return; # should never get here
 	}
@@ -451,7 +451,7 @@ sub set_value
 		if($value !~ /^-?\d+$/)
 		{
 			&misc::plog(0, "config::set_value $key invalid int value '$value'");
-			&main::quit("config::set_value $key invalid int value '$value'");
+			&misc::quit("config::set_value $key invalid int value '$value'");
 		}
 		$hash{$key}{value} = int($value);
 
@@ -470,7 +470,7 @@ sub set_value
 	# unknown type
 
 	&misc::plog(0, "config::set_value $key unknown type '".$hash{$key}{type}."'");
-	&main::quit("config::set_value $key unknown type '".$hash{$key}{type}."'");
+	&misc::quit("config::set_value $key unknown type '".$hash{$key}{type}."'");
 
 	return; # should never get here
 }

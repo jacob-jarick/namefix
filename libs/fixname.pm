@@ -34,9 +34,9 @@ sub fix
 	my $file 	= shift;
 	my $path	= '';
 
-	&main::quit ("fixname::fix : ERROR file is undef")		        	if ! defined $file;
-	&main::quit ("fixname::fix : ERROR file eq ''")			        	if $file eq '';
-	&main::quit ("fixname::fix : ERROR file '$file' isn't dir/file")	if !-d $file && !-f $file;
+	&misc::quit ("fixname::fix : ERROR file is undef")		        	if ! defined $file;
+	&misc::quit ("fixname::fix : ERROR file eq ''")			        	if $file eq '';
+	&misc::quit ("fixname::fix : ERROR file '$file' isn't dir/file")	if !-d $file && !-f $file;
 
 	($dir, $file, $path) =  &misc::get_file_info($file);
 	chdir $dir;
@@ -64,7 +64,7 @@ sub fix
 	# make sure file is allowed to be renamed
     # -----------------------------------------
 
-    &main::quit("ERROR IGNORE_FILE_TYPE is undef\n") if !defined $config::hash{ignore_file_type}{value};
+    &misc::quit("ERROR IGNORE_FILE_TYPE is undef\n") if !defined $config::hash{ignore_file_type}{value};
 
     my $RENAME = 0;
 
@@ -177,7 +177,7 @@ sub fix
 		my @tags_to_fix = ('artist', 'title', 'album', 'comment');
 		for my $k(@tags_to_fix)
 		{
-			&main::quit("ERROR processing audio file $file - $k is undef") if ! defined $tags_h_new{$k};
+			&misc::quit("ERROR processing audio file $file - $k is undef") if ! defined $tags_h_new{$k};
 			$tags_h_new{$k} = &fn_pre_clean	(0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_replace	(0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_spaces	(0, $tags_h_new{$k});
@@ -282,7 +282,7 @@ sub fix
 			}
 			else
 			{
-				&main::quit("ERROR id3_fn_style '$config::hash{id3_fn_style}{value}' is invalid");
+				&misc::quit("ERROR id3_fn_style '$config::hash{id3_fn_style}{value}' is invalid");
 			}
 
 			$newfile = $fn_from_tags;
@@ -493,11 +493,11 @@ sub fn_rename
 	my $file	= shift;
 	my $newfile	= shift;
 
-	&main::quit("fn_rename \$file is undef\n")		if ! defined $file;
-	&main::quit("fn_rename \$file eq ''\n")			if $file eq '';
+	&misc::quit("fn_rename \$file is undef\n")		if ! defined $file;
+	&misc::quit("fn_rename \$file eq ''\n")			if $file eq '';
 
-    &main::quit("fn_rename \$newfile is undef\n")	if ! defined $newfile;
-	&main::quit("fn_rename \$newfile eq ''\n")		if $newfile eq '';
+    &misc::quit("fn_rename \$newfile is undef\n")	if ! defined $newfile;
+	&misc::quit("fn_rename \$newfile eq ''\n")		if $newfile eq '';
 
 	my $file_name = &misc::get_file_name($file);
 	&misc::plog(3, "rename '$file_name' to '$newfile'");
@@ -550,9 +550,9 @@ sub run_fixname_subs
 	my $file	= shift;
 	my $newfile	= shift;
 
-	&main::quit("run_fixname_subs \$file is undef\n")		        if ! defined $file;
-	&main::quit("run_fixname_subs \$file eq ''\n")			        if $file eq '';
-	&main::quit("run_fixname_subs \$file isn't a dir or file\n")	if !-f $file && !-d $file;
+	&misc::quit("run_fixname_subs \$file is undef\n")		        if ! defined $file;
+	&misc::quit("run_fixname_subs \$file eq ''\n")			        if $file eq '';
+	&misc::quit("run_fixname_subs \$file isn't a dir or file\n")	if !-f $file && !-d $file;
 
 	$newfile = $file if !$newfile;
 
@@ -741,8 +741,8 @@ sub fn_kill_cwords
 	my $file		= shift;
 	my $file_new	= shift;
 
-	&main::quit("fn_kill_cwords \$file is undef\n")	if ! defined $file;
-	&main::quit("fn_kill_cwords \$file eq ''\n")	if $file eq '';
+	&misc::quit("fn_kill_cwords \$file is undef\n")	if ! defined $file;
+	&misc::quit("fn_kill_cwords \$file eq ''\n")	if $file eq '';
 
 	$file_new = $file if !defined $file_new || $file_new eq '';
 
@@ -773,8 +773,8 @@ sub fn_replace
 	my $FILE		= shift;
 	my $file_new	= shift;
 
-	&main::quit("fn_replace \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_replace \$file_new eq ''\n")	if $FILE && $file_new eq '';
+	&misc::quit("fn_replace \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_replace \$file_new eq ''\n")	if $FILE && $file_new eq '';
 
 	return $file_new if !$config::hash{replace}{value};
 
@@ -792,8 +792,8 @@ sub fn_replace
 sub fn_kill_sp_patterns
 {
 	my $file_new = shift;
-	&main::quit("fn_kill_sp_patterns \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_kill_sp_patterns \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_kill_sp_patterns \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_kill_sp_patterns \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{kill_sp_patterns}{value};
 
@@ -809,8 +809,8 @@ sub fn_unscene
 {
 	my $file_new = shift;
 
-	&main::quit("fn_unscene \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_unscene \$file_new eq ''\n")	if $file_new eq '';
+	&misc::quit("fn_unscene \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_unscene \$file_new eq ''\n")	if $file_new eq '';
 
 	$file_new =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie 	if($config::hash{unscene}{value});
 
@@ -820,8 +820,8 @@ sub fn_unscene
 sub fn_scene
 {
 	my $file_new = shift;
-	&main::quit("fn_scene \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_scene \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_scene \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_scene \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if $config::hash{scene}{value};
 
@@ -836,8 +836,8 @@ sub fn_spaces
 	my $FILE		= shift;
 	my $file_new	= shift;
 
-	&main::quit("fn_spaces \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_spaces \$file_new eq ''\n") 	if $FILE && $file_new eq '';
+	&misc::quit("fn_spaces \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_spaces \$file_new eq ''\n") 	if $FILE && $file_new eq '';
 
 	return $file_new if !$config::hash{spaces}{value};
 
@@ -849,8 +849,8 @@ sub fn_spaces
 sub fn_sp_char
 {
 	my $file_new = shift;
-	&main::quit("fn_sp_char \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_sp_char \$file_new eq ''\n")	if $file_new eq '';
+	&misc::quit("fn_sp_char \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_sp_char \$file_new eq ''\n")	if $file_new eq '';
 
 	return $file_new if !$config::hash{sp_char}{value};
 
@@ -866,8 +866,8 @@ sub fn_split_dddd
 {
 	my $file_new = shift;
 
-	&main::quit("fn_split_dddd \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_split_dddd \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_split_dddd \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_split_dddd \$file_new eq ''\n")		if $file_new eq '';
 
         return $file_new if !$config::hash{split_dddd}{value};
 	if($file_new =~ /(.*?)(\d{3,4})(.*)/)
@@ -898,8 +898,8 @@ sub fn_case_fl
 	my $FILE		= shift;
 	my $file_new	= shift;
 
-	&main::quit("fn_case_fl: \$file_new is undef\n")	if !defined $file_new;
-	&main::quit("fn_case_fl: \$file_new eq ''\n")		if $FILE && $file_new eq '';
+	&misc::quit("fn_case_fl: \$file_new is undef\n")	if !defined $file_new;
+	&misc::quit("fn_case_fl: \$file_new eq ''\n")		if $FILE && $file_new eq '';
 
 	return $file_new if !$config::hash{case}{value};
 	$file_new =~ s/^(\w)/uc($1)/e;
@@ -917,12 +917,12 @@ sub fn_sp_word
 	my $FILE = shift;
 	my $file = shift;
 
-	&main::quit("fn_sp_word \$file is undef\n")		if ! defined $file;
-	&main::quit("fn_sp_word \$file eq ''\n")		if $FILE && $file eq '';
+	&misc::quit("fn_sp_word \$file is undef\n")		if ! defined $file;
+	&misc::quit("fn_sp_word \$file eq ''\n")		if $FILE && $file eq '';
 
 	my $file_new = shift;
-	&main::quit("fn_sp_word \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_sp_word \$file_new eq ''\n")	if $FILE && $file_new eq '';
+	&misc::quit("fn_sp_word \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_sp_word \$file_new eq ''\n")	if $FILE && $file_new eq '';
 
 	return $file_new if !$config::hash{word_special_casing}{value};
 	foreach my $word(@globals::word_casing_arr)
@@ -945,9 +945,9 @@ sub fn_dot2space
 	my $file        = shift;
 	my $file_new    = shift;
 
-	&main::quit("fn_dot2space \$FILE value '$FILE' is invalid\n")	if $FILE != 0 && $FILE != 1;
-	&main::quit("fn_dot2space \$file is undef\n")					if ! defined $file;
-	&main::quit("fn_dot2space \$file eq ''\n")						if $FILE && $file eq '';
+	&misc::quit("fn_dot2space \$FILE value '$FILE' is invalid\n")	if $FILE != 0 && $FILE != 1;
+	&misc::quit("fn_dot2space \$file is undef\n")					if ! defined $file;
+	&misc::quit("fn_dot2space \$file eq ''\n")						if $FILE && $file eq '';
 
 	return $file_new if !$config::hash{dot2space}{value};
 
@@ -971,8 +971,8 @@ sub fn_dot2space
 sub fn_pad_digits
 {
 	my $file_new = shift;
-	&main::quit("fn_pad_digits \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_pad_digits \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_pad_digits \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_pad_digits \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{pad_digits}{value};
 
@@ -989,8 +989,8 @@ sub fn_pad_digits
 sub fn_pad_digits_w_zero
 {
 	my $file_new = shift;
-	&main::quit("fn_pad_digits_w_zero \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_pad_digits_w_zero \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_pad_digits_w_zero \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_pad_digits_w_zero \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{pad_digits_w_zero}{value};
 
@@ -1018,8 +1018,8 @@ sub fn_digits
 	# remove leading digits (Track Nr)
 
 	my $file_new = shift;
-	&main::quit("fn_digits \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_digits \$file_new eq ''\n")     if $file_new eq '';
+	&misc::quit("fn_digits \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_digits \$file_new eq ''\n")     if $file_new eq '';
 
 	$file_new =~ s/^\d*\s*// if $config::hash{digits}{value};
 
@@ -1031,9 +1031,9 @@ sub fn_enum
 	my $file		= shift;
 	my $file_new	= shift;
 
-	&main::quit("fn_enum \$file is undef\n")							if ! defined $file;
-	&main::quit("fn_enum \$file eq ''\n")								if $file eq '';
-	&main::quit("fn_enum \$file '$file' is not a file or directory")	if !-f $file && !-d $file;
+	&misc::quit("fn_enum \$file is undef\n")							if ! defined $file;
+	&misc::quit("fn_enum \$file eq ''\n")								if $file eq '';
+	&misc::quit("fn_enum \$file '$file' is not a file or directory")	if !-f $file && !-d $file;
 
 	return $file_new if ! $config::hash{enum}{value};
 
@@ -1084,7 +1084,7 @@ sub fn_enum
 	}
 	else
 	{
-		&main::quit("fn_enum unknown value set for \$config::hash{enum_opt}{value}\n" . Dumper($config::hash{enum_opt}));
+		&misc::quit("fn_enum unknown value set for \$config::hash{enum_opt}{value}\n" . Dumper($config::hash{enum_opt}));
 	}
 	$enum_count++;
 	return $file_new;
@@ -1095,8 +1095,8 @@ sub fn_truncate
 	my $file		= shift;
 	my $file_new	= shift;
 
-	&main::quit("fn_truncate \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_truncate \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_truncate \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_truncate \$file_new eq ''\n")		if $file_new eq '';
 
 	my $trunc_length = 0;
 
@@ -1161,9 +1161,9 @@ sub fn_pre_clean
 
 	$file_new		= $file if ! defined $file_new;
 
-	&main::quit("fn_pre_clean \$file is undef\n")	if ! defined $file;
-	&main::quit("fn_pre_clean \$file eq ''\n")	if $FILE && $file eq '';
-	&main::quit("fn_pre_clean \$FILE = 1 but '$file' is not a file and not a directory\n")	if $FILE && !-f $file && !-d $file;
+	&misc::quit("fn_pre_clean \$file is undef\n")	if ! defined $file;
+	&misc::quit("fn_pre_clean \$file eq ''\n")	if $FILE && $file eq '';
+	&misc::quit("fn_pre_clean \$FILE = 1 but '$file' is not a file and not a directory\n")	if $FILE && !-f $file && !-d $file;
 
 	return $file_new if !$config::hash{cleanup_general}{value};
 
@@ -1197,9 +1197,9 @@ sub fn_post_clean
 
 	$file_new = $f if !$file_new;
 
-	&main::quit("fn_post_clean: \$f is undef\n")		if ! defined $f;
-	&main::quit("fn_post_clean: \$f eq ''\n")			if $FILE && $f eq '';
-	&main::quit("fn_post_clean: \$f '$f' not found\n")	if $FILE && !-f $f;
+	&misc::quit("fn_post_clean: \$f is undef\n")		if ! defined $f;
+	&misc::quit("fn_post_clean: \$f eq ''\n")			if $FILE && $f eq '';
+	&misc::quit("fn_post_clean: \$f '$f' not found\n")	if $FILE && !-f $f;
 
 	return $file_new if !$config::hash{cleanup_general}{value};
 
@@ -1234,8 +1234,8 @@ sub fn_post_clean
 sub fn_front_a
 {
 	my $file_new = shift;
-	&main::quit("fn_front_a \$file_new is undef\n")		if ! defined $file_new;
-	&main::quit("fn_front_a \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_front_a \$file_new is undef\n")		if ! defined $file_new;
+	&misc::quit("fn_front_a \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{ins_start}{value};
 
@@ -1247,8 +1247,8 @@ sub fn_front_a
 sub fn_end_a
 {
 	my $file_new = shift;
-	&main::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_end_a \$file_new eq ''\n")	    if $file_new eq '';
+	&misc::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_end_a \$file_new eq ''\n")	    if $file_new eq '';
 
 	return $file_new if $config::hash{ins_end}{value};
 
@@ -1260,8 +1260,8 @@ sub fn_end_a
 sub fn_pad_N_to_NN
 {
 	my $file_new = shift;
-	&main::quit("fn_pad_N_to_NN \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_pad_N_to_NN \$file_new eq ''\n")	if $file_new eq '';
+	&misc::quit("fn_pad_N_to_NN \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_pad_N_to_NN \$file_new eq ''\n")	if $file_new eq '';
 
 	return $file_new if !$config::hash{pad_N_to_NN}{value};
 
@@ -1273,8 +1273,8 @@ sub fn_pad_N_to_NN
 sub fn_pad_dash
 {
 	my $file_new = shift;
-	&main::quit("fn_pad_dash \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_pad_dash \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_pad_dash \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_pad_dash \$file_new eq ''\n")		if $file_new eq '';
 
 	my $f = $file_new;
 
@@ -1288,8 +1288,8 @@ sub fn_pad_dash
 sub fn_rm_digits
 {
 	my $file_new = shift;
-	&main::quit("fn_rm_digits \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_rm_digits \$file_new eq ''\n")	if $file_new eq '';
+	&misc::quit("fn_rm_digits \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_rm_digits \$file_new eq ''\n")	if $file_new eq '';
 
 	return $file_new if !$config::hash{rm_digits}{value};
 
@@ -1302,8 +1302,8 @@ sub fn_lc_all
 {
 	# lowercase all
 	my $file_new = shift;
-	&main::quit("fn_lc_all \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_lc_all \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_lc_all \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_lc_all \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{lc_all}{value};
 
@@ -1316,8 +1316,8 @@ sub fn_uc_all
 {
 	# uppercase all
 	my $file_new = shift;
-	&main::quit("fn_uc_all \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_uc_all \$file_new eq ''\n")		if $file_new eq '';
+	&misc::quit("fn_uc_all \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_uc_all \$file_new eq ''\n")		if $file_new eq '';
 
 	return $file_new if !$config::hash{uc_all}{value};
 
@@ -1334,8 +1334,8 @@ sub fn_intr_char
 	# if you see alot of ? in your filenames, you need to add the correct codepage for the filesystem.
 
 	my $file_new = shift;
-	&main::quit("fn_intr_char \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_intr_char \$file_new eq ''\n")		if $FILE && $file_new eq '';
+	&misc::quit("fn_intr_char \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_intr_char \$file_new eq ''\n")		if $FILE && $file_new eq '';
 
 	my $f = $file_new;
 
@@ -1529,8 +1529,8 @@ sub fn_case
 {
 	my $FILE = shift;
 	my $file_new = shift;
-	&main::quit("fn_case \$file_new is undef\n")	if ! defined $file_new;
-	&main::quit("fn_case \$file_new eq ''\n")		if $FILE && $file_new eq '';
+	&misc::quit("fn_case \$file_new is undef\n")	if ! defined $file_new;
+	&misc::quit("fn_case \$file_new eq ''\n")		if $FILE && $file_new eq '';
 
 	my $f = $file_new;
 

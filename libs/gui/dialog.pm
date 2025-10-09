@@ -76,9 +76,9 @@ sub show_properties_hlist
 {
 	my $ff = shift;
 
-	&main::quit("show_properties_hlist: \$ff is undef") if ! defined $ff;
-	&main::quit("show_properties_hlist: \$ff eq ''") if $ff eq '';
-	&main::quit("show_properties_hlist: '$ff' is not a dir or file") if ! -f $ff && ! -d $ff;
+	&misc::quit("show_properties_hlist: \$ff is undef") if ! defined $ff;
+	&misc::quit("show_properties_hlist: \$ff eq ''") if $ff eq '';
+	&misc::quit("show_properties_hlist: '$ff' is not a dir or file") if ! -f $ff && ! -d $ff;
 
 	my $row = 1;
 

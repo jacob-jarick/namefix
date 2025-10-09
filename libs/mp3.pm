@@ -50,7 +50,7 @@ $template{comment}	= '';
 sub get_tags
 {
 	my $filepath	= shift;
-	&main::quit("get_tags \$filepath is undef") if !defined $filepath;
+	&misc::quit("get_tags \$filepath is undef") if !defined $filepath;
 
     my %tag_hash 		= ();
     $tag_hash{artist}	= '';	# artist
@@ -63,7 +63,7 @@ sub get_tags
 
     return \%tag_hash	if $filepath !~ /\.$globals::id3_ext_regex$/i;
 
-	&main::quit("get_tags '$filepath' not found") if !-f $filepath;
+	&misc::quit("get_tags '$filepath' not found") if !-f $filepath;
 
 	my $audio_tags		= MP3::Tag->new($filepath);
 
@@ -84,8 +84,8 @@ sub rm_tags
 {
 	my $filepath 	= shift;
 	
-	&main::quit("mp3::rm_tags: \$filepath is undef") if !defined $filepath;
-	&main::quit("mp3::rm_tags: file '$filepath' not found") if !-f $filepath;
+	&misc::quit("mp3::rm_tags: \$filepath is undef") if !defined $filepath;
+	&misc::quit("mp3::rm_tags: file '$filepath' not found") if !-f $filepath;
 	
 	my $audio_tags = MP3::Tag->new($filepath);
 
@@ -112,23 +112,23 @@ sub write_tags
 {
 	my $filepath = shift;
 
-	&main::quit("mp3::write_tags: \$filepath is undef")			if ! defined $filepath;
-	&main::quit("mp3::write_tags: \$filepath eq ''") 			if $filepath eq '';
-	&main::quit("mp3::write_tags: file '$filepath' not found")	if !-f $filepath;
+	&misc::quit("mp3::write_tags: \$filepath is undef")			if ! defined $filepath;
+	&misc::quit("mp3::write_tags: \$filepath eq ''") 			if $filepath eq '';
+	&misc::quit("mp3::write_tags: file '$filepath' not found")	if !-f $filepath;
 
-	&main::quit("mp3::write_tags: \$filepath  '$filepath' is not an audio file\n") if $filepath !~ /\.$globals::id3_ext_regex$/i;
+	&misc::quit("mp3::write_tags: \$filepath  '$filepath' is not an audio file\n") if $filepath !~ /\.$globals::id3_ext_regex$/i;
 
 	my $ref = shift;
 	my %tag_hash = %$ref;
 
-	&main::quit("mp3::write_tags: tag_hash is undef") if ! defined $tag_hash{title};
+	&misc::quit("mp3::write_tags: tag_hash is undef") if ! defined $tag_hash{title};
 
     # ensure all fieldss have been sent
     for my $k(keys %id3h)
     {
         if(!defined $tag_hash{$k})
         {
-            &main::quit("ERROR: write_tags incomplete hash received. \$tag_hash{$k} is undefined\n" . Dumper(\%tag_hash));
+            &misc::quit("ERROR: write_tags incomplete hash received. \$tag_hash{$k} is undefined\n" . Dumper(\%tag_hash));
         }
     }
     # ensure no extra keys in hash
@@ -136,7 +136,7 @@ sub write_tags
     {
         if(!defined $id3h{$k})
         {
-            &main::quit("ERROR: write_tags extra key '$k' in hash.\n" . Dumper(\%tag_hash));
+            &misc::quit("ERROR: write_tags extra key '$k' in hash.\n" . Dumper(\%tag_hash));
         }
     }
 

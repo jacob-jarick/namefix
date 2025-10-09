@@ -89,9 +89,9 @@ sub run
 
 			$config::percent_done = int(($count++ / $total) * 100);
 
-			&main::quit("sub run: \$f is undef\n")					if ! defined $f;
-			&main::quit("sub run: \$f eq ''\n")						if $f eq '';
-			&main::quit("sub run: \$f '$f' is not a dir or file\n")	if !-f $f && !-d $f;
+			&misc::quit("sub run: \$f is undef\n")					if ! defined $f;
+			&misc::quit("sub run: \$f eq ''\n")						if $f eq '';
+			&misc::quit("sub run: \$f '$f' is not a dir or file\n")	if !-f $f && !-d $f;
 
 			my ($d, $fn, $p) =  &misc::get_file_info($f);
 			&fixname::fix($fn)	if -f $f || ($config::hash{proc_dirs}{value} && -d $f);

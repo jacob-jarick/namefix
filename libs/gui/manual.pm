@@ -11,8 +11,8 @@ sub edit
 {
 	my $path = shift;
 
-	&main::quit("edit: \$path isn't defined.") if ! defined $path;
-	&main::quit("edit: \$path '$path' isn't a dir or file.") if !-f $path && !-d $path;
+	&misc::quit("edit: \$path isn't defined.") if ! defined $path;
+	&misc::quit("edit: \$path '$path' isn't a dir or file.") if !-f $path && !-d $path;
 
 	&misc::plog(3, "sub manual::edit: \"$path\"");
 
@@ -455,7 +455,7 @@ sub me_rename
 
 	if($config::hash{fat32fix}{value})
 	{
-		&main::quit("me_rename: tmpfile '$path_tmp' exists.") if -f $path_tmp;
+		&misc::quit("me_rename: tmpfile '$path_tmp' exists.") if -f $path_tmp;
 
 		rename $path, $path_tmp;
 		rename $path_tmp, $path_new;

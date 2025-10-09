@@ -26,9 +26,9 @@ sub add
 	my $level	= shift;
 	my $text	= shift;
 
-	&main::quit("add: \$level is undef") 					if ! defined $level;
-	&main::quit("add: \$level '$level' is not a number")	if $level !~ /^\d+$/;
-	&main::quit("add: \$text is undef")						if ! defined $text;
+	&misc::quit("add: \$level is undef") 					if ! defined $level;
+	&misc::quit("add: \$level '$level' is not a number")	if $level !~ /^\d+$/;
+	&misc::quit("add: \$text is undef")						if ! defined $text;
 
 	&prune	if (scalar keys %hash) > $size;
 
@@ -48,9 +48,9 @@ sub draw
 
 	if(defined $main::log_box) # plog can occur before gui is ready
 	{
-		&main::quit("draw: \$hash{$k} is undef \$k = $k")		if ! defined $hash{$k};
-		&main::quit("draw: \$hash{$k}{level} is undef")			if ! defined $hash{$k}{level};
-		&main::quit("draw: \$tags{$hash{$k}{level}} is undef")	if ! defined $tags{$hash{$k}{level}};
+		&misc::quit("draw: \$hash{$k} is undef \$k = $k")		if ! defined $hash{$k};
+		&misc::quit("draw: \$hash{$k}{level} is undef")			if ! defined $hash{$k}{level};
+		&misc::quit("draw: \$tags{$hash{$k}{level}} is undef")	if ! defined $tags{$hash{$k}{level}};
 
 		my $mode = $tags{$hash{$k}{level}};
 		$main::log_box->insert('end', $hash{$k}{text}, $mode);

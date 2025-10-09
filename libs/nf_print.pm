@@ -16,7 +16,7 @@ my $arrow = ' -> ';
 
 sub p
 {
-	&main::quit("CLI should not use p") if($globals::CLI);
+	&misc::quit("CLI should not use p") if($globals::CLI);
 
 	my $file1		= shift;
 	my $file2		= shift;
@@ -48,9 +48,9 @@ sub p
 	# ------------------------------------------------------------------
 	# these checks need to come after special print 1 and 2
 
-	&main::quit("p: \$target_file is undef")							if ! defined $target_file;
-	&main::quit("p: \$target_file eq '' is not a file or dir")			if $target_file eq '';
-	&main::quit("p: \$target_file '$target_file' is not a file or dir")	if !-f $target_file && !-d $target_file;
+	&misc::quit("p: \$target_file is undef")							if ! defined $target_file;
+	&misc::quit("p: \$target_file eq '' is not a file or dir")			if $target_file eq '';
+	&misc::quit("p: \$target_file '$target_file' is not a file or dir")	if !-f $target_file && !-d $target_file;
 
 	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);	# we only use $path
 	{
@@ -106,12 +106,12 @@ sub p
 
 	if($config::hash{id3_mode}{value})
 	{
-		&main::quit("nf_print id3_mode enabled but \$ref1 is undef\n") if !defined $ref1;
+		&misc::quit("nf_print id3_mode enabled but \$ref1 is undef\n") if !defined $ref1;
 		my %h = %$ref1;
 
 		for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 		{
-			&main::quit("nf_print::p \$ref1 \$h{$k} is undef\n") if ! defined $h{$k};
+			&misc::quit("nf_print::p \$ref1 \$h{$k} is undef\n") if ! defined $h{$k};
 			$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 		}
 	}
@@ -137,11 +137,11 @@ sub p
 
 	return if ! $config::hash{id3_mode}{value};
 
-	&main::quit("nf_print id3_mode enabled but \$ref2 is undef") if !defined $ref2;
+	&misc::quit("nf_print id3_mode enabled but \$ref2 is undef") if !defined $ref2;
 	my %h = %$ref2;
 	for my $k(sort {$mp3::id3_order{$a} <=> $mp3::id3_order{$b}} keys %mp3::id3_order)
 	{
-		&main::quit("nf_print::p \$ref2 \$h{$k} is undef") if ! defined $h{$k};
+		&misc::quit("nf_print::p \$ref2 \$h{$k} is undef") if ! defined $h{$k};
 		$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $h{$k});
 	}
 }
