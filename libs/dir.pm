@@ -139,12 +139,6 @@ sub ls_dir_print
 
 	return if $file eq '.';
 
-	if($file eq '..')
-	{
-		&nf_print::parent_dir();
-		return;
-	}
-
 	# recursive padding
 
 	if(-d $file && $config::hash{recursive}{value})
