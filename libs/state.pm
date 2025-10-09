@@ -36,9 +36,7 @@ sub check
 	}
 
 	# unknown state, log & exit
-	&misc::plog(0, "Unknown check '$check'");
-
-	&misc::quit("state::check: unknown check '$check'");
+	&misc::plog(0, "Unknown check '$check'", 1);
 }
 
 # get current state as string

@@ -135,7 +135,7 @@ sub ls_dir_print
 	my $file = shift;
 
 	&misc::quit("ls_dir_print \$file is undef\n")	if ! defined $file;
-	&misc::quit("ls_dir_print \$file eq ''\n")	if $file eq '';
+	&misc::quit("ls_dir_print \$file eq ''\n")		if $file eq '';
 
 	return if $file eq '.';
 

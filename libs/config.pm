@@ -439,8 +439,7 @@ sub set_value
 
 			return;
 		}
-		&misc::plog(0, "config::set_value $key invalid bool value '$value'");
-		&misc::quit("config::set_value $key invalid bool value '$value'");
+		&misc::plog(0, "config::set_value $key invalid bool value '$value'", 1);
 
 		return; # should never get here
 	}
@@ -450,8 +449,7 @@ sub set_value
 	{
 		if($value !~ /^-?\d+$/)
 		{
-			&misc::plog(0, "config::set_value $key invalid int value '$value'");
-			&misc::quit("config::set_value $key invalid int value '$value'");
+			&misc::plog(0, "config::set_value $key invalid int value '$value'", 1);
 		}
 		$hash{$key}{value} = int($value);
 
@@ -469,8 +467,7 @@ sub set_value
 
 	# unknown type
 
-	&misc::plog(0, "config::set_value $key unknown type '".$hash{$key}{type}."'");
-	&misc::quit("config::set_value $key unknown type '".$hash{$key}{type}."'");
+	&misc::plog(0, "config::set_value $key unknown type '".$hash{$key}{type}."'", 1);
 
 	return; # should never get here
 }

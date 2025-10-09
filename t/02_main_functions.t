@@ -5,12 +5,6 @@ use warnings;
 use Test::More tests => 5;
 use FindBin qw($Bin);
 
-sub quit
-{
-	my $string = shift;
-	die $string;
-}
-
 use lib "$Bin/../libs";
 
 use config;

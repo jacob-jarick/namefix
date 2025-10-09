@@ -37,23 +37,6 @@ use lib		"$Bin/libs/gui";
 $SIG{'__WARN__'} = sub { warn $_[0] unless (caller eq "Tk::JComboBox"); };
 use Tk::JComboBox;
 
-sub quit
-{
-	my $string = shift;
-
-	$string .= "\n" if $string !~ /\n$/;
-
-	print "\n\n====================================================================================\n\n";
-
-	cluck longmess("quit $string\n");
-	Tk::exit;
-
-	die "Trying to quit via die";
-
-	print "Trying to quit via CORE::exit";
-	CORE::exit;
-}
-
 #--------------------------------------------------------------------------------------------------------------
 # mems libs
 #--------------------------------------------------------------------------------------------------------------

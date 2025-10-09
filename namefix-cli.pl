@@ -860,12 +860,3 @@ sub proc_short_opts
 	}
 }
 
-sub quit
-{
-	my $string = shift;
-	$string = 'no quit message' if ! defined $string;
-	$string .= "\n" if $string !~ /\n$/;
-
-	cluck longmess("quit $string\n");
-	CORE::exit;
-}

@@ -25,7 +25,7 @@ sub plog
 {
 	my $level			= shift;
 	my $text			= shift;
-	my $force_quit		= shift || 0;  # Optional third parameter for force quit
+	my $force_quit		= shift || 0;  # Optional third parameter for force quit, mainly for my debugging
 
 	my $date_time		= localtime();
 	my $subroutine		= 'main'; # get caller - handle packed executables better
@@ -90,7 +90,7 @@ sub plog
 				print "$text\n";
 			}
 
-			&quit if $level == 0 && $exit_on_error;
+			&quit($text) if $level == 0 && $exit_on_error;
 
 			return 1;
 		}
@@ -127,7 +127,7 @@ sub plog
 		&show_dialog("namefix.pl ERROR", "$text");
 	}
 
-	&quit if $level == 0 && $exit_on_error;
+	&quit($text) if $level == 0 && $exit_on_error;
 
 	return 1;
 }

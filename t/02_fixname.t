@@ -7,12 +7,6 @@ use FindBin qw($Bin);
 use File::Copy;
 use File::Path qw(make_path remove_tree);
 
-sub quit
-{
-	my $string = shift;
-	die $string;
-}
-
 use lib "$Bin/../libs";
 
 use config;
