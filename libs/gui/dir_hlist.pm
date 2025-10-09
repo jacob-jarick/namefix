@@ -80,7 +80,7 @@ sub hide_rc_menu
 
 sub hlist_cd
 {
-	if(&globals::busy)
+	if(&state::busy)
 	{
 		&misc::plog(1, "dir::hlist_cd: cannot CD, busy\n");
 		return;

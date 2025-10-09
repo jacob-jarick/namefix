@@ -57,7 +57,7 @@ sub ls_dir
 	{
 		if(&state::check('stop'))
 		{
-			&plog(1, "listing stopped by user");
+			&misc::plog(1, "listing stopped by user");
 			&state::set('idle');
 			return;
 		}
@@ -81,7 +81,7 @@ sub ls_dir
 
 		if(&state::check('stop'))
 		{
-			&plog(1, "listing stopped by user");
+			&misc::plog(1, "listing stopped by user");
 			&state::set('idle');
 			return;
 		}
@@ -127,7 +127,7 @@ sub ls_dir_print
 
 	if(&state::check('stop'))
 	{
-		&plog(1, "listing stopped by user");
+		&misc::plog(1, "listing stopped by user");
 		# as this has a return it is up to the calling function to set idle
 		return;
 	}

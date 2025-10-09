@@ -23,7 +23,7 @@ sub fix
 {
 	if(&state::check('stop'))
 	{
-		&plog(1, "STOP flag set, aborting fixname");
+		&misc::plog(1, "STOP flag set, aborting fixname");
 		return 0;
 	}
 
@@ -469,7 +469,7 @@ sub fix
 			$newfile,
 
 			\%tags_h,
-			\%tags_h_new,
+			\%tags_h_new
 		);
 	}
 };
@@ -485,7 +485,7 @@ sub fn_rename
 {
 	if(&state::check('stop'))
 	{
-		&plog(1, "STOP flag set, aborting rename");
+		&misc::plog(1, "STOP flag set, aborting rename");
 		return 0;
 	}
 

@@ -18,11 +18,36 @@ sub p
 {
 	&main::quit("CLI should not use p") if($globals::CLI);
 
-	my $file1	= shift;
-	my $file2	= shift;
-	my $ref1	= shift;
-	my $ref2	= shift;
+	my $file1		= shift;
+	my $file2		= shift;
+	my $ref1		= shift;	# if id3 mode, hash ref of old tags
+	my $ref2		= shift;	# if id3 mode, hash ref of new tags
+
+	my $count		= 0;
+	my $target_file = undef;
+
+	if(&state::check('list'))
+	{
+		$target_file = $file1;
+	}
+	elsif(&state::check('run'))
+	{
+		if($globals::PREVIEW)
+		{
+			$target_file = $file1;
+		}
+		else
+		{
+			$target_file = $file2;
+		}
+	}
+
+
 	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
+
+	# ------------------------------------------------------------------
+	# add blank line and return
+	# special print 1
 
 	if(defined $file2 && $file2 eq '<BLANK>')
 	{
@@ -32,6 +57,7 @@ sub p
 
 	# ------------------------------------------------------------------
 	# add up directory and return
+	# special print 2
 
 	if($file1 eq '..')
 	{
@@ -52,16 +78,13 @@ sub p
 	}
 
 	# ------------------------------------------------------------------
-
-	my $count		= 0;
-	my $target_file	= $file1;
-	$target_file	= $file2 if &state::check('run');
+	# these checks need to come after special print 1 and 2
 
 	&main::quit("p: \$target_file is undef")							if ! defined $target_file;
 	&main::quit("p: \$target_file eq '' is not a file or dir")			if $target_file eq '';
 	&main::quit("p: \$target_file '$target_file' is not a file or dir")	if !-f $target_file && !-d $target_file;
 
-	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);
+	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);	# we only use $path
 	{
 		my $tmp1 = $file1;
 		my $tmp2 = $file2;
