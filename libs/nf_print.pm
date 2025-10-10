@@ -42,7 +42,6 @@ sub p
 		}
 	}
 
-
 	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
 
 	# ------------------------------------------------------------------
@@ -149,6 +148,8 @@ sub p
 # print a blank line
 sub blank
 {
+	&misc::quit("CLI should not use nf_print::blank") if($globals::CLI);
+
 	my $hlpos = $dir_hlist::counter++;	# now we have a ref, incr for next time
 	$dir_hlist::hlist->add($hlpos);
 
@@ -158,6 +159,8 @@ sub blank
 # print .. (parent dir)
 sub parent_dir
 {
+	&misc::quit("CLI should not use nf_print::parent_dir") if($globals::CLI);
+
 	my $hlpos = $dir_hlist::counter++;	# now we have a ref, incr for next time
 
 	my $parent_dir = &misc::get_file_parent_dir(cwd);
@@ -174,6 +177,42 @@ sub parent_dir
 
 	$dir_hlist::hlist->itemCreate($hlpos, 1, -text => '..');
 	return;
+}
+
+sub dir
+{
+	&misc::quit("CLI should not use nf_print::dir") if($globals::CLI);
+
+	my $dir1 = shift;
+	my $dir2 = shift;
+
+	my $target_dir = undef;
+
+	# determine if dir1 or dir2 is one that exists.
+	if(&state::check('list'))
+	{
+		$target_dir = $dir1;
+	}
+	elsif(&state::check('run'))
+	{
+		if($globals::PREVIEW)
+		{
+			$target_dir = $dir1;
+		}
+		else
+		{
+			$target_dir = $dir2;
+		}
+	}
+
+	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
+
+	# sanity checks
+
+	&misc::quit("p: \$target_dir is undef")						if ! defined $target_dir;
+	&misc::quit("p: \$target_dir eq ''")						if $target_dir eq '';
+	&misc::quit("p: \$target_dir '$target_dir' is not a dir")	if !-d $target_dir;
+
 }
 
 1;

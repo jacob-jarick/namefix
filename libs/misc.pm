@@ -360,68 +360,81 @@ sub is_in_array
 # my ($d, $f, $p) = get_file_info($file);
 sub get_file_info
 {
-	my $file	= shift;
+	my $file = shift;
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
 
-	&misc::quit("get_file_info: \$file is undef") if ! defined $file;
-	&misc::quit("get_file_info: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
-
-	my $file_path	= &get_file_path($file);
-	my $file_name	= &get_file_name($file_path);
-	my $file_dir	= &get_file_parent_dir($file_path);
-
-	return ($file_dir, $file_name, $file_path);
+	return ($parent_dir, $file_name, $full_path);
 }
 
 sub get_file_path
 {
 	my $file	= shift;
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
 
-	&misc::quit("get_file_path: \$file is undef") if ! defined $file;
-	&misc::quit("get_file_path: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
-
-	my $file_path	= File::Spec->rel2abs($file);
-	$file_path	=~ s/\\/\//g;
-
-	return $file_path;
+	return $full_path;
 }
 
 sub get_file_parent_dir
 {
-	my $file_path	= shift;
-	$file_path		= &get_file_path($file_path);
-	my @tmp			= split(/\//, $file_path);
-	my $file_name	= splice @tmp , $#tmp, 1;
-	my $file_dir	= join('/', @tmp);
+	my $file = shift;
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
 
-	return $file_dir;
+	return $parent_dir;
 }
 
 sub get_file_name
 {
-	my $file_path	= shift;
-	$file_path		= &get_file_path($file_path);
-	my @tmp			= split(/\//, $file_path);
+	my $file = shift;
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
 
-	return $tmp[$#tmp];
+	return $file_name;
 }
 
 sub get_file_ext
 {
-	my $file_path	= shift;
+	my $file = shift;
 
-	return undef if !-f $file_path;
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
 
-	$file_path		= &get_file_path($file_path);
-	my @tmp			= split(/\//, $file_path);
-	my $file_name	= splice @tmp , $#tmp, 1;
-
-	if ($file_name =~ /^(.+)\.(.+?)$/)
+	if($type eq 'dir')
 	{
-		return ($1, $2);
+		&misc::plog(3, "get_file_ext: '$file' is a directory, returning undef for extension");	
 	}
 
-	return undef;
+	return ($file_name, $file_ext);
 }
 
+# get file full path, parent dir, name and extension
+sub get_file_all
+{
+	my $file	= shift;
+
+	&misc::quit("get_file_all: \$file is undef") if ! defined $file;
+	&misc::quit("get_file_all: \$file eq ''") if $file eq '';
+	&misc::quit("get_file_all: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+
+	my $type = (-d $file) ? 'dir' : 'file';
+
+	# get full path
+	my $full_path	= File::Spec->rel2abs($file);
+	$full_path	=~ s/\\/\//g;
+
+	# get parent dir
+	my $parent_dir = $full_path;
+	$parent_dir	=~ s/^(.*)\/(.*?)$/$1/;
+
+	# get file name
+	my $file_name = $full_path;
+	$file_name	=~ s/^(.*)\/(.*?)$/$2/;
+
+	# get file extension
+	my $file_ext = undef;
+	if (-f $full_path && $file_name =~ /^(.+)\.(.+?)$/)
+	{
+		$file_ext  = $2;
+	}
+
+	return ($type, $full_path, $parent_dir, $file_name, $file_ext);
+}
 
 1;
