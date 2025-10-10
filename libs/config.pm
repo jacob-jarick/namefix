@@ -8,12 +8,13 @@ use Cwd;
 use Data::Dumper::Concise;
 use FindBin qw($Bin);
 
-our %hash				= ();
-
 require misc;
 require globals;
 
 # -----------------------------------------------------------------------------
+
+our %hash = ();
+
 
 &config_init_value('exit_on_error',		0, 0, 'bool', 'base');
 &config_init_value('debug',				0, 0, 'int', 'base');
@@ -155,7 +156,7 @@ require globals;
 &config_init_value('save_window_size',	0,		0,		'bool',	'base');
 &config_init_value('window_g',			'',		'',		'str',	'geometry');
 
-our $save_extended			= 0;	# save main window options
+our $save_extended = 0;	# save main window options
 
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - ADVANCED TAB
@@ -199,13 +200,9 @@ else
 &config_init_value('zero_log',		1, 1, 'bool',	'base');
 
 
-#######################################################################################################################
-# File and array initialization moved to globals.pm
-#######################################################################################################################
-
-#######################################################################################################################
-# functions
-#######################################################################################################################
+# ---------------------------------------------------------------------------------------------------------------
+# reset_config
+# ---------------------------------------------------------------------------------------------------------------
 
 # reset config to defaults
 
@@ -300,6 +297,12 @@ sub save_hash_helper
 	return &misc::file_append($globals::hash_tsv, "$k_lower\t\t".$hash{$k}{value}."\n");
 }
 
+# ---------------------------------------------------------------------------------------------------------------
+# load_hash
+# ---------------------------------------------------------------------------------------------------------------
+
+# load config from file
+
 sub load_hash
 {
 	&misc::plog(3, "config::save_hash $globals::hash_tsv");
@@ -362,9 +365,10 @@ sub load_hash
 # clear options
 #--------------------------------------------------------------------------------------------------------------
 
+# Clear all options that have save = 'no' by resetting them to their defaults
+
 sub clr_no_save
 {
-	# Clear all options that have save = 'no' by resetting them to their defaults
 	for my $k (keys %hash)
 	{
 		if (defined $hash{$k}{save} && $hash{$k}{save} eq 'no')
@@ -378,6 +382,12 @@ sub clr_no_save
 		}
 	}
 }
+
+# --------------------------------------------------------------------------------------------------------------
+# clear id3 options
+# --------------------------------------------------------------------------------------------------------------
+
+# used in GUI to clear all id3 related options in the MP3 tab
 
 sub clr_id3_options
 {
@@ -394,12 +404,19 @@ sub clr_id3_options
 		}
 	}
 
-		&misc::plog(2, 'cleared id3 options');
+	&misc::plog(2, 'cleared id3 options');
 }
+
+# --------------------------------------------------------------------------------------------------------------
+# set_value
+# --------------------------------------------------------------------------------------------------------------
+
+# set a config value with checks
 
 sub set_value
 {
-	my ($key, $value) = @_;
+	my $key		= shift;
+	my $value	= shift;
 
 	if(!defined $key)
 	{
@@ -460,6 +477,10 @@ sub set_value
 
 	return; # should never get here
 }
+
+# --------------------------------------------------------------------------------------------------------------
+# config_init_value
+# --------------------------------------------------------------------------------------------------------------
 
 # deliberately no checks. used only by this library to reduce code duplication
 
