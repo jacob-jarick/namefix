@@ -14,6 +14,8 @@ my $arrow = ' -> ';
 # namefix print
 #--------------------------------------------------------------------------------------------------------------
 
+# used by run and list modes to print filenames and id3 tags to the hlist
+
 sub p
 {
 	&misc::quit("CLI should not use p") if($globals::CLI);
@@ -29,7 +31,7 @@ sub p
 
 	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
 
-	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);	# we only use $path
+	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);	
 	{
 		my $tmp1 = $file1;
 		my $tmp2 = $file2;
@@ -39,12 +41,6 @@ sub p
 		$tmp2 =~ s/^\.*(\/|\\)// if defined $tmp2;
 
 		&dir_hlist::info_add($hlpos, $path, $tmp1, $tmp2);
-	}
-
-	if(&state::check('run'))
-	{
-		$file_name = $file1;
-		$file_name =~ s/^.*(\\|\/)//;
 	}
 
 	&dir_hlist::fn_update_delay;
@@ -74,10 +70,10 @@ sub p
 
 	$globals::hlist_file_row = $count;
 
-	my $file1_clean	= $file_name;
-	$file1_clean	= $path if $config::hash{recursive}{value} && -d $path;
+	my $hlist_file1_label = $file_name;
+	$hlist_file1_label = $path if $config::hash{recursive}{value} && -d $path;
 
-	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file1_clean);
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $hlist_file1_label);
 
 	return if (-d $file1);
 
@@ -102,12 +98,12 @@ sub p
 	# ------------------------------------------------------------------------------------------------
 	# Start of rename / preview section
 
-	my $file2_clean				= $file2;
-	$file2_clean				=~ s/^.*\///;
+	my $hlist_file2_label = $file2;
+	$hlist_file2_label =~ s/^.*\///;
 	$globals::hlist_newfile_row	= $count;
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $arrow);
-	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $file2_clean);
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $hlist_file2_label);
 
 	# ------------------------------------------------------------------------------------------------
 	# finished UNLESS id3 mode is enabled
@@ -168,6 +164,14 @@ sub dir
 
 	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
 }
+
+# --------------------------------------------------------------------------------------------------------------
+# set_target
+# --------------------------------------------------------------------------------------------------------------
+
+# Determine which of the two files/dirs is exists.
+# list mode, it's always file1
+# run mode, if preview, it's file1, else file2
 
 sub set_target
 {

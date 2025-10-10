@@ -15,7 +15,6 @@ require globals;
 
 our %hash = ();
 
-
 &config_init_value('exit_on_error',		0, 0, 'bool', 'base');
 &config_init_value('debug',				0, 0, 'int', 'base');
 &config_init_value('log_stdout',		0, 0, 'bool', 'base');

@@ -360,7 +360,9 @@ sub is_in_array
 sub get_file_info
 {
 	my $file = shift;
-	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
+	my $check_file_exists = shift // 1; # default to checking if file exists
+
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file, $check_file_exists);
 
 	return ($parent_dir, $file_name, $full_path);
 }
@@ -368,7 +370,9 @@ sub get_file_info
 sub get_file_path
 {
 	my $file	= shift;
-	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
+	my $check_file_exists = shift // 1; # default to checking if file exists
+
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file, $check_file_exists);
 
 	return $full_path;
 }
@@ -376,7 +380,9 @@ sub get_file_path
 sub get_file_parent_dir
 {
 	my $file = shift;
-	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
+	my $check_file_exists = shift // 1; # default to checking if file exists
+
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file, $check_file_exists);
 
 	return $parent_dir;
 }
@@ -384,7 +390,9 @@ sub get_file_parent_dir
 sub get_file_name
 {
 	my $file = shift;
-	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
+	my $check_file_exists = shift // 1; # default to checking if file exists
+
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file, $check_file_exists);
 
 	return $file_name;
 }
@@ -392,8 +400,9 @@ sub get_file_name
 sub get_file_ext
 {
 	my $file = shift;
+	my $check_file_exists = shift // 1; # default to checking if file exists
 
-	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file);
+	my ($type, $full_path, $parent_dir, $file_name, $file_ext) = &get_file_all($file, $check_file_exists);
 
 	if($type eq 'dir')
 	{
@@ -404,19 +413,31 @@ sub get_file_ext
 }
 
 # get file full path, parent dir, name and extension
+# $check_file_exists: if 0, allows processing of non-existent files for path extraction
 sub get_file_all
 {
 	my $file = shift;
+	my $check_file_exists = shift // 1; # default to checking if file exists
 
 	&misc::quit("get_file_all: \$file is undef") if ! defined $file;
 	&misc::quit("get_file_all: \$file eq ''") if $file eq '';
-	&misc::quit("get_file_all: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+	
+	# Only check file existence if requested
+	if ($check_file_exists) {
+		&misc::quit("get_file_all: \$file '$file' is not a dir or file") if !-f $file && !-d $file;
+	}
 
-	my $type = (-d $file) ? 'dir' : 'file';
+	# Determine type (only meaningful when checking file existence)
+	my $type = undef;
+	if($check_file_exists)
+	{	
+		$type = (-d $file) ? 'dir' : 'file';
+	}
+	# Note: For non-existent files ($check_file_exists = 0), $type remains undef
 
-	# get full path
-	my $full_path	= File::Spec->rel2abs($file);
-	$full_path		=~ s/\\/\//g;
+	# get full path - File::Spec->rel2abs works even for non-existent files
+	my $full_path = File::Spec->rel2abs($file);
+	$full_path =~ s/\\/\//g;
 
 	# get parent dir
 	my $parent_dir	= $full_path;
@@ -429,7 +450,16 @@ sub get_file_all
 	# get file extension
 	my $file_ext	= undef;
 
-	if (-f $full_path && $file_name =~ /^(.+)\.(.+?)$/)
+	if(!$check_file_exists)
+	{
+		# If not checking if file exists, we can still try to extract the extension from the filename
+		if($file_name =~ /^(.+)\.(.+?)$/)
+		{
+			$file_ext  = $2;
+		}
+	}
+
+	elsif (-f $full_path && $file_name =~ /^(.+)\.(.+?)$/)
 	{
 		$file_ext  = $2;
 	}

@@ -38,7 +38,7 @@ sub fix
 
 	my ($type, $file_path, $dir, $file_name, $file_ext) = &misc::get_file_all($file);
 
-	$file_ext = $file_ext || '';
+	$file_ext = $file_ext // '';
 
 	chdir $dir;
 
