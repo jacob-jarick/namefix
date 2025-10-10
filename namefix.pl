@@ -86,7 +86,11 @@ if (defined $ARGV[0] && $ARGV[0] eq '--gui-test')
 	$gui_test = 1;
 }
 
-$globals::dir = $ARGV[0] if defined $ARGV[0];
+if (defined $ARGV[0] && -d $ARGV[0]) 
+{
+	$globals::dir = $ARGV[0];
+	chdir $globals::dir;
+}
 
 #--------------------------------------------------------------------------------------------------------------
 # load config file if it exists
