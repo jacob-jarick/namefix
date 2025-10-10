@@ -33,12 +33,8 @@ sub p
 
 	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);	
 	{
-		my $tmp1 = $file1;
-		my $tmp2 = $file2;
-
-		# remove directory if any
-		$tmp1 =~ s/^\.*(\/|\\)//;
-		$tmp2 =~ s/^\.*(\/|\\)// if defined $tmp2;
+		my $tmp1 = &misc::get_file_name($file1, 0);
+		my $tmp2 = &misc::get_file_name($file2, 0) if defined $file2;
 
 		&dir_hlist::info_add($hlpos, $path, $tmp1, $tmp2);
 	}
@@ -73,9 +69,10 @@ sub p
 	my $hlist_file1_label = $file_name;
 	$hlist_file1_label = $path if $config::hash{recursive}{value} && -d $path;
 
-	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $hlist_file1_label);
+	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text=> $hlist_file1_label);
 
-	return if (-d $file1);
+	# finish here if directory, chose check and just check both
+	return if ((defined $file1 && -d $file1) || (defined $file2 && -d $file2));
 
 	if($config::hash{id3_mode}{value})
 	{
@@ -98,8 +95,7 @@ sub p
 	# ------------------------------------------------------------------------------------------------
 	# Start of rename / preview section
 
-	my $hlist_file2_label = $file2;
-	$hlist_file2_label =~ s/^.*\///;
+	my $hlist_file2_label = &misc::get_file_name($file2, 0);
 	$globals::hlist_newfile_row	= $count;
 
 	$dir_hlist::hlist->itemCreate($hlpos, $count++, -text => $arrow);
