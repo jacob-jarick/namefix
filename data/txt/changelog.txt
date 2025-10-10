@@ -1,3 +1,51 @@
+commit f9b2615723bbde7d14890b23e491e7784b3a4c37
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 16:50:47 2025 +0800
+
+    recursive no longer prints files when running / preview changes unless there have been changes
+
+commit f03aacc9ee6adabc8c53a18433a33f74543d96a0
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 16:36:45 2025 +0800
+
+    fix gui path argument
+
+commit 9f3a70bf58bca43bb83e7e85c12492adac946900
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 16:34:38 2025 +0800
+
+    Update nf_print.pm
+
+commit 47b5de4094f04ea20fb687ea7fa83bf0423c0c16
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 16:24:42 2025 +0800
+
+    get_file_all
+
+commit 9923b64dec32c780d89cbd0da86974d852a7a76f
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 15:49:51 2025 +0800
+
+    formatting
+
+commit 2e6145fef2b72f47e066c2ebf8e8a770aa516946
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 15:44:04 2025 +0800
+
+    removed &config::stop, &fixname::fix updated &nf_print
+
+commit 3f87a1a6c8bc1fde5ac1a02be85254dfd75b176e
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 14:05:47 2025 +0800
+
+    misc::get_file_all update and begin nf_print::dir
+
+commit ac62b8deef6344691a77f6f7ab174086f2deb57d
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 04:43:30 2025 +0800
+
+    4.1.20 build
+
 commit 563d184b8bd15e5de6df96a3e5bccc485486b817
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Fri Oct 10 04:41:57 2025 +0800
@@ -49,52 +97,4 @@ Date:   Thu Oct 9 22:34:41 2025 +0800
     4.1.19 build
 
 commit ac5ecfd6f5186883019bb2c02033a231c6ef183a
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 22:33:34 2025 +0800
-
-    4.1.19
-    
-    gui dir cd fix
-    nf_print::p patching to handle edge cases (need to properly overhaul)
-    updated &plog calls to &misc::plog
-
-commit e4aa31650c8229542c80a79fdfa9615151b50f4a
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 21:37:15 2025 +0800
-
-    4.1.18 - binaries
-
-commit 1820cdfc09172fc272a4a74710c6c4f9a0672bc2
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 21:36:00 2025 +0800
-
-    4.1.18
-    
-    better state handling which allows for better user interruption
-
-commit 1e896ac42076e194be26264df3faf62ba65a1d95
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 21:30:30 2025 +0800
-
-    improved logic
-
-commit 8a47dd53cea036cebedc39ffffd1cc4e1bb4ade6
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 21:01:40 2025 +0800
-
-    shifted state funcs to their own file
-
-commit e155da8ceba70a25c5eb555787f9cbb72f63ac3c
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 20:50:01 2025 +0800
-
-    Update run_namefix.pm
-
-commit 56673a9572f65ab4759ecfc1b9a9fbbfdfb4767b
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 20:31:55 2025 +0800
-
-    state migration
-
-commit dd9c32e6714b947fa7785b098e958467cd021595
 Author: jacob-jarick <mem.namefix@gmail.com>
