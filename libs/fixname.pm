@@ -46,6 +46,7 @@ sub fix
     my $tag 		        = 0;
     my $file_ext_length	    = 0;
     my $trunc_char_length	= 0;
+    my $TAGS_CHANGED        = 0;
 
     my $newfile		        = $file_name;    
     my $tmpfile		        = '';
@@ -377,7 +378,6 @@ sub fix
     if($tag)
 	{
         # fn & tags haven't changed
-        my $TAGS_CHANGED = 0;
 		
 		# Check and log individual tag changes
 		if(defined $tags_h{artist} && $tags_h{artist} ne $tags_h_new{artist})
@@ -464,14 +464,18 @@ sub fix
 	}
 	else 
 	{
-		&nf_print::p
-		(
-			$file_name,
-			$newfile,
+		# GUI output: only show if there are changes or high debug level
+		if ($file_name ne $newfile || $TAGS_CHANGED)
+		{
+			&nf_print::p
+			(
+				$file_name,
+				$newfile,
 
-			\%tags_h,
-			\%tags_h_new
-		);
+				\%tags_h,
+				\%tags_h_new
+			);
+		}
 	}
 };
 
