@@ -17,18 +17,18 @@ use Carp;
 sub prep_globals
 {
 	# reset misc vars
-	$config::id3_change		= 0;
-	$globals::change 		= 0;
+	$config::id3_change			= 0;
+	$globals::change 			= 0;
 	$globals::SUGGEST_FSFIX 	= 0;
 	$globals::FOUND_TMP 		= 0;
 	$globals::tags_rm_count		= 0;
-	$config::percent_done	= 0;
-	$fixname::enum_count	= 0;
+	$config::percent_done		= 0;
+	$fixname::enum_count		= 0;
 	$globals::last_recr_dir 	= '';
 
 	# escape replace word if regexp is disabled
 	$config::ins_str_old_escaped = $config::hash{ins_str_old}{value};
-	$config::ins_str_old_escaped = quotemeta $config::hash{ins_str_old}{value}		if($config::hash{filter_regex}{value} == 1);
+	$config::ins_str_old_escaped = quotemeta $config::hash{ins_str_old}{value}	if($config::hash{filter_regex}{value} == 1);
 
 	# update killword list if file exists
 	@globals::kill_words_arr = misc::readsf("$globals::killwords_file")	if(-f $globals::killwords_file);

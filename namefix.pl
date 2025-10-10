@@ -161,27 +161,48 @@ $mw->bind('<KeyPress>' => sub
 	}
 	if($Tk::event->K eq 'F5')
 	{
-		print "refresh\n";
-		$globals::PREVIEW = 1;
-		&dir::ls_dir;
+		if(&state::busy())
+		{
+			&misc::plog(1, "F5 pressed but busy, ignoring");
+		}
+		else
+		{
+			&misc::plog(0, "User pressed F5 - refresh list");
+			$globals::PREVIEW = 1;	# always force preview on F5
+			&dir::ls_dir;
+		}
 	}
 	if($Tk::event->K eq 'F6')
 	{
-		print "preview\n";
-		$globals::PREVIEW = 1;
-		&run_namefix::run;
+		if(&state::busy())
+		{
+			&misc::plog(1, "F6 pressed but busy, ignoring");
+		}
+		else
+		{
+			&misc::plog(0, "User pressed F6 - run preview");
+			$globals::PREVIEW = 1;	# always force preview on F6
+			&run_namefix::run;
+		}
 	}
 	# Escape
 	if($Tk::event->K eq 'Escape')
 	{
-		print "Escape Key = stopping any actions\n";
-		&config::halt;
+		if(&state::busy())
+		{
+			&misc::plog(2, "User pressed Escape - stopping any actions");
+			&state::set('stop');
+		}
+		else
+		{
+			&misc::plog(1, "User pressed Escape - no actions to stop");
+		}
 	}
 
 	# Help - TODO
 	if($Tk::event->K eq 'F1')
 	{
-		print "Hello\n";
+		&misc::plog(2, "User pressed F1 - Help not yet implemented");
 	}
 });
 
@@ -500,7 +521,7 @@ $frm_bottom -> Button
 		}
 		else
 		{
-			&config::halt;
+			&state::set('stop');
 			&misc::plog(0, "User pressed STOP button");
 		}
 	}

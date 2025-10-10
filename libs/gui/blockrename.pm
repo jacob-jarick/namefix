@@ -159,7 +159,7 @@ sub gui
 	(
 		-text=>				'STOP !',
 		-activebackground=>	'red',
-		-command=>			sub {&config::halt;}
+		-command=>			sub {&state::set('stop');}
 	)
 	->pack(-side=> 'left');
 

@@ -357,7 +357,6 @@ sub is_in_array
 	return 0;
 }
 
-# my ($d, $f, $p) = get_file_info($file);
 sub get_file_info
 {
 	my $file = shift;
@@ -407,7 +406,7 @@ sub get_file_ext
 # get file full path, parent dir, name and extension
 sub get_file_all
 {
-	my $file	= shift;
+	my $file = shift;
 
 	&misc::quit("get_file_all: \$file is undef") if ! defined $file;
 	&misc::quit("get_file_all: \$file eq ''") if $file eq '';
@@ -417,18 +416,19 @@ sub get_file_all
 
 	# get full path
 	my $full_path	= File::Spec->rel2abs($file);
-	$full_path	=~ s/\\/\//g;
+	$full_path		=~ s/\\/\//g;
 
 	# get parent dir
-	my $parent_dir = $full_path;
-	$parent_dir	=~ s/^(.*)\/(.*?)$/$1/;
+	my $parent_dir	= $full_path;
+	$parent_dir		=~ s/^(.*)\/(.*?)$/$1/;
 
-	# get file name
-	my $file_name = $full_path;
-	$file_name	=~ s/^(.*)\/(.*?)$/$2/;
+	# get file name (includes extension)
+	my $file_name	= $full_path;
+	$file_name		=~ s/^(.*)\/(.*?)$/$2/;
 
 	# get file extension
-	my $file_ext = undef;
+	my $file_ext	= undef;
+
 	if (-f $full_path && $file_name =~ /^(.+)\.(.+?)$/)
 	{
 		$file_ext  = $2;

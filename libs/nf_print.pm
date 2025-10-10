@@ -24,32 +24,10 @@ sub p
 	my $ref2		= shift;	# if id3 mode, hash ref of new tags
 
 	my $count		= 0;
-	my $target_file = undef;
 
-	if(&state::check('list'))
-	{
-		$target_file = $file1;
-	}
-	elsif(&state::check('run'))
-	{
-		if($globals::PREVIEW)
-		{
-			$target_file = $file1;
-		}
-		else
-		{
-			$target_file = $file2;
-		}
-	}
+	my $target_file = &set_target($file1, $file2);
 
 	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
-
-	# ------------------------------------------------------------------
-	# these checks need to come after special print 1 and 2
-
-	&misc::quit("p: \$target_file is undef")							if ! defined $target_file;
-	&misc::quit("p: \$target_file eq '' is not a file or dir")			if $target_file eq '';
-	&misc::quit("p: \$target_file '$target_file' is not a file or dir")	if !-f $target_file && !-d $target_file;
 
 	my ($dir, $file_name, $path) =  &misc::get_file_info($target_file);	# we only use $path
 	{
@@ -186,33 +164,39 @@ sub dir
 	my $dir1 = shift;
 	my $dir2 = shift;
 
-	my $target_dir = undef;
+	my $target_dir = &set_target($dir1, $dir2);
+
+	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
+}
+
+sub set_target
+{
+	my $file1	= shift;
+	my $file2 	= shift;
+	my $target	= undef;
 
 	# determine if dir1 or dir2 is one that exists.
 	if(&state::check('list'))
 	{
-		$target_dir = $dir1;
+		$target = $file1;
 	}
 	elsif(&state::check('run'))
 	{
 		if($globals::PREVIEW)
 		{
-			$target_dir = $dir1;
+			$target = $file1;
 		}
 		else
 		{
-			$target_dir = $dir2;
+			$target = $file2;
 		}
 	}
 
-	my $hlpos	= $dir_hlist::counter++;	# now we have a ref, incr for next time
+	&misc::quit("p: \$target is undef")							if ! defined $target;
+	&misc::quit("p: \$target eq ''")							if $target eq '';
+	&misc::quit("p: \$target '$target' is not a dir or file")	if !-d $target && !-f $target;
 
-	# sanity checks
-
-	&misc::quit("p: \$target_dir is undef")						if ! defined $target_dir;
-	&misc::quit("p: \$target_dir eq ''")						if $target_dir eq '';
-	&misc::quit("p: \$target_dir '$target_dir' is not a dir")	if !-d $target_dir;
-
+	return $target;
 }
 
 1;

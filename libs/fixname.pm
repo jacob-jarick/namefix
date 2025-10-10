@@ -31,14 +31,15 @@ sub fix
 	# Vars
     # -----------------------------------------
 
-	my $file 	= shift;
+	my $file 	= shift;	# should be full or relative path
 	my $path	= '';
 
-	&misc::quit ("fixname::fix : ERROR file is undef")		        	if ! defined $file;
-	&misc::quit ("fixname::fix : ERROR file eq ''")			        	if $file eq '';
-	&misc::quit ("fixname::fix : ERROR file '$file' isn't dir/file")	if !-d $file && !-f $file;
+	# ($dir, $file, $path) =  &misc::get_file_info($file);
 
-	($dir, $file, $path) =  &misc::get_file_info($file);
+	my ($type, $file_path, $dir, $file_name, $file_ext) = &misc::get_file_all($file);
+
+	$file_ext = $file_ext || '';
+
 	chdir $dir;
 
     my $IS_AUDIO_FILE	    = 0;
@@ -46,17 +47,16 @@ sub fix
     my $file_ext_length	    = 0;
     my $trunc_char_length	= 0;
 
-    my $newfile		        = $file;
-    my $file_ext		    = '';
+    my $newfile		        = $file_name;    
     my $tmpfile		        = '';
 
 	# Only check for audio file extensions on actual files, not directories
-	$IS_AUDIO_FILE = 1 if -f $file && $file =~ /\.($globals::id3_ext_regex)$/i;
+	$IS_AUDIO_FILE = 1 if -f $file_path && $file_name =~ /\.($globals::id3_ext_regex)$/i;
 
 	# check file exists
-	if($IS_AUDIO_FILE && $config::hash{id3_mode}{value} && !-f $file)
+	if($IS_AUDIO_FILE && $config::hash{id3_mode}{value} && !-f $file_path)
 	{
-		&misc::plog(0, "check file exists error !-f '$file'\n\t\$dir = '$dir'\n\t\$path = '$path'\n\t\$globals::dir = '$globals::dir'\n\tIS_AUDIO_FILE = '$IS_AUDIO_FILE'\n\t\$globals::id3_ext_regex = '$globals::id3_ext_regex'");
+		&misc::plog(0, "check file exists error !-f '$file_path'\n\t\$file_name = '$file_name'\n\t\$dir = '$dir'\n\t\$file_path = '$file_path'\n\tIS_AUDIO_FILE = '$IS_AUDIO_FILE'\n\t\$globals::id3_ext_regex = '$globals::id3_ext_regex'");
 		return;
 	}
 
@@ -69,16 +69,16 @@ sub fix
     my $RENAME = 0;
 
     # file extionsion check
-    $RENAME = 1 if -f $file && ($config::hash{ignore_file_type}{value} || $file =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
+    $RENAME = 1 if -f $file_path && ($config::hash{ignore_file_type}{value} || $file_name =~ /\.($config::hash{file_ext_2_proc}{value})$/i);
 
 	# dir check, is a directory, dir mode is enabled
-    $RENAME = 1 if $config::hash{proc_dirs}{value} && -d $file;
+    $RENAME = 1 if $config::hash{proc_dirs}{value} && -d $file_path;
 
 	# processing all file types & dirs
     $RENAME = 1 if $config::hash{proc_dirs}{value} && $config::hash{ignore_file_type}{value};
 
 	# didnt match filter
-    return if $config::hash{filter}{value} && !&filter::match($file);
+    return if $config::hash{filter}{value} && !&filter::match($file_name);
 
 	# rules say file shouldn't be renamed
 	return if !$RENAME;
@@ -113,13 +113,13 @@ sub fix
 	# currently it just prints and returns
 	# printing is probably ugly
 
-	if($globals::CLI && $config::hash{exif_show}{value} && &jpegexif::file_supports_exif($file))
+	if($globals::CLI && $config::hash{exif_show}{value} && &jpegexif::file_supports_exif($file_path))
 	{
-		my $exif_tags_ref = &jpegexif::list_exif_tags($file);
+		my $exif_tags_ref = &jpegexif::list_exif_tags($file_path);
 
 		if(defined $exif_tags_ref && ref($exif_tags_ref) eq 'HASH')
 		{
-			print "\n=== EXIF Data for $file ===\n";
+			print "\n=== EXIF Data for $file_path ===\n";
 			# loop through tags and print them
 			for my $tag (sort keys %$exif_tags_ref)
 			{
@@ -129,33 +129,33 @@ sub fix
 		}
 		else
 		{
-			print "No EXIF data found for $file\n";
+			print "No EXIF data found for $file_path\n";
 		}
 	}
 
 	# EXIF data removal
 
-	if($config::hash{exif_rm_all}{value} && &jpegexif::file_supports_exif($file))
+	if($config::hash{exif_rm_all}{value} && &jpegexif::file_supports_exif($file_path))
 	{
-		my $writable_tag_count = &jpegexif::writable_exif_tag_count($file);		
+		my $writable_tag_count = &jpegexif::writable_exif_tag_count($file_path);
 		if($writable_tag_count > 0)
 		{
-			&misc::plog(2, "'$file' has $writable_tag_count writable EXIF tags");
+			&misc::plog(2, "'$file_path' has $writable_tag_count writable EXIF tags");
 
 			if(!$globals::PREVIEW)
 			{
-				jpegexif::remove_exif_data($file);
+				jpegexif::remove_exif_data($file_path);
 				$globals::exif_rm_count++;
 				&misc::plog(2, "'$file' removed exif data");
 			}
 			else
 			{
-				&misc::plog(2, "'$file' would remove exif data (preview mode)");
+				&misc::plog(2, "'$file_path' would remove exif data (preview mode)");
 			}			
 		}
 		else
 		{
-			&misc::plog(2, "'$file' has no EXIF data, skipping removal");
+			&misc::plog(2, "'$file_path' has no EXIF data, skipping removal");
 			return;
 		}
 	}
@@ -169,7 +169,7 @@ sub fix
 
 	if($config::hash{id3_mode}{value} && $IS_AUDIO_FILE)
 	{
-		my $ref		= &mp3::get_tags($path);
+		my $ref		= &mp3::get_tags($file_path);
 		%tags_h		= %$ref;
 		%tags_h_new	= %tags_h;
 		$tag		= 1;
@@ -177,7 +177,7 @@ sub fix
 		my @tags_to_fix = ('artist', 'title', 'album', 'comment');
 		for my $k(@tags_to_fix)
 		{
-			&misc::quit("ERROR processing audio file $file - $k is undef") if ! defined $tags_h_new{$k};
+			&misc::quit("ERROR processing audio file $file_path - tag $k is undef") if ! defined $tags_h_new{$k};
 			$tags_h_new{$k} = &fn_pre_clean	(0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_replace	(0, $tags_h_new{$k});
 			$tags_h_new{$k} = &fn_spaces	(0, $tags_h_new{$k});
@@ -192,7 +192,7 @@ sub fix
 
 	if($config::hash{id3_fn_from_tag}{value} && $IS_AUDIO_FILE)
 	{
-		my $ref		= &mp3::get_tags($path);
+		my $ref		= &mp3::get_tags($file_path);
 		%tags_h		= %$ref;
 
 		# allow artist override
@@ -223,8 +223,8 @@ sub fix
 		}
 
 		my $fn_from_tags = '';	# always start blank
-		my $fn_ext = $file;
-		$fn_ext =~ s/^(.*)(\.)(.{3,4})$/$3/e;
+		# my $fn_ext = $file;
+		# $fn_ext =~ s/^(.*)(\.)(.{3,4})$/$3/e;
 		my $id3_fn_gen_error_count = 0;
 
 		# validate tags
@@ -266,19 +266,19 @@ sub fix
 		{
 			if($config::hash{id3_fn_style}{value} == 0)
 			{
-				$fn_from_tags = "$tags_h{artist} - $tags_h{title}.$fn_ext";
+				$fn_from_tags = "$tags_h{artist} - $tags_h{title}.$file_ext";
 			}
 			elsif($config::hash{id3_fn_style}{value} == 1)
 			{
-				$fn_from_tags = "$tags_h{artist} - $tags_h{track} - $tags_h{title}.$fn_ext";
+				$fn_from_tags = "$tags_h{artist} - $tags_h{track} - $tags_h{title}.$file_ext";
 			}
 			elsif($config::hash{id3_fn_style}{value} == 2)
 			{
-				$fn_from_tags = "$tags_h{artist} - $tags_h{album} - $tags_h{title}.$fn_ext";
+				$fn_from_tags = "$tags_h{artist} - $tags_h{album} - $tags_h{title}.$file_ext";
 			}
 			elsif($config::hash{id3_fn_style}{value} == 3)
 			{
-				$fn_from_tags = "$tags_h{artist} - $tags_h{album} - $tags_h{track} - $tags_h{title}.$fn_ext";
+				$fn_from_tags = "$tags_h{artist} - $tags_h{album} - $tags_h{track} - $tags_h{title}.$file_ext";
 			}
 			else
 			{
@@ -286,13 +286,13 @@ sub fix
 			}
 
 			$newfile = $fn_from_tags;
-			&misc::plog(2, "'$file' generated new filename from id3 tags: '$newfile'");
+			&misc::plog(2, "'$file_path' generated new filename from id3 tags: '$newfile'");
 		}
 	}
 
 	#------------------------------------------------------------------------------
 
-	$newfile = run_fixname_subs($file, $newfile);
+	$newfile = &run_fixname_subs($file_path, $newfile);
 
 	# End of cleanups
 
@@ -351,7 +351,7 @@ sub fix
 	{
         if(!$globals::PREVIEW)
 		{
-            &mp3::rm_tags($file);
+            &mp3::rm_tags($file_path);
         }
         else
 		{
@@ -425,20 +425,20 @@ sub fix
 
 		if($TAGS_CHANGED)
 		{	
-			&misc::plog(3, "'$path' update ID3 tags");	
+			&misc::plog(3, "'$file_path' update ID3 tags");	
 			if(!$globals::PREVIEW)
 			{
-				&mp3::write_tags("$path", \%tags_h_new);
+				&mp3::write_tags("$file_path", \%tags_h_new);
 			}
-			&misc::plog(2, "'$path' ID3 tags updated");
+			&misc::plog(2, "'$file_path' ID3 tags updated");
 		}
 	}
 
-	if($file ne $newfile)
+	if($file_name ne $newfile)
 	{
 		if(!$globals::PREVIEW)
 		{
-			if(!&fn_rename($file, $newfile) )
+			if(!&fn_rename($file_path, $newfile) )
 			{
 				&misc::plog(0, "fixname: '$newfile' cannot perform rename, file already exists");
 				return 0;
@@ -453,20 +453,20 @@ sub fix
 	if ($globals::CLI) 
 	{
 		# CLI output: simple before -> after format
-		if ($file ne $newfile) 
+		if ($file_name ne $newfile) 
 		{
-			print "'$file' -> '$newfile'\n";
+			print "'$file_name' -> '$newfile'\n";
 		}
 		elsif ($config::hash{debug}{value} >= 2)
 		{
-			print "'$file' (no change)\n";
+			print "'$file_name' (no change)\n";
 		}
 	}
 	else 
 	{
 		&nf_print::p
 		(
-			$file,
+			$file_name,
 			$newfile,
 
 			\%tags_h,
