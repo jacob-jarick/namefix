@@ -56,7 +56,7 @@ is( &fixname::fn_unscene($file), $expected,  'fn_unscene test (s03e11 to 03x11)'
 
 # fn_scene
 &config::reset_config();
-$config::hash{scene}{value} = 0;  # Set to 0 to enable processing
+$config::hash{scene}{value} = 1;  # Set to 0 to enable processing
 $file = "Hello - 03x11 - Today Tonight.avi";
 $expected = 'Hello - S03E11 - Today Tonight.avi';
 is( &fixname::fn_scene($file), $expected,  'fn_scene test (03x11 to S03E11)');

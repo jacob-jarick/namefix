@@ -111,7 +111,7 @@ sub reset_test_config {
 # fn_scene - Convert 03x11 to S03E11
 {
     &reset_test_config();
-    $config::hash{scene}{value} = 0; # 0 enables processing
+    $config::hash{scene}{value} = 1; # 1 enables processing
     
     my $result = &fixname::fn_scene('Show - 03x11 - Episode Title.avi');
     is( $result, 'Show - S03E11 - Episode Title.avi', 'fn_scene: 03x11 to S03E11' );

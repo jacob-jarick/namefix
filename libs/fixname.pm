@@ -816,7 +816,9 @@ sub fn_unscene
 	&misc::quit("fn_unscene \$file_new is undef\n")	if ! defined $file_new;
 	&misc::quit("fn_unscene \$file_new eq ''\n")	if $file_new eq '';
 
-	$file_new =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie 	if($config::hash{unscene}{value});
+	return $file_new  if !$config::hash{unscene}{value};
+
+	$file_new =~ s/(S)(\d+)(E)(\d+)/$2.qw(x).$4/ie;
 
 	return $file_new;
 }
@@ -827,7 +829,7 @@ sub fn_scene
 	&misc::quit("fn_scene \$file_new is undef\n")	if ! defined $file_new;
 	&misc::quit("fn_scene \$file_new eq ''\n")		if $file_new eq '';
 
-	return $file_new if $config::hash{scene}{value};
+	return $file_new if !$config::hash{scene}{value};
 
 	$file_new =~ s/(^|\W)(\d+)(x)(\d+)/$1.qw(S).$2.qw(E).$4/ie;
 
@@ -873,7 +875,8 @@ sub fn_split_dddd
 	&misc::quit("fn_split_dddd \$file_new is undef\n")	if ! defined $file_new;
 	&misc::quit("fn_split_dddd \$file_new eq ''\n")		if $file_new eq '';
 
-        return $file_new if !$config::hash{split_dddd}{value};
+	return $file_new if !$config::hash{split_dddd}{value};
+
 	if($file_new =~ /(.*?)(\d{3,4})(.*)/)
 	{
 		my @tmp_arr = ($1, $2, $3);
