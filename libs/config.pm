@@ -25,75 +25,69 @@ our %hash = ();
 # -----------------------------------------------------------------------------
 # MAIN TAB
 
-&config_init_value('cleanup_general',		0, 0, 'bool', 'extended');
-&config_init_value('case',					0, 0, 'bool', 'extended');
-&config_init_value('word_special_casing',	0, 0, 'bool', 'extended');
-&config_init_value('spaces',				0, 0, 'bool', 'extended');
-&config_init_value('dot2space',				0, 0, 'bool', 'extended');
-&config_init_value('kill_cwords',			0, 0, 'bool', 'extended');
-&config_init_value('kill_sp_patterns',		0, 0, 'bool', 'extended');
-&config_init_value('replace',				0, 0, 'bool', 'no');
-&config_init_value('ins_end',				0, 0, 'bool', 'no');
-&config_init_value('ins_start',				0, 0, 'bool', 'no');
+&config_init_value('cleanup_general',		0, 0, 'bool', 'extended'); # CLI: --clean / GUI: 'General Cleanup'
+&config_init_value('case',					0, 0, 'bool', 'extended'); # CLI: --case / GUI: 'Normal Casing'
+&config_init_value('word_special_casing',	0, 0, 'bool', 'extended'); # CLI: --case-sp / GUI: 'Specific Casing'
+&config_init_value('spaces',				0, 0, 'bool', 'extended'); # CLI: --spaces / GUI: 'Spaces'
+&config_init_value('dot2space',				0, 0, 'bool', 'extended'); # CLI: --dots / GUI: '. to Space'
+&config_init_value('kill_cwords',			0, 0, 'bool', 'extended'); # CLI: --rm-words / GUI: 'RM Word List'
+&config_init_value('kill_sp_patterns',		0, 0, 'bool', 'extended'); # CLI: --rm-patterns / GUI: 'RM Pattern List'
+&config_init_value('replace',				0, 0, 'bool', 'no'); # CLI: --replace / GUI: 'Replace With'
+&config_init_value('ins_end',				0, 0, 'bool', 'no'); # CLI: --append-end / GUI: 'End Append'
+&config_init_value('ins_start',				0, 0, 'bool', 'no'); # CLI: --ins-start / GUI: 'Start Prepend'
 
 # String variables for remove/replace/append operations (never saved)
 
-&config_init_value('ins_str_old',	'', '', 'str', 'no');
-&config_init_value('ins_str',		'', '', 'str', 'no');
-&config_init_value('ins_front_str',	'', '', 'str', 'no');
-&config_init_value('ins_end_str',	'', '', 'str', 'no');
+&config_init_value('ins_str_old',	'', '', 'str', 'no'); # CLI: --replace (old) / GUI: 'Replace With (old)'
+&config_init_value('ins_str',		'', '', 'str', 'no'); # CLI: --replace (new) / GUI: 'Replace With (new)'
+&config_init_value('ins_front_str',	'', '', 'str', 'no'); # CLI: --ins-front / GUI: 'Front Append'
+&config_init_value('ins_end_str',	'', '', 'str', 'no'); # CLI: --ins-end / GUI: 'End Append'
 
 # ID3 tag string variables (never saved)
 
 # its metal just to select a genre so combo box isnt blank
-&config_init_value('id3_gen_str',	'Metal',	'Metal',	'str', 'no');	
+&config_init_value('id3_gen_str',	'Metal',	'Metal',	'str', 'no');	# CLI: --id3-gen / GUI: 'Genre'
 # the rest of these are blank
-&config_init_value('id3_art_str',	'',			'',			'str', 'no');
-&config_init_value('id3_alb_str',	'',			'',			'str', 'no');
-&config_init_value('id3_tra_str',	'',			'',			'str', 'no');
-&config_init_value('id3_tit_str',	'',			'',			'str', 'no');
-&config_init_value('id3_year_str',	'',			'',			'str', 'no');
-&config_init_value('id3_com_str',	'',			'',			'str', 'no');
+&config_init_value('id3_art_str',	'',			'',			'str', 'no'); # CLI: --id3-art / GUI: 'Set Artist as:'
+&config_init_value('id3_tit_str',	'',			'',			'str', 'no'); # CLI: --id3-alb / GUI: N/A
+&config_init_value('id3_com_str',	'',			'',			'str', 'no'); # CLI: --id3-com / GUI: 'Set Comment as:'
+&config_init_value('id3_alb_str',	'',			'',			'str', 'no'); # CLI: --id3-alb / GUI: 'Set Album as:'
+&config_init_value('id3_tra_str',	'',			'',			'str', 'no'); # CLI: --id3-tra / GUI: N/A
+&config_init_value('id3_year_str',	'',			'',			'str', 'no'); # CLI: --id3-year / GUI: N/A
 
-&config_init_value('id3_fn_from_tag',	0, 0, 'bool',	'no'); # --id3-fn-from-tag
-&config_init_value('id3_fn_style', 		0, 0, 'int',	'no'); # --id3-fn-style
-
-# -----------------------------------------------------------------------------
-# Legacy GUI variable - kept for compatibility but also in hash
-# TODO these should no longer be referenced, check and remove
-
-&config_init_value('end_a', 0, 0, 'bool', 'no'); # shouldnt this be ins_end
+&config_init_value('id3_fn_from_tag',	0, 0, 'bool',	'no'); # CLI: --id3-fn-from-tag / GUI: N/A
+&config_init_value('id3_fn_style', 		0, 0, 'int',	'no'); # CLI: --id3-fn-style / GUI: N/A
 
 # -----------------------------------------------------------------------------
 # MP3 TAB
 
-&config_init_value('id3_mode',			0, 0, 'bool', 'extended');
-&config_init_value('id3_guess_tag',		0, 0, 'bool', 'extended');
-&config_init_value('id3_force',			0, 0, 'bool', 'extended');
-&config_init_value('id3_tags_rm',		0, 0, 'bool', 'no');
-&config_init_value('id3_set_artist',	0, 0, 'bool', 'no');
-&config_init_value('id3_set_album',		0, 0, 'bool', 'no');
-&config_init_value('id3_set_genre',		0, 0, 'bool', 'no');
-&config_init_value('id3_set_year',		0, 0, 'bool', 'no');
-&config_init_value('id3_set_comment',	0, 0, 'bool', 'no');
+&config_init_value('id3_mode',			0, 0, 'bool', 'extended'); # CLI: automatically set by other id3 arguments / GUI: 'Process Tags'
+&config_init_value('id3_guess_tag',		0, 0, 'bool', 'extended'); # CLI: --id3-guess / GUI: 'Guess Tags'
+&config_init_value('id3_force',			0, 0, 'bool', 'extended'); # CLI: --id3-force / GUI: 'Overwrite'
+&config_init_value('id3_tags_rm',		0, 0, 'bool', 'no'); # CLI: --id3-rm / GUI: 'RM id3 tags'
+&config_init_value('id3_set_artist',	0, 0, 'bool', 'no'); # CLI: --id3-art / GUI: 'Set Artist as:'
+&config_init_value('id3_set_album',		0, 0, 'bool', 'no'); # CLI: --id3-alb / GUI: 'Set Album as:'
+&config_init_value('id3_set_genre',		0, 0, 'bool', 'no'); # CLI: --id3-gen / GUI: 'Set Genre as:'
+&config_init_value('id3_set_year',		0, 0, 'bool', 'no'); # CLI: --id3-year / GUI: 'Set Year as:'
+&config_init_value('id3_set_comment',	0, 0, 'bool', 'no'); # CLI: --id3-com / GUI: 'Set Comment as:'
 
 # -----------------------------------------------------------------------------
 # MISC TAB
 
-&config_init_value('uc_all',			0, 0, 'bool', 'extended');
-&config_init_value('lc_all',			0, 0, 'bool', 'extended');
-&config_init_value('intr_char',			0, 0, 'bool', 'extended');
-&config_init_value('c7bit',				0, 0, 'bool', 'extended');
-&config_init_value('sp_char',			0, 0, 'bool', 'extended');
-&config_init_value('rm_digits',			0, 0, 'bool', 'extended');	# RM ^Digits
-&config_init_value('digits',			0, 0, 'bool', 'extended');
-&config_init_value('unscene',			0, 0, 'bool', 'extended');
-&config_init_value('scene',				0, 0, 'bool', 'extended');
-&config_init_value('pad_N_to_NN',		0, 0, 'bool', 'extended');
-&config_init_value('pad_dash',			0, 0, 'bool', 'extended');
-&config_init_value('pad_digits',		0, 0, 'bool', 'extended');
-&config_init_value('pad_digits_w_zero', 0, 0, 'bool', 'extended');
-&config_init_value('split_dddd',		0, 0, 'bool', 'extended');
+&config_init_value('uc_all',			0, 0, 'bool', 'extended'); # CLI: --uc / GUI: 'Uppercase All'
+&config_init_value('lc_all',			0, 0, 'bool', 'extended'); # CLI: --lc / GUI: 'Lowercase All'
+&config_init_value('intr_char',			0, 0, 'bool', 'extended'); # CLI: --int / GUI: 'International'
+&config_init_value('c7bit',				0, 0, 'bool', 'extended'); # CLI: --7bit / GUI: '7bit ASCII'
+&config_init_value('sp_char',			0, 0, 'bool', 'extended'); # CLI: --sp-char / GUI: 'RM Chars'
+&config_init_value('rm_digits',			0, 0, 'bool', 'extended'); # CLI: --rm-starting-digits / GUI: 'RM ^Digits'
+&config_init_value('digits',			0, 0, 'bool', 'extended'); # CLI: --rm-all-digits / GUI: 'RM all Digits'
+&config_init_value('unscene',			0, 0, 'bool', 'extended'); # CLI: --unscene / GUI: 'Un=Scenify'
+&config_init_value('scene',				0, 0, 'bool', 'extended'); # CLI: --scene / GUI: 'Scenify'
+&config_init_value('pad_N_to_NN',		0, 0, 'bool', 'extended'); # CLI: --pad-ntonn / GUI: 'Pad N to NN' 
+&config_init_value('pad_dash',			0, 0, 'bool', 'extended'); # CLI: --pad-hyphen / GUI: 'Pad - w space'
+&config_init_value('pad_digits',		0, 0, 'bool', 'extended'); # CLI: --pad-num / GUI: 'Pad NN w -'
+&config_init_value('pad_digits_w_zero', 0, 0, 'bool', 'extended'); # CLI: --pad-num-w0/ GUI: 'Pad NxNN w 0'
+&config_init_value('split_dddd',		0, 0, 'bool', 'extended'); # CLI: --pad-nnnn-wx / GUI: 'Pad NNNN with x'
 
 # -----------------------------------------------------------------------------
 # ENUMURATE TAB

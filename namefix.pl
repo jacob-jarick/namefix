@@ -927,7 +927,7 @@ $tab2->Label(-text=>' ')
 
 my $id3_guess_tag_chk = $tab2->Checkbutton
 (
-	-text=>			    "Guess tags",
+	-text=>			    'Guess Tags',
 	-variable=>		    \$config::hash{id3_guess_tag}{value},
 	-activeforeground=>	'blue',
     -command=>		    
@@ -1073,7 +1073,7 @@ $tab2->Label(-text=>" ")
 
 my $id3_art_chk = $tab2->Checkbutton
 (
-	-text=>				"Set Artist as:",
+	-text=>				'Set Artist as:',
 	-variable=>			\$config::hash{id3_set_artist}{value},
 	-activeforeground=>	'blue',
     -command=>		    
@@ -1113,7 +1113,7 @@ my $id3_art_ent = $tab2->Entry
 
 my $id3_alb_chk = $tab2->Checkbutton
 (
-	-text=>				"Set Album as:",
+	-text=>				'Set Album as:',
 	-variable=>			\$config::hash{id3_set_album}{value},
 	-activeforeground=>	'blue',
 	-command=>
@@ -1231,7 +1231,7 @@ my $id3_year_ent = $tab2 -> Entry
 
 my $id3_com_chk = $tab2->Checkbutton
 (
-	-text=>				"Set Comment as:",
+	-text=>				'Set Comment as:',
 	-variable=>			\$config::hash{id3_set_comment}{value},
 	-activeforeground=>	'blue',
 	-command=>
@@ -1316,7 +1316,7 @@ $tab5->Label
 
 my $U_chk = $tab5->Checkbutton
 (
-	-text=>				"Uppercase All",
+	-text=>				'Uppercase All',
 	-variable=>			\$config::hash{uc_all}{value},
 	-activeforeground=> 'blue',
 	-command=>			
@@ -1352,7 +1352,7 @@ my $L_chk = $tab5->Checkbutton
 
 my $i_chk = $tab5->Checkbutton
 (
-	-text=>				"International",
+	-text=>				'International',
 	-variable=>			\$config::hash{intr_char}{value},
 	-activeforeground=>	'blue'
 )
@@ -1370,7 +1370,7 @@ $balloon->attach
 
 my $c7_chk = $tab5->Checkbutton
 (
-	-text=>				"7bit ASCII",
+	-text=>				'7bit ASCII',
 	-variable=>			\$config::hash{c7bit}{value},
 	-activeforeground=>	'blue'
 )
@@ -1525,7 +1525,7 @@ $tab5->Label
 
 my $pad_N_to_NN = $tab5->Checkbutton
 (
-	-text=>				"Pad N to NN",
+	-text=>				'Pad N to NN',
 	-variable=>			\$config::hash{pad_N_to_NN}{value},
 	-activeforeground=>	'blue'
 )
@@ -1543,7 +1543,7 @@ $balloon->attach
 
 my $pad_chk = $tab5->Checkbutton
 (
-	-text=>				"Pad - w space",
+	-text=>				'Pad - w space',
 	-variable=>			\$config::hash{pad_dash}{value},
 	-activeforeground=>	'blue'
 )
@@ -1561,7 +1561,7 @@ $balloon->attach
 
 my $pad_d_chk = $tab5->Checkbutton
 (
-	-text=>				"Pad NN w -",
+	-text=>				'Pad NN w -',
 	-variable=>			\$config::hash{pad_digits}{value},
 	-activeforeground=>	'blue'
 )
@@ -1579,7 +1579,7 @@ $balloon->attach
 
 my $pad_d_w_chk = $tab5->Checkbutton
 (
-	-text=>				"Pad NxNN w 0",
+	-text=>				'Pad NxNN w 0',
 	-variable=>			\$config::hash{pad_digits_w_zero}{value},
 	-activeforeground=>	'blue'
 )
@@ -1597,7 +1597,7 @@ $balloon->attach
 
 my $chk_split_dddd = $tab5->Checkbutton
 (
-	-text=>				"Pad NNNN with x",
+	-text=>			'Pad NNNN with x',
 	-variable=>			\$config::hash{split_dddd}{value},
 	-activeforeground=>	'blue'
 )
