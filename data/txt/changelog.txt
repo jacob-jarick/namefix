@@ -1,3 +1,27 @@
+commit f171a02c1a089cfbc4acc520b27cd9b34397dbbc
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Oct 14 12:39:08 2025 +0800
+
+    fix regex for fn_kill_cwords
+
+commit 3e7fe10f0d9994814e6526b4571b2f2648d020d4
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Oct 14 11:39:47 2025 +0800
+
+    fixed end append inverted logic
+
+commit c75ae813757088adcdbaa9220549d6257908acc6
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Oct 14 11:35:30 2025 +0800
+
+    fixed inverted logic for scenify
+
+commit 67fc487911a89a68bc8ee4e91ec9e965448b110b
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 10 16:51:54 2025 +0800
+
+    4.1.20 build
+
 commit f9b2615723bbde7d14890b23e491e7784b3a4c37
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Fri Oct 10 16:50:47 2025 +0800
@@ -73,28 +97,4 @@ Date:   Fri Oct 10 04:21:56 2025 +0800
     unified quit
 
 commit 99ba122ed4351a13417512e71832138fcdcd3d75
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 04:07:54 2025 +0800
-
-    recursive bug in id3 mode fixed
-
-commit de4d5648794b3fcc557d84b153737902503c6e4d
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 03:49:34 2025 +0800
-
-    Update dir.pm
-
-commit 16cafa2f6e3fb589f92b03e3ecfa675b0babfb70
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 03:35:07 2025 +0800
-
-    print cleanup
-
-commit 8d76a791a217e8290952a5512e828f89dbba8bee
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Thu Oct 9 22:34:41 2025 +0800
-
-    4.1.19 build
-
-commit ac5ecfd6f5186883019bb2c02033a231c6ef183a
 Author: jacob-jarick <mem.namefix@gmail.com>
