@@ -1257,7 +1257,7 @@ sub fn_end_a
 	&misc::quit("fn_end_a \$file_new is undef\n")	if ! defined $file_new;
 	&misc::quit("fn_end_a \$file_new eq ''\n")	    if $file_new eq '';
 
-	return $file_new if $config::hash{ins_end}{value};
+	return $file_new if ! $config::hash{ins_end}{value};
 
 	$file_new =~ s/(.*)(\..*?$)/$1$config::hash{ins_end_str}{value}$2/g;
 

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 58;
+use Test::More tests => 60;
 use FindBin qw($Bin);
 use File::Copy;
 use File::Path qw(make_path remove_tree);
@@ -111,9 +111,15 @@ sub reset_test_config {
 # fn_scene - Convert 03x11 to S03E11
 {
     &reset_test_config();
-    $config::hash{scene}{value} = 1; # 1 enables processing
     
-    my $result = &fixname::fn_scene('Show - 03x11 - Episode Title.avi');
+    # Test when DISABLED (should return unchanged)
+    $config::hash{scene}{value} = 0;
+    my $result = &fixname::fn_scene('Better off Ted 1x13 Secrets and Lives.avi');
+    is( $result, 'Better off Ted 1x13 Secrets and Lives.avi', 'fn_scene: disabled returns unchanged' );
+    
+    # Test when ENABLED (should convert)
+    $config::hash{scene}{value} = 1;
+    $result = &fixname::fn_scene('Show - 03x11 - Episode Title.avi');
     is( $result, 'Show - S03E11 - Episode Title.avi', 'fn_scene: 03x11 to S03E11' );
     
     $result = &fixname::fn_scene('Show - 1x5 - Episode Title.avi');
@@ -299,11 +305,16 @@ sub reset_test_config {
 # fn_end_a - Append string to end (before extension)
 {
     &reset_test_config();
-    $config::hash{ins_end}{value} = 0; # 0 enables processing
+    $config::hash{ins_end}{value} = 1; # 1 enables processing (normal logic)
     $config::hash{ins_end_str}{value} = '_SUFFIX';
     
     my $result = &fixname::fn_end_a('filename.txt');
     is( $result, 'filename_SUFFIX.txt', 'fn_end_a: append suffix before extension' );
+    
+    # Test disabled (should return unchanged)
+    $config::hash{ins_end}{value} = 0; # 0 disables processing
+    $result = &fixname::fn_end_a('filename.txt');
+    is( $result, 'filename.txt', 'fn_end_a: disabled returns unchanged' );
 }
 
 # fn_truncate - Truncate filename
