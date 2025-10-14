@@ -1,3 +1,33 @@
+commit 1555e569605c63f8d7344e5f050ddc90b484a354
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 15 06:30:33 2025 +0800
+
+    4.1.23
+    
+    Deprecated  argument --fs-fix for --fat32
+    
+    documented and mapped CLI and GUI vars access to each other in config.pm
+    
+    corrected setting of fat32 default for windows etc
+    
+    updated fat32 fix to only do it if the names are the same when lowercased
+    
+    fixed CLI arguments --enum-string-front and --enum-string-end
+    
+    not being set correctly
+
+commit 28778c75d7f9d3ed86cbf9d5e9392c9adda96a36
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 15 03:53:20 2025 +0800
+
+    comments
+
+commit 890f4d336baf5325b7cddfbfbe69b578f3423605
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Oct 14 13:57:51 2025 +0800
+
+    4.1.22 build
+
 commit 7bd1c72c405ef16f08d7e6cd4396eee7ca8719fd
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Tue Oct 14 13:56:03 2025 +0800
@@ -68,33 +98,3 @@ commit 9923b64dec32c780d89cbd0da86974d852a7a76f
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Fri Oct 10 15:49:51 2025 +0800
 
-    formatting
-
-commit 2e6145fef2b72f47e066c2ebf8e8a770aa516946
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 15:44:04 2025 +0800
-
-    removed &config::stop, &fixname::fix updated &nf_print
-
-commit 3f87a1a6c8bc1fde5ac1a02be85254dfd75b176e
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 14:05:47 2025 +0800
-
-    misc::get_file_all update and begin nf_print::dir
-
-commit ac62b8deef6344691a77f6f7ab174086f2deb57d
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 04:43:30 2025 +0800
-
-    4.1.20 build
-
-commit 563d184b8bd15e5de6df96a3e5bccc485486b817
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 04:41:57 2025 +0800
-
-    4.1.20
-    
-    finished unified quit for cli & gui
-
-commit ce82048cb1f2fc9913249c898e3f7dccfb385d43
-Author: jacob-jarick <mem.namefix@gmail.com>
