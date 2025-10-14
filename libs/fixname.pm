@@ -752,20 +752,31 @@ sub fn_kill_cwords
 
 	if($config::hash{kill_cwords}{value})
 	{
-		if(-d $file)	# if directory process as normal
+		# PERFORMANCE FIX: Complete rewrite to eliminate catastrophic backtracking
+		# Instead of complex regex alternations, use simple word boundary matching
+		
+		foreach my $word (@globals::kill_words_arr) 
 		{
-			for my $a(@globals::kill_words_arr)
+			if(-d $file) 
 			{
-				$a = quotemeta $a;
-				$file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-|$)/$1$3/ig;
-			}
-		}
-		else		# if its a file, be careful not to remove the extension, hence why we don't match on $
-		{
-			for my $a(@globals::kill_words_arr)
+				# For directories, allow removal at end of string
+				$file_new =~ s/\b\Q$word\E\b//ig;
+			} 
+			else 
 			{
-				$a = quotemeta $a;
-				$file_new =~ s/(^|-|_|\.|\s+|\,|\+|\(|\[|\-)($a)(\]|\)|-|_|\.|\s+|\,|\+|\-)/$1$3/ig;
+				# For files, be careful not to remove from file extension
+				# Split into name and extension, process name only
+				if ($file_new =~ /^(.+)(\..+)$/) 
+				{
+					my ($name, $ext) = ($1, $2);
+					$name =~ s/\b\Q$word\E\b//ig;
+					$file_new = $name . $ext;
+				} 
+				else 
+				{
+					# No extension, process entire string
+					$file_new =~ s/\b\Q$word\E\b//ig;
+				}
 			}
 		}
 	}
