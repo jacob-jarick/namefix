@@ -344,7 +344,7 @@ for my $arg(@ARGV)
 		&config::set_value('word_special_casing', 1);
 	}
 
-	elsif($arg eq '--fs-fix')
+	elsif($arg eq '--fs-fix' || $arg eq '--fat32')
 	{
 		&config::set_value('fat32fix', 1);
 	}
@@ -438,16 +438,16 @@ for my $arg(@ARGV)
  		&config::set_value('enum_add', 1);
  	}
 
-	elsif($arg =~ /--enum-string-(front|start)=(.*)/)
+	elsif($arg =~ /--enum-string-front=(.*)/)
 	{
  		&config::set_value('enum_add', 1);
-		&config::set_value('enum_start_str', $2);
+		&config::set_value('enum_start_str', $1);
 	}
 
-	elsif($arg =~ /--enum-string-(end|stop)=(.*)/)
+	elsif($arg =~ /--enum-string-end=(.*)/)
 	{
  		&config::set_value('enum_add', 1);
-		&config::set_value('enum_end_str', $2);
+		&config::set_value('enum_end_str', $1);
 	}
 
 	elsif($arg =~ /--enum-zero-pad=(.*)/)

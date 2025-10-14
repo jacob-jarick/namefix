@@ -18,7 +18,7 @@ our %hash = ();
 &config_init_value('exit_on_error',		0, 0, 'bool', 'base');
 &config_init_value('debug',				0, 0, 'int', 'base');
 &config_init_value('log_stdout',		0, 0, 'bool', 'base');
-&config_init_value('error_stdout',		1, 1, 'bool', 'base');
+# &config_init_value('error_stdout',		1, 1, 'bool', 'base'); dupe and never used anyway
 &config_init_value('error_notify',		1, 1, 'bool', 'base');
 &config_init_value('zero_log',			1, 1, 'bool', 'base');
 
@@ -92,62 +92,62 @@ our %hash = ();
 # -----------------------------------------------------------------------------
 # ENUMURATE TAB
 
-&config_init_value('enum',				0,	0,	'bool',	'extended');
-&config_init_value('enum_opt',			0,	0,	'bool',	'extended');
-&config_init_value('enum_add',			0,	0,	'bool',	'extended');
-&config_init_value('enum_pad',			0,	0,	'bool',	'extended');
-&config_init_value('enum_pad_zeros',	4,	4,	'int',	'extended');
-&config_init_value('enum_start_str',	'',	'',	'str',	'no');
-&config_init_value('enum_end_str',		'',	'',	'str',	'no');
+&config_init_value('enum',				0,	0,	'bool',	'extended'); # CLI: --enum / GUI: 'Enumerate'
+&config_init_value('enum_opt',			0,	0,	'bool',	'extended'); # CLI: --enum-style / GUI: "\nStyles:\n" (radio buttons)
+&config_init_value('enum_add',			0,	0,	'bool',	'extended'); # CLI: --enum-add-strings / GUI: 'Add Strings'
+&config_init_value('enum_pad',			0,	0,	'bool',	'extended'); # CLI: --enum-zero-pad / GUI: 'Pad with zeros'
+&config_init_value('enum_pad_zeros',	4,	4,	'int',	'extended'); # CLI: --enum-zero-pad (value) / GUI: N/A (see spinbox $spin_pad_enum)
+&config_init_value('enum_start_str',	'',	'',	'str',	'no'); # CLI: --enum-string-front / GUI: 'Start String:'
+&config_init_value('enum_end_str',		'',	'',	'str',	'no'); # CLI: --enum-string-end / GUI: 'End String:'
 
 # -----------------------------------------------------------------------------
 # TRUNCATE TAB
 
-&config_init_value('truncate',			0,		0,		'bool',	'extended');
-&config_init_value('truncate_to',		256,	256,	'int',	'extended');
-&config_init_value('truncate_style',	0,		0,		'int',	'extended');
-&config_init_value('trunc_char',		'',		'',		'str',	'extended');
+&config_init_value('truncate',			0,		0,		'bool',	'extended'); # CLI: --trunc / GUI: 'Truncate'
+&config_init_value('truncate_to',		256,	256,	'int',	'extended'); # CLI: --trunc-to / GUI: "\nFilename Length: "
+&config_init_value('truncate_style',	0,		0,		'int',	'extended'); # CLI: --trunc-pat / GUI: "\nStyle:\n" (radio buttons)
+&config_init_value('trunc_char',		'',		'',		'str',	'extended'); # CLI: --trunc-ins / GUI: "Insert Character\/s: "
 
 # -----------------------------------------------------------------------------
 # EXIF TAB
 
-&config_init_value('exif_show',		0, 0, 'bool', 'extended');
-&config_init_value('exif_rm_all',	0, 0, 'bool', 'extended');
+&config_init_value('exif_show',		0, 0, 'bool', 'extended'); # CLI: --exif-show / GUI: N/A
+&config_init_value('exif_rm_all',	0, 0, 'bool', 'extended'); # CLI: --exif-rm / GUI: 'RM EXIF Tags'
 
 # -----------------------------------------------------------------------------
 # FILTER BAR
 
-&config_init_value('filter',				0,		0,	'bool',	'extended');
-&config_init_value('filter_ignore_case',	0,		0,	'bool',	'extended');
-&config_init_value('filter_string',			'',		'',	'str',	'no');
+&config_init_value('filter',				0,		0,	'bool',	'extended'); # CLI: auto set if --filt=STRING is used / GUI 'Filter'
+&config_init_value('filter_ignore_case',	0,		0,	'bool',	'extended'); # -CLI: TODO add -filt-ignore-case / GUI 'Case In-Sensitive'
+&config_init_value('filter_string',			'',		'',	'str',	'no'); # CLI: --filt=STRING / GUI 'Filter String:'
 
 # -----------------------------------------------------------------------------
 # bottom menu bar
 
-&config_init_value('recursive',			0,	0,	'bool',	'base');
-&config_init_value('ignore_file_type',	0,	0,	'bool',	'extended');
-&config_init_value('proc_dirs',			0,	0,	'bool',	'extended');
+&config_init_value('recursive',			0,	0,	'bool',	'base'); # CLI: --rec / GUI: 'Recursive'
+&config_init_value('ignore_file_type',	0,	0,	'bool',	'extended'); # CLI: --all-files / GUI: 'Ignore File Type'
+&config_init_value('proc_dirs',			0,	0,	'bool',	'extended'); # CLI: --proc-dirs / GUI: 'Process ALL Files'
 
 # -----------------------------------------------------------------------------
 # CLI ONLY OPTIONS
 
-&config_init_value('html_hack',			0,			0,			'bool',	'base');
-&config_init_value('browser',			'elinks',	'elinks',	'str',	'base');
-&config_init_value('editor',			'vim', 		'vim',		'str',	'base');
+&config_init_value('html_hack',			0,			0,			'bool',	'base'); # CLI: --html / GUI: N/A
+&config_init_value('browser',			'elinks',	'elinks',	'str',	'base'); # CLI: --browser / GUI: N/A
+&config_init_value('editor',			'vim', 		'vim',		'str',	'base'); # CLI: --editor / GUI: N/A
 
 # This two options are not in the GUI but needed for CLI
 # in the GUI the sub is triggered by a button
 
-&config_init_value('undo',			0, 0, 'bool', 'base');
-&config_init_value('save_options',	0, 0, 'bool', 'base');
+&config_init_value('undo',			0, 0, 'bool', 'base'); # CLI: --undo / GUI: N/A (see libs/gui/undo.pm)
+# &config_init_value('save_options',	0, 0, 'bool', 'base'); # Unused found, TODO remove
 
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - MAIN TAB
 
-&config_init_value('space_character',	' ',	' ',	'str',	'base');
-&config_init_value('max_fn_length',		256,	256,	'int',	'base');
-&config_init_value('save_window_size',	0,		0,		'bool',	'base');
-&config_init_value('window_g',			'',		'',		'str',	'geometry');
+&config_init_value('space_character',	' ',	' ',	'str',	'base'); # CLI: --space-char=C / GUI: 'Space Delimiter: (libs/gui/config_dialog.pm)
+&config_init_value('max_fn_length',		256,	256,	'int',	'base'); # CLI: TODO add --max-fn-length / GUI: 'Max Filename Length: (libs/gui/config_dialog.pm)
+&config_init_value('save_window_size',	0,		0,		'bool',	'base'); # CLI: N/A / GUI: 'Save main window size and position' (libs/gui/config_dialog.pm)
+&config_init_value('window_g',			'',		'',		'str',	'geometry'); # CLI: N/A / GUI: auto set on save when save_window_size is checked
 
 our $save_extended = 0;	# save main window options
 
@@ -156,18 +156,19 @@ our $save_extended = 0;	# save main window options
 
 # fat32fix - conditional default based on OS
 
-if(lc $^O eq 'mswin32')
-{
-	&config_init_value('fat32fix', 0, 0, 'bool', 'base');
-}
-else
+# CLI: --fat32 / GUI: 'FS Fix (Case insensitive file system workaround)' (libs/gui/config_dialog.pm)
+if(lc $^O eq 'mswin32')	# auto enable on windows
 {
 	&config_init_value('fat32fix', 1, 1, 'bool', 'base');
 }
+else
+{
+	&config_init_value('fat32fix', 0, 0, 'bool', 'base');
+}
 
-&config_init_value('filter_regex',	0, 0, 'bool', 'base');
-&config_init_value('overwrite',		0, 0, 'bool', 'base');
-&config_init_value('remove_regex',	0, 0, 'bool', 'base');
+&config_init_value('filter_regex',	0, 0, 'bool', 'base'); # CLI: --filt-regexp / GUI: 'regex'
+&config_init_value('overwrite',		0, 0, 'bool', 'base'); # CLI: --overwrite / GUI: N/A ( TODO ?? )
+&config_init_value('remove_regex',	0, 0, 'bool', 'base'); # CLI: --rm-regex / GUI: 'Enable Regexp pattern matching for Remove option' (libs/gui/config_dialog.pm)
 
 # file_ext_2_proc - long default string  
 
@@ -186,12 +187,11 @@ else
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - DEBUG TAB
 
-&config_init_value('debug', 		2, 2, 'int',	'base');
-&config_init_value('log_stdout',	0, 0, 'bool',	'base');
-&config_init_value('error_stdout',	0, 0, 'bool',	'base');
-&config_init_value('error_notify',	0, 0, 'bool',	'base');
-&config_init_value('zero_log',		1, 1, 'bool',	'base');
-
+&config_init_value('debug', 		2, 2, 'int',	'base'); # CLI: --debug=N / GUI: 'Debug Level:' (libs/gui/config_dialog.pm)
+&config_init_value('log_stdout',	0, 0, 'bool',	'base'); # CLI: --debug-stdout / GUI: 'Print log to STDOUT'
+&config_init_value('error_stdout',	0, 0, 'bool',	'base'); # # this is set but never used. TODO review and remove
+&config_init_value('error_notify',	0, 0, 'bool',	'base'); # CLI: N/A / GUI: 'Pop up errors in a dialog box' (libs/gui/config_dialog.pm)
+&config_init_value('zero_log',		1, 1, 'bool',	'base'); # CLI: TODO add --debug-zero-log / GUI: 'Zero logfile on start'
 
 # ---------------------------------------------------------------------------------------------------------------
 # reset_config

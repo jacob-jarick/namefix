@@ -1644,7 +1644,7 @@ $tab6->Label
 
 my $n_chk = $tab6->Checkbutton
 (
-	-text=>				"Enumerate",
+	-text=>				'Enumerate',
 	-variable=>			\$config::hash{enum}{value},
 	-activeforeground=>	'blue'
 )
@@ -1729,7 +1729,7 @@ $tab6->Label
 
 my $enum_add_checkbox = $tab6->Checkbutton
 (
-	-text=>				"Add Strings",
+	-text=>				'Add Strings',
 	-variable=>			\$config::hash{enum_add}{value},
 	-activeforeground=> 'blue'
 )
@@ -1748,7 +1748,7 @@ $balloon->attach
 
 $tab6->Label
 (
-	-text=>"Start String:"
+	-text=>'Start String:'
 )
 ->grid
 (
@@ -1813,7 +1813,7 @@ $tab6->Label
 
 my $enum_pad_chk = $tab6->Checkbutton
 (
-	-text=>				"Pad with zeros",
+	-text=>				'Pad with zeros',
 	-variable=>			\$config::hash{enum_pad}{value},
 	-activeforeground=>	'blue'
 )
@@ -1888,7 +1888,7 @@ $tab7->Label
 
 my $trunc_chk = $tab7->Checkbutton
 (
-	-text=>				"Truncate",
+	-text=>				'Truncate',
 	-variable=>			\$config::hash{truncate}{value},
 	-activeforeground=>	'blue'
 )
@@ -1936,7 +1936,7 @@ $balloon->attach
 $tab7->Label
 (
 	-justify=>	"left",
-	-text=>		"\nStyles:\n"
+	-text=>		"\nStyle:\n"
 )
 ->grid
 (
@@ -2074,7 +2074,7 @@ $tab_exif->Label
 
 my $exif_rm_chk = $tab_exif->Checkbutton
 (
-	-text=>				"RM EXIF Tags",
+	-text=>				'RM EXIF Tags',
 	-variable=>			\$config::hash{exif_rm_all}{value},
 	-activeforeground=>	'blue'
 )
@@ -2143,7 +2143,7 @@ $f_frame->Entry
 
 $f_frame->Checkbutton
 (
-	-text=>				"Case In-Sensitive",
+	-text=>				'Case In-Sensitive',
 	-variable=>			\$config::hash{filter_ignore_case}{value},
 	-activeforeground=>	'blue'
 )
@@ -2151,7 +2151,7 @@ $f_frame->Checkbutton
 
 my $re_checkbox = $f_frame->Checkbutton
 (
-	-text=>				"regex",
+	-text=>				'regex',
 	-variable=>			\$config::hash{filter_regex}{value},
 	-activeforeground=>	'blue'
 )

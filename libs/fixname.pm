@@ -510,7 +510,8 @@ sub fn_rename
 	$newfile	= "$dir/$newfile";
 	my $tmpfile = $newfile.'-FSFIX';
 
-	if($config::hash{fat32fix}{value}) 	# work around case insensitive filesystem renaming problems
+	# updated fat32 fix to only do it if the names are the same when lowercased
+	if($config::hash{fat32fix}{value} && lc $file eq lc $newfile) 	# work around case insensitive filesystem renaming problems
 	{
 		if( -e $tmpfile && !$config::hash{overwrite}{value})
 		{

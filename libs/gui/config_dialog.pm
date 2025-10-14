@@ -66,7 +66,7 @@ sub edit_prefs
 	my $label6 = $tab1->Label
 	(
 		-justify=>	"left",
-		-text=>		"Space Delimter: "
+		-text=>		'Space Delimter: '
 	)
 	->grid
 	(
@@ -159,7 +159,7 @@ sub edit_prefs
 
 	my $save_window_size_chk = $tab1->Checkbutton
 	(
-		-text=>				"Save main window size and position",
+		-text=>				'Save main window size and position',
 		-variable=>			\$config::hash{save_window_size}{value},
 		-activeforeground=>	"blue"
 	)
@@ -224,7 +224,7 @@ sub edit_prefs
 
 	my $F_chk = $tab7->Checkbutton
 	(
-		-text=>				"FS Fix (Case insensitive file system workaround)",
+		-text=>				'FS Fix (Case insensitive file system workaround)',
 		-variable=>			\$config::hash{fat32fix}{value},
 		-activeforeground=>	"blue"
 	)
@@ -243,7 +243,7 @@ sub edit_prefs
 
 	my $tab7_regexp_chk = $tab7->Checkbutton
 	(
-		-text=>				"Enable Regexp pattern matching for Remove option",
+		-text=>				'Enable Regexp pattern matching for Remove option',
 		-variable=>			\$config::hash{remove_regex}{value},
 		-activeforeground=>	"blue"
 	)
@@ -346,7 +346,7 @@ sub edit_prefs
 	$tab_debug->Label
 	(
 		-justify=>	"left",
-		-text=>		"Debug Level"
+		-text=>		'Debug Level'
 	)
 	-> grid
 	(
@@ -378,7 +378,7 @@ sub edit_prefs
 
 	$tab_debug->Checkbutton
 	(
-		-text=>             "Print log to stdout",
+		-text=>             'Print log to STDOUT',
 		-variable=>         \$config::hash{log_stdout}{value},
 		-activeforeground=> "blue"
 	)
@@ -404,7 +404,7 @@ sub edit_prefs
 
 	$tab_debug->Checkbutton
 	(
-		-text=>				"Pop up errors in a dialog box",
+		-text=>				'Pop up errors in a dialog box',
 		-variable=>			\$config::hash{error_notify}{value},
 		-activeforeground=>	"blue"
 	)
@@ -430,7 +430,7 @@ sub edit_prefs
 
 	$tab_debug->Checkbutton
 	(
-		-text=>				"Zero logfile on start",
+		-text=>				'Zero logfile on start',
 		-variable=>			\$config::hash{zero_log}{value},
 		-activeforeground=>	"blue"
 	)

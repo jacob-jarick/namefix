@@ -81,7 +81,7 @@ K	--rm-words		Remove Custom Words list
 P	--rm-pat		Remove Custom regexp patterns, ie urls
 				$globals::killpat_file
 
-F	--fs-fix		Work around case insensitive filesystems
+F	--fat32			Work around case insensitive filesystems
 				eg microsofts fat32
 
 ";
@@ -260,6 +260,7 @@ These options have been renamed but are kept for backwards compatibility
 
 	--rename	--process
 	--ren		--process
+	--fs-fix	--fat32
 ";
 
 my $txt_exif =
