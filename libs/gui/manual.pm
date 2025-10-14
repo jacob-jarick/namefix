@@ -21,6 +21,12 @@ sub edit
 	my $l					= length $file_name;
 	my $wd					= &misc::get_file_parent_dir($path);
 	my ($old_fn, $old_ext)	= &misc::get_file_ext($path);
+	
+	if(defined $old_ext && $old_ext ne '')
+	{
+		$old_fn =~ s/\.$old_ext$//;
+	}
+
 	my $new_fn				= $old_fn;
 	my $new_ext				= $old_ext;
 
