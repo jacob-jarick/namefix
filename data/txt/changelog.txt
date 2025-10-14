@@ -1,3 +1,21 @@
+commit 7bd1c72c405ef16f08d7e6cd4396eee7ca8719fd
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Oct 14 13:56:03 2025 +0800
+
+    4.1.22
+
+commit ccdd4c222a092192126f548f1c334197bf9a13b8
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Oct 14 13:55:31 2025 +0800
+
+    correct manual rename
+
+commit 8d4d4e144b62917206caeae2d7838987b2c1992f
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Tue Oct 14 13:49:19 2025 +0800
+
+    4.1.21 build
+
 commit f171a02c1a089cfbc4acc520b27cd9b34397dbbc
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Tue Oct 14 12:39:08 2025 +0800
@@ -79,22 +97,4 @@ Date:   Fri Oct 10 04:41:57 2025 +0800
     finished unified quit for cli & gui
 
 commit ce82048cb1f2fc9913249c898e3f7dccfb385d43
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 04:37:10 2025 +0800
-
-    unifiy quit
-
-commit 439cd176855bd98e2dfa1db3e6c8c5dfa93c39e2
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 04:24:22 2025 +0800
-
-    migrate to unified quit
-
-commit 9b7aaec4801feb76328036a583a2add8e6f9ec71
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 04:21:56 2025 +0800
-
-    unified quit
-
-commit 99ba122ed4351a13417512e71832138fcdcd3d75
 Author: jacob-jarick <mem.namefix@gmail.com>
