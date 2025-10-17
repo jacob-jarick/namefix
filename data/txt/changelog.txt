@@ -1,3 +1,18 @@
+commit 0b6ea00814adeb73c9496183d27e2476da77decb
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 12:13:08 2025 +0800
+
+    4.1.24
+    
+    --zero-log options added to CLI
+    more code documentation
+
+commit a89435f4ae9f233d2cf689604d4d799492838802
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Wed Oct 15 06:32:02 2025 +0800
+
+    4.1.23 build
+
 commit 1555e569605c63f8d7344e5f050ddc90b484a354
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Wed Oct 15 06:30:33 2025 +0800
@@ -83,18 +98,3 @@ Date:   Fri Oct 10 16:36:45 2025 +0800
     fix gui path argument
 
 commit 9f3a70bf58bca43bb83e7e85c12492adac946900
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 16:34:38 2025 +0800
-
-    Update nf_print.pm
-
-commit 47b5de4094f04ea20fb687ea7fa83bf0423c0c16
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 16:24:42 2025 +0800
-
-    get_file_all
-
-commit 9923b64dec32c780d89cbd0da86974d852a7a76f
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 15:49:51 2025 +0800
-
