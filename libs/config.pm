@@ -44,7 +44,7 @@ our %hash = ();
 # ID3 tag string variables (never saved)
 
 # its metal just to select a genre so combo box isnt blank
-&config_init_value('id3_gen_str',	'Metal',	'Metal',	'str', 'no');	# CLI: --id3-gen / GUI: 'Genre'
+&config_init_value('id3_gen_str',	'Metal',	'Metal',	'str', 'no'); # CLI: --id3-gen / GUI: 'Genre'
 # the rest of these are blank
 &config_init_value('id3_art_str',	'',			'',			'str', 'no'); # CLI: --id3-art / GUI: 'Set Artist as:'
 &config_init_value('id3_tit_str',	'',			'',			'str', 'no'); # CLI: --id3-alb / GUI: N/A
@@ -137,7 +137,6 @@ our %hash = ();
 # in the GUI the sub is triggered by a button
 
 &config_init_value('undo',			0, 0, 'bool', 'base'); # CLI: --undo / GUI: N/A (see libs/gui/undo.pm)
-# &config_init_value('save_options',	0, 0, 'bool', 'base'); # Unused found, TODO remove
 
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - MAIN TAB
