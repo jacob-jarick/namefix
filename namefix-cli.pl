@@ -49,6 +49,7 @@ our $html_file		= "$globals::home/.namefix.pl/namefix_html_output_hack.html";
 # check for debug flag early
 #--------------------------------------------------------------------------------------------------------------
 
+my $load_config = 1;
 my $debug_arg = undef;
 for (my $i = 0; $i <= $#ARGV; $i++)
 {
@@ -56,7 +57,10 @@ for (my $i = 0; $i <= $#ARGV; $i++)
 	{
 		$config::hash{'debug'}{'value'} = $1;
 		$debug_arg = $1;
-		last;
+	}
+	elsif($ARGV[$i] eq '--ignore-config')
+	{
+		$load_config = 0;
 	}
 }
 
@@ -66,14 +70,14 @@ for (my $i = 0; $i <= $#ARGV; $i++)
 
 $globals::CLI = 1;	# set cli mode flag
 
-&config::load_hash                  if -f	$globals::hash_tsv;
+&config::load_hash if $load_config == 1 && -f $globals::hash_tsv;
 
 &config::set_value('debug', $debug_arg) if defined $debug_arg;
 
-&misc::null_file($main::log_file)	if      $config::hash{zero_log}{value};
+&misc::null_file($main::log_file) if $config::hash{zero_log}{value};
 
 &misc::plog(2, "**** namefix.pl $globals::version start *************************************************");
-&misc::plog(4, "main: \$Bin = \"$Bin\"");
+&misc::plog(4, "main: \$Bin = '$Bin'");
 
 #--------------------------------------------------------------------------------------------------------------
 # CLI Variables
@@ -126,7 +130,7 @@ if (scalar @ARGV > 0 && (-f $ARGV[$#ARGV] || -d $ARGV[$#ARGV]))
 		&config::set_value('filter', 1);
 		&config::set_value('filter_ignore_case', 0);
 
-		my $basename			= basename($ARGV[$#ARGV]);
+		my $basename = basename($ARGV[$#ARGV]);
 
 		&config::set_value('filter_string', "^" . (quotemeta $basename) . '$');
 
@@ -399,6 +403,16 @@ for my $arg(@ARGV)
 	elsif($arg =~ /--media-types=(.*)/ || $arg =~ /--mt=(.*)/)
 	{		
 		&config::set_value('file_ext_2_proc', $1);
+	}
+
+	elsif($arg =~ /--max-fn-length=(\d+)/)
+	{
+		&config::set_value('max_fn_length', $1);
+	}
+
+	elsif($arg eq '--ignore-config')
+	{
+		# TODO: do nothing, already handled at start
 	}
 
 	#######################

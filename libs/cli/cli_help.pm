@@ -240,7 +240,6 @@ my $txt_debug =
 "Debug Options:
 
 	--debug=N		Set debug level to N (0-10)
-	--debug-stdout		Print debug log to stdout
 	--exit-on-error	Exit on first error (default is to continue)
 	--zero-log		Zero logfile on start
 
@@ -278,10 +277,11 @@ These options have been renamed but are kept for backwards compatibility
 
 	OLD NAME	NEW NAME
 
-	--rename	--process
-	--ren		--process
-	--fs-fix	--fat32
-	--regexp	--remove-use-regex
+	--rename		--process
+	--ren			--process
+	--fs-fix		--fat32
+	--regexp		--remove-use-regex
+	--debug-stdout	N/A - CLI always prints debug log to stdout
 ";
 
 my $txt_exif =
