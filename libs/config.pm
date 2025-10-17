@@ -171,17 +171,8 @@ else
 
 # file_ext_2_proc - long default string  
 
-&config_init_value
-(
-	'file_ext_2_proc', 
-
-	"aac|aiff|ape|asf|avi|bmp|flac|gif|jpeg|jpg|m4a|m4v|mkv|mov|mp2|mp3|mp4|mpc|mpg|mpeg|ogg|ogm|opus|png|rm|rmvb".
-	"|svg|tif|tiff|webm|webp|wma|wmv", "aac|aiff|ape|asf|avi|bmp|flac|gif|jpeg|jpg|m4a|m4v|mkv|mov|mp2|mp3|mp4|mpc".
-	"|mpg|mpeg|ogg|ogm|opus|png|rm|rmvb|svg|tif|tiff|webm|webp|wma|wmv", 
-
-	'str', 
-	'base'
-);
+# CLI: --media-types=STRING / GUI: 'Media File Extensions: ' (libs/gui/config_dialog.pm)	
+&config_init_value('file_ext_2_proc', $globals::media_ext_regex, $globals::media_ext_regex, 'str', 'base'); 
 
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - DEBUG TAB

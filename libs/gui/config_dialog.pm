@@ -275,7 +275,7 @@ sub edit_prefs
 	$tab7->Label
 	(
 		-justify=>	"left",
-		-text=>		"Media File Extensions: "
+		-text=>		'Media File Extensions: '
 	)
 	-> grid
 	(

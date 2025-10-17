@@ -85,15 +85,27 @@ our $tmpfilelist 		= '';
 our $last_recr_dir 		= '';
 
 our @id3v2_exts 		= ('aac', 'aiff', 'ape', 'flac', 'm4a', 'mp2', 'mp3', 'mp4', 'mpc', 'ogg', 'opus', 'wma');
-our $id3_ext_regex 		= join('|', @id3v2_exts);
+our $id3_ext_regex 		= join('|', sort @id3v2_exts);
 
 our @exif_exts = 
 (
-	'3fr', 'arw', 'bmp', 'cr2', 'cr3', 'crw', 'dcr', 'dng', 'erf', 'gif', 
-	'heic', 'heif', 'jpeg', 'jpg', 'kdc', 'mef', 'mos', 'mrw', 'nef', 'nrw', 
-	'orf', 'pef', 'png', 'raf', 'raw', 'rw2', 'sr2', 'srf', 'tif', 'tiff', 
+	'3fr',  'arw',  'bmp',  'cr2',  'cr3',  'crw',  'dcr',  'dng',  'erf',  'gif', 
+	'heic', 'heif', 'jpeg', 'jpg',  'kdc',  'mef',  'mos',  'mrw',  'nef',  'nrw', 
+	'orf',  'pef',  'png',  'raf',  'raw',  'rw2',  'sr2',  'srf',  'tif',  'tiff', 
 	'x3f'
 );
+
+
+our @media_exts = 
+(
+	'aac',  'aiff', 'ape',  'asf', 'avi',  'bmp',  'flac', 
+	'gif',  'jpeg', 'jpg',  'm4a', 'm4v',  'mkv',  'mov', 
+	'mp2',  'mp3',  'mp4',  'mpc', 'mpg',  'mpeg', 'ogg', 
+	'ogm',  'opus', 'png',  'rm',  'rmvb', 'svg',  'tif', 
+	'tiff', 'webm', 'webp', 'wma', 'wmv'
+);
+
+our $media_ext_regex = join('|', sort @media_exts);
 
 #=============================================================================
 # FILE AND ARRAY INITIALIZATION
