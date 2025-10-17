@@ -386,6 +386,11 @@ for my $arg(@ARGV)
 		&config::set_value('filter_regex', 1);
 	}
 
+	elsif($arg eq '--filt-ignore-case')
+	{
+		&config::set_value('filter_ignore_case', 1);
+	}
+
 	elsif($arg =~ /--space-char=(.*)/ || $arg =~ /--spc=(.*)/)
 	{
 		&config::set_value('space_character', $1);

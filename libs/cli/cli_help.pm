@@ -51,14 +51,11 @@ g	--clean			general cleanup (recommend)
 
 c	--case			Fix case
 
-p	--spaces		Convert _ and ' ' to set space delimiter
-				Current: '$config::hash{space_character}{value}'
-				Default: '$config::hash{space_character}{default}'
+p	--spaces		Convert _ and ' ' to set space delimiter '$config::hash{space_character}{value}'
 
 o	--dots			Dots '.' to Space Delimiter
 
 x	--remove-use-regex	Enable regexp in --remove option
-	--regexp		deprecated, use --remove-use-regex
 
 	--remove=STRING		Remove STRING from filename
 	--rm=STRING
@@ -86,6 +83,7 @@ F	--fat32			Work around case insensitive filesystems
 				eg microsofts fat32
 
 ";
+
 my $txt_trunc = "Truncate Options:
 
 	--trunc=N		truncate filenames to N length
@@ -98,6 +96,7 @@ my $txt_trunc = "Truncate Options:
 				Insert STRING in middle of filename
 
 ";
+
 my $txt_enum =
 "Enumerate Options:
 
@@ -110,6 +109,7 @@ my $txt_enum =
 	--enum-zero-pad=N	N = Pad enum number to N zeros
 
 ";
+
 my $txt_misc =
 "Misc Options:
 
@@ -136,14 +136,13 @@ L	--lc			lowercase all letters of filename
 	--rm-all-digits		remove all digits from filename
 	--rad			Excluding file extension
 
-H	--pad-hyphen		pad / hyphen dashes with space delimiter
-	--ph			Current Value: '$config::hash{space_character}{value}'
-				Default Value: '$config::hash{space_character}{default}'
+H	--pad-hyphen		pad / hyphen dashes with space delimiter '$config::hash{space_character}{value}'
+	--ph			
 
 N	--pad-num		pad digits with '-'
 	--pn			Aimed at track & EpisodexSeason numbers
-				eg: \"Artist 10 Title.mp3\" to
-				\"Artist - 10 - Title.mp3\"
+				eg: 'Artist 10 Title.mp3' to
+				'Artist - 10 - Title.mp3'
 
 0	--pad-num-w0		Pad numbers with zero's
 	--p0			eg: track & EpisodexSeason numbers
@@ -164,25 +163,32 @@ my $txt_advance =
 	--save-opt		File: $globals::hash_tsv
 	--save-config		all arguments after this are ignored
 
-	--recr			Recursive mode
+	--recr			Enable recursive mode
 				Warning: Use with caution
 
 D	--dir			process directories
 				Warning: Use with caution
+				Default: $config::hash{proc_dirs}{default}, Current: $config::hash{proc_dirs}{value}
 
 	--overwrite		Perform rename without checking if new filename exists.
 				Please be careful with this option
+				Default: $config::hash{overwrite}{default}, Current: $config::hash{overwrite}{value}
 
 A	--all-files		Process all files, not just media files.
 				if not set only extenstions set by --media-types are processed
 				using --all-files AND --media-types will exit with error as they contradict each other
+				Default: $config::hash{ignore_file_type}{default}, Current: $config::hash{ignore_file_type}{value}
 
 	--filt=STRING		Filter files processed. must contain STRING
 	--filt-regexp		filter STRING is a regexp
+				Default: '$config::hash{filter_regexp}{default}', Current: '$config::hash{filter_regexp}{value}'
+				
+
+	--filt-ignore-case	ignore case when filtering
+				Default: $config::hash{filter_ignore_case}{default}, Current: $config::hash{filter_ignore_case}{value}
 
 	--space-char=C		C = Space Delimiter character
-	--spc=C			Default: '$config::hash{space_character}{default}'
-				Current: '$config::hash{space_character}{value}'
+	--spc=C			Default: '$config::hash{space_character}{default}', Current: '$config::hash{space_character}{value}'
 
 	--media-types=STRING	only process the file extensions listed in STRING
 	--mt=STRING		STRING format: \"<file_ext1>|<file_ext2>\"
@@ -192,8 +198,10 @@ A	--all-files		Process all files, not just media files.
 				Current: $config::hash{file_ext_2_proc}{value}
 
 	--max-fn-length=N	Set Maximum filename length
-				Default: $config::hash{max_fn_length}{default}
-				Current: $config::hash{max_fn_length}{value}
+				Default: $config::hash{max_fn_length}{default}, Current: $config::hash{max_fn_length}{value}
+
+	--ignore-config		Ignore config file and use default settings
+				Can be used with --save-options to reset config file to defaults				
 
 ";
 my $txt_hacks =
@@ -273,6 +281,7 @@ These options have been renamed but are kept for backwards compatibility
 	--rename	--process
 	--ren		--process
 	--fs-fix	--fat32
+	--regexp	--remove-use-regex
 ";
 
 my $txt_exif =
