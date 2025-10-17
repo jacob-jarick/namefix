@@ -152,8 +152,6 @@ else
 # Parse Options
 #--------------------------------------------------------------------------------------------------------------
 
-$config::hash{error_stdout}{value} = 1;
-
 if(scalar @ARGV == 0)
 {
 	&cli_help::show('help');

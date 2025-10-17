@@ -391,19 +391,6 @@ sub edit_prefs
 
 	$tab_debug->Checkbutton
 	(
-		-text=>				"Print errors to stdout",
-		-variable=>			\$config::hash{error_stdout}{value},
-		-activeforeground=>	"blue"
-	)
-	-> grid
-	(
-		-row=>		$n++,
-		-column=>	1,
-		-sticky=>	"nw",
-	);
-
-	$tab_debug->Checkbutton
-	(
 		-text=>				'Show errors in dialog boxes',
 		-variable=>			\$config::hash{error_notify}{value},
 		-activeforeground=>	"blue"

@@ -188,7 +188,6 @@ else
 
 &config_init_value('debug', 		2, 2, 'int',	'base'); # CLI: --debug=N / GUI: 'Debug Level:' (libs/gui/config_dialog.pm)
 &config_init_value('log_stdout',	0, 0, 'bool',	'base'); # CLI: --debug-stdout / GUI: 'Print log to STDOUT'
-&config_init_value('error_stdout',	0, 0, 'bool',	'base'); # # this is set but never used. TODO review and remove
 &config_init_value('error_notify',	0, 0, 'bool',	'base'); # CLI: N/A / GUI: 'Show errors in dialog boxes' (libs/gui/config_dialog.pm)
 &config_init_value('zero_log',		1, 1, 'bool',	'base'); # CLI: --debug-zero-log / GUI: 'Zero logfile on start'
 
