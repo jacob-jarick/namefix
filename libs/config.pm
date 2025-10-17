@@ -17,7 +17,6 @@ our %hash = ();
 
 &config_init_value('exit_on_error',		0, 0, 'bool', 'base'); # CLI: --exit-on-error / GUI: 'Exit on error' (libs/gui/config_dialog.pm)
 &config_init_value('debug',				0, 0, 'int', 'base'); # CLI: --debug=N / GUI: 'Debug Level:' (libs/gui/config_dialog.pm)
-&config_init_value('log_stdout',		0, 0, 'bool', 'base'); # CLI: --debug-stdout / GUI: 'Print log to STDOUT' (libs/gui/config_dialog.pm)
 &config_init_value('error_notify',		1, 1, 'bool', 'base'); # CLI: N/A / GUI: 'Show errors in dialog boxes' (libs/gui/config_dialog.pm)
 
 # -----------------------------------------------------------------------------
@@ -176,9 +175,8 @@ else
 # CONFIG DIALOG - DEBUG TAB
 
 &config_init_value('debug', 		2, 2, 'int',	'base'); # CLI: --debug=N / GUI: 'Debug Level:' (libs/gui/config_dialog.pm)
-&config_init_value('log_stdout',	0, 0, 'bool',	'base'); # CLI: --debug-stdout / GUI: 'Print log to STDOUT'
 &config_init_value('error_notify',	0, 0, 'bool',	'base'); # CLI: N/A / GUI: 'Show errors in dialog boxes' (libs/gui/config_dialog.pm)
-&config_init_value('zero_log',		1, 1, 'bool',	'base'); # CLI: --debug-zero-log / GUI: 'Zero logfile on start'
+&config_init_value('zero_log',		1, 1, 'bool',	'base'); # CLI: --zero-log / GUI: 'Zero logfile on start'
 
 # ---------------------------------------------------------------------------------------------------------------
 # reset_config

@@ -21,7 +21,7 @@ require misc;
 our $dir				= cwd;
 our $home				= &misc::get_home;
 
-our $version 			= '4.1.24';
+our $version 			= '4.1.25';
 our $folderimage 		= '';
 our $fileimage   		= '';
 
@@ -46,7 +46,6 @@ our $undo_pre_file		= "$home/.namefix.pl/undo.previous.filenames.txt";
 our $undo_dir_file		= "$home/.namefix.pl/undo.dir.txt";
 
 our $hash_tsv			= "$home/.namefix.pl/config_hash.tsv";
-
 
 # system internal FLAGS
 our $CLI				= 0;
@@ -94,7 +93,6 @@ our @exif_exts =
 	'orf',  'pef',  'png',  'raf',  'raw',  'rw2',  'sr2',  'srf',  'tif',  'tiff', 
 	'x3f'
 );
-
 
 our @media_exts = 
 (
