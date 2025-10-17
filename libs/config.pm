@@ -19,7 +19,6 @@ our %hash = ();
 &config_init_value('debug',				0, 0, 'int', 'base'); # CLI: --debug=N / GUI: 'Debug Level:' (libs/gui/config_dialog.pm)
 &config_init_value('log_stdout',		0, 0, 'bool', 'base'); # CLI: --debug-stdout / GUI: 'Print log to STDOUT' (libs/gui/config_dialog.pm)
 &config_init_value('error_notify',		1, 1, 'bool', 'base'); # CLI: N/A / GUI: 'Show errors in dialog boxes' (libs/gui/config_dialog.pm)
-&config_init_value('zero_log',			1, 1, 'bool', 'base'); # CLI: TODO add --debug-zero-log / GUI: 'Zero logfile on start' (libs/gui/config_dialog.pm)
 
 # -----------------------------------------------------------------------------
 # MAIN TAB
