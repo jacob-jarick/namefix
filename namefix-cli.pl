@@ -392,7 +392,7 @@ for my $arg(@ARGV)
 	}
 
 	elsif($arg =~ /--media-types=(.*)/ || $arg =~ /--mt=(.*)/)
-	{
+	{		
 		&config::set_value('file_ext_2_proc', $1);
 	}
 
@@ -757,6 +757,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--save-options' || $arg eq '--save-opt' || $arg eq '--save-config')
 	{
+		# TODO: set var, finish looping options THEN save if var is set
 		&config::save_hash;
 		&cli_print::print("Options Saved, exiting", "<MSG>");
 		exit;

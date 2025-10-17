@@ -51,10 +51,11 @@ g	--clean			general cleanup (recommend)
 
 c	--case			Fix case
 
-p	--spaces		Convert _ and \" \" to set space delimiter
-				current space delimiter: \"$config::hash{space_character}{value}\"
+p	--spaces		Convert _ and ' ' to set space delimiter
+				Current: '$config::hash{space_character}{value}'
+				Default: '$config::hash{space_character}{default}'
 
-o	--dots			Dots \".\" to Space Delimiter
+o	--dots			Dots '.' to Space Delimiter
 
 x	--remove-use-regex	Enable regexp in --remove option
 	--regexp		deprecated, use --remove-use-regex
@@ -135,10 +136,11 @@ L	--lc			lowercase all letters of filename
 	--rm-all-digits		remove all digits from filename
 	--rad			Excluding file extension
 
-H	--pad-hyphen		pad / hyphen dashes with space delimiter \"$config::hash{space_character}{value}\"
-	--ph
+H	--pad-hyphen		pad / hyphen dashes with space delimiter
+	--ph			Current Value: '$config::hash{space_character}{value}'
+				Default Value: '$config::hash{space_character}{default}'
 
-N	--pad-num		pad digits with -
+N	--pad-num		pad digits with '-'
 	--pn			Aimed at track & EpisodexSeason numbers
 				eg: \"Artist 10 Title.mp3\" to
 				\"Artist - 10 - Title.mp3\"
@@ -158,9 +160,9 @@ N	--pad-num		pad digits with -
 my $txt_advance =
 "Advanced Options:
 
-	--save-options		Save current options as default
-	--save-opt		config file is located at:
-	--save-config		$globals::hash_tsv
+	--save-options		Save current options to config file
+	--save-opt		File: $globals::hash_tsv
+	--save-config		all arguments after this are ignored
 
 	--recr			Recursive mode
 				Warning: Use with caution
@@ -172,18 +174,26 @@ D	--dir			process directories
 				Please be careful with this option
 
 A	--all-files		Process all files, not just media files.
+				if not set only extenstions set by --media-types are processed
+				using --all-files AND --media-types will exit with error as they contradict each other
 
 	--filt=STRING		Filter files processed. must contain STRING
 	--filt-regexp		filter STRING is a regexp
 
 	--space-char=C		C = Space Delimiter character
-	--spc=C			Override default space delimiter \"$config::hash{space_character}{value}\"
-				and use C
+	--spc=C			Default: '$config::hash{space_character}{default}'
+				Current: '$config::hash{space_character}{value}'
 
 	--media-types=STRING	only process the file extensions listed in STRING
 	--mt=STRING		STRING format: \"<file_ext1>|<file_ext2>\"
-				Default file types processed:
-				$config::hash{file_ext_2_proc}{value}
+				File extensions are case insensitive
+				overrides --all-files option
+				Default: $config::hash{file_ext_2_proc}{default}
+				Current: $config::hash{file_ext_2_proc}{value}
+
+	--max-fn-length=N	Set Maximum filename length
+				Default: $config::hash{max_fn_length}{default}
+				Current: $config::hash{max_fn_length}{value}
 
 ";
 my $txt_hacks =
@@ -191,7 +201,8 @@ my $txt_hacks =
 
 	--html			output is formatted as html
 				Then viewed in a console mode browser:
-				$config::hash{browser}{value}
+				Default: $config::hash{browser}{default}
+				Current: $config::hash{browser}{value}
 
 	--browser		set browser to use for html hack
 

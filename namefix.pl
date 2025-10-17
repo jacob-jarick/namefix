@@ -464,6 +464,7 @@ my $I_chk = $frm_bottom->Checkbutton
 	-text=>				'Process ALL Files',
 	-variable=>			\$config::hash{ignore_file_type}{value},
 	-activeforeground=>	'blue'
+	
 )
 -> grid
 (
