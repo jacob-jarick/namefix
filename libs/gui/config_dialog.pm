@@ -404,7 +404,7 @@ sub edit_prefs
 
 	$tab_debug->Checkbutton
 	(
-		-text=>				'Pop up errors in a dialog box',
+		-text=>				'Show errors in dialog boxes',
 		-variable=>			\$config::hash{error_notify}{value},
 		-activeforeground=>	"blue"
 	)
@@ -417,7 +417,7 @@ sub edit_prefs
 
 		$tab_debug->Checkbutton
 	(
-		-text=>				"Exit on error",
+		-text=>				'Exit on error',
 		-variable=>			\$config::hash{exit_on_error}{value},
 		-activeforeground=>	"blue"
 	)
