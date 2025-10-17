@@ -4,11 +4,17 @@
 
 Feature Additions:
 
-* generate filename from id3 tags
+* generate filename from id3 tags - DONE
 
 Code Todo: 
 
-* id3 unit tests
+* id3 unit tests - DONE
+
+GUI: 
+
+Trial using Browser::Open to directly open URLs to github readme etc
+with aim of making use of markdown in browser.
+option B is Tk::MarkdownTk
 
 ==================
 =- Known Issues -=

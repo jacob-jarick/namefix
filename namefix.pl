@@ -522,7 +522,6 @@ $frm_bottom -> Button
 		if(&state::check('stop'))
 		{
 			&misc::plog(1, "STOP already requested, ignoring additional STOP request");
-			# TODO: idle should be set by dir::ls_dir or run_namefix::run when they see the STOP flag and finish
 		}
 		else
 		{
