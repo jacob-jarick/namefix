@@ -1,3 +1,81 @@
+commit ef5857878d152dee435ce84f1b403e0da38ada83
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 14:10:27 2025 +0800
+
+    4.1.25 version bump
+    
+    --ignore-config added
+    CLI Help
+    @media_exts added
+    config option 'error_stdout' removed
+    --zero-log added
+
+commit e214b80d66dde69f1445e7b899fa0e1a631be1d7
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 14:06:09 2025 +0800
+
+    --ignore-config
+    
+    --ignore-config
+    
+    clean up tests
+
+commit 079d9fc28e520477bee36cc70a937fdfa214ab0d
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 13:46:49 2025 +0800
+
+    CLI docs
+
+commit f2c7521d5304a93f4da4a1bf0ae2d6dc0bca85a6
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 13:19:12 2025 +0800
+
+    comments
+
+commit f8627f159f5023a7683ec3f6266be6445e107800
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 13:11:02 2025 +0800
+
+    comments
+
+commit 177a4832c04a7aa6b6f936d6319178ac8a2b0978
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 12:43:25 2025 +0800
+
+    Update config.pm
+
+commit 267beb06f5dbe843684913c925c886ba3b926a1c
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 12:42:00 2025 +0800
+
+    Update config.pm
+
+commit 65c1ed72ac26b997e6cf238745e408f591d00657
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 12:41:05 2025 +0800
+
+    file_ext_2_proc
+
+commit 8d03975dcb32f354285ca4616761fc7a40c8553e
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 12:26:43 2025 +0800
+
+    error_stdout removed
+    
+    option was set but never used
+
+commit 713000b1d11ab591eddcd3cddd3e4a44b28aa3bc
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 12:20:07 2025 +0800
+
+    Update config.pm
+
+commit 1e258055b1d542da31ab7e3f5cb7ac06a235df0e
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 12:16:17 2025 +0800
+
+    4.1.24 build
+
 commit 0b6ea00814adeb73c9496183d27e2476da77decb
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Fri Oct 17 12:13:08 2025 +0800
@@ -20,81 +98,3 @@ Date:   Wed Oct 15 06:30:33 2025 +0800
     4.1.23
     
     Deprecated  argument --fs-fix for --fat32
-    
-    documented and mapped CLI and GUI vars access to each other in config.pm
-    
-    corrected setting of fat32 default for windows etc
-    
-    updated fat32 fix to only do it if the names are the same when lowercased
-    
-    fixed CLI arguments --enum-string-front and --enum-string-end
-    
-    not being set correctly
-
-commit 28778c75d7f9d3ed86cbf9d5e9392c9adda96a36
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 15 03:53:20 2025 +0800
-
-    comments
-
-commit 890f4d336baf5325b7cddfbfbe69b578f3423605
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Oct 14 13:57:51 2025 +0800
-
-    4.1.22 build
-
-commit 7bd1c72c405ef16f08d7e6cd4396eee7ca8719fd
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Oct 14 13:56:03 2025 +0800
-
-    4.1.22
-
-commit ccdd4c222a092192126f548f1c334197bf9a13b8
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Oct 14 13:55:31 2025 +0800
-
-    correct manual rename
-
-commit 8d4d4e144b62917206caeae2d7838987b2c1992f
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Oct 14 13:49:19 2025 +0800
-
-    4.1.21 build
-
-commit f171a02c1a089cfbc4acc520b27cd9b34397dbbc
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Oct 14 12:39:08 2025 +0800
-
-    fix regex for fn_kill_cwords
-
-commit 3e7fe10f0d9994814e6526b4571b2f2648d020d4
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Oct 14 11:39:47 2025 +0800
-
-    fixed end append inverted logic
-
-commit c75ae813757088adcdbaa9220549d6257908acc6
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Tue Oct 14 11:35:30 2025 +0800
-
-    fixed inverted logic for scenify
-
-commit 67fc487911a89a68bc8ee4e91ec9e965448b110b
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 16:51:54 2025 +0800
-
-    4.1.20 build
-
-commit f9b2615723bbde7d14890b23e491e7784b3a4c37
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 16:50:47 2025 +0800
-
-    recursive no longer prints files when running / preview changes unless there have been changes
-
-commit f03aacc9ee6adabc8c53a18433a33f74543d96a0
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 10 16:36:45 2025 +0800
-
-    fix gui path argument
-
-commit 9f3a70bf58bca43bb83e7e85c12492adac946900
