@@ -60,42 +60,21 @@ fi
 
 # Copy important documentation files
 echo "Copying documentation files..."
-cp -v README.md "${TEMP_DIR}/" 2>/dev/null || echo "Warning: README.md not found"
 cp -v LICENSE "${TEMP_DIR}/" 2>/dev/null || echo "Warning: LICENSE not found"
 
 # Create a simple installation README for Linux users
 echo "Creating Linux installation instructions..."
 cat > "${TEMP_DIR}/INSTALL_LINUX.txt" << 'EOF'
-NAMEFIX - Linux Installation Instructions
-========================================
+INSTALL:
 
-This package contains the namefix file renaming utility for Linux systems.
-
-QUICK START:
-1. Extract this archive: tar -xzf namefix-linux.tar.gz
-2. Change to the directory: cd namefix-linux/
-3. Make scripts executable: chmod +x *.pl extra/*.sh
-4. Install Perl modules: sudo ./extra/install-modules.sh
-5. Install system links (optional): sudo ./extra/install.sh
-
-CONTENTS:
-- namefix.pl          : Main GUI application (requires Tk)
-- namefix-cli.pl      : Command-line version
-- namefix-gui.par     : Compiled GUI version (standalone)
-- namefix-cli.par     : Compiled CLI version (standalone)
-- jpgtest.pl          : JPG testing utility
-- data/               : Configuration and data files
-- libs/               : Perl library modules
-- tools/              : Additional utilities
-- t/                  : Test files
-- extra/install.sh    : System installation script
-- extra/install-modules.sh : Perl module installation script
+1. run ./extra/install-modules.sh to install required Perl modules.
+2. run ./extra/install.sh to set up namefix in your system.
 
 USAGE:
 GUI mode:    perl namefix.pl [directory]
-CLI mode:    perl namefix-cli.pl [options] [files/directories]
+CLI mode:    perl namefix-cli.pl [options] [file/directory]
 Standalone:  ./namefix-gui.par [directory]
-             ./namefix-cli.par [options] [files/directories]
+             ./namefix-cli.par [options] [file/directory]
 
 For help:    perl namefix-cli.pl --help
 
