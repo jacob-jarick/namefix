@@ -141,7 +141,7 @@ our %hash = ();
 # CONFIG DIALOG - MAIN TAB
 
 &config_init_value('space_character',	' ',	' ',	'str',	'base'); # CLI: --space-char=C / GUI: 'Space Delimiter: (libs/gui/config_dialog.pm)
-&config_init_value('max_fn_length',		256,	256,	'int',	'base'); # CLI: TODO add --max-fn-length / GUI: 'Max Filename Length: (libs/gui/config_dialog.pm)
+&config_init_value('max_fn_length',		256,	256,	'int',	'base'); # CLI: --max-fn-length / GUI: 'Max Filename Length: (libs/gui/config_dialog.pm)
 &config_init_value('save_window_size',	0,		0,		'bool',	'base'); # CLI: N/A / GUI: 'Save main window size and position' (libs/gui/config_dialog.pm)
 &config_init_value('window_g',			'',		'',		'str',	'geometry'); # CLI: N/A / GUI: auto set on save when save_window_size is checked
 

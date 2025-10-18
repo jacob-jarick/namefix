@@ -995,7 +995,6 @@ sub fn_pad_digits
 
 	return $file_new if !$config::hash{pad_digits}{value};
 
-	# TODO: optimize me
 	my $tmp = $config::hash{space_character}{value}."-".$config::hash{space_character}{value};
 	my $space = $config::hash{space_character}{value};
 
