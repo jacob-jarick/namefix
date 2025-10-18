@@ -1,3 +1,26 @@
+commit 400655ca1fb0da98494faa764fb0951863a878e3
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Sat Oct 18 12:58:00 2025 +0800
+
+    4.1.26 - pad_digits
+    
+    optimized function slightly.
+    commented code better
+    support scene format
+    updated tests for pad_digits
+
+commit 657671bd54802ecac13c124ab9970809a27f6e7a
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Sat Oct 18 10:30:36 2025 +0800
+
+    "left" to 'left'
+
+commit 22ad096a89ff671daa3c3ff5ae226c9e1a15b40e
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 17 14:11:50 2025 +0800
+
+    4.1.25 build
+
 commit ef5857878d152dee435ce84f1b403e0da38ada83
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Fri Oct 17 14:10:27 2025 +0800
@@ -75,26 +98,3 @@ Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Fri Oct 17 12:16:17 2025 +0800
 
     4.1.24 build
-
-commit 0b6ea00814adeb73c9496183d27e2476da77decb
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 17 12:13:08 2025 +0800
-
-    4.1.24
-    
-    --zero-log options added to CLI
-    more code documentation
-
-commit a89435f4ae9f233d2cf689604d4d799492838802
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 15 06:32:02 2025 +0800
-
-    4.1.23 build
-
-commit 1555e569605c63f8d7344e5f050ddc90b484a354
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Wed Oct 15 06:30:33 2025 +0800
-
-    4.1.23
-    
-    Deprecated  argument --fs-fix for --fat32
