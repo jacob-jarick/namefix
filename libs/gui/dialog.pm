@@ -336,7 +336,7 @@ sub show_del_dialog
 	)
 	->pack
 	(
-		-side=>		"left",
+		-side=>		'left',
 		-expand=>	1,
 		-fill=>		"x",
 	);
@@ -353,7 +353,7 @@ sub show_del_dialog
 	)
 	->pack
 	(
-		-side=>     "left",
+		-side=>     'left',
 		-expand=>   1,
 		-fill=>     "x",
 	);

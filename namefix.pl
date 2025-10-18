@@ -1303,7 +1303,7 @@ $row = 1;
 
 $tab5->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"Misc Options:\n",
 	-font=>		'Arial 10 bold',
 )
@@ -1453,7 +1453,7 @@ my $N_chk = $tab5->Checkbutton
 
 my $tab5_label_scene = $tab5->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"\nScene Options:\n"
 )
 -> grid
@@ -1513,7 +1513,7 @@ $balloon->attach
 
 $tab5->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"\nPadding options:\n"
 )
 ->grid
@@ -1663,7 +1663,7 @@ $balloon->attach
 
 $tab6->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"\nStyles:\n"
 )
 ->grid
@@ -1800,7 +1800,7 @@ $tab6->Label
 
 $tab6->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"Padding:"
 )
 ->grid
@@ -1847,7 +1847,7 @@ my $spin_pad_enum = $tab6->Spinbox
 
 $tab6->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"zeros"
 )
 ->grid
@@ -1907,7 +1907,7 @@ $balloon->attach
 
 $tab7->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"\nFilename Length: "
 )
 ->grid
@@ -1935,7 +1935,7 @@ $balloon->attach
 
 $tab7->Label
 (
-	-justify=>	"left",
+	-justify=>	'left',
 	-text=>		"\nStyle:\n"
 )
 ->grid
@@ -2015,7 +2015,7 @@ my $tab7_spacer1 = $tab7->Label
 
 $tab7->Label
 (
-	-justify=>		"left",
+	-justify=>		'left',
 	-text=>			"Insert Character\/s: "
 )
 ->grid

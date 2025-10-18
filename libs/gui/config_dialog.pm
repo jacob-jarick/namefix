@@ -42,7 +42,7 @@ sub edit_prefs
 
 	my $tab1_label_mo = $tab1->Label
 	(
-		-justify=>	"left",
+		-justify=>	'left',
 		-text=>		"Main system options for namefix.pl:\n"
 	)
 	->grid
@@ -65,7 +65,7 @@ sub edit_prefs
 
 	my $label6 = $tab1->Label
 	(
-		-justify=>	"left",
+		-justify=>	'left',
 		-text=>		'Space Delimter: '
 	)
 	->grid
@@ -106,7 +106,7 @@ sub edit_prefs
 
 	$tab1->Label
 	(
-		-justify=>	"left",
+		-justify=>	'left',
 		-text=>		"Maximum Filename Length: "
 	)
 	->grid
@@ -136,7 +136,7 @@ sub edit_prefs
 
 	$tab1->Label
 	(
-		-justify=>	"left",
+		-justify=>	'left',
 		-text=>		" "
 	)
 	->grid
@@ -212,7 +212,7 @@ sub edit_prefs
 
 	$tab7->Label
 	(
-		-justify=>	"left",
+		-justify=>	'left',
 		-text=>		"Advance system options for namefix.pl:\n"
 	)
 	-> grid
@@ -274,7 +274,7 @@ sub edit_prefs
 
 	$tab7->Label
 	(
-		-justify=>	"left",
+		-justify=>	'left',
 		-text=>		'Media File Extensions: '
 	)
 	-> grid
@@ -345,7 +345,7 @@ sub edit_prefs
 
 	$tab_debug->Label
 	(
-		-justify=>	"left",
+		-justify=>	'left',
 		-text=>		'Debug Level'
 	)
 	-> grid
