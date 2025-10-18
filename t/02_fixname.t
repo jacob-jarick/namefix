@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 60;
+use Test::More tests => 69;
 use FindBin qw($Bin);
 use File::Copy;
 use File::Path qw(make_path remove_tree);
@@ -235,11 +235,49 @@ sub reset_test_config {
     $config::hash{pad_digits}{value} = 1;
     $config::hash{space_character}{value} = ' ';
     
+	# DDxDD middle of filename
     my $result = &fixname::fn_pad_digits('Show 03x11 Episode.avi');
-    is( $result, 'Show - 03x11 - Episode.avi', 'fn_pad_digits: pad with dashes' );
+    is($result, 'Show - 03x11 - Episode.avi', 'fn_pad_digits: DDxDD middle of filename');
+
+	# scene style middle of filename
+	$result = &fixname::fn_pad_digits('Show S03E11 Episode.avi');
+	is($result, 'Show - S03E11 - Episode.avi', 'fn_pad_digits: scene style middle of filename');
     
+	# DDxDD at start of filename
     $result = &fixname::fn_pad_digits('03x11 Episode Name.avi');
-    is( $result, '03x11 - Episode Name.avi', 'fn_pad_digits: leading episode' );
+    is($result, '03x11 - Episode Name.avi', 'fn_pad_digits: DDxDD at start of filename');
+
+	# scene style at start of filename
+	$result = &fixname::fn_pad_digits('S03E11 Episode Name.avi');
+	is($result, 'S03E11 - Episode Name.avi', 'fn_pad_digits: scene style at start of filename');
+
+	# DDxDD at end of filename
+	$result = &fixname::fn_pad_digits('Generic Isekai 03x11.avi');
+	is($result, 'Generic Isekai - 03x11.avi', 'fn_pad_digits: DDxDD at end of filename');
+
+	# scene style at end of filename
+	$result = &fixname::fn_pad_digits('Generic Isekai S03E11.avi');
+	is($result, 'Generic Isekai - S03E11.avi', 'fn_pad_digits: scene style at end of filename');
+
+	# DxDD at end of filename
+	$result = &fixname::fn_pad_digits('Generic Isekai 3x11.avi');
+	is($result, 'Generic Isekai - 3x11.avi', 'fn_pad_digits: DxDD at end of filename');
+
+	# scene style sDeDD at end of filename
+	$result = &fixname::fn_pad_digits('Generic Isekai S3E11.avi');
+	is($result, 'Generic Isekai - S3E11.avi', 'fn_pad_digits: scene style sDeDD at end of filename');
+
+	# scene style sDeD at start end of filename
+	$result = &fixname::fn_pad_digits('S3E1 Generic Isekai.avi');
+	is($result, 'S3E1 - Generic Isekai.avi', 'fn_pad_digits: scene style sDeD at start of filename');
+
+	# Track number padding
+	$result = &fixname::fn_pad_digits('Metallica 02 Napster is love.mp3');
+	is($result, 'Metallica - 02 - Napster is love.mp3', 'fn_pad_digits: track number padding');
+
+	# track number at start of filename
+	$result = &fixname::fn_pad_digits('02 Metallica - Napster is love.mp3');
+	is($result, '02 - Metallica - Napster is love.mp3', 'fn_pad_digits: leading track number');
 }
 
 # fn_digits - Remove leading digits

@@ -956,7 +956,7 @@ $balloon->attach
 
 my $AUDIO_FORCE_chk = $tab2->Checkbutton
 (
-	-text=>             "Overwrite",
+	-text=>             'Overwrite',
 	-variable=>         \$config::hash{id3_force}{value},
 	-activeforeground=> 'blue',
     -command=>		    
@@ -1574,7 +1574,13 @@ my $pad_d_chk = $tab5->Checkbutton
 $balloon->attach
 (
 	$pad_d_chk,
-	-msg=> "Pads TRACK and SEASONxEPISODE with \" - \"\n\neg: Norther 10 Hollow.mp3 to Norther - 10 - Hollow.mp3"
+	-msg=> 
+		"Pads TRACK and SEASONxEPISODE with '$config::hash{space_character}{value}-$config::hash{space_character}{value}'\n\n".
+		"Examples:\n\n".
+			"OLD\t\t\tNEW\n".
+			"Norther 10 Hollow.mp3\tNorther - 10 - Hollow.mp3\n".
+			"Family Guy 01x01.avi\tFamily Guy - 01x01.avi\n".
+			"Simpsons s01e01.mkv\tSimpsons - s01e01.mkv"
 );
 
 my $pad_d_w_chk = $tab5->Checkbutton

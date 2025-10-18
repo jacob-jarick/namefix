@@ -412,7 +412,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--ignore-config')
 	{
-		# TODO: do nothing, already handled at start
+		# nothing, already handled at start
 	}
 
 	#######################
@@ -684,11 +684,6 @@ for my $arg(@ARGV)
 		# this is just to avoid the unknown option error
 	}
 
-	elsif($arg eq '--debug-stdout')
-	{
-		&config::set_value('log_stdout', 1);
-	}
-
 	elsif($arg eq '--zero-log')
 	{
 		# unlike the GUI we simply clear the log file.
@@ -776,7 +771,7 @@ for my $arg(@ARGV)
 
 	elsif($arg eq '--save-options' || $arg eq '--save-opt' || $arg eq '--save-config')
 	{
-		# TODO: set var, finish looping options THEN save if var is set
+		# NOTE: saves and exits immediately. If not the last argument, following args are ignored.
 		&config::save_hash;
 		&cli_print::print("Options Saved, exiting", "<MSG>");
 		exit;

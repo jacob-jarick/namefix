@@ -139,7 +139,7 @@ L	--lc			lowercase all letters of filename
 H	--pad-hyphen		pad / hyphen dashes with space delimiter '$config::hash{space_character}{value}'
 	--ph			
 
-N	--pad-num		pad digits with '-'
+N	--pad-num		pad digits with '$config::hash{space_character}{value}-$config::hash{space_character}{value}'
 	--pn			Aimed at track & EpisodexSeason numbers
 				eg: 'Artist 10 Title.mp3' to
 				'Artist - 10 - Title.mp3'
@@ -241,7 +241,7 @@ my $txt_debug =
 
 	--debug=N		Set debug level to N (0-10)
 	--exit-on-error	Exit on first error (default is to continue)
-	--zero-log		Zero logfile on start
+	`--zero-log`		Zero logfile on start
 
 ";
 my $txt_mp3 =

@@ -997,10 +997,14 @@ sub fn_pad_digits
 
 	# TODO: optimize me
 	my $tmp = $config::hash{space_character}{value}."-".$config::hash{space_character}{value};
+	my $space = $config::hash{space_character}{value};
 
-	$file_new =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$tmp.$2.$tmp/ie;
-	$file_new =~ s/($config::hash{space_character}{value})+(\d\d|\d+x\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
-	$file_new =~ s/^(\d\d|\d+x\d+)($config::hash{space_character}{value})+/$1.$tmp/ie;
+	# beginning of filename
+	$file_new =~ s/^(\d{2}|\d+x\d+|s\d+e\d+)($space)+/$1.$tmp/ie;
+	# middle of filename
+	$file_new =~ s/($space)+(\d{2}|\d+x\d+|s\d+e\d+)($space)+/$tmp.$2.$tmp/ie;
+	# end of filename
+	$file_new =~ s/($space)+(\d{2}|\d+x\d+|s\d+e\d+)(\..{3,4}$)/$tmp.$2.$3/ie;
 
 	return $file_new;
 }

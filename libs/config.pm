@@ -115,7 +115,7 @@ our %hash = ();
 # FILTER BAR
 
 &config_init_value('filter',				0,		0,	'bool',	'extended'); # CLI: auto set if --filt=STRING is used / GUI 'Filter'
-&config_init_value('filter_ignore_case',	0,		0,	'bool',	'extended'); # -CLI: TODO add -filt-ignore-case / GUI 'Case In-Sensitive'
+&config_init_value('filter_ignore_case',	0,		0,	'bool',	'extended'); # -CLI: --filt-ignore-case / GUI 'Case In-Sensitive'
 &config_init_value('filter_string',			'',		'',	'str',	'no'); # CLI: --filt=STRING / GUI 'Filter String:'
 
 # -----------------------------------------------------------------------------
