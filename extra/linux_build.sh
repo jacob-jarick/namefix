@@ -14,6 +14,11 @@ GUI_PAR="namefix-gui.par"
 BUILD_DATE=$(date +"%Y%m%d-%H%M%S")
 BUILD_DATE_FILE="builds/linux.builddate.txt"
 
+MODULES_SCRIPT="extra/modules_linux.sh"
+INSTALL_SCRIPT="extra/install.sh"
+
+INSTALL_BZ2="$builds/{PACKAGE_NAME}.tar.bz2"
+
 echo "Set build date: ${BUILD_DATE}"
 echo ${BUILD_DATE} > ${BUILD_DATE_FILE}
 
@@ -107,7 +112,7 @@ fi
 
 # Copy shell scripts from extra directory
 cp -v extra/install.sh "${TEMP_DIR}/"
-cp -v extra/linux_modules.sh "${TEMP_DIR}/install_modules.sh"
+cp -v "${MODULES_SCRIPT}" "${TEMP_DIR}/install_modules.sh"
 
 # Set execution permissions for script files
 echo "Setting execution permissions..."
@@ -140,4 +145,9 @@ echo ""
 echo "Linux packages created"
 echo "  Archive: ${ARCHIVE_NAME}"
 echo "  Size: $(du -h ./builds/${ARCHIVE_NAME} | cut -f1)"
+
+# Calculate SHA1 checksum and save to file
+SHA1=$(sha1sum ./builds/${ARCHIVE_NAME} | awk '{print $1}')
+echo "${SHA1}" > ./builds/${ARCHIVE_NAME}.sha1
+echo "  SHA1: ${SHA1}"
 
