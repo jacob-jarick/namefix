@@ -12,6 +12,8 @@ set -e  # Exit on any error
 PACKAGE_NAME="namefix"
 BUILD_DATE=$(date +"%Y%m%d-%H%M%S")
 
+VERSION=$(perl ./namefix-cli.pl --version)
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # get script directory parent directory
@@ -23,16 +25,16 @@ TEMP_DIR="/tmp/${PACKAGE_NAME}"
 CLI_PAR="namefix-cli.par"
 GUI_PAR="namefix-gui.par"
 
-ARCHIVE_PATH="${BUILD_DIR}/${PACKAGE_NAME}.tar.bz2"
+ARCHIVE_PATH="${BUILD_DIR}/${PACKAGE_NAME}.${VERSION}.tar.bz2"
 
-BUILD_DATE_FILE="${BUILD_DIR}/linux.builddate.txt"
+BUILD_DATE_FILE="${BUILD_DIR}/namefix.${VERSION}.linux.builddate.txt"
 
 MODULES_SCRIPT="${EXTRA_DIR}/modules_linux.sh"
 INSTALL_SCRIPT="${EXTRA_DIR}/install.sh"
 
 CHANGELOG_FILE="${PARENT_DIR}/data/txt/changelog.txt"
 
-
+echo "Version:          ${VERSION}"
 echo "Parent directory: ${PARENT_DIR}"
 echo "Build directory:  ${BUILD_DIR}"
 echo "Build date file:  ${BUILD_DATE_FILE}"
@@ -43,13 +45,17 @@ echo "Modules script:   ${MODULES_SCRIPT}"
 echo "Install script:   ${INSTALL_SCRIPT}"
 echo "Changelog file:   ${CHANGELOG_FILE}"
 echo "Temp directory:   ${TEMP_DIR}"
-# exit
+echo -e "\n\n"
 
-echo "Set build date: ${BUILD_DATE}"
-echo "${BUILD_DATE}" > "${BUILD_DATE_FILE}"
 
 echo "Cleaning up any previous temporary files..."
 rm -rfv "${TEMP_DIR}"
+
+echo "remove old archive and sha1sum"
+rm -vf "${BUILD_DIR}"/*bz2 "${BUILD_DIR}"/*.sha1sum "${BUILD_DIR}"/*.linux.builddate.txt || echo "No old archive or sha1sum to remove"
+
+echo "Set build date: ${BUILD_DATE}"
+echo "${BUILD_DATE}" > "${BUILD_DATE_FILE}"
 
 echo "Updating changelog"
 git log | head -100 > "${CHANGELOG_FILE}"
@@ -117,7 +123,7 @@ cp namefix-gui.par "${TEMP_DIR}/" 2>/dev/null || echo "Warning: namefix-gui.par 
 cp namefix-cli.par "${TEMP_DIR}/" 2>/dev/null || echo "Warning: namefix-cli.par not found"
 
 # copy build date file
-cp "${BUILD_DATE_FILE}" "${TEMP_DIR}/builddate.txt"
+cp -v "${BUILD_DATE_FILE}" "${TEMP_DIR}/"
 
 # Copy complete data directory
 echo "Copying data directory..."

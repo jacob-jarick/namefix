@@ -1,3 +1,15 @@
+commit 6c6b0120ed97f31751bab0d8578ae0780f0a5361
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 24 00:04:39 2025 +0800
+
+    Delete namefix.tar.bz2.sha1
+
+commit 79fbfac1cfa87c8c6a458ea3ccb6dfe7f87e7955
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Fri Oct 24 00:02:55 2025 +0800
+
+    build scripts updated again
+
 commit 6834b44d627a0123921fd4610362a6d183d91319
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Thu Oct 23 19:10:30 2025 +0800
@@ -86,15 +98,3 @@ Date:   Fri Oct 17 14:10:27 2025 +0800
     --zero-log added
 
 commit e214b80d66dde69f1445e7b899fa0e1a631be1d7
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 17 14:06:09 2025 +0800
-
-    --ignore-config
-    
-    --ignore-config
-    
-    clean up tests
-
-commit 079d9fc28e520477bee36cc70a937fdfa214ab0d
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 17 13:46:49 2025 +0800

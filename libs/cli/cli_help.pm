@@ -155,6 +155,8 @@ N	--pad-num		pad digits with '$config::hash{space_character}{value}-$config::has
 	--gui-test		Test GUI startup (for debugging only)
 				Starts the GUI and exits
 
+	--version		prints version and exits
+
 ";
 my $txt_advance =
 "Advanced Options:

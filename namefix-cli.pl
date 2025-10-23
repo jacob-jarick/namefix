@@ -171,6 +171,12 @@ for my $arg(@ARGV)
 		next;
 	}
 
+	if($arg eq '--version')
+	{
+		print "$globals::version\n";
+		exit 0;
+	}
+
 	if($arg eq '--help')
 	{
 		&cli_help::show('help');
