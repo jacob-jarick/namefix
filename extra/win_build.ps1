@@ -13,8 +13,11 @@ $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 # get one level up to project root
 $PROJECT_ROOT = Split-Path -Parent $SCRIPT_DIR
 
-$INST_NAME = "namefix-installer.exe"
-$NSI_OUT_PATH = "$PROJECT_ROOT\$INST_NAME"
+# get version from perl .\namefix-cli.pl --version
+$VERSION = & perl .\namefix-cli.pl --version
+
+$INST_NAME = "namefix.$VERSION.installer.exe"
+$NSI_OUT_PATH = "$PROJECT_ROOT\namefix-installer.exe"
 $INSTALLER_BUILD_PATH = "$PROJECT_ROOT\builds\$INST_NAME"
 $INSTALLER_SHA1_PATH = "$INSTALLER_BUILD_PATH.sha1sum"
 
@@ -23,12 +26,13 @@ $CHANGELOG_PATH = "$PROJECT_ROOT\data\txt\changelog.txt"
 $GUI_EXE = "$PROJECT_ROOT\namefix-gui.exe"
 $CLI_EXE = "$PROJECT_ROOT\namefix.exe"
 
-$BUILD_DATE_FILE = "$PROJECT_ROOT\builds\windows.builddate.txt"
+$BUILD_DATE_FILE = "$INSTALLER_BUILD_PATH.builddate.txt"
 
 Write-Output "==============================================="
 Write-Output "Build script"
 Write-Output "."
 Write-Output "==============================================="
+Write-Output "Version:              $VERSION"
 Write-Output "PROJECT_ROOT:         $PROJECT_ROOT"
 Write-Output "THIS SCRIPT_DIR:      $SCRIPT_DIR"
 Write-Output "NSI_OUT_PATH:         $NSI_OUT_PATH"
