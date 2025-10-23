@@ -1,3 +1,29 @@
+commit 8bbf600e0ab335a666ff66d33e2dff40d58d0b93
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Thu Oct 23 08:52:17 2025 +0800
+
+    enum_opt incorrectly set as bool.
+    
+    updates tests to use &config::set_value which caught error with type
+
+commit 7375cfad276c954c0a46d93012edb4bde1d0427d
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Sun Oct 19 05:06:14 2025 +0800
+
+    update linux install scripts
+
+commit 7c800ee23146af6a1ae50c74b04a2babce446186
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Sun Oct 19 04:46:06 2025 +0800
+
+    remove old comments
+
+commit 2cf527e8acabc27851d6afdf74aaee3275553b1b
+Author: jacob-jarick <mem.namefix@gmail.com>
+Date:   Sat Oct 18 13:01:08 2025 +0800
+
+    4.1.26 build
+
 commit 400655ca1fb0da98494faa764fb0951863a878e3
 Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Sat Oct 18 12:58:00 2025 +0800
@@ -72,29 +98,3 @@ Author: jacob-jarick <mem.namefix@gmail.com>
 Date:   Fri Oct 17 12:42:00 2025 +0800
 
     Update config.pm
-
-commit 65c1ed72ac26b997e6cf238745e408f591d00657
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 17 12:41:05 2025 +0800
-
-    file_ext_2_proc
-
-commit 8d03975dcb32f354285ca4616761fc7a40c8553e
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 17 12:26:43 2025 +0800
-
-    error_stdout removed
-    
-    option was set but never used
-
-commit 713000b1d11ab591eddcd3cddd3e4a44b28aa3bc
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 17 12:20:07 2025 +0800
-
-    Update config.pm
-
-commit 1e258055b1d542da31ab7e3f5cb7ac06a235df0e
-Author: jacob-jarick <mem.namefix@gmail.com>
-Date:   Fri Oct 17 12:16:17 2025 +0800
-
-    4.1.24 build
