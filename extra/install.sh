@@ -11,7 +11,7 @@ echo "Script directory: ${SCRIPT_DIR}"
 echo install script
 
 echo set execution bits
-chmod a+x ${SCRIPT_DIR}/*.par
+chmod a+x "${SCRIPT_DIR}"/*.par
 
 echo remove old versions
 sudo rm -vf /usr/bin/namefix*

@@ -6,27 +6,53 @@
 set -e  # Exit on any error
 
 # Define variables
+
+# get script directory full path
+
 PACKAGE_NAME="namefix"
-ARCHIVE_NAME="${PACKAGE_NAME}.tar.bz2"
+BUILD_DATE=$(date +"%Y%m%d-%H%M%S")
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+# get script directory parent directory
+PARENT_DIR="$(dirname "$SCRIPT_DIR")"
+EXTRA_DIR="${PARENT_DIR}/extra"
+BUILD_DIR="${PARENT_DIR}/builds"
 TEMP_DIR="/tmp/${PACKAGE_NAME}"
+
 CLI_PAR="namefix-cli.par"
 GUI_PAR="namefix-gui.par"
-BUILD_DATE=$(date +"%Y%m%d-%H%M%S")
-BUILD_DATE_FILE="builds/linux.builddate.txt"
 
-MODULES_SCRIPT="extra/modules_linux.sh"
-INSTALL_SCRIPT="extra/install.sh"
+ARCHIVE_PATH="${BUILD_DIR}/${PACKAGE_NAME}.tar.bz2"
 
-INSTALL_BZ2="$builds/{PACKAGE_NAME}.tar.bz2"
+BUILD_DATE_FILE="${BUILD_DIR}/linux.builddate.txt"
+
+MODULES_SCRIPT="${EXTRA_DIR}/modules_linux.sh"
+INSTALL_SCRIPT="${EXTRA_DIR}/install.sh"
+
+CHANGELOG_FILE="${PARENT_DIR}/data/txt/changelog.txt"
+
+
+echo "Parent directory: ${PARENT_DIR}"
+echo "Build directory:  ${BUILD_DIR}"
+echo "Build date file:  ${BUILD_DATE_FILE}"
+echo "Archive path:     ${ARCHIVE_PATH}"
+echo "Script directory: ${SCRIPT_DIR}"
+echo "Extra directory:  ${EXTRA_DIR}"
+echo "Modules script:   ${MODULES_SCRIPT}"
+echo "Install script:   ${INSTALL_SCRIPT}"
+echo "Changelog file:   ${CHANGELOG_FILE}"
+echo "Temp directory:   ${TEMP_DIR}"
+# exit
 
 echo "Set build date: ${BUILD_DATE}"
-echo ${BUILD_DATE} > ${BUILD_DATE_FILE}
+echo "${BUILD_DATE}" > "${BUILD_DATE_FILE}"
 
 echo "Cleaning up any previous temporary files..."
 rm -rfv "${TEMP_DIR}"
 
 echo "Updating changelog"
-git log | head -100 > data/txt/changelog.txt
+git log | head -100 > "${CHANGELOG_FILE}"
 
 echo "Building CLI PAR"
 
@@ -73,8 +99,7 @@ else
     echo "Warning: namefix.pl not found, skipping GUI PAR build"
 fi
 
-echo "Creating Linux package for namefix..."
-echo "Package name: ${ARCHIVE_NAME}"
+echo "Creating Linux archive ${ARCHIVE_PATH}"
 
 # Clean up any existing temp directory
 if [ -d "${TEMP_DIR}" ]; then
@@ -100,6 +125,7 @@ if [ -d "data" ]; then
     cp -r data "${TEMP_DIR}/"
 else
     echo "Warning: data directory not found"
+	exit 1
 fi
 
 # Copy complete libs directory
@@ -108,6 +134,7 @@ if [ -d "libs" ]; then
     cp -r libs "${TEMP_DIR}/"
 else
     echo "Warning: libs directory not found"
+	exit 1
 fi
 
 # Copy shell scripts from extra directory
@@ -116,7 +143,6 @@ cp -v "${MODULES_SCRIPT}" "${TEMP_DIR}/install_modules.sh"
 
 # Set execution permissions for script files
 echo "Setting execution permissions..."
-chmod +x "${TEMP_DIR}"/*.pl 2>/dev/null || echo "Warning: No .pl files to make executable"
 chmod +x "${TEMP_DIR}"/*.par 2>/dev/null || echo "Warning: No .par files to make executable"
 chmod +x "${TEMP_DIR}"/*.sh 2>/dev/null || echo "Warning: No shell scripts to make executable"
 
@@ -127,27 +153,25 @@ tree "${TEMP_DIR}"
 # Create the tar.bz2 archive
 echo "Creating tar.bz2 archive..."
 cd /tmp
-tar -cjf "${ARCHIVE_NAME}" "${PACKAGE_NAME}"
+tar -cjf "${ARCHIVE_PATH}" "${PACKAGE_NAME}"
 cd - > /dev/null
-
-# Move the archive to current directory
-mv "/tmp/${ARCHIVE_NAME}" ./builds/
+ARCHIVE_SIZE=$(du -h "${ARCHIVE_PATH}" | cut -f1)
 
 # Clean up temporary directory
 echo "Cleaning up temporary files..."
 rm -rf "${TEMP_DIR}"
 
 # remove par files
-rm -vf *.par
+rm -vf ./*.par
 
 # Display results
 echo ""
 echo "Linux packages created"
-echo "  Archive: ${ARCHIVE_NAME}"
-echo "  Size: $(du -h ./builds/${ARCHIVE_NAME} | cut -f1)"
+echo "  Archive: ${ARCHIVE_PATH}"
+echo "  Size: ${ARCHIVE_SIZE}"
 
 # Calculate SHA1 checksum and save to file
-SHA1=$(sha1sum ./builds/${ARCHIVE_NAME} | awk '{print $1}')
-echo "${SHA1}" > ./builds/${ARCHIVE_NAME}.sha1
+SHA1=$(sha1sum "${ARCHIVE_PATH}" | awk '{print $1}')
+echo "${SHA1}" > "${ARCHIVE_PATH}.sha1sum"
 echo "  SHA1: ${SHA1}"
 
