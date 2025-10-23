@@ -19,17 +19,17 @@ $globals::CLI = 1;
 #=============================================================================
 
 # fn_intr_char (--int, -i) - international characters
-$config::hash{intr_char}{value} = 1;
+&config::set_value('intr_char', 1);
 my $file = 'Café München.avi';
 is( &fixname::fn_intr_char(1, $file), 'Cafe Muenchen.avi',  'fn_intr_char test - international characters');
 
 # fn_uc_all (--uc, -U) - uppercase all (DOS legacy)
-$config::hash{uc_all}{value} = 1;
+&config::set_value('uc_all', 1);
 $file = 'hello world.avi';
 is( &fixname::fn_uc_all($file), 'HELLO WORLD.AVI',  'fn_uc_all test (DOS legacy - includes extension)');
 
-# fn_lc_all (--lc, -L) - lowercase all  
-$config::hash{lc_all}{value} = 1;
+# fn_lc_all (--lc, -L) - lowercase all
+&config::set_value('lc_all', 1);
 $file = 'HELLO WORLD.AVI';
 is( &fixname::fn_lc_all($file), 'hello world.avi',  'fn_lc_all test');
 

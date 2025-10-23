@@ -90,7 +90,7 @@ our %hash = ();
 # ENUMURATE TAB
 
 &config_init_value('enum',				0,	0,	'bool',	'extended'); # CLI: --enum / GUI: 'Enumerate'
-&config_init_value('enum_opt',			0,	0,	'bool',	'extended'); # CLI: --enum-style / GUI: "\nStyles:\n" (radio buttons)
+&config_init_value('enum_opt',			0,	0,	'int',	'extended'); # CLI: --enum-style / GUI: "\nStyles:\n" (radio buttons)
 &config_init_value('enum_add',			0,	0,	'bool',	'extended'); # CLI: --enum-add-strings / GUI: 'Add Strings'
 &config_init_value('enum_pad',			0,	0,	'bool',	'extended'); # CLI: --enum-zero-pad / GUI: 'Pad with zeros'
 &config_init_value('enum_pad_zeros',	4,	4,	'int',	'extended'); # CLI: --enum-zero-pad (value) / GUI: N/A (see spinbox $spin_pad_enum)

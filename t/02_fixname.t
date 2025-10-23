@@ -28,7 +28,8 @@ ok( -d $temp_dir && -w $temp_dir, 'Test temp directory created and writable' );
 #=============================================================================
 
 # Reset config before each test group
-sub reset_test_config {
+sub reset_test_config 
+{
     &config::reset_config();
     $globals::CLI = 1;
 }
@@ -40,18 +41,18 @@ sub reset_test_config {
 # fn_replace - Replace user-entered strings
 {
     &reset_test_config();
-    $config::hash{replace}{value} = 1;
-    $config::hash{ins_str_old}{value} = 'bad';
-    $config::hash{ins_str}{value} = 'good';
-    $config::hash{remove_regex}{value} = 0;
-    
+    &config::set_value('replace', 1);
+    &config::set_value('ins_str_old', 'bad');
+    &config::set_value('ins_str', 'good');
+    &config::set_value('remove_regex', 0);
+
     my $result = &fixname::fn_replace(1, 'This is a bad example');
     is( $result, 'This is a good example', 'fn_replace: basic string replacement' );
     
     # Test regex mode
-    $config::hash{remove_regex}{value} = 1;
-    $config::hash{ins_str_old}{value} = '\d+';
-    $config::hash{ins_str}{value} = 'NUM';
+    &config::set_value('remove_regex', 1);
+    &config::set_value('ins_str_old', '\d+');
+    &config::set_value('ins_str', 'NUM');
     $result = &fixname::fn_replace(1, 'Test 123 file');
     is( $result, 'Test NUM file', 'fn_replace: regex replacement' );
 }
@@ -59,8 +60,8 @@ sub reset_test_config {
 # fn_spaces - Convert underscores to spaces
 {
     &reset_test_config();
-    $config::hash{spaces}{value} = 1;
-    $config::hash{space_character}{value} = ' ';
+    &config::set_value('spaces', 1);
+    &config::set_value('space_character', ' ');
     
     my $result = &fixname::fn_spaces(1, 'Hello_World_Episode_01.avi');
     is( $result, 'Hello World Episode 01.avi', 'fn_spaces: underscores to spaces' );
@@ -72,7 +73,7 @@ sub reset_test_config {
 # fn_sp_char - Remove special characters
 {
     &reset_test_config();
-    $config::hash{sp_char}{value} = 1;
+    &config::set_value('sp_char', 1);
     
     my $result = &fixname::fn_sp_char('Hello [World] (Test) @#%.txt');
     is( $result, 'Hello World Test .txt', 'fn_sp_char: remove special characters' );
@@ -81,9 +82,9 @@ sub reset_test_config {
 # fn_dot2space - Convert dots to spaces
 {
     &reset_test_config();
-    $config::hash{dot2space}{value} = 1;
-    $config::hash{space_character}{value} = ' ';
-    
+    &config::set_value('dot2space', 1);
+    &config::set_value('space_character', ' ');
+
     my $result = &fixname::fn_dot2space(1, 'test.file', 'Hello.World.Episode.01.avi');
     is( $result, 'Hello World Episode 01.avi', 'fn_dot2space: dots to spaces preserving extension' );
     
@@ -99,7 +100,7 @@ sub reset_test_config {
 # fn_unscene - Convert S03E11 to 03x11
 {
     &reset_test_config();
-    $config::hash{unscene}{value} = 1;
+    &config::set_value('unscene', 1);
     
     my $result = &fixname::fn_unscene('Show - S03E11 - Episode Title.avi');
     is( $result, 'Show - 03x11 - Episode Title.avi', 'fn_unscene: S03E11 to 03x11' );
@@ -113,12 +114,12 @@ sub reset_test_config {
     &reset_test_config();
     
     # Test when DISABLED (should return unchanged)
-    $config::hash{scene}{value} = 0;
+    &config::set_value('scene', 0);
     my $result = &fixname::fn_scene('Better off Ted 1x13 Secrets and Lives.avi');
     is( $result, 'Better off Ted 1x13 Secrets and Lives.avi', 'fn_scene: disabled returns unchanged' );
     
     # Test when ENABLED (should convert)
-    $config::hash{scene}{value} = 1;
+    &config::set_value('scene', 1);
     $result = &fixname::fn_scene('Show - 03x11 - Episode Title.avi');
     is( $result, 'Show - S03E11 - Episode Title.avi', 'fn_scene: 03x11 to S03E11' );
     
@@ -129,7 +130,7 @@ sub reset_test_config {
 # fn_split_dddd - Split episode numbers like 0103 to 01x03
 {
     &reset_test_config();
-    $config::hash{split_dddd}{value} = 1;
+    &config::set_value('split_dddd', 1);
     
     my $result = &fixname::fn_split_dddd('Show 0103 Episode.avi');
     is( $result, 'Show 01x03 Episode.avi', 'fn_split_dddd: 0103 to 01x03' );
@@ -149,7 +150,7 @@ sub reset_test_config {
 # fn_case_fl - Capitalize first letter
 {
     &reset_test_config();
-    $config::hash{case}{value} = 1;
+    &config::set_value('case', 1);
     
     my $result = &fixname::fn_case_fl(1, 'hello world.txt');
     is( $result, 'Hello world.txt', 'fn_case_fl: capitalize first letter' );
@@ -161,7 +162,7 @@ sub reset_test_config {
 # fn_case - Apply proper case formatting
 {
     &reset_test_config();
-    $config::hash{case}{value} = 1;
+    &config::set_value('case', 1);
     
     my $result = &fixname::fn_case(1, 'hello world test');
     is( $result, 'Hello World Test', 'fn_case: proper case formatting' );
@@ -173,7 +174,7 @@ sub reset_test_config {
 # fn_lc_all - Convert to lowercase
 {
     &reset_test_config();
-    $config::hash{lc_all}{value} = 1;
+    &config::set_value('lc_all', 1);
     
     my $result = &fixname::fn_lc_all('HELLO WORLD TEST.TXT');
     is( $result, 'hello world test.txt', 'fn_lc_all: all lowercase' );
@@ -182,7 +183,7 @@ sub reset_test_config {
 # fn_uc_all - Convert to uppercase
 {
     &reset_test_config();
-    $config::hash{uc_all}{value} = 1;
+    &config::set_value('uc_all', 1);
     
     my $result = &fixname::fn_uc_all('hello world test.txt');
     is( $result, 'HELLO WORLD TEST.TXT', 'fn_uc_all: all uppercase' );
@@ -195,7 +196,7 @@ sub reset_test_config {
 # fn_intr_char - International character translation
 {
     &reset_test_config();
-    $config::hash{intr_char}{value} = 1;
+    &config::set_value('intr_char', 1);
     
     my $result = &fixname::fn_intr_char(1, 'Café München Bjørk.txt');
     is( $result, 'Cafe Muenchen Bjork.txt', 'fn_intr_char: international characters' );
@@ -220,8 +221,8 @@ sub reset_test_config {
 # fn_pad_digits_w_zero - Pad digits with zeros
 {
     &reset_test_config();
-    $config::hash{pad_digits_w_zero}{value} = 1;
-    
+    &config::set_value('pad_digits_w_zero', 1);
+
     my $result = &fixname::fn_pad_digits_w_zero('Show 1x5 Episode.avi');
     is( $result, 'Show 01x05 Episode.avi', 'fn_pad_digits_w_zero: pad episode numbers' );
     
@@ -232,9 +233,9 @@ sub reset_test_config {
 # fn_pad_digits - Pad digits with spaces and dashes
 {
     &reset_test_config();
-    $config::hash{pad_digits}{value} = 1;
-    $config::hash{space_character}{value} = ' ';
-    
+    &config::set_value('pad_digits', 1);
+    &config::set_value('space_character', ' ');
+
 	# DDxDD middle of filename
     my $result = &fixname::fn_pad_digits('Show 03x11 Episode.avi');
     is($result, 'Show - 03x11 - Episode.avi', 'fn_pad_digits: DDxDD middle of filename');
@@ -283,7 +284,7 @@ sub reset_test_config {
 # fn_digits - Remove leading digits
 {
     &reset_test_config();
-    $config::hash{digits}{value} = 1;
+    &config::set_value('digits', 1);
     
     my $result = &fixname::fn_digits('01 Track Name.mp3');
     is( $result, 'Track Name.mp3', 'fn_digits: remove leading track number' );
@@ -295,7 +296,7 @@ sub reset_test_config {
 # fn_pad_N_to_NN - Pad single digits to double digits
 {
     &reset_test_config();
-    $config::hash{pad_N_to_NN}{value} = 1;
+    &config::set_value('pad_N_to_NN', 1);
     
     my $result = &fixname::fn_pad_N_to_NN('Track 5 Name.mp3');
     is( $result, 'Track 05 Name.mp3', 'fn_pad_N_to_NN: single digit to double' );
@@ -307,8 +308,8 @@ sub reset_test_config {
 # fn_pad_dash - Pad dashes with spaces
 {
     &reset_test_config();
-    $config::hash{pad_dash}{value} = 1;
-    $config::hash{space_character}{value} = ' ';
+    &config::set_value('pad_dash', 1);
+    &config::set_value('space_character', ' ');
     
     my $result = &fixname::fn_pad_dash('Artist-Song-Title.mp3');
     is( $result, 'Artist - Song - Title.mp3', 'fn_pad_dash: pad dashes with spaces' );
@@ -320,7 +321,7 @@ sub reset_test_config {
 # fn_rm_digits - Remove all digits
 {
     &reset_test_config();
-    $config::hash{rm_digits}{value} = 1;
+    &config::set_value('rm_digits', 1);
     
     my $result = &fixname::fn_rm_digits('Show Season 3 Episode 11.avi');
     is( $result, 'Show Season  Episode .avi', 'fn_rm_digits: remove all digits' );
@@ -333,8 +334,8 @@ sub reset_test_config {
 # fn_front_a - Prepend string to front
 {
     &reset_test_config();
-    $config::hash{ins_start}{value} = 1;
-    $config::hash{ins_front_str}{value} = 'PREFIX_';
+    &config::set_value('ins_start', 1);
+    &config::set_value('ins_front_str', 'PREFIX_');
     
     my $result = &fixname::fn_front_a('filename.txt');
     is( $result, 'PREFIX_filename.txt', 'fn_front_a: prepend prefix' );
@@ -343,8 +344,8 @@ sub reset_test_config {
 # fn_end_a - Append string to end (before extension)
 {
     &reset_test_config();
-    $config::hash{ins_end}{value} = 1; # 1 enables processing (normal logic)
-    $config::hash{ins_end_str}{value} = '_SUFFIX';
+    &config::set_value('ins_end', 1);
+    &config::set_value('ins_end_str', '_SUFFIX');
     
     my $result = &fixname::fn_end_a('filename.txt');
     is( $result, 'filename_SUFFIX.txt', 'fn_end_a: append suffix before extension' );
@@ -358,10 +359,10 @@ sub reset_test_config {
 # fn_truncate - Truncate filename
 {
     &reset_test_config();
-    $config::hash{truncate}{value} = 1;
-    $config::hash{truncate_to}{value} = 20;
-    $config::hash{truncate_style}{value} = 1; # from end
-    $config::hash{max_fn_length}{value} = 256;
+    &config::set_value('truncate', 1);
+    &config::set_value('truncate_to', 20);
+    &config::set_value('truncate_style', 1); # from end
+    &config::set_value('max_fn_length', 256);
     
     my $result = &fixname::fn_truncate('test', 'This_Is_A_Very_Long_Filename_That_Should_Be_Truncated.txt');
     is( length($result), 20, 'fn_truncate: filename truncated to specified length' );
@@ -375,7 +376,7 @@ sub reset_test_config {
 # fn_pre_clean - Pre-processing cleanup
 {
     &reset_test_config();
-    $config::hash{cleanup_general}{value} = 1;
+    &config::set_value('cleanup_general', 1);
     
     # Create actual test files for pre_clean testing
     my $test_avi = "$temp_dir/test.avi";
@@ -397,8 +398,8 @@ sub reset_test_config {
 # fn_post_clean - Post-processing cleanup
 {
     &reset_test_config();
-    $config::hash{cleanup_general}{value} = 1;
-    $config::hash{space_character}{value} = ' ';
+    &config::set_value('cleanup_general', 1);
+    &config::set_value('space_character', ' ');
     
     # Create actual test files for post_clean testing
     my $test_file = "$temp_dir/test.avi";
@@ -434,10 +435,10 @@ sub reset_test_config {
     # fn_enum - Add enumeration
     {
         &reset_test_config();
-        $config::hash{enum}{value} = 1;
-        $config::hash{enum_opt}{value} = 1; # prepend
-        $config::hash{enum_pad}{value} = 1;
-        $config::hash{enum_pad_zeros}{value} = 3;
+        &config::set_value('enum', 1);
+        &config::set_value('enum_opt', 1); # prepend
+        &config::set_value('enum_pad', 1);
+        &config::set_value('enum_pad_zeros', 3);
         $fixname::enum_count = 1; # Reset counter
         
         my $result = &fixname::fn_enum($test_file1, 'filename.txt');
@@ -447,7 +448,7 @@ sub reset_test_config {
         is( $result, '002filename.txt', 'fn_enum: counter increments' );
         
         # Test append mode
-        $config::hash{enum_opt}{value} = 2; # append
+        &config::set_value('enum_opt', 2); # append
         $result = &fixname::fn_enum($test_file1, 'filename.txt');
         is( $result, 'filename003.txt', 'fn_enum: append before extension' );
     }
@@ -455,7 +456,7 @@ sub reset_test_config {
     # fn_sp_word - Special word casing (requires word casing array)
     {
         &reset_test_config();
-        $config::hash{word_special_casing}{value} = 1;
+        &config::set_value('word_special_casing', 1);
         @globals::word_casing_arr = ('The', 'Of', 'And', 'A', 'An');
         
         my $result = &fixname::fn_sp_word(1, $test_file1, 'the lord of the rings.avi');
@@ -465,7 +466,7 @@ sub reset_test_config {
     # fn_kill_cwords - Kill words from list
     {
         &reset_test_config();
-        $config::hash{kill_cwords}{value} = 1;
+        &config::set_value('kill_cwords', 1);
         @globals::kill_words_arr = ('bad', 'ugly', 'terrible');
         
         my $result = &fixname::fn_kill_cwords($test_file1, 'this bad ugly movie terrible.avi');
@@ -475,7 +476,7 @@ sub reset_test_config {
     # fn_kill_sp_patterns - Kill special patterns
     {
         &reset_test_config();
-        $config::hash{kill_sp_patterns}{value} = 1;
+        &config::set_value('kill_sp_patterns', 1);
         @globals::kill_patterns_arr = ('\[.*?\]', '\(.*?\)');
         
         my $result = &fixname::fn_kill_sp_patterns('Movie [2023] (Director Cut).avi');
@@ -490,12 +491,12 @@ sub reset_test_config {
 # Test multiple functions working together
 {
     &reset_test_config();
-    $config::hash{spaces}{value} = 1;
-    $config::hash{case}{value} = 1;
-    $config::hash{sp_char}{value} = 1;
-    $config::hash{cleanup_general}{value} = 1;
-    $config::hash{space_character}{value} = ' ';
-    
+    &config::set_value('spaces', 1);
+    &config::set_value('case', 1);
+    &config::set_value('sp_char', 1);
+    &config::set_value('cleanup_general', 1);
+    &config::set_value('space_character', ' ');
+
     # Create actual test file for integration testing
     my $test_file = "$temp_dir/integration_test.avi";
     open(my $fh, '>', $test_file) or die "Cannot create test file: $!";
@@ -525,7 +526,7 @@ sub reset_test_config {
     is( $result, 'test_file.txt', 'Edge case: function disabled returns unchanged' );
     
     # Test international characters in realistic filename
-    $config::hash{intr_char}{value} = 1;
+	&config::set_value('intr_char', 1);
     $result = &fixname::fn_intr_char(1, 'Motörhead - Ace of Spades.mp3');
     is( $result, 'Motoerhead - Ace of Spades.mp3', 'Edge case: realistic international filename' );
 }
@@ -543,9 +544,9 @@ sub reset_test_config {
     close($fh);
     
     &reset_test_config();
-    $config::hash{dot2space}{value} = 1;
-    $config::hash{space_character}{value} = ' ';
-    
+    &config::set_value('dot2space', 1);
+    &config::set_value('space_character', ' ');
+
     # File should preserve extension
     my $file_result = &fixname::fn_dot2space(1, $test_file, 'test.file.name.txt');
     is( $file_result, 'test file name.txt', 'File extension preserved in fn_dot2space' );

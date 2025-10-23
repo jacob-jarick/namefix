@@ -14,7 +14,7 @@ use jpegexif;
 
 # Set CLI mode to avoid GUI dependencies
 $globals::CLI = 1;
-$config::hash{'debug'}{'value'} = 0;
+&config::set_value('debug', 0);
 
 #=============================================================================
 # EXIF Data Functions

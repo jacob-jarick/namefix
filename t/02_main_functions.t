@@ -26,22 +26,25 @@ $globals::CLI = 1;
 
 # fn_spaces (--spaces, -p)
 &config::reset_config();
-$config::hash{spaces}{value} = 1;
-$config::hash{space_character}{value} = ' ';
+&config::set_value('space_character', ' ');
+&config::set_value('spaces', 1);
+
 my $file = "Hello_-_03x11_-_Today_Tonight.avi";
 my $expected = 'Hello - 03x11 - Today Tonight.avi';
 is( &fixname::fn_spaces(0, $file), $expected,  'fn_spaces test (underscores to spaces)');
 
 # fn_dot2space (--dots, -o)
 &config::reset_config();
-$config::hash{dot2space}{value} = 1;
+&config::set_value('dot2space', 1);
+
 $file = 'Hello.World.Episode.01.avi';
 $expected = 'Hello World Episode 01.avi';
 is( &fixname::fn_dot2space(1, $file, $file), $expected,  'fn_dot2space test');
 
 # fn_sp_char (remove special characters like parentheses)
 &config::reset_config();
-$config::hash{sp_char}{value} = 1;
+&config::set_value('sp_char', 1);
+
 $file = 'Hello - 03x11 - (Today Tonight).avi';
 $expected = 'Hello - 03x11 - Today Tonight.avi';
 is( &fixname::fn_sp_char($file), $expected,  'fn_sp_char test (remove parentheses)');
@@ -49,14 +52,15 @@ is( &fixname::fn_sp_char($file), $expected,  'fn_sp_char test (remove parenthese
 # Scene/Unscene functions (--scene/--unscene, -s/-u)
 # fn_unscene
 &config::reset_config();
-$config::hash{unscene}{value} = 1;
+&config::set_value('unscene', 1);
+
 $file = "Hello - s03e11 - Today Tonight.avi";
 $expected = 'Hello - 03x11 - Today Tonight.avi';
 is( &fixname::fn_unscene($file), $expected,  'fn_unscene test (s03e11 to 03x11)');
 
 # fn_scene
 &config::reset_config();
-$config::hash{scene}{value} = 1;  # Set to 0 to enable processing
+&config::set_value('scene', 1);
 $file = "Hello - 03x11 - Today Tonight.avi";
 $expected = 'Hello - S03E11 - Today Tonight.avi';
 is( &fixname::fn_scene($file), $expected,  'fn_scene test (03x11 to S03E11)');
