@@ -123,6 +123,5 @@ Remove-Item $GUI_EXE -ErrorAction SilentlyContinue
 Remove-Item $CLI_EXE -ErrorAction SilentlyContinue
 Remove-Item $NSI_OUT_PATH -ErrorAction SilentlyContinue
 
-# Generate SHA1 checksum for the installer
 
 

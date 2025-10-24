@@ -27,7 +27,7 @@ GUI_PAR="namefix-gui.par"
 
 ARCHIVE_PATH="${BUILD_DIR}/${PACKAGE_NAME}.${VERSION}.tar.bz2"
 
-BUILD_DATE_FILE="${BUILD_DIR}/namefix.${VERSION}.linux.builddate.txt"
+BUILD_DATE_FILE="${ARCHIVE_PATH}.builddate.txt"
 
 MODULES_SCRIPT="${EXTRA_DIR}/modules_linux.sh"
 INSTALL_SCRIPT="${EXTRA_DIR}/install.sh"
@@ -52,7 +52,7 @@ echo "Cleaning up any previous temporary files..."
 rm -rfv "${TEMP_DIR}"
 
 echo "remove old archive and sha1sum"
-rm -vf "${BUILD_DIR}"/*bz2 "${BUILD_DIR}"/*.sha1sum "${BUILD_DIR}"/*.linux.builddate.txt || echo "No old archive or sha1sum to remove"
+rm -vf "${BUILD_DIR}"/*bz2* || echo "No old archive or sha1sum to remove"
 
 echo "Set build date: ${BUILD_DATE}"
 echo "${BUILD_DATE}" > "${BUILD_DATE_FILE}"
