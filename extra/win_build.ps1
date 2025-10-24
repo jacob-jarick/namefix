@@ -5,8 +5,8 @@
 # NOTE: Data files directory are not bundled - provided by .nsi installer
 
 # Generate timestamp without spaces by replacing spaces with zeros
-$hour = (Get-Date).Hour.ToString("00")
-$dtStamp24 = (Get-Date).ToString("yyyyMMdd-HHmmss")
+$DATETIME = (Get-Date).ToString("yyyyMMdd-HHmmss")
+$SHORT_DATE = (Get-Date).ToString("yyMMdd")
 
 # get this scripts directory
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -16,7 +16,7 @@ $PROJECT_ROOT = Split-Path -Parent $SCRIPT_DIR
 # get version from perl .\namefix-cli.pl --version
 $VERSION = & perl .\namefix-cli.pl --version
 
-$INST_NAME = "namefix.$VERSION.installer.exe"
+$INST_NAME = "namefix.$VERSION-$SHORT_DATE.setup.exe"
 $NSI_OUT_PATH = "$PROJECT_ROOT\namefix-installer.exe"
 $INSTALLER_BUILD_PATH = "$PROJECT_ROOT\builds\$INST_NAME"
 $INSTALLER_SHA1_PATH = "$INSTALLER_BUILD_PATH.sha1sum"
@@ -26,23 +26,31 @@ $CHANGELOG_PATH = "$PROJECT_ROOT\data\txt\changelog.txt"
 $GUI_EXE = "$PROJECT_ROOT\namefix-gui.exe"
 $CLI_EXE = "$PROJECT_ROOT\namefix.exe"
 
-$BUILD_DATE_FILE = "$INSTALLER_BUILD_PATH.builddate.txt"
+# $BUILD_DATE_FILE = "$INSTALLER_BUILD_PATH.builddate.txt"
 
 Write-Output "==============================================="
 Write-Output "Build script"
 Write-Output "."
 Write-Output "==============================================="
-Write-Output "Version:              $VERSION"
+Write-Output "DATETIME:             $DATETIME"
+Write-Output "VERSION:              $VERSION"
+Write-Output "."
+Write-Output "SCRIPT_DIR:           $SCRIPT_DIR"
+# Write-Output "BUILD_DATE_FILE:      $BUILD_DATE_FILE"
+Write-Output "."
 Write-Output "PROJECT_ROOT:         $PROJECT_ROOT"
-Write-Output "THIS SCRIPT_DIR:      $SCRIPT_DIR"
-Write-Output "NSI_OUT_PATH:         $NSI_OUT_PATH"
-Write-Output "CHANGELOG_PATH:       $CHANGELOG_PATH"
-Write-Output "INSTALLER_SHA1_PATH:  $INSTALLER_SHA1_PATH"
+Write-Output "THIS_SCRIPT_DIR:      $SCRIPT_DIR"
+Write-Output "."
+Write-Output "INST_NAME:            $INST_NAME"
 Write-Output "GUI_EXE:              $GUI_EXE"
 Write-Output "CLI_EXE:              $CLI_EXE"
-Write-Output "BUILD_DATE_FILE:      $BUILD_DATE_FILE"
+Write-Output "CHANGELOG_PATH:       $CHANGELOG_PATH"
 Write-Output "NSI_OUT_PATH:         $NSI_OUT_PATH"
+Write-Output "."
+Write-Output "INSTALLER_SHA1_PATH:  $INSTALLER_SHA1_PATH"
 Write-Output "INSTALLER_BUILD_PATH: $INSTALLER_BUILD_PATH"
+Write-Output "INSTALLER_SHA1_PATH:  $INSTALLER_SHA1_PATH"
+Write-Output "==============================================="
 
 Write-Output "."
 Write-Output "==============================================="
@@ -50,11 +58,11 @@ Write-Output "Updating changelog"
 Write-Output "."
 & git log | Select-Object -First 100 | Out-File $CHANGELOG_PATH
 
-Write-Output "."
-Write-Output "==============================================="
-Write-Output "SET Build pack date $dtStamp24"
-Write-Output "."
-"$dtStamp24" | Out-File $BUILD_DATE_FILE
+# Write-Output "."
+# Write-Output "==============================================="
+# Write-Output "SET Build pack date $DATETIME"
+# Write-Output "."
+# "$DATETIME" | Out-File $BUILD_DATE_FILE
 
 Write-Output "."
 Write-Output "==============================================="

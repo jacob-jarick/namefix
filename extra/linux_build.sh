@@ -10,7 +10,8 @@ set -e  # Exit on any error
 # get script directory full path
 
 PACKAGE_NAME="namefix"
-BUILD_DATE=$(date +"%Y%m%d-%H%M%S")
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+DATE=$(date +"%y%m%d")
 
 VERSION=$(perl ./namefix-cli.pl --version)
 
@@ -25,9 +26,9 @@ TEMP_DIR="/tmp/${PACKAGE_NAME}"
 CLI_PAR="namefix-cli.par"
 GUI_PAR="namefix-gui.par"
 
-ARCHIVE_PATH="${BUILD_DIR}/${PACKAGE_NAME}.${VERSION}.tar.bz2"
+ARCHIVE_PATH="${BUILD_DIR}/${PACKAGE_NAME}.${VERSION}-${DATE}.tar.bz2"
 
-BUILD_DATE_FILE="${ARCHIVE_PATH}.builddate.txt"
+# DATETIME_FILE="${ARCHIVE_PATH}.builddate.txt"
 
 MODULES_SCRIPT="${EXTRA_DIR}/modules_linux.sh"
 INSTALL_SCRIPT="${EXTRA_DIR}/install.sh"
@@ -37,7 +38,7 @@ CHANGELOG_FILE="${PARENT_DIR}/data/txt/changelog.txt"
 echo "Version:          ${VERSION}"
 echo "Parent directory: ${PARENT_DIR}"
 echo "Build directory:  ${BUILD_DIR}"
-echo "Build date file:  ${BUILD_DATE_FILE}"
+#echo "Build date file:  ${DATETIME_FILE}"
 echo "Archive path:     ${ARCHIVE_PATH}"
 echo "Script directory: ${SCRIPT_DIR}"
 echo "Extra directory:  ${EXTRA_DIR}"
@@ -54,8 +55,8 @@ rm -rfv "${TEMP_DIR}"
 echo "remove old archive and sha1sum"
 rm -vf "${BUILD_DIR}"/*bz2* || echo "No old archive or sha1sum to remove"
 
-echo "Set build date: ${BUILD_DATE}"
-echo "${BUILD_DATE}" > "${BUILD_DATE_FILE}"
+# echo "Set build date: ${DATETIME}"
+# echo "${DATETIME}" > "${DATETIME_FILE}"
 
 echo "Updating changelog"
 git log | head -100 > "${CHANGELOG_FILE}"
@@ -123,7 +124,7 @@ cp namefix-gui.par "${TEMP_DIR}/" 2>/dev/null || echo "Warning: namefix-gui.par 
 cp namefix-cli.par "${TEMP_DIR}/" 2>/dev/null || echo "Warning: namefix-cli.par not found"
 
 # copy build date file
-cp -v "${BUILD_DATE_FILE}" "${TEMP_DIR}/"
+# cp -v "${DATETIME_FILE}" "${TEMP_DIR}/"
 
 # Copy complete data directory
 echo "Copying data directory..."
