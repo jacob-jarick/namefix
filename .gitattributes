@@ -3,3 +3,4 @@
 *.jpg binary
 *.png binary
 *.bat text eol=lf
+*.msi binary
