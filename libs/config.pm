@@ -382,8 +382,7 @@ sub clr_id3_options
 		{
 			if (!defined $config::hash{$k}{default})
 			{
-				print Dumper(\%config::hash);
-				&misc::quit("clr_id3_options: \$config::hash{$k}{default} is undef\n");
+				&misc::quit("clr_id3_options: '$k' has no default value in config\n");
 			}
 			$config::hash{$k}{value} = $config::hash{$k}{default};
 		}
