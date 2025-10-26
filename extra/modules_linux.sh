@@ -40,4 +40,5 @@ sudo cpanm Tk::Wm
 sudo cpanm Tk::Event
 sudo cpanm Time/localtime.pm
 
+sudo cpanm -v Image::ExifTool
 

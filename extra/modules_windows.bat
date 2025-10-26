@@ -1,12 +1,22 @@
 echo installing modules
 
+rem cpan update
+cmd /c cpan -u
+
 rem install cpanminus if not already installed
 cmd /c cpan App::cpanminus
 rem Install PAR::Packer for creating executables 
 cmd /c cpanm --notest PAR::Packer
 
 rem  install all Tk modules
-cmd /c cpanm -v Tk
+@REM cmd /c cpanm -v Tk
+
+rem  install patched Tk module to avoid build issues
+rem https://github.com/StrawberryPerl/Perl-Dist-Strawberry/issues/87#issuecomment-2292839449
+rem known issues with building Tk on Strawberry Perl 5.32 and later
+rem https://github.com/eserte/perl-tk/issues/87
+cmd /c cpanm --force --notest https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/patched_cpan_modules/Tk-804.036_001.tar.gz
+
 cmd /c cpanm -v Tk::Menu
 cmd /c cpanm -v Tk::DynaTabFrame
 cmd /c cpanm -v Tk::NoteBook
@@ -45,6 +55,9 @@ cmd /c cpanm -v Time::localtime
 rem  debugging
 cmd /c cpanm -v Data::Dumper::Concise
 cmd /c cpanm -v Carp
+
+rem Image::ExifTool for metadata reading/writing
+cmd /c cpanm -v Image::ExifTool
 
 
 
