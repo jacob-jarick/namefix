@@ -295,9 +295,11 @@ sub load_hash
 		my ($k, $v) = ($1, $2);
 		next if $v eq "\t";
 
+		# TODO: always use lowercase keys
 		# Convert key to lowercase for backward compatibility with old config files
 		my $k_lower = lc($k);
 		
+		# TODO: remove migration code. best to break old configs rather than keep legacy names forever
 		# Migration table for renamed variables
 		my %migration_map = (
 			'audio_force' => 'id3_force',
@@ -323,11 +325,16 @@ sub load_hash
 		}
 		
 		# Use the best available key
-		if (defined $hash{$target_key}) {
+		if (defined $hash{$target_key}) 
+		{
 			# Migration target exists
-		} elsif (defined $hash{$k_lower}) {
+		} 
+		elsif (defined $hash{$k_lower}) 
+		{
 			$target_key = $k_lower;
-		} else {
+		} 
+		else 
+		{
 			$target_key = $k;
 		}
 		$h{$target_key} = $v;
