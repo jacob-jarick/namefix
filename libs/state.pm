@@ -42,14 +42,15 @@ sub check
 # get current state as string
 sub get
 {
-	return 'stop'	if $globals::STOP;
-	return 'list'	if $globals::LISTING;
-	return 'run'	if $globals::RUN;
-	return 'idle'	if $globals::IDLE;
+	my $state = shift;
+	return $globals::STOP		if $state eq 'stop';
+	return $globals::LISTING	if $state eq 'list';
+	return $globals::RUN		if $state eq 'run';
+	return $globals::IDLE		if $state eq 'idle';
 
 	&misc::plog(0, "Unknown state\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP\n\tIDLE: $globals::IDLE");
 
-	return 'unknown';
+	return "unknown state '$state'";
 }
 
 # return 1 if we are doing something
