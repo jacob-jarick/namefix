@@ -8,7 +8,7 @@ use Cwd;
 require misc;
 
 # return value of state $state
-sub check
+sub get
 {
 	my $state = shift;
 	if(! defined $state)
