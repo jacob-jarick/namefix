@@ -32,7 +32,8 @@ sub draw_menu
 				"States\n".
 				"\tlist:\t\t "	. &state::get('list')	."\n".
 				"\trun:\t\t "	. &state::get('run')	."\n".
-				"\tstop:\t\t "	. &state::get('stop')	."\n"
+				"\tstop:\t\t "	. &state::get('stop')	."\n".
+				"\tidle:\t\t "	. &state::get('idle')	."\n"
 			);
 		}
 	);

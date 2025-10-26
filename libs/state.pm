@@ -85,8 +85,8 @@ sub set
 	{
 		# Allow transition to idle from any state (completion/cleanup)
 		# This is used when finishing listing, running, or stopping operations
-		
-		$globals::IDLE    = 1;
+
+		$globals::IDLE 		= 1;
 
 		$globals::LISTING	= 0;
 		$globals::RUN		= 0;
@@ -106,10 +106,12 @@ sub set
 			return 0;
 		}
 
-		$globals::IDLE    = 0;
-		$globals::LISTING = 1;
-		$globals::RUN     = 0;
-		$globals::STOP    = 0;
+		$globals::IDLE    	= 0;
+		$globals::LISTING 	= 1;
+		$globals::RUN     	= 0;
+		$globals::STOP    	= 0;
+
+		$globals::PREVIEW	= 1;	# always use preview mode when listing
 
 		return 1;
 	} 
