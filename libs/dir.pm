@@ -55,7 +55,7 @@ sub ls_dir
 
 	for my $f (@dirlist)
 	{
-		if(&state::check('stop'))
+		if(&state::get('stop'))
 		{
 			&misc::plog(1, "listing stopped by user");
 			&state::set('idle');
@@ -79,7 +79,7 @@ sub ls_dir
 		$count++;
 		$config::percent_done = int(($count / $total) * 100);
 
-		if(&state::check('stop'))
+		if(&state::get('stop'))
 		{
 			&misc::plog(1, "listing stopped by user");
 			&state::set('idle');
@@ -125,7 +125,7 @@ sub ls_dir_find_fix
 sub ls_dir_print
 {
 
-	if(&state::check('stop'))
+	if(&state::get('stop'))
 	{
 		&misc::plog(1, "listing stopped by user");
 		# as this has a return it is up to the calling function to set idle
@@ -230,7 +230,7 @@ sub dir_filtered
 	for my $file (@dirlist)
 	{
 		# $file is dir automatically fail filter
-		next if !&state::check('list') && !$config::hash{proc_dirs}{value} && -d $file;
+		next if !&state::get('list') && !$config::hash{proc_dirs}{value} && -d $file;
 		next if $config::hash{filter}{value} && !&filter::match($file);
 
 		push @d, $file;

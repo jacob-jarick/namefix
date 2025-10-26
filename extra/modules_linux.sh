@@ -1,7 +1,15 @@
 #!/bin/bash
 
 # linux_install_modules.sh - Install apt packages needed for building Linux executables
-sudo apt -y install libperl-dev libx11-dev
+sudo apt update
+
+sudo apt -y install libperl-dev libx11-dev 
+sudo apt -y install build-essential
+
+
+# sudo apt -y install perl-tk
+
+sudo apt -y install build-essential libpng-dev zlib1g-dev libx11-dev libxt-dev tcl-dev tk-dev
 
 echo install cpanminus if not already installed
 sudo cpan App::cpanminus
@@ -12,11 +20,12 @@ sudo cpanm PAR::Packer
 echo installing modules for namefix
 
 sudo cpanm Data::Dumper
+sudo cpanm Data::Dumper::Concise
 sudo cpanm MP3::Tag
 sudo cpanm File::Spec::Functions
 sudo cpanm File::Spec::Functions
 
-sudo cpanm Tk
+sudo cpanm -v --force Tk
 sudo cpanm Tk::JPEG
 sudo cpanm Tk::FontDialog
 sudo cpanm Tk::ColourChooser

@@ -26,8 +26,6 @@ $CHANGELOG_PATH = "$PROJECT_ROOT\data\txt\changelog.txt"
 $GUI_EXE = "$PROJECT_ROOT\namefix-gui.exe"
 $CLI_EXE = "$PROJECT_ROOT\namefix.exe"
 
-# $BUILD_DATE_FILE = "$INSTALLER_BUILD_PATH.builddate.txt"
-
 Write-Output "==============================================="
 Write-Output "Build script"
 Write-Output "."
@@ -36,7 +34,6 @@ Write-Output "DATETIME:             $DATETIME"
 Write-Output "VERSION:              $VERSION"
 Write-Output "."
 Write-Output "SCRIPT_DIR:           $SCRIPT_DIR"
-# Write-Output "BUILD_DATE_FILE:      $BUILD_DATE_FILE"
 Write-Output "."
 Write-Output "PROJECT_ROOT:         $PROJECT_ROOT"
 Write-Output "THIS_SCRIPT_DIR:      $SCRIPT_DIR"
@@ -58,19 +55,13 @@ Write-Output "Updating changelog"
 Write-Output "."
 & git log | Select-Object -First 100 | Out-File $CHANGELOG_PATH
 
-# Write-Output "."
-# Write-Output "==============================================="
-# Write-Output "SET Build pack date $DATETIME"
-# Write-Output "."
-# "$DATETIME" | Out-File $BUILD_DATE_FILE
-
 Write-Output "."
 Write-Output "==============================================="
 Write-Output "GUI"
 Write-Output "."
 
 Remove-Item $GUI_EXE -ErrorAction SilentlyContinue
-pp --gui -u -o $GUI_EXE -M Tk -M Tk::JPEG -M Tk::FontDialog -M Tk::ColourChooser -M Config::IniHash -M MP3::Tag -B -M Tk::DirTree -M Tk::Balloon -M Tk::NoteBook -M Tk::HList -M Tk::Radiobutton -M Tk::Spinbox -M Tk::Text -M Tk::ROText -M Tk::DynaTabFrame -M Tk::Menu -M Tk::ProgressBar -M Tk::Text::SuperText -M Tk::JComboBox -M Tk::Widget -M Tk::Wm -M Tk::Event -M Time/localtime.pm -M File::Spec::Functions namefix.pl
+pp --gui -o $GUI_EXE -M Tk -M Tk::JPEG -M Tk::FontDialog -M Tk::ColourChooser -M Config::IniHash -M MP3::Tag -B -M Tk::DirTree -M Tk::Balloon -M Tk::NoteBook -M Tk::HList -M Tk::Radiobutton -M Tk::Spinbox -M Tk::Text -M Tk::ROText -M Tk::DynaTabFrame -M Tk::Menu -M Tk::ProgressBar -M Tk::Text::SuperText -M Tk::JComboBox -M Tk::Widget -M Tk::Wm -M Tk::Event -M Time/localtime.pm -M File::Spec::Functions namefix.pl
 
 Write-Output "."
 Write-Output "==============================================="
@@ -78,7 +69,7 @@ Write-Output "CLI"
 Write-Output "."
 
 Remove-Item $CLI_EXE -ErrorAction SilentlyContinue
-pp -u -o $CLI_EXE -M Time/localtime.pm -M File::Spec::Functions namefix-cli.pl
+pp -o $CLI_EXE -M Time/localtime.pm -M File::Spec::Functions namefix-cli.pl
 Write-Output "."
 
 Write-Output "."

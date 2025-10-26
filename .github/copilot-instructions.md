@@ -188,8 +188,7 @@ namefix uses a state management system to avoid race conditions.
 
 #### Primary Functions
 - **`state::set(state)`** - Atomic state transitions with validation and automatic PREVIEW flag management
-- **`state::check(state)`** - Clean state inspection interface
-- **`state::get(state)`** - Direct state value retrieval  
+- **`state::get(state)`** - check if state is active
 - **`state::busy()`** - Composite check for both 'run' and 'list' states
 
 #### Automatic Features
@@ -203,14 +202,14 @@ namefix uses a state management system to avoid race conditions.
 2. **Atomic Transitions**: All state changes go through `state::set()` with validation
 3. **Composite Checking**: Use `state::busy()` for comprehensive busy detection
 4. **Automatic Cleanup**: PREVIEW flag automatically managed on idle state
-5. **Consistent Interface**: All state queries use `state::check()` or `state::get()`  
+5. **Consistent Interface**: All state queries use `state::get()` or `state::get()`  
 6. **Graceful Exit**: Use `last` instead of `return` to allow cleanup code to execute
 
 ### Implementation Details
 
 #### Migration Completed
 - **RUN Variables**: All `$globals::RUN` assignments → `state::set('run'/'idle')`
-- **STOP Variables**: All `$globals::STOP` checks → `state::check('stop')`
+- **STOP Variables**: All `$globals::STOP` checks → `state::get('stop')`
 - **LISTING Variables**: All `$globals::LISTING` assignments → `state::set('list'/'idle')`
 - **Module Organization**: All state functions moved from `globals.pm` to dedicated `state.pm`
 

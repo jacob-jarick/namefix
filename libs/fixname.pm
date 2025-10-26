@@ -21,7 +21,7 @@ our $enum_count = 0;
 
 sub fix
 {
-	if(&state::check('stop'))
+	if(&state::get('stop'))
 	{
 		&misc::plog(1, "STOP flag set, aborting fixname");
 		return 0;
@@ -488,7 +488,7 @@ sub fix
 
 sub fn_rename
 {
-	if(&state::check('stop'))
+	if(&state::get('stop'))
 	{
 		&misc::plog(1, "STOP flag set, aborting rename");
 		return 0;

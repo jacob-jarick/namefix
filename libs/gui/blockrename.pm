@@ -332,7 +332,7 @@ sub br
 
 	for my $c(0 .. $#old_l)	# check for changes - then rename
 	{
-		if(&state::check('stop'))
+		if(&state::get('stop'))
 		{			
 			&misc::plog(1, "block rename stopped by user");
 			last; # do not return, let cleanup happen below
@@ -369,7 +369,7 @@ sub br
 	&br_show_lists("Block Rename Results", \@new_a, \@new_b);
 	&txt_reset;
 
-	if(&state::check('stop'))
+	if(&state::get('stop'))
 	{
 		&misc::plog(1, "block rename stopped by user");
 	}

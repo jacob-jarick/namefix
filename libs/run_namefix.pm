@@ -81,7 +81,7 @@ sub run
 
 		foreach my $f (@dirlist)
 		{
-			if(&state::check('stop'))
+			if(&state::get('stop'))
 			{
 				&misc::plog(1, "run stopped by user");
 				last;	# DONT RETURN, let cleanup happen below
@@ -120,7 +120,7 @@ sub run
 	&misc::plog(0, "tmp file found. check the following files.\n$globals::tmpfilelist\n")		if($globals::FOUND_TMP);
 
 	# above loops (recursive and non-recursive) may have been terminated by user, note here
-	if(&state::check('stop'))
+	if(&state::get('stop'))
 	{
 		&misc::plog(1, "STOP detected, run terminated by user");
 	}
@@ -153,7 +153,7 @@ sub find_fix_process
 
 	for my $file(@globals::find_arr)
 	{
-		if(&state::check('stop'))
+		if(&state::get('stop'))
 		{
 			&misc::plog(1, "recursive run stopped by user");
 			return;

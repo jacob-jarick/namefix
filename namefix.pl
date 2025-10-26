@@ -519,7 +519,7 @@ $frm_bottom -> Button
 	-command=>
 	sub
 	{
-		if(&state::check('stop'))
+		if(&state::get('stop'))
 		{
 			&misc::plog(1, "STOP already requested, ignoring additional STOP request");
 		}

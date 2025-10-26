@@ -87,10 +87,10 @@ sub p
 	}
 
 	# finish here if list mode	
-	return if &state::check('list');
+	return if &state::get('list');
 	
 	# stop mode shouldn't get here but just in case
-	return if &state::check('stop');
+	return if &state::get('stop');
 
 	# ------------------------------------------------------------------------------------------------
 	# Start of rename / preview section
@@ -176,11 +176,11 @@ sub set_target
 	my $target	= undef;
 
 	# determine if dir1 or dir2 is one that exists.
-	if(&state::check('list'))
+	if(&state::get('list'))
 	{
 		$target = $file1;
 	}
-	elsif(&state::check('run'))
+	elsif(&state::get('run'))
 	{
 		if($globals::PREVIEW)
 		{

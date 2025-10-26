@@ -58,7 +58,7 @@ sub undo_rename
 
 	for my $c (0 .. $#config::undo_cur)
 	{
-		if(&state::check('stop'))
+		if(&state::get('stop'))
 		{
 			&misc::plog(0, "UNDO stopped by user");
 			last; # do not return, let cleanup happen below
@@ -92,7 +92,7 @@ sub undo_rename
 		&nf_print::p($cur, $pre);
 	}
 
-	if(&state::check('stop'))
+	if(&state::get('stop'))
 	{
 		&misc::plog(1, "UNDO stopped by user");
 	}

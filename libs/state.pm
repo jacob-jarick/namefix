@@ -7,50 +7,29 @@ use Cwd;
 
 require misc;
 
-
-
-# return 1 if state matches argument
+# return value of state $state
 sub check
 {
-	my $check = shift;
-	if(! defined $check)
+	my $state = shift;
+	if(! defined $state)
 	{
-		&misc::plog(0, "\$check is undef");
-		return 0;
-	}
-	if($check eq '')
-	{
-		&misc::plog(0, "\$check is blank");
-		return 0;
+		&misc::plog(0, "\$state is undef", 1);
 	}
 
-	return 1 if $globals::LISTING	&& $check eq 'list';
-	return 1 if $globals::RUN		&& $check eq 'run';
-	return 1 if $globals::STOP		&& $check eq 'stop';
-	return 1 if $globals::IDLE		&& $check eq 'idle';
-
-	# Check if it's a valid state but the flag is just false
-	if ($check eq 'stop' || $check eq 'list' || $check eq 'run' || $check eq 'idle') 
+	if($state eq '')
 	{
-		return 0;  # Valid state, but flag is false
+		&misc::plog(0, "\$state is blank", 1);
 	}
+
+	$state = lc $state;
+
+	return $globals::LISTING	&& $state eq 'list';
+	return $globals::RUN		&& $state eq 'run';
+	return $globals::STOP		&& $state eq 'stop';
+	return $globals::IDLE		&& $state eq 'idle';
 
 	# unknown state, log & exit
-	&misc::plog(0, "Unknown check '$check'", 1);
-}
-
-# get current state as string
-sub get
-{
-	my $state = shift;
-	return $globals::STOP		if $state eq 'stop';
-	return $globals::LISTING	if $state eq 'list';
-	return $globals::RUN		if $state eq 'run';
-	return $globals::IDLE		if $state eq 'idle';
-
-	&misc::plog(0, "Unknown state\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP\n\tIDLE: $globals::IDLE");
-
-	return "unknown state '$state'";
+	&misc::plog(0, "Unknown check '$state'", 1);
 }
 
 # return 1 if we are doing something
@@ -61,6 +40,9 @@ sub busy
 	return 1 if $globals::STOP;	# if set then not idle and still in the process of stopping
 
 	return 0 if $globals::IDLE;
+
+	# unknown state, log & exit
+	&misc::plog(0, "sub state_busy: error, unknown state\n\tLISTING: $globals::LISTING\n\tRUN: $globals::RUN\n\tSTOP: $globals::STOP\n\tIDLE: $globals::IDLE", 1);
 }
 
 # set state
