@@ -135,7 +135,7 @@ our %hash = ();
 # This two options are not in the GUI but needed for CLI
 # in the GUI the sub is triggered by a button
 
-&config_init_value('undo',			0, 0, 'bool', 'base'); # CLI: --undo / GUI: N/A (see libs/gui/undo.pm)
+&config_init_value('undo',			0, 0, 'bool', 'no'); # CLI: --undo / GUI: N/A (see libs/gui/undo.pm)
 
 # -----------------------------------------------------------------------------
 # CONFIG DIALOG - MAIN TAB
