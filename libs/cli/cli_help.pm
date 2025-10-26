@@ -183,7 +183,7 @@ A	--all-files		Process all files, not just media files.
 
 	--filt=STRING		Filter files processed. must contain STRING
 	--filt-regexp		filter STRING is a regexp
-				Default: '$config::hash{filter_regexp}{default}', Current: '$config::hash{filter_regexp}{value}'
+				Default: '$config::hash{filter_regex}{default}', Current: '$config::hash{filter_regex}{value}'
 				
 
 	--filt-ignore-case	ignore case when filtering
