@@ -178,6 +178,9 @@ else
 &config_init_value('error_notify',	0, 0, 'bool',	'base'); # CLI: N/A / GUI: 'Show errors in dialog boxes' (libs/gui/config_dialog.pm)
 &config_init_value('zero_log',		1, 1, 'bool',	'base'); # CLI: --zero-log / GUI: 'Zero logfile on start'
 
+# log_stdout
+&config_init_value('log_stdout',	0, 0, 'bool',	'base'); # CLI: --log-stdout / GUI: 'Print log to STDOUT'
+
 # ---------------------------------------------------------------------------------------------------------------
 # reset_config
 # ---------------------------------------------------------------------------------------------------------------

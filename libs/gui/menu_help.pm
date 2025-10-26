@@ -37,6 +37,16 @@ sub draw_menu
 		}
 	);
 
+	$main::help->command
+	(
+		-label=>	'Error Log Test',
+		-command=>	
+		sub 
+		{ 
+			&misc::plog(0, "This is a test error log message.");
+		}
+	);
+
 	$main::help->separator();
 
 	$main::help->command

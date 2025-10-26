@@ -690,6 +690,11 @@ for my $arg(@ARGV)
 		# this is just to avoid the unknown option error
 	}
 
+	elsif($arg eq '--log-stdout')
+	{
+		&config::set_value('log_stdout', 1);
+	}
+
 	elsif($arg eq '--zero-log')
 	{
 		# unlike the GUI we simply clear the log file.

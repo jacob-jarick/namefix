@@ -242,8 +242,9 @@ my $txt_debug =
 "Debug Options:
 
 	--debug=N		Set debug level to N (0-10)
-	--exit-on-error	Exit on first error (default is to continue)
-	`--zero-log`		Zero logfile on start
+	--exit-on-error		Exit on first error (default is to continue)
+	--zero-log		Zero logfile on start
+	--log-stdout		Print log to STDOUT
 
 ";
 my $txt_mp3 =
