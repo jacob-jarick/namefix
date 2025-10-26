@@ -15,6 +15,7 @@ rem  install patched Tk module to avoid build issues
 rem https://github.com/StrawberryPerl/Perl-Dist-Strawberry/issues/87#issuecomment-2292839449
 rem known issues with building Tk on Strawberry Perl 5.32 and later
 rem https://github.com/eserte/perl-tk/issues/87
+rem alternative solution is to install an older Strawberry Perl version (strawberry-perl-5.14.4.1-64bit.msi works)
 cmd /c cpanm --force --notest https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/patched_cpan_modules/Tk-804.036_001.tar.gz
 
 cmd /c cpanm -v Tk::Menu
