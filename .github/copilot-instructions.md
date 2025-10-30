@@ -112,12 +112,8 @@ sudo ./extra/install.sh
 ```
 
 #### Module Installation
-The `extra/install-modules.sh` script installs required CPAN modules:
-- Data::Dumper
-- Tk (for GUI)
-- Tk::JComboBox
-- Tk::DynaTabFrame  
-- MP3::Tag
+The `extra/modules_linux.sh` script installs required CPAN modules for Linux/macOS.  
+The `extra/modules_windows.bat` script installs required CPAN modules for Windows.
 
 ## Usage
 
@@ -130,13 +126,10 @@ perl namefix.pl [directory]
 
 # CLI version (always runs in preview mode by default)
 perl namefix-cli.pl --help
-perl namefix-cli.pl [options] [files/directories]
+perl namefix-cli.pl [options] [directory|file]
 ```
 
-#### CLI Help Reference
-For detailed CLI options and usage, see:
-- `./libs/cli/cli_help.pm` - Complete CLI help documentation
-- Command line: `perl namefix-cli.pl --help`
+**Note**: namefix supports a single directory (with optional --recr for recursion) or a single file (which sets a regex filter). It also supports filtering files in a directory using --filt options (e.g., --filt=STRING, --filt-regexp, --filt-ignore-case, --all-files).
 
 **Note**: The CLI (`namefix-cli.pl`) always runs in preview mode by default, making it completely safe for testing operations without risk of modifying files.  
 To enable file modifications, include the `--process` argument. This should only be used on files in the `temp` directory. You can copy/create any files you want in `temp` for testing. Files in `temp` should be deleted once tests are done; no files in `temp` should be expected to persist.
@@ -147,7 +140,7 @@ To enable file modifications, include the `--process` argument. This should only
 ./namefix-gui.par [directory]
 
 # CLI PAR
-./namefix-cli.par [options] [files/directories]
+./namefix-cli.par [options] [directory|file]
 ```
 
 ## Media-Specific Features
@@ -204,14 +197,6 @@ namefix uses a state management system to avoid race conditions.
 4. **Automatic Cleanup**: PREVIEW flag automatically managed on idle state
 5. **Consistent Interface**: All state queries use `state::get()` or `state::get()`  
 6. **Graceful Exit**: Use `last` instead of `return` to allow cleanup code to execute
-
-### Implementation Details
-
-#### Migration Completed
-- **RUN Variables**: All `$globals::RUN` assignments → `state::set('run'/'idle')`
-- **STOP Variables**: All `$globals::STOP` checks → `state::get('stop')`
-- **LISTING Variables**: All `$globals::LISTING` assignments → `state::set('list'/'idle')`
-- **Module Organization**: All state functions moved from `globals.pm` to dedicated `state.pm`
 
 ## Testing
 
