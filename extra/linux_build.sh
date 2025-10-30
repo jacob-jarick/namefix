@@ -28,8 +28,6 @@ GUI_PAR="namefix-gui.par"
 
 ARCHIVE_PATH="${BUILD_DIR}/${PACKAGE_NAME}.${VERSION}-${DATE}.tar.bz2"
 
-# DATETIME_FILE="${ARCHIVE_PATH}.builddate.txt"
-
 MODULES_SCRIPT="${EXTRA_DIR}/modules_linux.sh"
 INSTALL_SCRIPT="${EXTRA_DIR}/install.sh"
 
@@ -38,7 +36,6 @@ CHANGELOG_FILE="${PARENT_DIR}/data/txt/changelog.txt"
 echo "Version:          ${VERSION}"
 echo "Parent directory: ${PARENT_DIR}"
 echo "Build directory:  ${BUILD_DIR}"
-#echo "Build date file:  ${DATETIME_FILE}"
 echo "Archive path:     ${ARCHIVE_PATH}"
 echo "Script directory: ${SCRIPT_DIR}"
 echo "Extra directory:  ${EXTRA_DIR}"

@@ -50,6 +50,17 @@ Write-Output "==============================================="
 
 Write-Output "."
 Write-Output "==============================================="
+Write-Output "Removing old windows builds"
+Write-Output "."
+
+# delete anything matching namefix*.exe in builds directory
+Get-ChildItem "$PROJECT_ROOT\builds\namefix*.exe*" | ForEach-Object {
+	Write-Output "Removing old build: $($_.FullName)"
+	Remove-Item $_.FullName -ErrorAction SilentlyContinue
+}
+
+Write-Output "."
+Write-Output "==============================================="
 Write-Output "Updating changelog"
 Write-Output "."
 & git log | Select-Object -First 100 | Out-File $CHANGELOG_PATH
