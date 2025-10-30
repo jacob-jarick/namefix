@@ -9,6 +9,12 @@ use warnings;
 # cli print
 #--------------------------------------------------------------------------------------------------------------
 
+# TODO: this module is only referenced in a single file once.
+# This was used to output rename information to console and HTML for viewing with a console (or GUI) web browser.
+# test and complete, its still a neat feature to have.
+# test example: perl .\namefix-cli.pl --uc --recr --html --browser="C:/Program Files/Mozilla Firefox/firefox.exe" .\temp\
+# issue, spaces in arguments, dont work well in some shells.
+
 sub print
 {
 	my $s1		= shift;

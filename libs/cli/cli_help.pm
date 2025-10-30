@@ -214,7 +214,7 @@ my $txt_hacks =
 				Default: $config::hash{browser}{default}
 				Current: $config::hash{browser}{value}
 
-	--browser		set browser to use for html hack
+	--browser=STRING	set browser to use for html hack
 
 ";
 my $txt_docs =
@@ -245,6 +245,7 @@ my $txt_debug =
 	--exit-on-error		Exit on first error (default is to continue)
 	--zero-log		Zero logfile on start
 	--log-stdout		Print log to STDOUT
+	--dump-argv		Dump all command line arguments to log
 
 ";
 my $txt_mp3 =

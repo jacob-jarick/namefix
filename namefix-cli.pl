@@ -162,6 +162,13 @@ if(scalar @ARGV == 0)
 	exit;
 }
 
+# if @ARGV contains '--dump-argv' use Dumper to log all arguments then exit
+if(grep { $_ eq '--dump-argv' } @ARGV)
+{
+	print "Command line arguments:\n" . Dumper(\@ARGV);
+	exit 0;
+}
+
 for my $arg(@ARGV)
 {
 	# found a short option, process it
@@ -561,9 +568,10 @@ for my $arg(@ARGV)
 	{
 		&config::set_value('html_hack', 1);
 	}
-	elsif($arg =~ /--browser=(.*)/)
+	elsif($arg =~ /--browser=(.+)/)
 	{
 		&config::set_value('browser', $1);
+		&misc::plog(2, "browser set to '$1'");
 	}
 
 	#####################
@@ -832,7 +840,8 @@ else
 
 if($config::hash{html_hack}{value})
 {
-	system("$config::hash{browser}{value} $main::html_file");
+	# TODO: eval and catch errors
+	system("\"$config::hash{browser}{value}\" \"$main::html_file\"");
 }
 
 exit;
