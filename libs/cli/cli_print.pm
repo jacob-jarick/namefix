@@ -12,31 +12,30 @@ use warnings;
 # TODO: this module is only referenced in a single file once.
 # This was used to output rename information to console and HTML for viewing with a console (or GUI) web browser.
 # test and complete, its still a neat feature to have.
-# test example: perl .\namefix-cli.pl --uc --recr --html --browser="C:/Program Files/Mozilla Firefox/firefox.exe" .\temp\
-# issue, spaces in arguments, dont work well in some shells.
+# test example: perl .\namefix-cli.pl --uc --recr --html --browser="C:/Program Files/Mozilla Firefox/firefox.exe" C:/git/namefix/temp
 
 sub print
 {
-	my $s1		= shift;
-	my $s2		= shift;
-	my $ref1	= shift;
-	my $ref2	= shift;
+	# short circuit if not in cli mode
+	if($globals::CLI == 0)
+	{
+		return;
+	}
+
+	my $s1		= shift;	# old filename
+	my $s2		= shift;	# new filename, if eq "<MSG>" then s1 is a message to print and $ref1 and $ref2 are ignored / used in alternate ways
+	my $ref1	= shift;	# old mp3 id3 tags hash ref
+	my $ref2	= shift;	# new mp3 id3 tags hash ref
 
 	if(!$s2) { $s2 = $s1; }
 
 	my %tag_h = ();
 	my %tag_h_new = ();
 
-	if($config::hash{id3_mode}{value})
+	if($config::hash{id3_mode}{value} && defined $ref1 && defined $ref2)
 	{
-		if(defined $ref1)
-		{
-			%tag_h = %$ref1;
-		}
-		if(defined $ref2)
-		{
-			%tag_h_new = %$ref2;
-		}
+		%tag_h = %$ref1;
+		%tag_h_new = %$ref2;
 	}
 
 	my $tmp = '';
@@ -49,6 +48,7 @@ sub print
 		{
 			print "*** $line\n";
 		}
+
 		&htmlh::html("<TR><TD colspan=4>$s1</TD></TR>");
 		return 1;
 	}
