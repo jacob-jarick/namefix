@@ -29,7 +29,6 @@ use dir;
 use mp3;
 use filter;
 use undo;
-use htmlh;
 
 use cli_help;
 use cli_print;
@@ -820,8 +819,8 @@ print "*** Processing dir: $globals::dir\n";
 
 &misc::null_file($html_file);	# clear html file
 
-&htmlh::html("<table border=1>");
-&htmlh::html("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
+&cli_print::html_print("<table border=1>");
+&cli_print::html_print("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
 
 if($globals::UNDO)
 {
@@ -836,7 +835,7 @@ else
 	&run_namefix::run;
 }
 
-&htmlh::html("</table>");
+&cli_print::html_print("</table>");
 
 if($config::hash{html_hack}{value})
 {

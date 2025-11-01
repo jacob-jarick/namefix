@@ -4,3 +4,7 @@
 *.png binary
 *.bat text eol=lf
 *.msi binary
+*.bz2 binary
+*.zip binary
+*.7z binary
+*.gz binary

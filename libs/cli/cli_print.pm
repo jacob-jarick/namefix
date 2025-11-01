@@ -43,14 +43,14 @@ sub print
 
 	&misc::plog(3, "sub cli_print: \"$s1\", \"$s2\"");
 
-	if($type eq "message")
+	if($mode eq "message")
 	{
 		for my $line(split(/\n/, $s1))
 		{
 			print "*** $line\n";
 		}
 
-		&htmlh::html("<TR><TD colspan=4>$s1</TD></TR>");
+		&html_print("<TR><TD colspan=4>$s1</TD></TR>");
 		return 1;
 	}
 
@@ -59,7 +59,7 @@ sub print
 	if(!$config::hash{id3_mode}{value})
 	{
 		print "old> $s1\nnew> $s2\n\n";
-		&htmlh::html("<TR><TD  colspan=2 nowrap>$s1</TD><TD  colspan=2 nowrap>$s2</TD></TR>");
+		&html_print("<TR><TD  colspan=2 nowrap>$s1</TD><TD  colspan=2 nowrap>$s2</TD></TR>");
 		return 1;
 	}
 	else
@@ -110,12 +110,26 @@ $tmp="
 </tr>
 ";
 
-		&htmlh::html($tmp);
+		&html_print($tmp);
 
 		return 1;
 	}
 	return;
+}
 
+sub html_print
+{
+	# short circuit if not in cli mode
+	if($globals::CLI == 0 || !$config::hash{html_hack}{value})
+	{
+		return;
+	}
+
+	my $s = shift;	# string to print to html
+
+	&misc::file_append($main::html_file, $s);
+
+	return;
 }
 
 1;
