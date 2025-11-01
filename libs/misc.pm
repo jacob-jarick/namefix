@@ -85,6 +85,15 @@ sub plog
 			print FILE "$text\n";
 			close(FILE);
 
+			if($config::hash{html_hack}{value})
+			{
+				# &cli_print::print($text, undef, undef, undef, 'debug');
+				&cli_print::html_print("<TR><TD colspan=4><PRE>$text</PRE></TD></TR>\n");
+			}
+			else
+			{
+				print "$text\n";
+			}
 			if($config::hash{log_stdout}{value})
 			{
 				print "$text\n";

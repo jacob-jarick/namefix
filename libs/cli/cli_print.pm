@@ -28,7 +28,9 @@ sub print
 	my $ref2	= shift;	# new mp3 id3 tags hash ref
 	my $mode	= shift || 'normal'; # type of print, default is normal
 
-	# proposed modes: list, rename, message
+	$mode = lc($mode);
+	# proposed modes: list, rename
+	# existing modes: message, debug
 
 	my %tag_h = ();
 	my %tag_h_new = ();
@@ -39,9 +41,21 @@ sub print
 		%tag_h_new = %$ref2;
 	}
 
-	my $tmp = '';
+	{
+		my $str1 = 'undefined';
+		my $str2 = 'undefined';
 
-	&misc::plog(3, "sub cli_print: \"$s1\", \"$s2\"");
+		if(defined $s1)
+		{
+			$str1 = "'$s1'";
+		}
+		if(defined $s2)
+		{
+			$str2 = "'$s2'";
+		}
+
+		&misc::plog(5, "cli_print::print $str1, $str2");
+	}
 
 	if($mode eq "message")
 	{
@@ -54,6 +68,13 @@ sub print
 		return 1;
 	}
 
+	if($mode eq "debug")
+	{
+		print "DEBUG: $s1\n";
+		&html_print("<TR><TD colspan=4><PRE>$s1</PRE></TD></TR>");
+		return 1;
+	}
+
 	# normal listing
 
 	if(!$config::hash{id3_mode}{value})
@@ -62,58 +83,106 @@ sub print
 		&html_print("<TR><TD  colspan=2 nowrap>$s1</TD><TD  colspan=2 nowrap>$s2</TD></TR>");
 		return 1;
 	}
-	else
-	{
-		print 	"old>\"$s1\"\nnew>\"$s2\"\n",
-			"\told-artist>	$tag_h{artist}\n\tnew-artist>	$tag_h_new{artist}\n",
-			"\told-title>	$tag_h{title}\n\tnew-title>	$tag_h_new{title}\n",
-			"\told-track>	$tag_h{track}\n\tnew-track>	$tag_h_new{track}\n",
-			"\told-album>	$tag_h{album}\n\tnew-album>	$tag_h_new{album}\n",
-			"\told-comment>	$tag_h{comment}\n\tnew-comment>	$tag_h_new{comment}\n",
-			"\told-genre>	$tag_h{genre}\n\tnew-genre>	$tag_h_new{genre}\n",
-			"\told-year>	$tag_h{year}\n\tnew-year>	$tag_h_new{year}\n\n";
 
-$tmp="
+		my @mp3_headers = ('Artist', 'Title', 'Track', 'Album', 'Comment', 'Genre', 'Year');
+
+	my $IS_AUDIO_FILE = 0;
+
+	if($s1 =~ /\.($globals::id3_ext_regex)$/i)
+	{
+		$IS_AUDIO_FILE = 1;
+	}
+
+	# loop through mp3 headers and check that all are defined
+	for my $h(@mp3_headers)
+	{
+		my $lc_h = lc($h);
+
+		if(!$IS_AUDIO_FILE)
+		{
+			$tag_h{$lc_h}		= 'N/A';
+			$tag_h_new{$lc_h}	= 'N/A';
+			next;
+		}
+
+		$tag_h{$lc_h}		= 'undefined' if !defined $tag_h{$lc_h};
+		$tag_h_new{$lc_h}	= 'undefined' if !defined $tag_h_new{$lc_h};
+	}
+
+
+	print 	"old>\"$s1\"\nnew>\"$s2\"\n";
+
+	if($IS_AUDIO_FILE)
+	{
+		for my $h(@mp3_headers)
+		{
+			my $lc_h = lc($h);
+			print 	"\told-$h>	$tag_h{$lc_h}\n".
+					"\tnew-$h>	$tag_h_new{$lc_h}\n";
+		}
+	}
+	
+my $tmp="
 <TR>
 	<TD colspan=2 nowrap>$s1</TD>
-	<TD colspan=2 nowrap>$s2</TD></TR>
-<TR>
-	<TD>Artist</TD><TD>$tag_h{artist}</TD>
-	<TD colspan=2>$tag_h_new{artist}</TD>
+	<TD colspan=2 nowrap>$s2</TD>
 </TR>
-<TR>
-	<TD>Title</TD><TD>$tag_h{title}</TD>
-	<TD colspan=2>$tag_h_new{title}</TD>
-</TR>
-<TR>
-	<TD>Track</TD><TD>$tag_h{track}</TD>
-	<TD colspan=2>$tag_h_new{track}</TD>
-</TR>
-<TR>
-	<TD>Album</TD><TD>$tag_h{album}</TD>
-	<TD colspan=2>$tag_h_new{album}</TD>
-</TR>
-<TR>
-	<TD>Comment</TD><TD>$tag_h{comment}</TD>
-	<TD colspan=2>$tag_h_new{comment}</TD>
-</TR>
-<TR>
-	<TD>Genre</TD><TD>$tag_h{genre}</TD>
-	<TD colspan=2>$tag_h_new{genre}</TD>
-</TR>
-<TR>
-	<TD>Year</TD><TD>$tag_h{year}</TD>
-	<TD colspan=2>$tag_h_new{year}</TD>
-</TR>
-<TR>
-	<TD colspan=4 align=center>***********</TD>
-</tr>
 ";
 
-		&html_print($tmp);
-
-		return 1;
+if($IS_AUDIO_FILE)
+{
+	# loop through mp3 headers and print
+	for my $h(@mp3_headers)
+	{
+		my $lc_h = lc($h);
+		$tmp .= "<TR>
+	<TD>$h</TD><TD>$tag_h{$lc_h}</TD>
+	<TD colspan=2>$tag_h_new{$lc_h}</TD>
+</TR>
+";
 	}
+
+# 	$tmp .= "
+# <TR>
+# 	<TD>Artist</TD><TD>$tag_h{artist}</TD>
+# 	<TD colspan=2>$tag_h_new{artist}</TD>
+# </TR>
+# <TR>
+# 	<TD>Title</TD><TD>$tag_h{title}</TD>
+# 	<TD colspan=2>$tag_h_new{title}</TD>
+# </TR>
+# <TR>
+# 	<TD>Track</TD><TD>$tag_h{track}</TD>
+# 	<TD colspan=2>$tag_h_new{track}</TD>
+# </TR>
+# <TR>
+# 	<TD>Album</TD><TD>$tag_h{album}</TD>
+# 	<TD colspan=2>$tag_h_new{album}</TD>
+# </TR>
+# <TR>
+# 	<TD>Comment</TD><TD>$tag_h{comment}</TD>
+# 	<TD colspan=2>$tag_h_new{comment}</TD>
+# </TR>
+# <TR>
+# 	<TD>Genre</TD><TD>$tag_h{genre}</TD>
+# 	<TD colspan=2>$tag_h_new{genre}</TD>
+# </TR>
+# <TR>
+# 	<TD>Year</TD><TD>$tag_h{year}</TD>
+# 	<TD colspan=2>$tag_h_new{year}</TD>
+# </TR>
+# ";
+
+	}
+
+	$tmp .= "
+<TR>
+	<TD colspan=4 align=center>***********</TD>
+</TR>
+";
+
+	&html_print($tmp);
+
 	return;
 }
 
