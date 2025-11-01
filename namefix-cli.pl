@@ -61,6 +61,12 @@ for (my $i = 0; $i <= $#ARGV; $i++)
 	{
 		$load_config = 0;
 	}
+
+	elsif($ARGV[$i] eq '--version')
+	{
+		print "$globals::version\n";
+		exit 0;
+	}
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -165,13 +171,6 @@ if(scalar @ARGV == 0)
 if(grep { $_ eq '--dump-argv' } @ARGV)
 {
 	print "Command line arguments:\n" . Dumper(\@ARGV);
-	exit 0;
-}
-
-# --version
-if(grep { $_ eq '--version' } @ARGV)
-{
-	print "$globals::version\n";
 	exit 0;
 }
 
