@@ -160,58 +160,62 @@ sub guess_tags
 
 	my $filename = shift;
 
-    my $tag = "";
-    my $art = "";
-    my $tra = "";
-    my $tit = "";
-    my $alb = "";
-    my $com = "";
+	my $tag = "";
+	my $art = "";
+	my $tra = "";
+	my $tit = "";
+	my $alb = "";
 
-    my $exts = join('|', @globals::id3v2_exts);
 
-	if($filename =~ /^(\d+)( - |\. )(.*?)( - )(.*?)\.($globals::id3_ext_regex)$/i)
+	if($filename !~ /\.$globals::id3_ext_regex$/i)
 	{
-		&misc::plog(4, "sub guess_tags: track - artist - title");
-		$tra = $1;
-		$art = $3;
-		$tit = $5;
+		&misc::plog(4, "sub guess_tags: not an audio file");
+		return($art, $tra, $tit, $alb);
 	}
 
-	elsif($filename =~ /^(\d+)( - |\. )(.*?)\.($globals::id3_ext_regex)$/i)
+	my $detected_style = -1;
+
+	# 01 - ACDC - Thunderstruck.mp3
+	# Track - Artist - Title
+	if($filename =~ /^(\d+) - (.+?) - (.+?)\.[A-Za-z0-9]+?$/i)
 	{
-		&misc::plog(4, "sub guess_tags: track - title");
 		$tra = $1;
+		$art = $2;
 		$tit = $3;
+		$detected_style = "track - artist - title";
 	}
 
-	elsif($filename =~ /^(.*?)( - )(.*?)( - )(\d+)( - )(.*)\.($globals::id3_ext_regex)$/i)
+	# Artist - Album - Track - Title.mp3
+	# Metallica - Black - 01 - Enter Sandman.mp3
+	elsif($filename =~ /^(.+?) - (.+?) - (\d+) - (.+)\.[A-Za-z0-9]+?$/i)
 	{
-		&misc::plog(4, "sub guess_tags: artist - ablum - track - title");
 		$art = $1;
-		$alb = $3;
-		$tra = $5;
-		$tit = $7;
+		$alb = $2;
+		$tra = $3;
+		$tit = $4;
+		$detected_style = "artist - album - track - title";
 	}
 
 	# mems prefered format
-	elsif($filename =~ /^(.*?)( - )(\d+)( - )(.*)\.($globals::id3_ext_regex)$/i)
+	# Artist - Track - Title.mp3
+	elsif($filename =~ /^(.+?) - (\d+) - (.+)\.[A-Za-z0-9]+?$/i)
 	{
-		&misc::plog(4, "sub guess_tags: artist - track - title");
 		$art = $1;
-		$tra = $3;
-		$tit = $5;
-		$alb = "";	# get this later
+		$tra = $2;
+		$tit = $3;
+		$detected_style = "artist - track - title";
 	}
 
-	elsif($filename =~ /^(.*?)( - )(.*)\.($globals::id3_ext_regex)$/)
+	# Artist - Title.mp3
+	# ACDC - Thunderstruck.mp3
+	elsif($filename =~ /^([^\-]+?) - ([^\-]+?)\.[A-Za-z0-9]+?$/i)
 	{
-		&misc::plog(4, "sub guess_tags: artist - title");
 		$art = $1;
-		$tit = $3;
-		$tra = "";
-		$alb = "";	# get this later
+		$tit = $2;
+		$detected_style = "artist - title";
 	}
-	&misc::plog(4, "sub guess_tags: returning art = \"$art\", track = \"$tra\", title = \"$tit\", album = \"$alb\"");
+
+	&misc::plog(4, "guess_tags detected style '$detected_style', returning art = \"$art\", track = \"$tra\", title = \"$tit\", album = \"$alb\"");
 	return($art, $tra, $tit, $alb);
 }
 
