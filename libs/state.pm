@@ -143,4 +143,31 @@ sub set
 	return 0;
 }
 
+# get current state as string
+sub current_state_as_string
+{
+	# added to help distinguish between preview and actual renaming when in run mode
+	my $run = 'run';
+	if($globals::PREVIEW)
+	{
+		$run = "preview";
+	}
+
+	if($globals::LISTING)
+	{
+		return "list";
+	}
+	if($globals::RUN)
+	{
+		return $run;
+	}
+	if($globals::STOP)
+	{
+		return "stop";
+	}
+	if($globals::IDLE)
+	{
+		return "idle";
+	}
+}
 1;

@@ -175,26 +175,25 @@ sub set_target
 	my $file2 	= shift;
 	my $target	= undef;
 
+	my $state = &state::current_state_as_string();
+
 	# determine if dir1 or dir2 is one that exists.
-	if(&state::get('list'))
+	if($state eq 'list')
 	{
 		$target = $file1;
 	}
-	elsif(&state::get('run'))
+	elsif($state eq 'preview')
 	{
-		if($globals::PREVIEW)
-		{
-			$target = $file1;
-		}
-		else
-		{
-			$target = $file2;
-		}
+		$target = $file1;
+	}
+	elsif($state eq 'run')
+	{
+		$target = $file2;
 	}
 
-	&misc::quit("p: \$target is undef")							if ! defined $target;
-	&misc::quit("p: \$target eq ''")							if $target eq '';
-	&misc::quit("p: \$target '$target' is not a dir or file")	if !-d $target && !-f $target;
+	&misc::quit("p: \$target is undef, $state")							if ! defined $target;
+	&misc::quit("p: \$target eq '', $state")							if $target eq '';
+	&misc::quit("p: \$target '$target' is not a dir or file, $state")	if !-d $target && !-f $target;
 
 	return $target;
 }
