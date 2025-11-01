@@ -168,6 +168,13 @@ if(grep { $_ eq '--dump-argv' } @ARGV)
 	exit 0;
 }
 
+# --version
+if(grep { $_ eq '--version' } @ARGV)
+{
+	print "$globals::version\n";
+	exit 0;
+}
+
 for my $arg(@ARGV)
 {
 	# found a short option, process it
@@ -177,11 +184,12 @@ for my $arg(@ARGV)
 		next;
 	}
 
-	if($arg eq '--version')
-	{
-		print "$globals::version\n";
-		exit 0;
-	}
+	# shifted to top for early exit and no debug output
+	# if($arg eq '--version')
+	# {
+	# 	print "$globals::version\n";
+	# 	exit 0;
+	# }
 
 	if($arg eq '--help')
 	{

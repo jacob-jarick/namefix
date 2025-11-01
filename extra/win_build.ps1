@@ -14,7 +14,9 @@ $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $PROJECT_ROOT = Split-Path -Parent $SCRIPT_DIR
 
 # get version from perl .\namefix-cli.pl --version
-$VERSION = & perl .\namefix-cli.pl --version
+$VERSION = & perl "$PROJECT_ROOT\namefix-cli.pl" --version
+$VERSION = ($VERSION | Select-String -Pattern 'namefix\.pl (\d+\.\d+\.\d+)').Matches[0].Groups[1].Value
+Write-Output "Extracted VERSION: '$VERSION'"
 
 $INST_NAME = "namefix.$VERSION-$SHORT_DATE.setup.exe"
 $NSI_OUT_PATH = "$PROJECT_ROOT\namefix-installer.exe"
@@ -103,6 +105,8 @@ if (-not (Test-Path "extra\build installer.nsi")) {
 
 # copy installer to builds directory
 if (Test-Path $NSI_OUT_PATH) {
+	Write-Output "Copying from: $NSI_OUT_PATH"
+	Write-Output "Copying to: $INSTALLER_BUILD_PATH"
 	Copy-Item $NSI_OUT_PATH $INSTALLER_BUILD_PATH -Force
 	Write-Output "Installer copied to '$INSTALLER_BUILD_PATH'"
 } else {
