@@ -452,8 +452,20 @@ sub fix
 
 	if ($globals::CLI) 
 	{
-		# CLI output: simple before -> after format
-		if ($file_name ne $newfile) 
+		if($config::hash{html_hack}{value})
+		{
+			&cli_print::print
+			(
+				$file_name,
+				$newfile,
+
+				\%tags_h,
+				\%tags_h_new,
+				'normal'
+			);
+		}
+		# current CLI output: simple before -> after format
+		elsif ($file_name ne $newfile) 
 		{
 			print "'$file_name' -> '$newfile'\n";
 		}
