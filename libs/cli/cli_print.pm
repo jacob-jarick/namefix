@@ -26,8 +26,9 @@ sub print
 	my $s2		= shift;	# new filename, if eq "<MSG>" then s1 is a message to print and $ref1 and $ref2 are ignored / used in alternate ways
 	my $ref1	= shift;	# old mp3 id3 tags hash ref
 	my $ref2	= shift;	# new mp3 id3 tags hash ref
+	my $mode	= shift || 'normal'; # type of print, default is normal
 
-	if(!$s2) { $s2 = $s1; }
+	# proposed modes: list, rename, message
 
 	my %tag_h = ();
 	my %tag_h_new = ();
@@ -42,7 +43,7 @@ sub print
 
 	&misc::plog(3, "sub cli_print: \"$s1\", \"$s2\"");
 
-	if($s2 eq "<MSG>")
+	if($type eq "message")
 	{
 		for my $line(split(/\n/, $s1))
 		{

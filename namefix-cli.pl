@@ -792,7 +792,7 @@ for my $arg(@ARGV)
 	{
 		# NOTE: saves and exits immediately. If not the last argument, following args are ignored.
 		&config::save_hash;
-		&cli_print::print("Options Saved, exiting", "<MSG>");
+		&cli_print::print('Options Saved, exiting', 'message');
 		exit;
 	}
 	else
