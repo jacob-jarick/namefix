@@ -21,7 +21,7 @@ require misc;
 our $dir				= cwd;
 our $home				= &misc::get_home;
 
-our $version 			= '4.1.34';
+our $version 			= '4.1.35';
 our $folderimage 		= '';
 our $fileimage   		= '';
 
