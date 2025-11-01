@@ -23,10 +23,10 @@ sub get
 
 	$state = lc $state;
 
-	return $globals::LISTING	&& $state eq 'list';
-	return $globals::RUN		&& $state eq 'run';
-	return $globals::STOP		&& $state eq 'stop';
-	return $globals::IDLE		&& $state eq 'idle';
+	return $globals::LISTING	if $state eq 'list';
+	return $globals::RUN		if $state eq 'run';
+	return $globals::STOP		if $state eq 'stop';
+	return $globals::IDLE		if $state eq 'idle';
 
 	# unknown state, log & exit
 	&misc::plog(0, "Unknown check '$state'", 1);

@@ -127,17 +127,23 @@ sub draw_list
 
 	my $ic = scalar(@id3_headers);	# count of id3 headers
 
+	my $run_state = &state::get('run');
+
 	# with id3 tags: icon, filename
 	if($config::hash{id3_mode}{value})
 	{
 		$columns	= 9;			# listing
-		$columns	= 18 if  &state::get('run');	# preview / rename
+		$columns	= 18 if  $run_state;	# preview / rename
 	}
 	else
 	{
 		$columns	= 2;			# listing
-		$columns	= 4 if  &state::get('run');	# preview / rename
+		$columns	= 4 if  $run_state;	# preview / rename
 	}
+
+	my $state = &state::current_state_as_string();
+	&misc::plog(4, "dir_hlist::draw_list state '$state', run_state '$run_state', columns '$columns'");
+
 
 	$hlist = $main::frm_right2 -> Scrolled
     (
@@ -206,6 +212,8 @@ sub draw_list
 	# rename / preview - add 'New <VALUE>' column headers
 	if(&state::get('run'))
 	{
+		&misc::plog(4, "dir_hlist::draw_list adding rename / preview headers");
+
 		$hlist->header('create', $count++, -text => '#');
 		$hlist->header('create', $count++, -text => 'New Filename');
 		if($config::hash{id3_mode}{value} == 1)

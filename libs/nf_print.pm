@@ -86,14 +86,23 @@ sub p
 		}
 	}
 
-	# finish here if list mode	
-	return if &state::get('list');
-	
+	# finish here if list mode
+	if(&state::get('list'))
+	{
+		&misc::plog(4, "nf_print::p finishing in list mode");
+		return;
+	}
 	# stop mode shouldn't get here but just in case
-	return if &state::get('stop');
+	if(&state::get('stop'))
+	{
+		&misc::plog(4, "nf_print::p finishing in stop mode");
+		return;
+	}
 
 	# ------------------------------------------------------------------------------------------------
 	# Start of rename / preview section
+
+	&misc::plog(4, "nf_print::p continuing to rename / preview section");
 
 	my $hlist_file2_label = &misc::get_file_name($file2, 0);
 	$globals::hlist_newfile_row	= $count;
