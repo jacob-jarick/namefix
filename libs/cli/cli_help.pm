@@ -262,8 +262,6 @@ my $txt_mp3 =
 	--id3-yer=STRING	Set id3 year tag to STRING
 	--id3-com=STRING	Set id3 comment tag to STRING
 
-	# the below id3 options have not been implemented yet
-
 	--id3-fn-from-tag	Generate filename from id3 tags
 				if all needed tags are present
 
