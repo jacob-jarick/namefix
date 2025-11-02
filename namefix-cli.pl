@@ -573,6 +573,9 @@ for my $arg(@ARGV)
 	elsif($arg eq '--html')
 	{
 		&config::set_value('html_hack', 1);
+		# Initialize HTML output immediately when flag is set
+		&misc::null_file($html_file);
+		&cli_print::page_header();
 	}
 	elsif($arg =~ /--browser=(.+)/)
 	{
@@ -823,10 +826,6 @@ if(!$globals::PREVIEW && !$globals::UNDO)
 
 # set main dir, run fixname.....
 print "*** Processing dir: $globals::dir\n";
-
-&misc::null_file($html_file);	# clear html file
-
-&cli_print::page_header();
 
 if($globals::UNDO)
 {

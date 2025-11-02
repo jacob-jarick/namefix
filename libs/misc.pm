@@ -88,7 +88,7 @@ sub plog
 			if($config::hash{html_hack}{value})
 			{
 				&cli_print::debug_open_td();
-				&cli_print::html_print("plog $text\n");
+				&cli_print::html_print("$text\n");
 			}
 			else
 			{

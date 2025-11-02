@@ -14,16 +14,24 @@ my $debug_td_open = 0;
 
 my $debug_header = 
 "
-<!-- debug header -->
+<!-- debug header open -->
 <TR>
-	<TD colspan=4 align=center><PRE>
+	<TD colspan=4 align=left><PRE>
 ";
 
 my $debug_footer = 
+"</PRE></TD>
+</TR>
+<!-- debug footer close -->
+";
+
+my $rename_header = 
 "
-<!-- debug footer -->
-</PRE></TD>
-</TR>";
+<TR>
+	<TH colspan=2 nowrap>OLD</TH>
+	<TH colspan=2 nowrap>NEW</TH>
+</TR>
+";
 
 #--------------------------------------------------------------------------------------------------------------
 # cli print
@@ -49,8 +57,6 @@ sub print
 	my $mode	= shift || 'normal'; # type of print, default is normal
 
 	$mode = lc($mode);
-	# proposed modes: list, rename
-	# existing modes: message, debug, line
 
 	my %tag_h = ();
 	my %tag_h_new = ();
@@ -91,14 +97,6 @@ sub print
 		return 1;
 	}
 
-	if($mode eq "debug")
-	{
-		&debug_open_td;
-		print "DEBUG: $s1\n";
-		&html_print("<PRE>$s1\n");
-		return 1;
-	}
-
 	# normal listing
 
 	# normal mode without id3
@@ -106,7 +104,7 @@ sub print
 	{
 		&debug_close_td;
 		print "old> $s1\nnew> $s2\n\n";
-		&html_print("<TR><TD  colspan=2 nowrap>$s1</TD><TD  colspan=2 nowrap>$s2</TD></TR>");
+		&html_print("$rename_header<TR><TD colspan=2 nowrap>$s1</TD><TD colspan=2 nowrap>$s2</TD></TR>");
 		return 1;
 	}
 
@@ -149,6 +147,7 @@ sub print
 	}
 	
 my $tmp="
+$rename_header
 <TR>
 	<TD colspan=2 nowrap>$s1</TD>
 	<TD colspan=2 nowrap>$s2</TD>
@@ -164,7 +163,7 @@ my $tmp="
 			$tmp .= 
 				"<TR>\n" .
 				"\t<TD>$h</TD><TD>$tag_h{$lc_h}</TD>\n" .
-				"\t<TD colspan=2>$tag_h_new{$lc_h}</TD>\n" .
+				"\t<TD>$h</TD><TD>$tag_h_new{$lc_h}</TD>\n" .
 				"</TR>\n";
 		}
 	}
@@ -214,26 +213,18 @@ sub debug_close_td
 
 sub page_header
 {
+	# Reset debug TD state when creating new page (do this FIRST, before any checks)
+	$debug_td_open = 0;
+
 	# short circuit if not in cli mode
 	if($globals::CLI == 0 || !$config::hash{html_hack}{value})
 	{
 		return;
 	}
 
-	my $title = shift || 'NameFix CLI Output';
-
 	my $header = <<'END_HEADER';
 <!DOCTYPE html>
-<table border=1>
-<TR>
-	<TD colspan=2>
-		<b>Before</b>
-	</TD>
-	<TD colspan=2>
-		<b>After</b>
-	</TD>
-</TR>
-
+<TABLE BORDER=1>
 END_HEADER
 
 	&html_print($header);
