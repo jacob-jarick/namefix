@@ -5,6 +5,26 @@ require Exporter;
 use strict;
 use warnings;
 
+my $separator = "
+<TR>
+	<TD colspan=4 align=center bgcolor=\"grey\">***********</TD>
+</TR>
+";
+my $debug_td_open = 0;
+
+my $debug_header = 
+"
+<!-- debug header -->
+<TR>
+	<TD colspan=4 align=center><PRE>
+";
+
+my $debug_footer = 
+"
+<!-- debug footer -->
+</PRE></TD>
+</TR>";
+
 #--------------------------------------------------------------------------------------------------------------
 # cli print
 #--------------------------------------------------------------------------------------------------------------
@@ -30,11 +50,12 @@ sub print
 
 	$mode = lc($mode);
 	# proposed modes: list, rename
-	# existing modes: message, debug
+	# existing modes: message, debug, line
 
 	my %tag_h = ();
 	my %tag_h_new = ();
 
+	# define tag hashes for normal + id3 mode
 	if($config::hash{id3_mode}{value} && defined $ref1 && defined $ref2)
 	{
 		%tag_h = %$ref1;
@@ -59,6 +80,8 @@ sub print
 
 	if($mode eq "message")
 	{
+		&debug_close_td;
+
 		for my $line(split(/\n/, $s1))
 		{
 			print "*** $line\n";
@@ -70,21 +93,24 @@ sub print
 
 	if($mode eq "debug")
 	{
+		&debug_open_td;
 		print "DEBUG: $s1\n";
-		&html_print("<TR><TD colspan=4><PRE>$s1</PRE></TD></TR>");
+		&html_print("<PRE>$s1\n");
 		return 1;
 	}
 
 	# normal listing
 
+	# normal mode without id3
 	if(!$config::hash{id3_mode}{value})
 	{
+		&debug_close_td;
 		print "old> $s1\nnew> $s2\n\n";
 		&html_print("<TR><TD  colspan=2 nowrap>$s1</TD><TD  colspan=2 nowrap>$s2</TD></TR>");
 		return 1;
 	}
 
-		my @mp3_headers = ('Artist', 'Title', 'Track', 'Album', 'Comment', 'Genre', 'Year');
+	my @mp3_headers = ('Artist', 'Title', 'Track', 'Album', 'Comment', 'Genre', 'Year');
 
 	my $IS_AUDIO_FILE = 0;
 
@@ -129,58 +155,23 @@ my $tmp="
 </TR>
 ";
 
-if($IS_AUDIO_FILE)
-{
-	# loop through mp3 headers and print
-	for my $h(@mp3_headers)
+	if($IS_AUDIO_FILE)
 	{
-		my $lc_h = lc($h);
-		$tmp .= "<TR>
-	<TD>$h</TD><TD>$tag_h{$lc_h}</TD>
-	<TD colspan=2>$tag_h_new{$lc_h}</TD>
-</TR>
-";
+		# loop through mp3 headers and print
+		for my $h(@mp3_headers)
+		{
+			my $lc_h = lc($h);
+			$tmp .= 
+				"<TR>\n" .
+				"\t<TD>$h</TD><TD>$tag_h{$lc_h}</TD>\n" .
+				"\t<TD colspan=2>$tag_h_new{$lc_h}</TD>\n" .
+				"</TR>\n";
+		}
 	}
 
-# 	$tmp .= "
-# <TR>
-# 	<TD>Artist</TD><TD>$tag_h{artist}</TD>
-# 	<TD colspan=2>$tag_h_new{artist}</TD>
-# </TR>
-# <TR>
-# 	<TD>Title</TD><TD>$tag_h{title}</TD>
-# 	<TD colspan=2>$tag_h_new{title}</TD>
-# </TR>
-# <TR>
-# 	<TD>Track</TD><TD>$tag_h{track}</TD>
-# 	<TD colspan=2>$tag_h_new{track}</TD>
-# </TR>
-# <TR>
-# 	<TD>Album</TD><TD>$tag_h{album}</TD>
-# 	<TD colspan=2>$tag_h_new{album}</TD>
-# </TR>
-# <TR>
-# 	<TD>Comment</TD><TD>$tag_h{comment}</TD>
-# 	<TD colspan=2>$tag_h_new{comment}</TD>
-# </TR>
-# <TR>
-# 	<TD>Genre</TD><TD>$tag_h{genre}</TD>
-# 	<TD colspan=2>$tag_h_new{genre}</TD>
-# </TR>
-# <TR>
-# 	<TD>Year</TD><TD>$tag_h{year}</TD>
-# 	<TD colspan=2>$tag_h_new{year}</TD>
-# </TR>
-# ";
+	$tmp .= $separator;
 
-	}
-
-	$tmp .= "
-<TR>
-	<TD colspan=4 align=center>***********</TD>
-</TR>
-";
-
+	&debug_close_td;
 	&html_print($tmp);
 
 	return;
@@ -198,6 +189,54 @@ sub html_print
 
 	&misc::file_append($main::html_file, $s);
 
+	return;
+}
+
+sub debug_open_td
+{
+	if(! $debug_td_open)
+	{
+		&html_print($debug_header);
+		$debug_td_open = 1;
+	}
+	return;
+}
+
+sub debug_close_td
+{
+	if($debug_td_open)
+	{
+		&html_print($debug_footer);
+		$debug_td_open = 0;
+	}
+	return;
+}
+
+sub page_header
+{
+	# short circuit if not in cli mode
+	if($globals::CLI == 0 || !$config::hash{html_hack}{value})
+	{
+		return;
+	}
+
+	my $title = shift || 'NameFix CLI Output';
+
+	my $header = <<'END_HEADER';
+<!DOCTYPE html>
+<table border=1>
+<TR>
+	<TD colspan=2>
+		<b>Before</b>
+	</TD>
+	<TD colspan=2>
+		<b>After</b>
+	</TD>
+</TR>
+
+END_HEADER
+
+	&html_print($header);
 	return;
 }
 

@@ -826,8 +826,7 @@ print "*** Processing dir: $globals::dir\n";
 
 &misc::null_file($html_file);	# clear html file
 
-&cli_print::html_print("<table border=1>");
-&cli_print::html_print("<TR><TD colspan=2><b>Before</b></TD><TD colspan=2><b>After</b></TD></TR>");
+&cli_print::page_header();
 
 if($globals::UNDO)
 {
